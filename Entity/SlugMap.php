@@ -20,10 +20,18 @@ use Doctrine\ORM\Mapping as ORM;
 class SlugMap
 {
     /**
+     * @var int
+     *
+     * @ORM\Column(type="integer", unique=true)
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\Id
+     */
+    private $id;
+
+    /**
      * @var string
      *
-     * @ORM\Column(type="string", unique=true)
-     * @ORM\Id
+     * @ORM\Column(type="string", length=2550)
      */
     private $slug;
 
@@ -40,6 +48,14 @@ class SlugMap
      * @ORM\Column(type="integer")
      */
     private $entityId;
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * @param string $slug slug
