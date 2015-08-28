@@ -1,6 +1,6 @@
 {
     "name":        "darvinstudio/darvin-content-bundle",
-    "description": "This bundle provides basic content management functionality.",
+    "description": "This bundle provides basic content management functionality for Symfony2-based applications.",
     "keywords":    ["content"],
     "type":        "symfony-bundle",
     "license":     "MIT",
