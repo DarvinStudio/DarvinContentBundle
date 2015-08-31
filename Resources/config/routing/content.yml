@@ -1,0 +1,5 @@
+darvin_content_content_show:
+    path:         /{slug}.html
+    defaults:     { _controller: DarvinContentBundle:ContentFront:show }
+    requirements: { slug: "[0-9a-z_\-\/]+" }
+    methods:      [ get ]

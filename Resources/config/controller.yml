@@ -1,0 +1,6 @@
+parameters:
+    darvin_content.controller.pool.class: Darvin\ContentBundle\Controller\ContentControllerPool
+
+services:
+    darvin_content.controller.pool:
+        class: %darvin_content.controller.pool.class%

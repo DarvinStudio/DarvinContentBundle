@@ -8,17 +8,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Darvin\ContentBundle\Sluggable;
+namespace Darvin\ContentBundle\Controller;
+
+use Darvin\ContentBundle\Exception\DarvinContentException;
 
 /**
- * Sluggable
+ * Controller exception
  */
-interface SluggableInterface
+class ControllerException extends DarvinContentException
 {
-    const INTERFACE_NAME = __CLASS__;
 
-    /**
-     * @return array
-     */
-    public function getSlugProperties();
 }

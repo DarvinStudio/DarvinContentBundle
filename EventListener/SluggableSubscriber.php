@@ -87,7 +87,7 @@ class SluggableSubscriber extends AbstractOnFlushListener implements EventSubscr
 
         $entityClass = ClassUtils::getClass($entity);
 
-        $properties = $this->getSlugProperties($entityClass);
+        $properties = $entity->getSlugProperties();
 
         if (empty($properties)) {
             return;
@@ -128,7 +128,7 @@ class SluggableSubscriber extends AbstractOnFlushListener implements EventSubscr
     {
         $entityClass = ClassUtils::getClass($entity);
 
-        $properties = $this->getSlugProperties($entityClass);
+        $properties = $entity->getSlugProperties();
 
         if (empty($properties)) {
             return;
@@ -185,17 +185,5 @@ class SluggableSubscriber extends AbstractOnFlushListener implements EventSubscr
     private function getSlugMapItemRepository()
     {
         return $this->em->getRepository(SlugMapItem::CLASS_NAME);
-    }
-
-    /**
-     * @param string $entityClass Entity class
-     *
-     * @return array
-     */
-    private function getSlugProperties($entityClass)
-    {
-        $configuration = $this->sluggableListener->getConfiguration($this->em, $entityClass);
-
-        return isset($configuration['slugs']) ? array_keys($configuration['slugs']) : array();
     }
 }
