@@ -40,7 +40,7 @@ class ContentFrontController extends Controller
 
         if (empty($content)) {
             $message = sprintf(
-                'Unable to find content object "%s" by ID "%s".',
+                'Unable to find content entity "%s" by ID "%s".',
                 $slugMapItem->getEntityClass(),
                 $slugMapItem->getEntityId()
             );
