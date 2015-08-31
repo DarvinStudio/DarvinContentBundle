@@ -13,12 +13,15 @@ namespace Darvin\ContentBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Slug map
+ * Slug map item
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Darvin\ContentBundle\Repository\SlugMapItemRepository")
+ * @ORM\Table(name="slug_map")
  */
-class SlugMap
+class SlugMapItem
 {
+    const CLASS_NAME = __CLASS__;
+
     /**
      * @var int
      *
@@ -45,9 +48,30 @@ class SlugMap
     /**
      * @var string
      *
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string")
      */
     private $entityId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string")
+     */
+    private $property;
+
+    /**
+     * @param string $slug        Slug
+     * @param string $entityClass Entity class
+     * @param string $entityId    Entity ID
+     * @param string $property    Slug property
+     */
+    public function __construct($slug = null, $entityClass = null, $entityId = null, $property = null)
+    {
+        $this->slug = $slug;
+        $this->entityClass = $entityClass;
+        $this->entityId = $entityId;
+        $this->property = $property;
+    }
 
     /**
      * @return int
@@ -60,7 +84,7 @@ class SlugMap
     /**
      * @param string $slug slug
      *
-     * @return SlugMap
+     * @return SlugMapItem
      */
     public function setSlug($slug)
     {
@@ -80,7 +104,7 @@ class SlugMap
     /**
      * @param string $entityClass entityClass
      *
-     * @return SlugMap
+     * @return SlugMapItem
      */
     public function setEntityClass($entityClass)
     {
@@ -100,7 +124,7 @@ class SlugMap
     /**
      * @param string $entityId entityId
      *
-     * @return SlugMap
+     * @return SlugMapItem
      */
     public function setEntityId($entityId)
     {
@@ -115,5 +139,25 @@ class SlugMap
     public function getEntityId()
     {
         return $this->entityId;
+    }
+
+    /**
+     * @param string $property property
+     *
+     * @return SlugMapItem
+     */
+    public function setProperty($property)
+    {
+        $this->property = $property;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProperty()
+    {
+        return $this->property;
     }
 }
