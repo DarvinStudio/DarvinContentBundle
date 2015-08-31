@@ -1,11 +1,27 @@
 parameters:
+    darvin_content.sluggable.listener.class: Gedmo\Sluggable\SluggableListener
+
     darvin_content.sluggable.subscriber.class: Darvin\ContentBundle\EventListener\SluggableSubscriber
 
+    darvin_content.sluggable.transliterator.class: Darvin\ContentBundle\Sluggable\SluggableTransliterator
+
 services:
+    darvin_content.sluggable.listener:
+        class: %darvin_content.sluggable.listener.class%
+        calls:
+            - [ setTransliterator, [ [ "@darvin_content.sluggable.transliterator", transliterate ] ] ]
+        tags:
+            - { name: doctrine.event_subscriber, priority: 10 }
+
     darvin_content.sluggable.subscriber:
         class: %darvin_content.sluggable.subscriber.class%
         arguments:
-            - "@stof_doctrine_extensions.listener.sluggable"
             - "@property_accessor"
+            - "@darvin_content.sluggable.listener"
         tags:
             - { name: doctrine.event_subscriber }
+
+    darvin_content.sluggable.transliterator:
+        class: %darvin_content.sluggable.transliterator.class%
+        arguments:
+            - "@darvin_utils.transliterator"

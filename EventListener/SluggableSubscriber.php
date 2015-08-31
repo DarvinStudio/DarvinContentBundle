@@ -27,23 +27,23 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 class SluggableSubscriber extends AbstractOnFlushListener implements EventSubscriber
 {
     /**
-     * @var \Gedmo\Sluggable\SluggableListener
-     */
-    private $gedmoSluggableListener;
-
-    /**
      * @var \Symfony\Component\PropertyAccess\PropertyAccessorInterface
      */
     private $propertyAccessor;
 
     /**
-     * @param \Gedmo\Sluggable\SluggableListener                          $gedmoSluggableListener Gedmo sluggable listener
-     * @param \Symfony\Component\PropertyAccess\PropertyAccessorInterface $propertyAccessor       Property accessor
+     * @var \Gedmo\Sluggable\SluggableListener
      */
-    public function __construct(SluggableListener $gedmoSluggableListener, PropertyAccessorInterface $propertyAccessor)
+    private $sluggableListener;
+
+    /**
+     * @param \Symfony\Component\PropertyAccess\PropertyAccessorInterface $propertyAccessor  Property accessor
+     * @param \Gedmo\Sluggable\SluggableListener                          $sluggableListener Sluggable listener
+     */
+    public function __construct(PropertyAccessorInterface $propertyAccessor, SluggableListener $sluggableListener)
     {
-        $this->gedmoSluggableListener = $gedmoSluggableListener;
         $this->propertyAccessor = $propertyAccessor;
+        $this->sluggableListener = $sluggableListener;
     }
 
     /**
@@ -194,7 +194,7 @@ class SluggableSubscriber extends AbstractOnFlushListener implements EventSubscr
      */
     private function getSlugProperties($entityClass)
     {
-        $configuration = $this->gedmoSluggableListener->getConfiguration($this->em, $entityClass);
+        $configuration = $this->sluggableListener->getConfiguration($this->em, $entityClass);
 
         return isset($configuration['slugs']) ? array_keys($configuration['slugs']) : array();
     }
