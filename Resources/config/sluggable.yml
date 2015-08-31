@@ -17,7 +17,6 @@ services:
         class: %darvin_content.sluggable.subscriber.class%
         arguments:
             - "@property_accessor"
-            - "@darvin_content.sluggable.listener"
         tags:
             - { name: doctrine.event_subscriber }
 

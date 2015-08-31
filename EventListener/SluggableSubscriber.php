@@ -18,7 +18,6 @@ use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
-use Gedmo\Sluggable\SluggableListener;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 /**
@@ -32,18 +31,11 @@ class SluggableSubscriber extends AbstractOnFlushListener implements EventSubscr
     private $propertyAccessor;
 
     /**
-     * @var \Gedmo\Sluggable\SluggableListener
+     * @param \Symfony\Component\PropertyAccess\PropertyAccessorInterface $propertyAccessor Property accessor
      */
-    private $sluggableListener;
-
-    /**
-     * @param \Symfony\Component\PropertyAccess\PropertyAccessorInterface $propertyAccessor  Property accessor
-     * @param \Gedmo\Sluggable\SluggableListener                          $sluggableListener Sluggable listener
-     */
-    public function __construct(PropertyAccessorInterface $propertyAccessor, SluggableListener $sluggableListener)
+    public function __construct(PropertyAccessorInterface $propertyAccessor)
     {
         $this->propertyAccessor = $propertyAccessor;
-        $this->sluggableListener = $sluggableListener;
     }
 
     /**
