@@ -121,6 +121,8 @@ class SluggableSubscriber extends AbstractOnFlushListener implements EventSubscr
 
     /**
      * @param object $entity Entity
+     *
+     * @throws \Darvin\ContentBundle\Sluggable\SluggableException
      */
     private function updateSlugMapItems($entity)
     {
@@ -134,21 +136,22 @@ class SluggableSubscriber extends AbstractOnFlushListener implements EventSubscr
             return;
         }
 
-        $changeSet = $this->uow->getEntityChangeSet($entity);
-
-        foreach ($properties as $key => $property) {
-            if (!isset($changeSet[$property])) {
-                unset($properties[$key]);
-            }
-        }
-        if (empty($properties)) {
-            return;
-        }
-
         $slugMapItems = $this->getSlugMapItems($entityClass, $this->getEntityId($entity, $entityClass), $properties);
 
         foreach ($slugMapItems as $slugMapItem) {
-            $slugMapItem->setSlug($changeSet[$slugMapItem->getProperty()][1]);
+            if (!$this->propertyAccessor->isReadable($entity, $slugMapItem->getProperty())) {
+                throw new SluggableException(
+                    sprintf('Property "%s::$%s" is not readable.', $entityClass, $slugMapItem->getProperty())
+                );
+            }
+
+            $newSlug = $this->propertyAccessor->getValue($entity, $slugMapItem->getProperty());
+
+            if ($newSlug === $slugMapItem->getSlug()) {
+                continue;
+            }
+
+            $slugMapItem->setSlug($newSlug);
 
             $this->recomputeChangeSet($slugMapItem);
         }
