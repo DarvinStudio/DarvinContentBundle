@@ -10,6 +10,9 @@
 
 namespace Darvin\ContentBundle\Traits;
 
+use Darvin\Utils\Mapping\Annotation as Darvin;
+use Gedmo\Mapping\Annotation as Gedmo;
+
 /**
  * Metadata
  */
@@ -22,6 +25,7 @@ trait MetadataTrait
      *
      * @ORM\Column(type="string", unique=true)
      * @Gedmo\Slug(fields={"title"})
+     * @Darvin\Slug
      */
     protected $slug;
 
