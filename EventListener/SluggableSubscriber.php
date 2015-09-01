@@ -13,7 +13,7 @@ namespace Darvin\ContentBundle\EventListener;
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Sluggable\SluggableException;
 use Darvin\Utils\EventListener\AbstractOnFlushListener;
-use Darvin\Utils\Mapping\MetadataFactoryProviderInterface;
+use Darvin\Utils\Mapping\MetadataFactoryInterface;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\Event\LifecycleEventArgs;
@@ -26,9 +26,9 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 class SluggableSubscriber extends AbstractOnFlushListener implements EventSubscriber
 {
     /**
-     * @var \Darvin\Utils\Mapping\MetadataFactoryProviderInterface
+     * @var \Darvin\Utils\Mapping\MetadataFactoryInterface
      */
-    private $metadataFactoryProvider;
+    private $metadataFactory;
 
     /**
      * @var \Symfony\Component\PropertyAccess\PropertyAccessorInterface
@@ -36,14 +36,12 @@ class SluggableSubscriber extends AbstractOnFlushListener implements EventSubscr
     private $propertyAccessor;
 
     /**
-     * @param \Darvin\Utils\Mapping\MetadataFactoryProviderInterface      $metadataFactoryProvider Metadata factory provider
-     * @param \Symfony\Component\PropertyAccess\PropertyAccessorInterface $propertyAccessor        Property accessor
+     * @param \Darvin\Utils\Mapping\MetadataFactoryInterface              $metadataFactory  Metadata factory
+     * @param \Symfony\Component\PropertyAccess\PropertyAccessorInterface $propertyAccessor Property accessor
      */
-    public function __construct(
-        MetadataFactoryProviderInterface $metadataFactoryProvider,
-        PropertyAccessorInterface $propertyAccessor
-    ) {
-        $this->metadataFactoryProvider = $metadataFactoryProvider;
+    public function __construct(MetadataFactoryInterface $metadataFactory, PropertyAccessorInterface $propertyAccessor)
+    {
+        $this->metadataFactory = $metadataFactory;
         $this->propertyAccessor = $propertyAccessor;
     }
 
@@ -87,7 +85,7 @@ class SluggableSubscriber extends AbstractOnFlushListener implements EventSubscr
 
         $entityClass = ClassUtils::getClass($entity);
 
-        $meta = $this->metadataFactoryProvider->getMetadataFactory()->getMetadata($entityClass);
+        $meta = $this->metadataFactory->getMetadata($this->em->getClassMetadata($entityClass));
 
         if (empty($meta['slugs'])) {
             return;
@@ -128,7 +126,7 @@ class SluggableSubscriber extends AbstractOnFlushListener implements EventSubscr
     {
         $entityClass = ClassUtils::getClass($entity);
 
-        $meta = $this->metadataFactoryProvider->getMetadataFactory()->getMetadata($entityClass);
+        $meta = $this->metadataFactory->getMetadata($this->em->getClassMetadata($entityClass));
 
         $properties = $meta['slugs'];
 
