@@ -12,8 +12,8 @@ namespace Darvin\ContentBundle\EventListener;
 
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Sluggable\SluggableException;
-use Darvin\ContentBundle\Sluggable\SluggableInterface;
 use Darvin\Utils\EventListener\AbstractOnFlushListener;
+use Darvin\Utils\Mapping\MetadataFactoryProviderInterface;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\Event\LifecycleEventArgs;
@@ -26,15 +26,24 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 class SluggableSubscriber extends AbstractOnFlushListener implements EventSubscriber
 {
     /**
+     * @var \Darvin\Utils\Mapping\MetadataFactoryProviderInterface
+     */
+    private $metadataFactoryProvider;
+
+    /**
      * @var \Symfony\Component\PropertyAccess\PropertyAccessorInterface
      */
     private $propertyAccessor;
 
     /**
-     * @param \Symfony\Component\PropertyAccess\PropertyAccessorInterface $propertyAccessor Property accessor
+     * @param \Darvin\Utils\Mapping\MetadataFactoryProviderInterface      $metadataFactoryProvider Metadata factory provider
+     * @param \Symfony\Component\PropertyAccess\PropertyAccessorInterface $propertyAccessor        Property accessor
      */
-    public function __construct(PropertyAccessorInterface $propertyAccessor)
-    {
+    public function __construct(
+        MetadataFactoryProviderInterface $metadataFactoryProvider,
+        PropertyAccessorInterface $propertyAccessor
+    ) {
+        $this->metadataFactoryProvider = $metadataFactoryProvider;
         $this->propertyAccessor = $propertyAccessor;
     }
 
@@ -56,9 +65,12 @@ class SluggableSubscriber extends AbstractOnFlushListener implements EventSubscr
     {
         parent::onFlush($args);
 
-        $this
-            ->onDelete(SluggableInterface::INTERFACE_NAME, array($this, 'deleteSlugMapItems'))
-            ->onUpdate(SluggableInterface::INTERFACE_NAME, array($this, 'updateSlugMapItems'));
+        foreach ($this->uow->getScheduledEntityDeletions() as $entity) {
+            $this->deleteSlugMapItems($entity);
+        }
+        foreach ($this->uow->getScheduledEntityUpdates() as $entity) {
+            $this->updateSlugMapItems($entity);
+        }
     }
 
     /**
@@ -73,18 +85,14 @@ class SluggableSubscriber extends AbstractOnFlushListener implements EventSubscr
 
         $entity = $args->getEntity();
 
-        if (!$entity instanceof SluggableInterface) {
-            return;
-        }
-
         $entityClass = ClassUtils::getClass($entity);
 
-        $properties = $entity->getSlugProperties();
+        $meta = $this->metadataFactoryProvider->getMetadataFactory()->getMetadata($entityClass);
 
-        if (empty($properties)) {
+        if (empty($meta['slugs'])) {
             return;
         }
-        foreach ($properties as $property) {
+        foreach ($meta['slugs'] as $property) {
             if (!$this->propertyAccessor->isReadable($entity, $property)) {
                 throw new SluggableException(sprintf('Property "%s::$%s" is not readable.', $entityClass, $property));
             }
@@ -100,9 +108,9 @@ class SluggableSubscriber extends AbstractOnFlushListener implements EventSubscr
     }
 
     /**
-     * @param \Darvin\ContentBundle\Sluggable\SluggableInterface $entity Sluggable entity
+     * @param object $entity Entity
      */
-    protected function deleteSlugMapItems(SluggableInterface $entity)
+    private function deleteSlugMapItems($entity)
     {
         $entityClass = ClassUtils::getClass($entity);
 
@@ -114,13 +122,15 @@ class SluggableSubscriber extends AbstractOnFlushListener implements EventSubscr
     }
 
     /**
-     * @param \Darvin\ContentBundle\Sluggable\SluggableInterface $entity Sluggable entity
+     * @param object $entity Entity
      */
-    protected function updateSlugMapItems(SluggableInterface $entity)
+    private function updateSlugMapItems($entity)
     {
         $entityClass = ClassUtils::getClass($entity);
 
-        $properties = $entity->getSlugProperties();
+        $meta = $this->metadataFactoryProvider->getMetadataFactory()->getMetadata($entityClass);
+
+        $properties = $meta['slugs'];
 
         if (empty($properties)) {
             return;

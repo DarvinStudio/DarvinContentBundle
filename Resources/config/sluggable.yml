@@ -16,6 +16,7 @@ services:
     darvin_content.sluggable.subscriber:
         class: %darvin_content.sluggable.subscriber.class%
         arguments:
+            - "@darvin_utils.mapping.metadata_factory_provider"
             - "@property_accessor"
         tags:
             - { name: doctrine.event_subscriber }
