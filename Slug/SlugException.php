@@ -8,14 +8,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Darvin\ContentBundle\Sluggable;
+namespace Darvin\ContentBundle\Slug;
 
 use Darvin\ContentBundle\Exception\DarvinContentException;
 
 /**
- * Sluggable exception
+ * Slug exception
  */
-class SluggableException extends DarvinContentException
+class SlugException extends DarvinContentException
 {
 
 }

@@ -1,0 +1,11 @@
+parameters:
+    darvin_content.slug.subscriber.class: Darvin\ContentBundle\EventListener\SlugSubscriber
+
+services:
+    darvin_content.slug.subscriber:
+        class: %darvin_content.slug.subscriber.class%
+        arguments:
+            - "@darvin_utils.mapping.metadata_factory"
+            - "@property_accessor"
+        tags:
+            - { name: doctrine.event_subscriber, priority: -30 }

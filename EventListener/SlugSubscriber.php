@@ -11,7 +11,7 @@
 namespace Darvin\ContentBundle\EventListener;
 
 use Darvin\ContentBundle\Entity\SlugMapItem;
-use Darvin\ContentBundle\Sluggable\SluggableException;
+use Darvin\ContentBundle\Slug\SlugException;
 use Darvin\Utils\EventListener\AbstractOnFlushListener;
 use Darvin\Utils\Mapping\MetadataFactoryInterface;
 use Doctrine\Common\EventSubscriber;
@@ -22,9 +22,9 @@ use Doctrine\ORM\Events;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 /**
- * Sluggable event subscriber
+ * Slug event subscriber
  */
-class SluggableSubscriber extends AbstractOnFlushListener implements EventSubscriber
+class SlugSubscriber extends AbstractOnFlushListener implements EventSubscriber
 {
     /**
      * @var \Darvin\Utils\Mapping\MetadataFactoryInterface
@@ -72,7 +72,7 @@ class SluggableSubscriber extends AbstractOnFlushListener implements EventSubscr
     /**
      * @param \Doctrine\ORM\Event\LifecycleEventArgs $args Event arguments
      *
-     * @throws \Darvin\ContentBundle\Sluggable\SluggableException
+     * @throws \Darvin\ContentBundle\Slug\SlugException
      */
     public function postPersist(LifecycleEventArgs $args)
     {
@@ -88,14 +88,14 @@ class SluggableSubscriber extends AbstractOnFlushListener implements EventSubscr
         if (!isset($meta['slugs']) || empty($meta['slugs'])) {
             return;
         }
-        foreach ($meta['slugs'] as $property) {
-            if (!$this->propertyAccessor->isReadable($entity, $property)) {
-                throw new SluggableException(sprintf('Property "%s::$%s" is not readable.', $entityClass, $property));
+        foreach ($meta['slugs'] as $slugProperty => $params) {
+            if (!$this->propertyAccessor->isReadable($entity, $slugProperty)) {
+                throw new SlugException(sprintf('Property "%s::$%s" is not readable.', $entityClass, $slugProperty));
             }
 
-            $slug = $this->propertyAccessor->getValue($entity, $property);
+            $slug = $this->propertyAccessor->getValue($entity, $slugProperty);
 
-            $slugMapItem = new SlugMapItem($slug, $entityClass, $this->getEntityId($entity, $entityClass), $property);
+            $slugMapItem = new SlugMapItem($slug, $entityClass, $this->getEntityId($entity, $entityClass), $slugProperty);
 
             $this->em->persist($slugMapItem);
         }
@@ -120,7 +120,7 @@ class SluggableSubscriber extends AbstractOnFlushListener implements EventSubscr
     /**
      * @param object $entity Entity
      *
-     * @throws \Darvin\ContentBundle\Sluggable\SluggableException
+     * @throws \Darvin\ContentBundle\Slug\SlugException
      */
     protected function updateSlugMapItems($entity)
     {
@@ -128,17 +128,19 @@ class SluggableSubscriber extends AbstractOnFlushListener implements EventSubscr
 
         $meta = $this->metadataFactory->getMetadata($this->em->getClassMetadata($entityClass));
 
-        $properties = $meta['slugs'];
-
-        if (empty($properties)) {
+        if (!isset($meta['slugs']) || empty($meta['slugs'])) {
             return;
         }
 
-        $slugMapItems = $this->getSlugMapItems($entityClass, $this->getEntityId($entity, $entityClass), $properties);
+        $slugMapItems = $this->getSlugMapItems(
+            $entityClass,
+            $this->getEntityId($entity, $entityClass),
+            array_keys($meta['slugs'])
+        );
 
         foreach ($slugMapItems as $slugMapItem) {
             if (!$this->propertyAccessor->isReadable($entity, $slugMapItem->getProperty())) {
-                throw new SluggableException(
+                throw new SlugException(
                     sprintf('Property "%s::$%s" is not readable.', $entityClass, $slugMapItem->getProperty())
                 );
             }
