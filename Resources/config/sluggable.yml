@@ -7,5 +7,5 @@ services:
         arguments:
             - "@darvin_utils.mapping.metadata_factory"
             - "@property_accessor"
-        tags:
-            - { name: doctrine.event_subscriber }
+#        tags:
+#            - { name: doctrine.event_subscriber }
