@@ -11,7 +11,8 @@
 namespace Darvin\ContentBundle\Traits;
 
 use Darvin\Utils\Mapping\Annotation as Darvin;
-use Gedmo\Mapping\Annotation as Gedmo;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Metadata
@@ -24,8 +25,6 @@ trait MetadataTrait
      * @var string
      *
      * @ORM\Column(type="string", unique=true)
-     * @Gedmo\Slug(fields={"title"})
-     * @Darvin\Slug
      */
     protected $slug;
 
