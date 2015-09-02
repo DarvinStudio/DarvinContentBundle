@@ -64,12 +64,9 @@ class SluggableSubscriber extends AbstractOnFlushListener implements EventSubscr
     {
         parent::onFlush($args);
 
-        foreach ($this->uow->getScheduledEntityDeletions() as $entity) {
-            $this->deleteSlugMapItems($entity);
-        }
-        foreach ($this->uow->getScheduledEntityUpdates() as $entity) {
-            $this->updateSlugMapItems($entity);
-        }
+        $this
+            ->onDelete(array($this, 'deleteSlugMapItems'))
+            ->onUpdate(array($this, 'updateSlugMapItems'));
     }
 
     /**
@@ -109,7 +106,7 @@ class SluggableSubscriber extends AbstractOnFlushListener implements EventSubscr
     /**
      * @param object $entity Entity
      */
-    private function deleteSlugMapItems($entity)
+    protected function deleteSlugMapItems($entity)
     {
         $entityClass = ClassUtils::getClass($entity);
 
@@ -125,7 +122,7 @@ class SluggableSubscriber extends AbstractOnFlushListener implements EventSubscr
      *
      * @throws \Darvin\ContentBundle\Sluggable\SluggableException
      */
-    private function updateSlugMapItems($entity)
+    protected function updateSlugMapItems($entity)
     {
         $entityClass = ClassUtils::getClass($entity);
 
