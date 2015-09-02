@@ -10,7 +10,7 @@
 
 namespace Darvin\ContentBundle\Sluggable;
 
-use Darvin\Utils\Strings\Transliterator\TransliteratorInterface;
+use Darvin\Utils\Transliteratable\TransliteratorInterface;
 
 /**
  * Sluggable transliterator
@@ -18,12 +18,12 @@ use Darvin\Utils\Strings\Transliterator\TransliteratorInterface;
 class SluggableTransliterator
 {
     /**
-     * @var \Darvin\Utils\Strings\Transliterator\TransliteratorInterface
+     * @var \Darvin\Utils\Transliteratable\TransliteratorInterface
      */
     private $transliterator;
 
     /**
-     * @param \Darvin\Utils\Strings\Transliterator\TransliteratorInterface $transliterator Transliterator
+     * @param \Darvin\Utils\Transliteratable\TransliteratorInterface $transliterator Transliterator
      */
     public function __construct(TransliteratorInterface $transliterator)
     {
