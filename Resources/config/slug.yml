@@ -1,7 +1,14 @@
 parameters:
+    darvin_content.slug.handler.unique.class: Darvin\ContentBundle\Slug\UniqueSlugHandler
+
     darvin_content.slug.subscriber.class: Darvin\ContentBundle\EventListener\SlugSubscriber
 
 services:
+    darvin_content.slug.handler.unique:
+        class: %darvin_content.slug.handler.unique.class%
+        tags:
+            - { name: darvin_utils.slug_handler }
+
     darvin_content.slug.subscriber:
         class: %darvin_content.slug.subscriber.class%
         arguments:

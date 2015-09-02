@@ -26,12 +26,39 @@ class SlugMapItemRepository extends EntityRepository
      */
     public function getByEntityBuilder($entityClass, $entityId, array $properties = array())
     {
-        $qb = $this->createQueryBuilder('o')
+        $qb = $this->createDefaultQueryBuilder()
             ->andWhere('o.entityClass = :entity_class')
             ->setParameter('entity_class', $entityClass)
             ->andWhere('o.entityId = :entity_id')
             ->setParameter('entity_id', $entityId);
 
         return !empty($properties) ? $qb->andWhere($qb->expr()->in('o.property', $properties)) : $qb;
+    }
+
+    /**
+     * @param string $slug Slug
+     *
+     * @return array
+     */
+    public function getSimilarSlugs($slug)
+    {
+        $rows = $this->createDefaultQueryBuilder()
+            ->select('o.slug')
+            ->andWhere('o.slug LIKE :slug')
+            ->setParameter('slug', $slug.'%')
+            ->getQuery()
+            ->getArrayResult();
+
+        return array_map(function (array $row) {
+            return $row['slug'];
+        }, $rows);
+    }
+
+    /**
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    private function createDefaultQueryBuilder()
+    {
+        return $this->createQueryBuilder('o');
     }
 }
