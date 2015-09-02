@@ -85,7 +85,7 @@ class SluggableSubscriber extends AbstractOnFlushListener implements EventSubscr
 
         $meta = $this->metadataFactory->getMetadata($this->em->getClassMetadata($entityClass));
 
-        if (empty($meta['slugs'])) {
+        if (!isset($meta['slugs']) || empty($meta['slugs'])) {
             return;
         }
         foreach ($meta['slugs'] as $property) {
