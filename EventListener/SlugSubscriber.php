@@ -132,26 +132,23 @@ class SlugSubscriber extends AbstractOnFlushListener implements EventSubscriber
             return;
         }
 
-        $slugMapItems = $this->getSlugMapItems(
-            $entityClass,
-            $this->getEntityId($entity, $entityClass),
-            array_keys($meta['slugs'])
-        );
+        $properties = array_keys($meta['slugs']);
+
+        $changeSet = $this->uow->getEntityChangeSet($entity);
+
+        foreach ($properties as $key => $property) {
+            if (!isset($changeSet[$property])) {
+                unset($properties[$key]);
+            }
+        }
+        if (empty($properties)) {
+            return;
+        }
+
+        $slugMapItems = $this->getSlugMapItems($entityClass, $this->getEntityId($entity, $entityClass), $properties);
 
         foreach ($slugMapItems as $slugMapItem) {
-            if (!$this->propertyAccessor->isReadable($entity, $slugMapItem->getProperty())) {
-                throw new SlugException(
-                    sprintf('Property "%s::$%s" is not readable.', $entityClass, $slugMapItem->getProperty())
-                );
-            }
-
-            $newSlug = $this->propertyAccessor->getValue($entity, $slugMapItem->getProperty());
-
-            if ($newSlug === $slugMapItem->getSlug()) {
-                continue;
-            }
-
-            $slugMapItem->setSlug($newSlug);
+            $slugMapItem->setSlug($changeSet[$slugMapItem->getProperty()][1]);
 
             $this->recomputeChangeSet($slugMapItem);
         }
