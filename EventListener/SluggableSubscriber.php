@@ -18,6 +18,7 @@ use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
+use Doctrine\ORM\Events;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 /**
@@ -51,8 +52,8 @@ class SluggableSubscriber extends AbstractOnFlushListener implements EventSubscr
     public function getSubscribedEvents()
     {
         return array(
-            'onFlush',
-            'postPersist',
+            Events::onFlush,
+            Events::postPersist,
         );
     }
 
