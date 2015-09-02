@@ -54,6 +54,15 @@ trait MetadataTrait
      *
      * @ORM\Column(type="string")
      * @Darvin\DefaultValue(sourcePropertyPath="title")
+     * @Darvin\Transliteratable
+     */
+    protected $slugSuffix;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string")
+     * @Darvin\DefaultValue(sourcePropertyPath="title")
      */
     protected $metaTitle;
 
@@ -169,6 +178,26 @@ trait MetadataTrait
     public function getHeading()
     {
         return $this->heading;
+    }
+
+    /**
+     * @param string $slugSuffix slugSuffix
+     *
+     * @return MetadataTrait
+     */
+    public function setSlugSuffix($slugSuffix)
+    {
+        $this->slugSuffix = $slugSuffix;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSlugSuffix()
+    {
+        return $this->slugSuffix;
     }
 
     /**
