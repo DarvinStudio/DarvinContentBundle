@@ -42,16 +42,21 @@ class SlugMapItemRepository extends EntityRepository
      */
     public function getSimilarSlugs($slug)
     {
-        $rows = $this->createDefaultQueryBuilder()
-            ->select('o.slug')
-            ->andWhere('o.slug LIKE :slug')
-            ->setParameter('slug', $slug.'%')
-            ->getQuery()
-            ->getArrayResult();
-
         return array_map(function (array $row) {
             return $row['slug'];
-        }, $rows);
+        }, $this->getSimilarSlugsBuilder($slug)->select('o.slug')->getQuery()->getArrayResult());
+    }
+
+    /**
+     * @param string $slug Slug
+     *
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function getSimilarSlugsBuilder($slug)
+    {
+        return $this->createDefaultQueryBuilder()
+            ->andWhere('o.slug LIKE :slug')
+            ->setParameter('slug', $slug.'%');
     }
 
     /**

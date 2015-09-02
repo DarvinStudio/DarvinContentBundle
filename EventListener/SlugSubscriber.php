@@ -12,6 +12,7 @@ namespace Darvin\ContentBundle\EventListener;
 
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Slug\SlugException;
+use Darvin\Utils\Event\SlugsUpdateEvent;
 use Darvin\Utils\EventListener\AbstractOnFlushListener;
 use Darvin\Utils\Mapping\MetadataFactoryInterface;
 use Doctrine\Common\EventSubscriber;
@@ -101,6 +102,32 @@ class SlugSubscriber extends AbstractOnFlushListener implements EventSubscriber
         }
 
         $this->em->flush();
+    }
+
+    /**
+     * @param \Darvin\Utils\Event\SlugsUpdateEvent $event Event
+     */
+    public function postSlugsUpdate(SlugsUpdateEvent $event)
+    {
+        $this->em = $event->getEntityManager();
+        $this->uow = $this->em->getUnitOfWork();
+
+        $changeSet = $event->getChangeSet();
+
+        $slugMapItemRepository = $this->getSlugMapItemRepository();
+        $slugMapItems = array();
+
+        foreach ($changeSet as $oldSlug => $newSlug) {
+            $slugMapItems[$oldSlug] = $slugMapItemRepository->getSimilarSlugsBuilder($oldSlug)->getQuery()->getResult();
+        }
+        foreach ($slugMapItems as $oldSlug => $mapItems) {
+            /** @var \Darvin\ContentBundle\Entity\SlugMapItem $mapItem */
+            foreach ($mapItems as $mapItem) {
+                $mapItem->setSlug(preg_replace(sprintf('/^%s/', $oldSlug), $changeSet[$oldSlug], $mapItem->getSlug()));
+
+                $this->recomputeChangeSet($mapItem);
+            }
+        }
     }
 
     /**
