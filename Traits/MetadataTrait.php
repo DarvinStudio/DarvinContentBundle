@@ -19,23 +19,126 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 trait MetadataTrait
 {
-    use BaseMetadataTrait;
+    /**
+     * @var bool
+     *
+     * @ORM\Column(type="boolean")
+     */
+    protected $enabled;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(type="boolean")
+     */
+    protected $hidden;
 
     /**
      * @var string
      *
-     * @ORM\Column(type="string", unique=true)
+     * @ORM\Column(type="string")
+     * @Assert\NotBlank
      */
-    protected $slug;
+    protected $title;
 
     /**
-     * @param string $slug slug
+     * @var string
+     *
+     * @ORM\Column(type="string")
+     * @Darvin\DefaultValue(sourcePropertyPath="title")
+     */
+    protected $heading;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string")
+     * @Darvin\DefaultValue(sourcePropertyPath="title")
+     */
+    protected $metaTitle;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string")
+     * @Darvin\DefaultValue(sourcePropertyPath="title")
+     */
+    protected $metaDescription;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string")
+     * @Darvin\DefaultValue(sourcePropertyPath="title")
+     */
+    protected $metaKeywords;
+
+    /**
+     * @param bool $enabled Is enabled
+     * @param bool $hidden  Is hidden
+     */
+    public function __construct($enabled = true, $hidden = false)
+    {
+        $this->enabled = $enabled;
+        $this->hidden = $hidden;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param boolean $enabled enabled
      *
      * @return MetadataTrait
      */
-    public function setSlug($slug)
+    public function setEnabled($enabled)
     {
-        $this->slug = $slug;
+        $this->enabled = $enabled;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @param boolean $hidden hidden
+     *
+     * @return MetadataTrait
+     */
+    public function setHidden($hidden)
+    {
+        $this->hidden = $hidden;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isHidden()
+    {
+        return $this->hidden;
+    }
+
+    /**
+     * @param string $title title
+     *
+     * @return MetadataTrait
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
 
         return $this;
     }
@@ -43,8 +146,88 @@ trait MetadataTrait
     /**
      * @return string
      */
-    public function getSlug()
+    public function getTitle()
     {
-        return $this->slug;
+        return $this->title;
+    }
+
+    /**
+     * @param string $heading heading
+     *
+     * @return MetadataTrait
+     */
+    public function setHeading($heading)
+    {
+        $this->heading = $heading;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHeading()
+    {
+        return $this->heading;
+    }
+
+    /**
+     * @param string $metaTitle metaTitle
+     *
+     * @return MetadataTrait
+     */
+    public function setMetaTitle($metaTitle)
+    {
+        $this->metaTitle = $metaTitle;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMetaTitle()
+    {
+        return $this->metaTitle;
+    }
+
+    /**
+     * @param string $metaDescription metaDescription
+     *
+     * @return MetadataTrait
+     */
+    public function setMetaDescription($metaDescription)
+    {
+        $this->metaDescription = $metaDescription;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMetaDescription()
+    {
+        return $this->metaDescription;
+    }
+
+    /**
+     * @param string $metaKeywords metaKeywords
+     *
+     * @return MetadataTrait
+     */
+    public function setMetaKeywords($metaKeywords)
+    {
+        $this->metaKeywords = $metaKeywords;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMetaKeywords()
+    {
+        return $this->metaKeywords;
     }
 }
