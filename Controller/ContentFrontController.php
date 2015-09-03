@@ -12,6 +12,7 @@ namespace Darvin\ContentBundle\Controller;
 
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Content front controller
@@ -19,12 +20,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class ContentFrontController extends Controller
 {
     /**
-     * @param string $slug Content slug
+     * @param \Symfony\Component\HttpFoundation\Request $request Request
+     * @param string                                    $slug    Content slug
      *
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public function showAction($slug)
+    public function showAction(Request $request, $slug)
     {
         $slugMapItem = $this->getSlugMapItem($slug);
 
@@ -50,7 +52,7 @@ class ContentFrontController extends Controller
 
         $contentController = $controllerPool->getController($slugMapItem->getEntityClass());
 
-        return $contentController->showAction($content);
+        return $contentController->showAction($request, $content);
     }
 
     /**

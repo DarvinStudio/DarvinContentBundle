@@ -10,17 +10,20 @@
 
 namespace Darvin\ContentBundle\Controller;
 
+use Symfony\Component\HttpFoundation\Request;
+
 /**
  * Content controller
  */
 interface ContentControllerInterface
 {
     /**
-     * @param object $content Content
+     * @param \Symfony\Component\HttpFoundation\Request $request Request
+     * @param object                                    $content Content
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function showAction($content);
+    public function showAction(Request $request, $content);
 
     /**
      * @return string
