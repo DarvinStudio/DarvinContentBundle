@@ -20,7 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class SlugMapItem
 {
-    const CLASS_NAME = __CLASS__;
+    const SLUG_MAP_ITEM_CLASS = __CLASS__;
 
     /**
      * @var int
