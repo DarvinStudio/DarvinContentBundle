@@ -11,16 +11,16 @@
 namespace Darvin\ContentBundle\Command;
 
 use Darvin\ContentBundle\Entity\SlugMapItem;
+use Darvin\Utils\Command\AbstractContainerAwareCommand;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Events;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Rebuild slug map command
  */
-class RebuildSlugMapCommand extends ContainerAwareCommand
+class RebuildSlugMapCommand extends AbstractContainerAwareCommand
 {
     /**
      * {@inheritdoc}
@@ -37,6 +37,8 @@ class RebuildSlugMapCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        parent::execute($input, $output);
+
         $this->truncateSlugMap();
 
         $em = $this->getEntityManager();
@@ -59,7 +61,7 @@ class RebuildSlugMapCommand extends ContainerAwareCommand
             foreach ($entities as $entity) {
                 $em->getEventManager()->dispatchEvent(Events::postPersist, new LifecycleEventArgs($entity, $em));
 
-                $output->writeln($doctrineMeta->getName().' '.implode('', $doctrineMeta->getIdentifierValues($entity)));
+                $this->info($doctrineMeta->getName().' '.implode('', $doctrineMeta->getIdentifierValues($entity)));
             }
         }
     }
