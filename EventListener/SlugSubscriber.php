@@ -116,7 +116,7 @@ class SlugSubscriber extends AbstractOnFlushListener implements EventSubscriber
 
         $slugMapItemUpdateQb = $this->em->createQueryBuilder()
             ->update(SlugMapItem::CLASS_NAME, 'o')
-            ->set('o.slug', 'CONCAT(:new_slug, SUBSTRING(o.slug, :old_slug_length + 1, CHAR_LENGTH(o.slug)))')
+            ->set('o.slug', 'CONCAT(:new_slug, SUBSTRING(o.slug, :old_slug_length + 1, LENGTH(o.slug)))')
             ->where('SUBSTRING(o.slug, 1, :old_slug_length) = :old_slug');
 
         $entitiesToUpdate = array();
@@ -143,7 +143,7 @@ class SlugSubscriber extends AbstractOnFlushListener implements EventSubscriber
                     ->update($entityClass, 'o')
                     ->set(
                         'o.'.$property,
-                        sprintf('CONCAT(:new_slug, SUBSTRING(o.%s, :old_slug_length + 1, CHAR_LENGTH(o.%1$s)))', $property)
+                        sprintf('CONCAT(:new_slug, SUBSTRING(o.%s, :old_slug_length + 1, LENGTH(o.%1$s)))', $property)
                     )
                     ->where(sprintf('SUBSTRING(o.%s, 1, :old_slug_length) = :old_slug', $property))
                     ->setParameter('new_slug', $slugs[1])
