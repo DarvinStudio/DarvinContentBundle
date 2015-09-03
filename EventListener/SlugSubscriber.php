@@ -115,17 +115,37 @@ class SlugSubscriber extends AbstractOnFlushListener implements EventSubscriber
         $changeSet = $event->getChangeSet();
 
         $slugMapItemRepository = $this->getSlugMapItemRepository();
-        $slugMapItems = array();
+
+        $slugMapItemUpdateQb = $this->em->createQueryBuilder()
+            ->update(SlugMapItem::CLASS_NAME, 'o')
+            ->set('o.slug', 'REPLACE(o.slug, :old_slug, :new_slug)');
+
+        $entitiesToUpdate = array();
 
         foreach ($changeSet as $oldSlug => $newSlug) {
-            $slugMapItems[$oldSlug] = $slugMapItemRepository->getSimilarSlugsBuilder($oldSlug)->getQuery()->getResult();
-        }
-        foreach ($slugMapItems as $oldSlug => $mapItems) {
-            /** @var \Darvin\ContentBundle\Entity\SlugMapItem $mapItem */
-            foreach ($mapItems as $mapItem) {
-                $mapItem->setSlug(preg_replace(sprintf('/^%s/', $oldSlug), $changeSet[$oldSlug], $mapItem->getSlug()));
+            foreach ($slugMapItemRepository->getSimilarSlugsBuilder($oldSlug)->getQuery()->getArrayResult() as $slugMapItem) {
+                if (!isset($entitiesToUpdate[$slugMapItem['entityClass']])) {
+                    $entitiesToUpdate[$slugMapItem['entityClass']] = array();
+                }
 
-                $this->recomputeChangeSet($mapItem);
+                $entitiesToUpdate[$slugMapItem['entityClass']][$slugMapItem['property']] = array($oldSlug, $newSlug);
+            }
+
+            $slugMapItemUpdateQb
+                ->setParameter('old_slug', $oldSlug)
+                ->setParameter('new_slug', $newSlug)
+                ->getQuery()
+                ->execute();
+        }
+        foreach ($entitiesToUpdate as $entityClass => $properties) {
+            foreach ($properties as $property => $slugs) {
+                $this->em->createQueryBuilder()
+                    ->update($entityClass, 'o')
+                    ->set('o.'.$property, sprintf('REPLACE(o.%s, :old_slug, :new_slug)', $property))
+                    ->setParameter('old_slug', $slugs[0])
+                    ->setParameter('new_slug', $slugs[1])
+                    ->getQuery()
+                    ->execute();
             }
         }
     }
