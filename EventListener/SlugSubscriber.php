@@ -77,8 +77,7 @@ class SlugSubscriber extends AbstractOnFlushListener implements EventSubscriber
      */
     public function postPersist(LifecycleEventArgs $args)
     {
-        $this->em = $args->getEntityManager();
-        $this->uow = $this->em->getUnitOfWork();
+        $this->init($args->getEntityManager(), $args->getEntityManager()->getUnitOfWork());
 
         $entity = $args->getEntity();
 
@@ -109,8 +108,7 @@ class SlugSubscriber extends AbstractOnFlushListener implements EventSubscriber
      */
     public function postSlugsUpdate(SlugsUpdateEvent $event)
     {
-        $this->em = $event->getEntityManager();
-        $this->uow = $this->em->getUnitOfWork();
+        $this->init($event->getEntityManager(), $event->getEntityManager()->getUnitOfWork());
 
         $changeSet = $event->getChangeSet();
 
