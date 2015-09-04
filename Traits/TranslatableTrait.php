@@ -20,9 +20,41 @@ trait TranslatableTrait
     use Translatable;
 
     /**
+     * @param string $property Property name
+     * @param mixed  $value    Property value
+     *
+     * @return mixed
+     */
+    public function __set($property, $value)
+    {
+        return $this->proxyCurrentLocaleTranslation('set'.ucfirst($property), array($value));
+    }
+
+    /**
+     * @param string $property Property name
+     *
+     * @return mixed
+     */
+    public function __get($property)
+    {
+        return $this->proxyCurrentLocaleTranslation('get'.ucfirst($property));
+    }
+
+    /**
+     * @param string $method Method name
+     * @param array  $args   Method arguments
+     *
+     * @return mixed
+     */
+    public function __call($method, array $args)
+    {
+        return $this->proxyCurrentLocaleTranslation($method, $args);
+    }
+
+    /**
      * {@inheritdoc}
      */
-    protected function proxyCurrentLocaleTranslation($method, array $arguments = [])
+    protected function proxyCurrentLocaleTranslation($method, array $arguments = array())
     {
         $translation = $this->translate($this->getCurrentLocale());
 
