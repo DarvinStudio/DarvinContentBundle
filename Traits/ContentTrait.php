@@ -23,46 +23,10 @@ trait ContentTrait
      * @var string
      *
      * @ORM\Column(type="string")
-     * @Assert\NotBlank
-     */
-    protected $name;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string")
-     * @Darvin\DefaultValue(sourcePropertyPath="name")
+     * @Darvin\DefaultValue(sourcePropertyPath="title")
      * @Darvin\Transliteratable
      */
     protected $slugSuffix;
-
-    /**
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @param string $name name
-     *
-     * @return ContentTrait
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
 
     /**
      * @param string $slugSuffix slugSuffix
