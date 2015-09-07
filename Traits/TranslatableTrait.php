@@ -58,6 +58,9 @@ trait TranslatableTrait
     {
         $translation = $this->translate($this->getCurrentLocale());
 
+        if (!method_exists($translation, $method) && !preg_match('/^(get|is)/', $method)) {
+            $method = 'get'.ucfirst($method);
+        }
         if (!method_exists($translation, $method) && 0 === strpos($method, 'get')) {
             $method = substr_replace($method, 'is', 0, 3);
         }
