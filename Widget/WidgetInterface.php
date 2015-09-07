@@ -24,4 +24,9 @@ interface WidgetInterface
      * @return string
      */
     public function getPlaceholder();
+
+    /**
+     * @return string
+     */
+    public function getName();
 }
