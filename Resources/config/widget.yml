@@ -1,8 +1,22 @@
 parameters:
+    darvin_content.widget.embedder.class: Darvin\ContentBundle\Widget\WidgetEmbedder
+
+    darvin_content.widget.pool.class: Darvin\ContentBundle\Widget\WidgetPool
+
     darvin_content.widget.twig_extension.class: Darvin\ContentBundle\Twig\Extension\WidgetExtension
 
 services:
+    darvin_content.widget.embedder:
+        class: %darvin_content.widget.embedder.class%
+        arguments:
+            - "@darvin_content.widget.pool"
+
+    darvin_content.widget.pool:
+        class: %darvin_content.widget.pool.class%
+
     darvin_content.widget.twig_extension:
         class: %darvin_content.widget.twig_extension.class%
+        arguments:
+            - "@darvin_content.widget.embedder"
         tags:
             - { name: twig.extension }

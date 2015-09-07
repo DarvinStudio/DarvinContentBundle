@@ -10,8 +10,7 @@
 
 namespace Darvin\ContentBundle\Twig\Extension;
 
-use Darvin\ContentBundle\Widget\WidgetException;
-use Darvin\ContentBundle\Widget\WidgetInterface;
+use Darvin\ContentBundle\Widget\WidgetEmbedderInterface;
 
 /**
  * Widget Twig extension
@@ -19,38 +18,16 @@ use Darvin\ContentBundle\Widget\WidgetInterface;
 class WidgetExtension extends \Twig_Extension
 {
     /**
-     * @var \Darvin\ContentBundle\Widget\WidgetInterface[]
+     * @var \Darvin\ContentBundle\Widget\WidgetEmbedderInterface
      */
-    private $widgets;
+    private $widgetEmbedder;
 
     /**
-     * @var string
+     * @param \Darvin\ContentBundle\Widget\WidgetEmbedderInterface $widgetEmbedder Widget embedder
      */
-    private $widgetContents;
-
-    /**
-     * Constructor
-     */
-    public function __construct()
+    public function __construct(WidgetEmbedderInterface $widgetEmbedder)
     {
-        $this->widgets = array();
-        $this->widgetContents = array();
-    }
-
-    /**
-     * @param \Darvin\ContentBundle\Widget\WidgetInterface $widget Widget
-     *
-     * @throws \Darvin\ContentBundle\Widget\WidgetException
-     */
-    public function addWidget(WidgetInterface $widget)
-    {
-        $placeholder = $widget->getPlaceholder();
-
-        if (isset($this->widgets[$placeholder])) {
-            throw new WidgetException(sprintf('Widget with placeholder "%s" already added.', $placeholder));
-        }
-
-        $this->widgets[$placeholder] = $widget;
+        $this->widgetEmbedder = $widgetEmbedder;
     }
 
     /**
@@ -59,34 +36,8 @@ class WidgetExtension extends \Twig_Extension
     public function getFilters()
     {
         return array(
-            new \Twig_SimpleFilter('darvin_content_embed_widgets', array($this, 'embedWidgets'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFilter('darvin_content_embed_widgets', array($this->widgetEmbedder, 'embed'), array('is_safe' => array('html'))),
         );
-    }
-
-    /**
-     * @param string $content Content
-     *
-     * @return string
-     */
-    public function embedWidgets($content)
-    {
-        if (empty($content)) {
-            return $content;
-        }
-        foreach ($this->widgets as $placeholder => $widget) {
-            if (false === strpos($content, $placeholder)) {
-                continue;
-            }
-
-            $widgetContent = isset($this->widgetContents[$placeholder])
-                ? $this->widgetContents[$placeholder]
-                : $widget->getContent();
-            $this->widgetContents[$placeholder] = $widgetContent;
-
-            $content = str_replace($placeholder, $widgetContent, $content);
-        }
-
-        return $content;
     }
 
     /**

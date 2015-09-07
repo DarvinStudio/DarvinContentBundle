@@ -26,10 +26,10 @@ class WidgetPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $widgetTwigExtension = $container->getDefinition('darvin_content.widget.twig_extension');
+        $pool = $container->getDefinition('darvin_content.widget.pool');
 
         foreach ($container->findTaggedServiceIds(self::TAG_WIDGET) as $id => $attr) {
-            $widgetTwigExtension->addMethodCall('addWidget', array(
+            $pool->addMethodCall('add', array(
                 new Reference($id),
             ));
         }
