@@ -33,6 +33,7 @@ class DarvinContentExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('controller.yml');
         $loader->load('slug.yml');
+        $loader->load('widget.yml');
 
         $container->setParameter(
             'knp.doctrine_behaviors.translatable_subscriber.translatable_trait',
