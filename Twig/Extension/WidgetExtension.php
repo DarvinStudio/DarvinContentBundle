@@ -36,7 +36,7 @@ class WidgetExtension extends \Twig_Extension
     public function getFilters()
     {
         return array(
-            new \Twig_SimpleFilter('darvin_content_embed_widgets', array($this->widgetEmbedder, 'embed'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFilter('content_embed_widgets', array($this->widgetEmbedder, 'embed'), array('is_safe' => array('html'))),
         );
     }
 
