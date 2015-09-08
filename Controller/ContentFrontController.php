@@ -79,7 +79,7 @@ class ContentFrontController extends Controller
      */
     private function getContentControllerPool()
     {
-        return $this->container->get('darvin_content.controller.pool');
+        return $this->get('darvin_content.controller.pool');
     }
 
     /**
