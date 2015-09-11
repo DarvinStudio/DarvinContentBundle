@@ -12,6 +12,7 @@ namespace Darvin\ContentBundle\Traits;
 
 use Darvin\Utils\Mapping\Annotation as Darvin;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -23,6 +24,7 @@ trait MetadataTrait
      * @var bool
      *
      * @ORM\Column(type="boolean")
+     * @Gedmo\Versioned
      */
     protected $enabled;
 
@@ -30,6 +32,7 @@ trait MetadataTrait
      * @var bool
      *
      * @ORM\Column(type="boolean")
+     * @Gedmo\Versioned
      */
     protected $hidden;
 
@@ -38,6 +41,7 @@ trait MetadataTrait
      *
      * @ORM\Column(type="string")
      * @Assert\NotBlank
+     * @Gedmo\Versioned
      */
     protected $title;
 
@@ -46,6 +50,7 @@ trait MetadataTrait
      *
      * @ORM\Column(type="string")
      * @Darvin\DefaultValue(sourcePropertyPath="title")
+     * @Gedmo\Versioned
      */
     protected $heading;
 
@@ -54,6 +59,7 @@ trait MetadataTrait
      *
      * @ORM\Column(type="string")
      * @Darvin\DefaultValue(sourcePropertyPath="title")
+     * @Gedmo\Versioned
      */
     protected $metaTitle;
 
@@ -62,6 +68,7 @@ trait MetadataTrait
      *
      * @ORM\Column(type="string")
      * @Darvin\DefaultValue(sourcePropertyPath="title")
+     * @Gedmo\Versioned
      */
     protected $metaDescription;
 
@@ -70,6 +77,7 @@ trait MetadataTrait
      *
      * @ORM\Column(type="string")
      * @Darvin\DefaultValue(sourcePropertyPath="title")
+     * @Gedmo\Versioned
      */
     protected $metaKeywords;
 
