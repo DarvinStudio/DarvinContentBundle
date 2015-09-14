@@ -15,7 +15,8 @@ services:
         class: %darvin_content.widget.pool.class%
 
     darvin_content.widget.twig_extension:
-        class: %darvin_content.widget.twig_extension.class%
+        class:  %darvin_content.widget.twig_extension.class%
+        public: false
         arguments:
             - "@darvin_content.widget.embedder"
         tags:
