@@ -18,9 +18,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Rebuild slug map command
+ * Slug map rebuild command
  */
-class RebuildSlugMapCommand extends AbstractContainerAwareCommand
+class SlugMapRebuildCommand extends AbstractContainerAwareCommand
 {
     /**
      * {@inheritdoc}
@@ -28,7 +28,7 @@ class RebuildSlugMapCommand extends AbstractContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('darvin:content:rebuild-slug-map')
+            ->setName('darvin:content:slug-map:rebuild')
             ->setDescription('Rebuilds slug map.');
     }
 
