@@ -11,7 +11,7 @@
 namespace Darvin\ContentBundle\EventListener;
 
 use Darvin\ContentBundle\Entity\SlugMapItem;
-use Darvin\ContentBundle\Slug\SlugException;
+use Darvin\ContentBundle\Slug\SlugMapItemFactory;
 use Darvin\Utils\Event\SlugsUpdateEvent;
 use Darvin\Utils\EventListener\AbstractOnFlushListener;
 use Darvin\Utils\Mapping\MetadataFactoryInterface;
@@ -38,13 +38,23 @@ class SlugSubscriber extends AbstractOnFlushListener implements EventSubscriber
     private $propertyAccessor;
 
     /**
-     * @param \Darvin\Utils\Mapping\MetadataFactoryInterface              $metadataFactory  Metadata factory
-     * @param \Symfony\Component\PropertyAccess\PropertyAccessorInterface $propertyAccessor Property accessor
+     * @var \Darvin\ContentBundle\Slug\SlugMapItemFactory
      */
-    public function __construct(MetadataFactoryInterface $metadataFactory, PropertyAccessorInterface $propertyAccessor)
-    {
+    private $slugMapItemFactory;
+
+    /**
+     * @param \Darvin\Utils\Mapping\MetadataFactoryInterface              $metadataFactory    Metadata factory
+     * @param \Symfony\Component\PropertyAccess\PropertyAccessorInterface $propertyAccessor   Property accessor
+     * @param \Darvin\ContentBundle\Slug\SlugMapItemFactory               $slugMapItemFactory Slug map item factory
+     */
+    public function __construct(
+        MetadataFactoryInterface $metadataFactory,
+        PropertyAccessorInterface $propertyAccessor,
+        SlugMapItemFactory $slugMapItemFactory
+    ) {
         $this->metadataFactory = $metadataFactory;
         $this->propertyAccessor = $propertyAccessor;
+        $this->slugMapItemFactory = $slugMapItemFactory;
     }
 
     /**
@@ -83,20 +93,14 @@ class SlugSubscriber extends AbstractOnFlushListener implements EventSubscriber
 
         $entityClass = ClassUtils::getClass($entity);
 
-        $meta = $this->metadataFactory->getMetadata($this->em->getClassMetadata($entityClass));
+        $doctrineMeta = $this->em->getClassMetadata($entityClass);
+
+        $meta = $this->metadataFactory->getMetadata($doctrineMeta);
 
         if (!isset($meta['slugs']) || empty($meta['slugs'])) {
             return;
         }
-        foreach ($meta['slugs'] as $slugProperty => $params) {
-            if (!$this->propertyAccessor->isReadable($entity, $slugProperty)) {
-                throw new SlugException(sprintf('Property "%s::$%s" is not readable.', $entityClass, $slugProperty));
-            }
-
-            $slug = $this->propertyAccessor->getValue($entity, $slugProperty);
-
-            $slugMapItem = new SlugMapItem($slug, $entityClass, $this->getEntityId($entity, $entityClass), $slugProperty);
-
+        foreach ($this->slugMapItemFactory->createItems($entity, $meta['slugs'], $doctrineMeta) as $slugMapItem) {
             $this->em->persist($slugMapItem);
         }
 

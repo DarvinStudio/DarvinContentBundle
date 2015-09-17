@@ -12,8 +12,6 @@ namespace Darvin\ContentBundle\Command;
 
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\Utils\Command\AbstractContainerAwareCommand;
-use Doctrine\ORM\Event\LifecycleEventArgs;
-use Doctrine\ORM\Events;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -43,6 +41,7 @@ class SlugMapRebuildCommand extends AbstractContainerAwareCommand
 
         $em = $this->getEntityManager();
         $darvinMetadataFactory = $this->getDarvinMetadataFactory();
+        $slugMapItemFactory = $this->getSlugMapItemFactory();
 
         /** @var \Doctrine\ORM\Mapping\ClassMetadataInfo $doctrineMeta */
         foreach ($em->getMetadataFactory()->getAllMetadata() as $doctrineMeta) {
@@ -59,11 +58,15 @@ class SlugMapRebuildCommand extends AbstractContainerAwareCommand
             $entities = $em->getRepository($doctrineMeta->getName())->findAll();
 
             foreach ($entities as $entity) {
-                $em->getEventManager()->dispatchEvent(Events::postPersist, new LifecycleEventArgs($entity, $em));
+                foreach ($slugMapItemFactory->createItems($entity, $darvinMeta['slugs'], $doctrineMeta) as $slugMapItem) {
+                    $em->persist($slugMapItem);
+                }
 
                 $this->info($doctrineMeta->getName().' '.implode('', $doctrineMeta->getIdentifierValues($entity)));
             }
         }
+
+        $em->flush();
     }
 
     private function truncateSlugMap()
@@ -90,5 +93,13 @@ class SlugMapRebuildCommand extends AbstractContainerAwareCommand
     private function getEntityManager()
     {
         return $this->getContainer()->get('doctrine.orm.entity_manager');
+    }
+
+    /**
+     * @return \Darvin\ContentBundle\Slug\SlugMapItemFactory
+     */
+    private function getSlugMapItemFactory()
+    {
+        return $this->getContainer()->get('darvin_content.slug.map_item_factory');
     }
 }
