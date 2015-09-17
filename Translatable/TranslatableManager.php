@@ -11,7 +11,7 @@
 namespace Darvin\ContentBundle\Translatable;
 
 use Doctrine\Common\Persistence\Mapping\MappingException;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManager;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 /**
@@ -25,9 +25,14 @@ class TranslatableManager implements TranslatableManagerInterface
     private $classAnalyzer;
 
     /**
-     * @var \Doctrine\Common\Persistence\ObjectManager
+     * @var \Doctrine\ORM\EntityManager
      */
-    private $om;
+    private $em;
+
+    /**
+     * @var string
+     */
+    private $getTranslationEntityClassMethod;
 
     /**
      * @var bool
@@ -40,6 +45,16 @@ class TranslatableManager implements TranslatableManagerInterface
     private $translatableTrait;
 
     /**
+     * @var string
+     */
+    private $translationLocaleProperty;
+
+    /**
+     * @var string
+     */
+    private $translationsProperty;
+
+    /**
      * @var array
      */
     private $checkedObjectClasses;
@@ -50,17 +65,30 @@ class TranslatableManager implements TranslatableManagerInterface
     private $translationClasses;
 
     /**
-     * @param \Knp\DoctrineBehaviors\Reflection\ClassAnalyzer $classAnalyzer         Class analyzer
-     * @param \Doctrine\Common\Persistence\ObjectManager      $om                    Object manager
-     * @param bool                                            $isReflectionRecursive Is reflection recursive
-     * @param string                                          $translatableTrait     Translatable trait
+     * @param \Knp\DoctrineBehaviors\Reflection\ClassAnalyzer $classAnalyzer                   Class analyzer
+     * @param \Doctrine\ORM\EntityManager                     $em                              Entity manager
+     * @param string                                          $getTranslationEntityClassMethod Get translation entity class method name
+     * @param bool                                            $isReflectionRecursive           Is reflection recursive
+     * @param string                                          $translatableTrait               Translatable trait
+     * @param string                                          $translationLocaleProperty       Translation locale property name
+     * @param string                                          $translationsProperty            Translations property name
      */
-    public function __construct(ClassAnalyzer $classAnalyzer, ObjectManager $om, $isReflectionRecursive, $translatableTrait)
-    {
+    public function __construct(
+        ClassAnalyzer $classAnalyzer,
+        EntityManager $em,
+        $getTranslationEntityClassMethod,
+        $isReflectionRecursive,
+        $translatableTrait,
+        $translationLocaleProperty,
+        $translationsProperty
+    ) {
         $this->classAnalyzer = $classAnalyzer;
-        $this->om = $om;
+        $this->em = $em;
+        $this->getTranslationEntityClassMethod = $getTranslationEntityClassMethod;
         $this->isReflectionRecursive = $isReflectionRecursive;
         $this->translatableTrait = $translatableTrait;
+        $this->translationLocaleProperty = $translationLocaleProperty;
+        $this->translationsProperty = $translationsProperty;
         $this->checkedObjectClasses = array();
         $this->translationClasses = array();
     }
@@ -68,47 +96,63 @@ class TranslatableManager implements TranslatableManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getTranslationClass($objectClass)
+    public function getTranslationClass($entityClass)
     {
-        if (!isset($this->translationClasses[$objectClass])) {
-            if (!$this->isTranslatable($objectClass)) {
-                throw new TranslatableException(sprintf('Class "%s" is not translatable.', $objectClass));
+        if (!isset($this->translationClasses[$entityClass])) {
+            if (!$this->isTranslatable($entityClass)) {
+                throw new TranslatableException(sprintf('Class "%s" is not translatable.', $entityClass));
             }
 
-            $this->translationClasses[$objectClass] = call_user_func(array($objectClass, 'getTranslationEntityClass'));
+            $this->translationClasses[$entityClass] = call_user_func(array($entityClass, $this->getTranslationEntityClassMethod));
         }
 
-        return $this->translationClasses[$objectClass];
+        return $this->translationClasses[$entityClass];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function isTranslatable($objectClass)
+    public function isTranslatable($entityClass)
     {
-        if (!isset($this->checkedObjectClasses[$objectClass])) {
-            $this->checkedObjectClasses[$objectClass] = $this->classAnalyzer->hasTrait(
-                $this->getDoctrineMetadata($objectClass)->getReflectionClass(),
+        if (!isset($this->checkedObjectClasses[$entityClass])) {
+            $this->checkedObjectClasses[$entityClass] = $this->classAnalyzer->hasTrait(
+                $this->getDoctrineMetadata($entityClass)->getReflectionClass(),
                 $this->translatableTrait,
                 $this->isReflectionRecursive
             );
         }
 
-        return $this->checkedObjectClasses[$objectClass];
+        return $this->checkedObjectClasses[$entityClass];
     }
 
     /**
-     * @param string $objectClass Object class
+     * {@inheritdoc}
+     */
+    public function getTranslationLocaleProperty()
+    {
+        return $this->translationLocaleProperty;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTranslationsProperty()
+    {
+        return $this->translationsProperty;
+    }
+
+    /**
+     * @param string $entityClass Entity class
      *
-     * @return \Doctrine\Common\Persistence\Mapping\ClassMetadata
+     * @return \Doctrine\ORM\Mapping\ClassMetadataInfo
      * @throws \Darvin\ContentBundle\Translatable\TranslatableException
      */
-    private function getDoctrineMetadata($objectClass)
+    private function getDoctrineMetadata($entityClass)
     {
         try {
-            return $this->om->getClassMetadata($objectClass);
+            return $this->em->getClassMetadata($entityClass);
         } catch (MappingException $ex) {
-            throw new TranslatableException(sprintf('Unable to get Doctrine metadata for class "%s".', $objectClass));
+            throw new TranslatableException(sprintf('Unable to get Doctrine metadata for class "%s".', $entityClass));
         }
     }
 }

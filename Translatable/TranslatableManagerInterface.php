@@ -16,16 +16,26 @@ namespace Darvin\ContentBundle\Translatable;
 interface TranslatableManagerInterface
 {
     /**
-     * @param string $objectClass Object class
+     * @param string $entityClass Entity class
      *
      * @return string
      */
-    public function getTranslationClass($objectClass);
+    public function getTranslationClass($entityClass);
 
     /**
-     * @param string $objectClass Object class
+     * @param string $entityClass Entity class
      *
      * @return bool
      */
-    public function isTranslatable($objectClass);
+    public function isTranslatable($entityClass);
+
+    /**
+     * @return string
+     */
+    public function getTranslationLocaleProperty();
+
+    /**
+     * @return string
+     */
+    public function getTranslationsProperty();
 }

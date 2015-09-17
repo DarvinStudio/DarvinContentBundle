@@ -1,5 +1,10 @@
 parameters:
-    darvin_content.translatable.manager.class: Darvin\ContentBundle\Translatable\TranslatableManager
+    darvin_content.translatable.manager.class:                               Darvin\ContentBundle\Translatable\TranslatableManager
+    darvin_content.translatable.manager.get_translation_entity_class_method: getTranslationEntityClass
+    darvin_content.translatable.manager.translation_locale_property:         locale
+    darvin_content.translatable.manager.translations_property:               translations
+
+    darvin_content.translatable.translation_joiner.class: Darvin\ContentBundle\Translatable\TranslationJoiner
 
 services:
     darvin_content.translatable.manager:
@@ -7,5 +12,13 @@ services:
         arguments:
             - "@knp.doctrine_behaviors.reflection.class_analyzer"
             - "@doctrine.orm.entity_manager"
+            - %darvin_content.translatable.manager.get_translation_entity_class_method%
             - %knp.doctrine_behaviors.reflection.is_recursive%
             - %knp.doctrine_behaviors.translatable_subscriber.translatable_trait%
+            - %darvin_content.translatable.manager.translation_locale_property%
+            - %darvin_content.translatable.manager.translations_property%
+
+    darvin_content.translatable.translation_joiner:
+        class: %darvin_content.translatable.translation_joiner.class%
+        arguments:
+            - "@darvin_content.translatable.manager"
