@@ -10,8 +10,8 @@
 
 namespace Darvin\ContentBundle;
 
-use Darvin\ContentBundle\DependencyInjection\Compiler\ContentControllerPoolPass;
-use Darvin\ContentBundle\DependencyInjection\Compiler\WidgetPass;
+use Darvin\ContentBundle\DependencyInjection\Compiler\AddContentControllersPass;
+use Darvin\ContentBundle\DependencyInjection\Compiler\AddWidgetsPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -26,7 +26,7 @@ class DarvinContentBundle extends Bundle
     public function build(ContainerBuilder $container)
     {
         $container
-            ->addCompilerPass(new ContentControllerPoolPass())
-            ->addCompilerPass(new WidgetPass());
+            ->addCompilerPass(new AddContentControllersPass())
+            ->addCompilerPass(new AddWidgetsPass());
     }
 }

@@ -10,14 +10,15 @@
 
 namespace Darvin\ContentBundle\DependencyInjection\Compiler;
 
+use Darvin\Utils\DependencyInjection\TaggedServiceIdsSorter;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Widget compiler pass
+ * Add widgets compiler pass
  */
-class WidgetPass implements CompilerPassInterface
+class AddWidgetsPass implements CompilerPassInterface
 {
     const TAG_WIDGET = 'darvin_content.widget';
 
@@ -26,10 +27,19 @@ class WidgetPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $pool = $container->getDefinition('darvin_content.widget.pool');
+        $widgetIds = $container->findTaggedServiceIds(self::TAG_WIDGET);
 
-        foreach ($container->findTaggedServiceIds(self::TAG_WIDGET) as $id => $attr) {
-            $pool->addMethodCall('add', array(
+        if (empty($widgetIds)) {
+            return;
+        }
+
+        $taggedServiceIdsSorter = new TaggedServiceIdsSorter();
+        $taggedServiceIdsSorter->sort($widgetIds);
+
+        $poolDefinition = $container->getDefinition('darvin_content.widget.pool');
+
+        foreach ($widgetIds as $id => $attr) {
+            $poolDefinition->addMethodCall('add', array(
                 new Reference($id),
             ));
         }

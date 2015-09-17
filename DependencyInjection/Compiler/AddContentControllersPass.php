@@ -15,21 +15,27 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Content controller pool compiler pass
+ * Add content controllers compiler pass
  */
-class ContentControllerPoolPass implements CompilerPassInterface
+class AddContentControllersPass implements CompilerPassInterface
 {
-    const TAG_CONTENT_CONTROLLER = 'darvin_content.controller';
+    const TAG_CONTROLLER = 'darvin_content.controller';
 
     /**
      * {@inheritdoc}
      */
     public function process(ContainerBuilder $container)
     {
-        $pool = $container->getDefinition('darvin_content.controller.pool');
+        $controllerIds = $container->findTaggedServiceIds(self::TAG_CONTROLLER);
 
-        foreach ($container->findTaggedServiceIds(self::TAG_CONTENT_CONTROLLER) as $id => $attr) {
-            $pool->addMethodCall('add', array(
+        if (empty($controllerIds)) {
+            return;
+        }
+
+        $poolDefinition = $container->getDefinition('darvin_content.controller.pool');
+
+        foreach ($controllerIds as $id => $attr) {
+            $poolDefinition->addMethodCall('add', array(
                 new Reference($id),
             ));
         }
