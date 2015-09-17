@@ -20,6 +20,8 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class AddWidgetsPass implements CompilerPassInterface
 {
+    const POOL_ID = 'darvin_content.widget.pool';
+
     const TAG_WIDGET = 'darvin_content.widget';
 
     /**
@@ -27,6 +29,10 @@ class AddWidgetsPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
+        if (!$container->hasDefinition(self::POOL_ID)) {
+            return;
+        }
+
         $widgetIds = $container->findTaggedServiceIds(self::TAG_WIDGET);
 
         if (empty($widgetIds)) {
@@ -36,7 +42,7 @@ class AddWidgetsPass implements CompilerPassInterface
         $taggedServiceIdsSorter = new TaggedServiceIdsSorter();
         $taggedServiceIdsSorter->sort($widgetIds);
 
-        $poolDefinition = $container->getDefinition('darvin_content.widget.pool');
+        $poolDefinition = $container->getDefinition(self::POOL_ID);
 
         foreach ($widgetIds as $id => $attr) {
             $poolDefinition->addMethodCall('add', array(

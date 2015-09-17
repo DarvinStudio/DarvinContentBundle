@@ -19,20 +19,26 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class AddContentControllersPass implements CompilerPassInterface
 {
-    const TAG_CONTROLLER = 'darvin_content.controller';
+    const POOL_ID = 'darvin_content.controller.pool';
+
+    const TAG_CONTENT_CONTROLLER = 'darvin_content.controller';
 
     /**
      * {@inheritdoc}
      */
     public function process(ContainerBuilder $container)
     {
-        $controllerIds = $container->findTaggedServiceIds(self::TAG_CONTROLLER);
+        if (!$container->hasDefinition(self::POOL_ID)) {
+            return;
+        }
+
+        $controllerIds = $container->findTaggedServiceIds(self::TAG_CONTENT_CONTROLLER);
 
         if (empty($controllerIds)) {
             return;
         }
 
-        $poolDefinition = $container->getDefinition('darvin_content.controller.pool');
+        $poolDefinition = $container->getDefinition(self::POOL_ID);
 
         foreach ($controllerIds as $id => $attr) {
             $poolDefinition->addMethodCall('add', array(
