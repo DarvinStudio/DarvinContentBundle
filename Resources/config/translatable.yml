@@ -1,0 +1,11 @@
+parameters:
+    darvin_content.translatable.manager.class: Darvin\ContentBundle\Translatable\TranslatableManager
+
+services:
+    darvin_content.translatable.manager:
+        class: %darvin_content.translatable.manager.class%
+        arguments:
+            - "@knp.doctrine_behaviors.reflection.class_analyzer"
+            - "@doctrine.orm.entity_manager"
+            - %knp.doctrine_behaviors.reflection.is_recursive%
+            - %knp.doctrine_behaviors.translatable_subscriber.translatable_trait%
