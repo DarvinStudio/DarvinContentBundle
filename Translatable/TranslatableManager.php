@@ -57,7 +57,7 @@ class TranslatableManager implements TranslatableManagerInterface
     /**
      * @var array
      */
-    private $checkedObjectClasses;
+    private $checkedEntityClasses;
 
     /**
      * @var array
@@ -89,7 +89,7 @@ class TranslatableManager implements TranslatableManagerInterface
         $this->translatableTrait = $translatableTrait;
         $this->translationLocaleProperty = $translationLocaleProperty;
         $this->translationsProperty = $translationsProperty;
-        $this->checkedObjectClasses = array();
+        $this->checkedEntityClasses = array();
         $this->translationClasses = array();
     }
 
@@ -114,15 +114,15 @@ class TranslatableManager implements TranslatableManagerInterface
      */
     public function isTranslatable($entityClass)
     {
-        if (!isset($this->checkedObjectClasses[$entityClass])) {
-            $this->checkedObjectClasses[$entityClass] = $this->classAnalyzer->hasTrait(
+        if (!isset($this->checkedEntityClasses[$entityClass])) {
+            $this->checkedEntityClasses[$entityClass] = $this->classAnalyzer->hasTrait(
                 $this->getDoctrineMetadata($entityClass)->getReflectionClass(),
                 $this->translatableTrait,
                 $this->isReflectionRecursive
             );
         }
 
-        return $this->checkedObjectClasses[$entityClass];
+        return $this->checkedEntityClasses[$entityClass];
     }
 
     /**
