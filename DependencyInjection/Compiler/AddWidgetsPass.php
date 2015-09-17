@@ -39,8 +39,8 @@ class AddWidgetsPass implements CompilerPassInterface
             return;
         }
 
-        $taggedServiceIdsSorter = new TaggedServiceIdsSorter();
-        $taggedServiceIdsSorter->sort($widgetIds);
+        $sorter = new TaggedServiceIdsSorter();
+        $sorter->sort($widgetIds);
 
         $poolDefinition = $container->getDefinition(self::POOL_ID);
 
