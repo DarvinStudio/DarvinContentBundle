@@ -32,25 +32,25 @@ class ContentFrontController extends Controller
 
         $controllerPool = $this->getContentControllerPool();
 
-        if (!$controllerPool->hasController($slugMapItem->getEntityClass())) {
+        if (!$controllerPool->hasController($slugMapItem->getObjectClass())) {
             throw $this->createNotFoundException(
-                sprintf('Content controller for class "%s" does not exist.', $slugMapItem->getEntityClass())
+                sprintf('Content controller for class "%s" does not exist.', $slugMapItem->getObjectClass())
             );
         }
 
-        $content = $this->getDoctrine()->getRepository($slugMapItem->getEntityClass())->find($slugMapItem->getEntityId());
+        $content = $this->getDoctrine()->getRepository($slugMapItem->getObjectClass())->find($slugMapItem->getObjectId());
 
         if (empty($content)) {
             $message = sprintf(
-                'Unable to find content entity "%s" by ID "%s".',
-                $slugMapItem->getEntityClass(),
-                $slugMapItem->getEntityId()
+                'Unable to find content object "%s" by ID "%s".',
+                $slugMapItem->getObjectClass(),
+                $slugMapItem->getObjectId()
             );
 
             throw $this->createNotFoundException($message);
         }
 
-        $contentController = $controllerPool->getController($slugMapItem->getEntityClass());
+        $contentController = $controllerPool->getController($slugMapItem->getObjectClass());
 
         return $contentController->showAction($request, $content);
     }

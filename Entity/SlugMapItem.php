@@ -43,14 +43,14 @@ class SlugMapItem
      *
      * @ORM\Column(type="string")
      */
-    private $entityClass;
+    private $objectClass;
 
     /**
      * @var string
      *
      * @ORM\Column(type="string")
      */
-    private $entityId;
+    private $objectId;
 
     /**
      * @var string
@@ -61,15 +61,15 @@ class SlugMapItem
 
     /**
      * @param string $slug        Slug
-     * @param string $entityClass Entity class
-     * @param string $entityId    Entity ID
+     * @param string $objectClass Object class
+     * @param string $objectId    Object ID
      * @param string $property    Slug property
      */
-    public function __construct($slug = null, $entityClass = null, $entityId = null, $property = null)
+    public function __construct($slug = null, $objectClass = null, $objectId = null, $property = null)
     {
         $this->slug = $slug;
-        $this->entityClass = $entityClass;
-        $this->entityId = $entityId;
+        $this->objectClass = $objectClass;
+        $this->objectId = $objectId;
         $this->property = $property;
     }
 
@@ -102,13 +102,13 @@ class SlugMapItem
     }
 
     /**
-     * @param string $entityClass entityClass
+     * @param string $objectClass objectClass
      *
      * @return SlugMapItem
      */
-    public function setEntityClass($entityClass)
+    public function setObjectClass($objectClass)
     {
-        $this->entityClass = $entityClass;
+        $this->objectClass = $objectClass;
 
         return $this;
     }
@@ -116,19 +116,19 @@ class SlugMapItem
     /**
      * @return string
      */
-    public function getEntityClass()
+    public function getObjectClass()
     {
-        return $this->entityClass;
+        return $this->objectClass;
     }
 
     /**
-     * @param string $entityId entityId
+     * @param string $objectId objectId
      *
      * @return SlugMapItem
      */
-    public function setEntityId($entityId)
+    public function setObjectId($objectId)
     {
-        $this->entityId = $entityId;
+        $this->objectId = $objectId;
 
         return $this;
     }
@@ -136,9 +136,9 @@ class SlugMapItem
     /**
      * @return string
      */
-    public function getEntityId()
+    public function getObjectId()
     {
-        return $this->entityId;
+        return $this->objectId;
     }
 
     /**
