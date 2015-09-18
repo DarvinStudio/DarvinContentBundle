@@ -10,6 +10,7 @@
 
 namespace Darvin\ContentBundle\Translatable;
 
+use Darvin\Utils\Doctrine\ORM\QueryBuilderUtil;
 use Doctrine\ORM\QueryBuilder;
 
 /**
@@ -57,10 +58,27 @@ class TranslationJoiner implements TranslationJoinerInterface
             $joinAlias = $translationsProperty;
         }
 
-        $qb
-            ->addSelect($joinAlias)
-            ->leftJoin($rootAlias.'.'.$translationsProperty, $joinAlias)
-            ->andWhere($joinAlias.sprintf('.%s = :%1$s', $translationLocaleProperty))
-            ->setParameter($translationLocaleProperty, $locale);
+        $join = $rootAlias.'.'.$translationsProperty;
+
+        $sameAliasJoin = QueryBuilderUtil::findJoinByAlias($qb, $rootAlias, $joinAlias);
+
+        if (empty($sameAliasJoin)) {
+            $qb
+                ->leftJoin($join, $joinAlias)
+                ->andWhere($joinAlias.sprintf('.%s = :%1$s', $translationLocaleProperty))
+                ->setParameter($translationLocaleProperty, $locale);
+
+            return;
+        }
+        if ($join !== $sameAliasJoin->getJoin()) {
+            $message = sprintf(
+                'Unable to add join "%s" with alias "%s": expression with same alias already exists and has different join ("%s").',
+                $join,
+                $joinAlias,
+                $sameAliasJoin->getJoin()
+            );
+
+            throw new TranslatableException($message);
+        }
     }
 }

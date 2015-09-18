@@ -12,6 +12,7 @@ namespace Darvin\ContentBundle\Sorting;
 
 use Darvin\ContentBundle\Translatable\TranslatableManagerInterface;
 use Darvin\ContentBundle\Translatable\TranslationJoinerInterface;
+use Darvin\Utils\Doctrine\ORM\QueryBuilderUtil;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
@@ -120,9 +121,25 @@ class SortedByEntityJoiner implements SortedByEntityJoinerInterface
             throw $this->createPropertyIsNotAssociationException($doctrineMeta->getName(), $firstPart);
         }
 
-        $qb
-            ->addSelect($firstPart)
-            ->leftJoin($qbRootAlias.'.'.$firstPart, $firstPart);
+        $join = $qbRootAlias.'.'.$firstPart;
+
+        $sameAliasJoin = QueryBuilderUtil::findJoinByAlias($qb, $qbRootAlias, $firstPart);
+
+        if (empty($sameAliasJoin)) {
+            $qb->leftJoin($join, $firstPart);
+
+            return;
+        }
+        if ($join !== $sameAliasJoin->getJoin()) {
+            $message = sprintf(
+                'Unable to add join "%s" with alias "%s": expression with same alias already exists and has different join ("%s").',
+                $join,
+                $firstPart,
+                $sameAliasJoin->getJoin()
+            );
+
+            throw new SortingException($message);
+        }
     }
 
     /**
