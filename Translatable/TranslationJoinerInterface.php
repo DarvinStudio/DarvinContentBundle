@@ -18,8 +18,9 @@ use Doctrine\ORM\QueryBuilder;
 interface TranslationJoinerInterface
 {
     /**
-     * @param \Doctrine\ORM\QueryBuilder $qb     Query builder
-     * @param string                     $locale Locale
+     * @param \Doctrine\ORM\QueryBuilder $qb        Query builder
+     * @param string                     $locale    Locale
+     * @param string                     $joinAlias Join alias
      */
-    public function joinTranslation(QueryBuilder $qb, $locale);
+    public function joinTranslation(QueryBuilder $qb, $locale, $joinAlias = null);
 }

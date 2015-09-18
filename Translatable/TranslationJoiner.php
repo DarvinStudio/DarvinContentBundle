@@ -33,20 +33,18 @@ class TranslationJoiner implements TranslationJoinerInterface
     /**
      * {@inheritdoc}
      */
-    public function joinTranslation(QueryBuilder $qb, $locale)
+    public function joinTranslation(QueryBuilder $qb, $locale, $joinAlias = null)
     {
-        $rootEntityClasses = $qb->getRootEntities();
+        $rootEntities = $qb->getRootEntities();
 
-        if (count($rootEntityClasses) > 1) {
-            throw new TranslatableException(
-                sprintf('Translation joiner "%s" supports only single root entity query builders.', __CLASS__)
-            );
+        if (count($rootEntities) > 1) {
+            throw new TranslatableException('Only single root entity query builders are supported.');
         }
 
-        $entityClass = $rootEntityClasses[0];
+        $entityClass = $rootEntities[0];
 
         if (!$this->translatableManager->isTranslatable($entityClass)) {
-            return;
+            throw new TranslatableException(sprintf('Entity class "%s" is not translatable.', $entityClass));
         }
 
         $rootAliases = $qb->getRootAliases();
@@ -55,10 +53,14 @@ class TranslationJoiner implements TranslationJoinerInterface
         $translationLocaleProperty = $this->translatableManager->getTranslationLocaleProperty();
         $translationsProperty = $this->translatableManager->getTranslationsProperty();
 
+        if (empty($joinAlias)) {
+            $joinAlias = $translationsProperty;
+        }
+
         $qb
-            ->addSelect($translationsProperty)
-            ->leftJoin($rootAlias.'.'.$translationsProperty, $translationsProperty)
-            ->andWhere($translationsProperty.sprintf('.%s = :%1$s', $translationLocaleProperty))
+            ->addSelect($joinAlias)
+            ->leftJoin($rootAlias.'.'.$translationsProperty, $joinAlias)
+            ->andWhere($joinAlias.sprintf('.%s = :%1$s', $translationLocaleProperty))
             ->setParameter($translationLocaleProperty, $locale);
     }
 }
