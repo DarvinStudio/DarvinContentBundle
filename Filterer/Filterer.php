@@ -16,6 +16,7 @@ use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Filterer
@@ -43,6 +44,11 @@ class Filterer implements FiltererInterface
     private $translationJoiner;
 
     /**
+     * @var \Symfony\Component\OptionsResolver\OptionsResolver
+     */
+    private $optionsResolver;
+
+    /**
      * @var \Doctrine\ORM\Mapping\ClassMetadataInfo[]
      */
     private $doctrineMetadata;
@@ -63,7 +69,10 @@ class Filterer implements FiltererInterface
         $this->requestStack = $requestStack;
         $this->translatableManager = $translatableManager;
         $this->translationJoiner = $translationJoiner;
+        $this->optionsResolver = new OptionsResolver();
         $this->doctrineMetadata = array();
+
+        $this->configureOptions($this->optionsResolver);
     }
 
     /**
@@ -74,9 +83,9 @@ class Filterer implements FiltererInterface
         if (empty($filterData)) {
             return;
         }
-        foreach ($filterData as $key => $value) {
+        foreach ($filterData as $field => $value) {
             if (null === $value) {
-                unset($filterData[$key]);
+                unset($filterData[$field]);
             }
         }
         if (empty($filterData)) {
@@ -89,20 +98,36 @@ class Filterer implements FiltererInterface
             throw new FiltererException('Only single root alias query builders are supported.');
         }
 
+        $options = $this->optionsResolver->resolve($options);
+
         $rootAlias = $rootAliases[0];
 
         $rootEntities = $qb->getRootEntities();
         $entityClass = $rootEntities[0];
 
-        foreach ($filterData as $key => $value) {
-            $strictComparison = !isset($options[$key]['strict_comparison']) || $options[$key]['strict_comparison'];
-            $this->addConstraint($qb, $key, $value, $entityClass, $rootAlias, $strictComparison);
+        foreach ($filterData as $field => $value) {
+            $strictComparison = !in_array($field, $options['non_strict_comparison_fields']);
+            $this->addConstraint($qb, $field, $value, $entityClass, $rootAlias, $strictComparison);
         }
     }
 
     /**
+     * @param \Symfony\Component\OptionsResolver\OptionsResolver $resolver Options resolver
+     */
+    private function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver
+            ->setDefaults(array(
+                'non_strict_comparison_fields' => array(),
+            ))
+            ->setAllowedTypes(array(
+                'non_strict_comparison_fields' => 'array',
+            ));
+    }
+
+    /**
      * @param \Doctrine\ORM\QueryBuilder $qb               Query builder
-     * @param string                     $key              Constraint key
+     * @param string                     $field            Constraint field
      * @param mixed                      $value            Constraint value
      * @param string                     $entityClass      Entity class
      * @param string                     $rootAlias        Query builder root alias
@@ -110,9 +135,9 @@ class Filterer implements FiltererInterface
      *
      * @throws \Darvin\ContentBundle\Filterer\FiltererException
      */
-    private function addConstraint(QueryBuilder $qb, $key, $value, $entityClass, $rootAlias, $strictComparison)
+    private function addConstraint(QueryBuilder $qb, $field, $value, $entityClass, $rootAlias, $strictComparison)
     {
-        $property = preg_replace('/(From|To)$/', '', $key);
+        $property = preg_replace('/(From|To)$/', '', $field);
 
         $doctrineMeta = $this->getDoctrineMetadata($entityClass);
 
@@ -136,22 +161,22 @@ class Filterer implements FiltererInterface
         }
 
         $qb
-            ->andWhere(sprintf('%s.%s %s :%2$s', $rootAlias, $key, $this->getConstraintExpression($key, $strictComparison)))
-            ->setParameter($key, $strictComparison ? $value : '%'.$value.'%');
+            ->andWhere(sprintf('%s.%s %s :%2$s', $rootAlias, $property, $this->getConstraintExpression($field, $strictComparison)))
+            ->setParameter($property, $strictComparison ? $value : '%'.$value.'%');
     }
 
     /**
-     * @param string $key              Constraint key
+     * @param string $field            Constraint field
      * @param bool   $strictComparison Whether to use strict comparison
      *
      * @return string
      */
-    private function getConstraintExpression($key, $strictComparison)
+    private function getConstraintExpression($field, $strictComparison)
     {
-        if (preg_match('/From$/', $key)) {
+        if (preg_match('/From$/', $field)) {
             return '>=';
         }
-        if (preg_match('/To$/', $key)) {
+        if (preg_match('/To$/', $field)) {
             return '<=';
         }
 
