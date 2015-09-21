@@ -1,0 +1,11 @@
+parameters:
+    darvin_content.filterer.class: Darvin\ContentBundle\Filterer\Filterer
+
+services:
+    darvin_content.filterer:
+        class: %darvin_content.filterer.class%
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@request_stack"
+            - "@darvin_content.translatable.manager"
+            - "@darvin_content.translatable.translation_joiner"

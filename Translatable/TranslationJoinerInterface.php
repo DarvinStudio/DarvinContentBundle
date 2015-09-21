@@ -21,6 +21,7 @@ interface TranslationJoinerInterface
      * @param \Doctrine\ORM\QueryBuilder $qb        Query builder
      * @param string                     $locale    Locale
      * @param string                     $joinAlias Join alias
+     * @param bool                       $inner     Is join inner
      */
-    public function joinTranslation(QueryBuilder $qb, $locale, $joinAlias = null);
+    public function joinTranslation(QueryBuilder $qb, $locale, $joinAlias = null, $inner = false);
 }
