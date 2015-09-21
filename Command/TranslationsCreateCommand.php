@@ -52,9 +52,9 @@ EOF
             return;
         }
 
-        $this->checkIfTargetLocaleTranslationsExist($translationClasses, $targetLocale);
-
-        $this->cloneDefaultLocaleTranslations($translationClasses, $targetLocale);
+        $this
+            ->checkIfTargetLocaleTranslationsExist($translationClasses, $targetLocale)
+            ->cloneDefaultLocaleTranslations($translationClasses, $targetLocale);
     }
 
     /**
@@ -97,6 +97,7 @@ EOF
      * @param array  $translationClasses Translation classes
      * @param string $targetLocale       Target locale
      *
+     * @return TranslationsCreateCommand
      * @throws \Darvin\ContentBundle\Translatable\TranslatableException
      */
     private function checkIfTargetLocaleTranslationsExist(array $translationClasses, $targetLocale)
@@ -119,6 +120,8 @@ EOF
                 );
             }
         }
+
+        return $this;
     }
 
     /**
