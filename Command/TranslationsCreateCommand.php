@@ -88,9 +88,10 @@ EOF
                 $ids = $doctrineMeta->getIdentifierValues($translation);
                 $this->info($translationClass.' '.reset($ids));
             }
-        }
 
-        $em->flush();
+            $em->flush();
+            $em->clear();
+        }
     }
 
     /**
