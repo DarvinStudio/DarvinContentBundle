@@ -10,7 +10,7 @@
 
 namespace Darvin\ContentBundle\Slug;
 
-use Darvin\Utils\Slug\SlugHandlerInterface;
+use Darvin\Utils\Sluggable\SlugHandlerInterface;
 use Doctrine\ORM\EntityManager;
 
 /**
