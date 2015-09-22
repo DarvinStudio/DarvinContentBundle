@@ -127,11 +127,11 @@ class SlugSubscriber extends AbstractOnFlushListener implements EventSubscriber
 
         foreach ($changeSet as $oldSlug => $newSlug) {
             foreach ($slugMapItemRepository->getSimilarSlugsBuilder($oldSlug)->getQuery()->getArrayResult() as $slugMapItem) {
-                if (!isset($entitiesToUpdate[$slugMapItem['entityClass']])) {
-                    $entitiesToUpdate[$slugMapItem['entityClass']] = array();
+                if (!isset($entitiesToUpdate[$slugMapItem['objectClass']])) {
+                    $entitiesToUpdate[$slugMapItem['objectClass']] = array();
                 }
 
-                $entitiesToUpdate[$slugMapItem['entityClass']][$slugMapItem['property']] = array($oldSlug, $newSlug);
+                $entitiesToUpdate[$slugMapItem['objectClass']][$slugMapItem['property']] = array($oldSlug, $newSlug);
             }
 
             $slugMapItemUpdateQb
