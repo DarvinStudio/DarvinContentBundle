@@ -18,10 +18,10 @@ interface WidgetPoolInterface
     /**
      * @param \Darvin\ContentBundle\Widget\WidgetInterface $widget Widget
      */
-    public function add(WidgetInterface $widget);
+    public function addWidget(WidgetInterface $widget);
 
     /**
      * @return \Darvin\ContentBundle\Widget\WidgetInterface[]
      */
-    public function getAll();
+    public function getAllWidgets();
 }

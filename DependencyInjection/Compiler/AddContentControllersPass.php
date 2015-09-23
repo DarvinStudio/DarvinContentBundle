@@ -41,7 +41,7 @@ class AddContentControllersPass implements CompilerPassInterface
         $poolDefinition = $container->getDefinition(self::POOL_ID);
 
         foreach ($controllerIds as $id => $attr) {
-            $poolDefinition->addMethodCall('add', array(
+            $poolDefinition->addMethodCall('addController', array(
                 new Reference($id),
             ));
         }

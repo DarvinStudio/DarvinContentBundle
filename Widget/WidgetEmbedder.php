@@ -42,7 +42,7 @@ class WidgetEmbedder implements WidgetEmbedderInterface
         if (empty($content)) {
             return $content;
         }
-        foreach ($this->widgetPool->getAll() as $widget) {
+        foreach ($this->widgetPool->getAllWidgets() as $widget) {
             $placeholder = $widget->getPlaceholder();
 
             if (false === strpos($content, $placeholder)) {

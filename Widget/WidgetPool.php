@@ -31,7 +31,7 @@ class WidgetPool implements WidgetPoolInterface
     /**
      * {@inheritdoc}
      */
-    public function add(WidgetInterface $widget)
+    public function addWidget(WidgetInterface $widget)
     {
         $placeholder = $widget->getPlaceholder();
 
@@ -45,7 +45,7 @@ class WidgetPool implements WidgetPoolInterface
     /**
      * {@inheritdoc}
      */
-    public function getAll()
+    public function getAllWidgets()
     {
         return $this->widgets;
     }

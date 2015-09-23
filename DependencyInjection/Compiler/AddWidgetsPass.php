@@ -45,7 +45,7 @@ class AddWidgetsPass implements CompilerPassInterface
         $poolDefinition = $container->getDefinition(self::POOL_ID);
 
         foreach ($widgetIds as $id => $attr) {
-            $poolDefinition->addMethodCall('add', array(
+            $poolDefinition->addMethodCall('addWidget', array(
                 new Reference($id),
             ));
         }

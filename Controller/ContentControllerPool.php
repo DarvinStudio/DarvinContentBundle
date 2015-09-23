@@ -33,7 +33,7 @@ class ContentControllerPool
      *
      * @throws \Darvin\ContentBundle\Controller\ControllerException
      */
-    public function add(ContentControllerInterface $controller)
+    public function addController(ContentControllerInterface $controller)
     {
         $contentClass = $controller->getContentClass();
 
