@@ -16,6 +16,7 @@ use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\OptionsResolver\Exception\ExceptionInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -97,8 +98,11 @@ class Filterer implements FiltererInterface
         if (count($rootAliases) > 1) {
             throw new FiltererException('Only single root alias query builders are supported.');
         }
-
-        $options = $this->optionsResolver->resolve($options);
+        try {
+            $options = $this->optionsResolver->resolve($options);
+        } catch (ExceptionInterface $ex) {
+            throw new FiltererException(sprintf('Options are invalid: "%s".', $ex->getMessage()));
+        }
 
         $rootAlias = $rootAliases[0];
 
