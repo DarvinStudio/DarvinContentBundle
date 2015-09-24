@@ -164,9 +164,11 @@ class Filterer implements FiltererInterface
             $rootAlias = $joinAlias;
         }
 
+        $where = sprintf('%s.%s %s :%s', $rootAlias, $property, $this->getConstraintExpression($field, $strictComparison), $field);
+
         $qb
-            ->andWhere(sprintf('%s.%s %s :%2$s', $rootAlias, $property, $this->getConstraintExpression($field, $strictComparison)))
-            ->setParameter($property, $strictComparison ? $value : '%'.$value.'%');
+            ->andWhere($where)
+            ->setParameter($field, $strictComparison ? $value : '%'.$value.'%');
     }
 
     /**
