@@ -124,9 +124,7 @@ class Filterer implements FiltererInterface
             ->setDefaults(array(
                 'non_strict_comparison_fields' => array(),
             ))
-            ->setAllowedTypes(array(
-                'non_strict_comparison_fields' => 'array',
-            ));
+            ->setAllowedTypes('non_strict_comparison_fields', 'array');
     }
 
     /**
