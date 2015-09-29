@@ -54,4 +54,4 @@ $content = 'test %foo% test';
 $content = $this->getContainer()->get('darvin_content.widget.embedder')->embed($content);
 ```
 
-или воспользоваться фильтром Twig "content_embed_widgets".
+или использовать фильтр Twig "content_embed_widgets".
