@@ -52,6 +52,7 @@ services:
 ```php
 $content = 'test %foo% test';
 $content = $this->getContainer()->get('darvin_content.widget.embedder')->embed($content);
+echo $content; // 'test bar test'
 ```
 
 или использовать фильтр Twig "content_embed_widgets".
