@@ -10,6 +10,7 @@
 
 namespace Darvin\ContentBundle\Slug;
 
+use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\Utils\Sluggable\SlugHandlerInterface;
 use Doctrine\ORM\EntityManager;
 
@@ -47,6 +48,6 @@ class UniqueSlugHandler implements SlugHandlerInterface
      */
     private function getSlugMapItemRepository(EntityManager $em)
     {
-        return $em->getRepository('DarvinContentBundle:SlugMapItem');
+        return $em->getRepository(SlugMapItem::SLUG_MAP_ITEM_CLASS);
     }
 }
