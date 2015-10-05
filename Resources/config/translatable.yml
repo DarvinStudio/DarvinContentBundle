@@ -21,4 +21,5 @@ services:
     darvin_content.translatable.translation_joiner:
         class: %darvin_content.translatable.translation_joiner.class%
         arguments:
+            - "@request_stack"
             - "@darvin_content.translatable.manager"

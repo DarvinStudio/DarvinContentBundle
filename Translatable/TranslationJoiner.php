@@ -12,6 +12,7 @@ namespace Darvin\ContentBundle\Translatable;
 
 use Darvin\Utils\Doctrine\ORM\QueryBuilderUtil;
 use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Translation joiner
@@ -19,22 +20,29 @@ use Doctrine\ORM\QueryBuilder;
 class TranslationJoiner implements TranslationJoinerInterface
 {
     /**
+     * @var \Symfony\Component\HttpFoundation\RequestStack
+     */
+    private $requestStack;
+
+    /**
      * @var \Darvin\ContentBundle\Translatable\TranslatableManagerInterface
      */
     private $translatableManager;
 
     /**
+     * @param \Symfony\Component\HttpFoundation\RequestStack                  $requestStack        Request stack
      * @param \Darvin\ContentBundle\Translatable\TranslatableManagerInterface $translatableManager Translatable manager
      */
-    public function __construct(TranslatableManagerInterface $translatableManager)
+    public function __construct(RequestStack $requestStack, TranslatableManagerInterface $translatableManager)
     {
+        $this->requestStack = $requestStack;
         $this->translatableManager = $translatableManager;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function joinTranslation(QueryBuilder $qb, $locale, $joinAlias = null, $inner = false)
+    public function joinTranslation(QueryBuilder $qb, $locale = null, $joinAlias = null, $inner = false)
     {
         $rootEntities = $qb->getRootEntities();
 
@@ -44,7 +52,7 @@ class TranslationJoiner implements TranslationJoinerInterface
 
         $entityClass = $rootEntities[0];
 
-        if (!$this->translatableManager->isTranslatable($entityClass)) {
+        if (!$this->isTranslatable($entityClass)) {
             throw new TranslatableException(sprintf('Entity class "%s" is not translatable.', $entityClass));
         }
 
@@ -64,6 +72,11 @@ class TranslationJoiner implements TranslationJoinerInterface
 
         if (empty($sameAliasJoin)) {
             $inner ? $qb->innerJoin($join, $joinAlias) : $qb->leftJoin($join, $joinAlias);
+
+            if (empty($locale)) {
+                $locale = $this->getLocaleFromRequest();
+            }
+
             $qb
                 ->andWhere($joinAlias.sprintf('.%s = :%1$s', $translationLocaleProperty))
                 ->setParameter($translationLocaleProperty, $locale);
@@ -80,5 +93,28 @@ class TranslationJoiner implements TranslationJoinerInterface
 
             throw new TranslatableException($message);
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isTranslatable($entityClass)
+    {
+        return $this->translatableManager->isTranslatable($entityClass);
+    }
+
+    /**
+     * @return string
+     * @throws \Darvin\ContentBundle\Translatable\TranslatableException
+     */
+    private function getLocaleFromRequest()
+    {
+        $request = $this->requestStack->getCurrentRequest();
+
+        if (empty($request)) {
+            throw new TranslatableException('Unable to get locale from current request: request is empty.');
+        }
+
+        return $request->getLocale();
     }
 }
