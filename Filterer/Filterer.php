@@ -15,7 +15,6 @@ use Darvin\ContentBundle\Translatable\TranslationJoinerInterface;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\Exception\ExceptionInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -28,11 +27,6 @@ class Filterer implements FiltererInterface
      * @var \Doctrine\ORM\EntityManager
      */
     private $em;
-
-    /**
-     * @var \Symfony\Component\HttpFoundation\RequestStack
-     */
-    private $requestStack;
 
     /**
      * @var \Darvin\ContentBundle\Translatable\TranslatableManagerInterface
@@ -56,18 +50,15 @@ class Filterer implements FiltererInterface
 
     /**
      * @param \Doctrine\ORM\EntityManager                                     $em                  Entity manager
-     * @param \Symfony\Component\HttpFoundation\RequestStack                  $requestStack        Request stack
      * @param \Darvin\ContentBundle\Translatable\TranslatableManagerInterface $translatableManager Translatable manager
      * @param \Darvin\ContentBundle\Translatable\TranslationJoinerInterface   $translationJoiner   Translation joiner
      */
     public function __construct(
         EntityManager $em,
-        RequestStack $requestStack,
         TranslatableManagerInterface $translatableManager,
         TranslationJoinerInterface $translationJoiner
     ) {
         $this->em = $em;
-        $this->requestStack = $requestStack;
         $this->translatableManager = $translatableManager;
         $this->translationJoiner = $translationJoiner;
         $this->optionsResolver = new OptionsResolver();
@@ -150,14 +141,8 @@ class Filterer implements FiltererInterface
                 );
             }
 
-            $request = $this->requestStack->getCurrentRequest();
-
-            if (empty($request)) {
-                throw new FiltererException('Unable to get current locale: request is empty.');
-            }
-
             $joinAlias = $this->translatableManager->getTranslationsProperty();
-            $this->translationJoiner->joinTranslation($qb, $request->getLocale(), $joinAlias, true);
+            $this->translationJoiner->joinTranslation($qb, null, $joinAlias, true);
 
             $rootAlias = $joinAlias;
         }
