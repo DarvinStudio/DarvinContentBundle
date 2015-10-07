@@ -11,6 +11,7 @@
 namespace Darvin\ContentBundle\Controller;
 
 use Darvin\ContentBundle\Entity\SlugMapItem;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -38,7 +39,7 @@ class ContentFrontController extends Controller
             );
         }
 
-        $content = $this->getDoctrine()->getRepository($slugMapItem->getObjectClass())->find($slugMapItem->getObjectId());
+        $content = $this->getContent($slugMapItem->getObjectClass(), $slugMapItem->getObjectId(), $request->getLocale());
 
         if (empty($content)) {
             $message = sprintf(
@@ -53,6 +54,35 @@ class ContentFrontController extends Controller
         $contentController = $controllerPool->getController($slugMapItem->getObjectClass());
 
         return $contentController->showAction($request, $content);
+    }
+
+    /**
+     * @param string $objectClass Content object class
+     * @param string $objectId    Content object ID
+     * @param string $locale      Locale
+     *
+     * @return object
+     */
+    private function getContent($objectClass, $objectId, $locale)
+    {
+        $repository = $this->getDoctrine()->getRepository($objectClass);
+
+        if (!$repository instanceof EntityRepository) {
+            return $repository->find($objectId);
+        }
+
+        $qb = $repository->createQueryBuilder('o')
+            ->andWhere('o.id = :id')
+            ->setParameter('id', $objectId);
+
+        $translationJoiner = $this->getTranslationJoiner();
+
+        if ($translationJoiner->isTranslatable($objectClass)) {
+            $translationJoiner->joinTranslation($qb, $locale, 'translations');
+            $qb->addSelect('translations');
+        }
+
+        return $qb->getQuery()->getOneOrNullResult();
     }
 
     /**
@@ -88,5 +118,13 @@ class ContentFrontController extends Controller
     private function getSlugMapItemRepository()
     {
         return $this->getDoctrine()->getRepository(SlugMapItem::SLUG_MAP_ITEM_CLASS);
+    }
+
+    /**
+     * @return \Darvin\ContentBundle\Translatable\TranslationJoinerInterface
+     */
+    private function getTranslationJoiner()
+    {
+        return $this->get('darvin_content.translatable.translation_joiner');
     }
 }
