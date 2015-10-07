@@ -76,7 +76,7 @@ class SlugMapRebuildCommand extends AbstractContainerAwareCommand
         $tableName = $em->getClassMetadata(SlugMapItem::SLUG_MAP_ITEM_CLASS)->getTableName();
 
         $connection = $em->getConnection();
-        $connection->executeQuery($connection->getDriver()->getDatabasePlatform()->getTruncateTableSQL($tableName));
+        $connection->exec($connection->getDriver()->getDatabasePlatform()->getTruncateTableSQL($tableName));
     }
 
     /**
