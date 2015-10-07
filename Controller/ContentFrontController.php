@@ -78,7 +78,7 @@ class ContentFrontController extends Controller
         $translationJoiner = $this->getTranslationJoiner();
 
         if ($translationJoiner->isTranslatable($objectClass)) {
-            $translationJoiner->joinTranslation($qb, $locale, 'translations');
+            $translationJoiner->joinTranslation($qb, $locale, 'translations', true);
             $qb->addSelect('translations');
         }
 
