@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Client metadata
  */
-class ClientMetadataTrait
+trait ClientMetadataTrait
 {
     /**
      * @var string
