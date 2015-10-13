@@ -41,6 +41,7 @@ trait MetadataTrait
      *
      * @ORM\Column(type="string")
      * @Assert\NotBlank
+     * @Assert\Regex(pattern="/[a-zA-Zа-яА-Я0-9]+/")
      * @Gedmo\Versioned
      */
     protected $title;
