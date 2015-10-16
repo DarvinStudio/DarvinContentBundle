@@ -33,13 +33,7 @@ class WidgetPool implements WidgetPoolInterface
      */
     public function addWidget(WidgetInterface $widget)
     {
-        $placeholder = $widget->getPlaceholder();
-
-        if (isset($this->widgets[$placeholder])) {
-            throw new WidgetException(sprintf('Widget with placeholder "%s" already added.', $placeholder));
-        }
-
-        $this->widgets[$placeholder] = $widget;
+        $this->widgets[$widget->getPlaceholder()] = $widget;
     }
 
     /**
