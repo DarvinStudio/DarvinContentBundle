@@ -17,7 +17,6 @@
         "doctrine/orm":                     "~2.2,>=2.2.3,<2.5",
         "doctrine/dbal":                    "<2.5",
         "doctrine/doctrine-bundle":         "~1.4",
-        "darvinstudio/darvin-utils":        "*",
         "darvinstudio/darvin-utils-bundle": "*",
         "knplabs/doctrine-behaviors":       "1.1.*"
     },
