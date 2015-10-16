@@ -11,27 +11,15 @@
 namespace Darvin\ContentBundle\Widget;
 
 /**
- * Widget
+ * Widget abstract implementation
  */
-interface WidgetInterface
+abstract class AbstractWidget implements WidgetInterface
 {
     /**
-     * @return string
+     * {@inheritdoc}
      */
-    public function getContent();
-
-    /**
-     * @return string
-     */
-    public function getPlaceholder();
-
-    /**
-     * @return string
-     */
-    public function getName();
-
-    /**
-     * @return array
-     */
-    public function getOptions();
+    public function getOptions()
+    {
+        return array();
+    }
 }
