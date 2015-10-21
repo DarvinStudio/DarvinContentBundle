@@ -18,6 +18,14 @@ abstract class AbstractWidget implements WidgetInterface
     /**
      * {@inheritdoc}
      */
+    public function getPlaceholder()
+    {
+        return '%'.$this->getName().'%';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getOptions()
     {
         return array();
