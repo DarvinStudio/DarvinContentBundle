@@ -39,7 +39,14 @@ class ContentFrontController extends Controller
             );
         }
 
-        $content = $this->getContent($slugMapItem->getObjectClass(), $slugMapItem->getObjectId(), $request->getLocale());
+        $contentController = $controllerPool->getController($slugMapItem->getObjectClass());
+
+        $content = $this->getContent(
+            $slugMapItem->getObjectClass(),
+            $slugMapItem->getObjectId(),
+            $request->getLocale(),
+            $contentController
+        );
 
         if (empty($content)) {
             $message = sprintf(
@@ -51,19 +58,18 @@ class ContentFrontController extends Controller
             throw $this->createNotFoundException($message);
         }
 
-        $contentController = $controllerPool->getController($slugMapItem->getObjectClass());
-
         return $contentController->showAction($request, $content);
     }
 
     /**
-     * @param string $objectClass Content object class
-     * @param string $objectId    Content object ID
-     * @param string $locale      Locale
+     * @param string                                                      $objectClass       Content object class
+     * @param string                                                      $objectId          Content object ID
+     * @param string                                                      $locale            Locale
+     * @param \Darvin\ContentBundle\Controller\ContentControllerInterface $contentController Content controller
      *
      * @return object
      */
-    private function getContent($objectClass, $objectId, $locale)
+    private function getContent($objectClass, $objectId, $locale, ContentControllerInterface $contentController)
     {
         $repository = $this->getDoctrine()->getRepository($objectClass);
 
@@ -81,6 +87,8 @@ class ContentFrontController extends Controller
             $translationJoiner->joinTranslation($qb, $locale, 'translations', true);
             $qb->addSelect('translations');
         }
+
+        $contentController->handleQueryBuilder($qb, $locale);
 
         return $qb->getQuery()->getOneOrNullResult();
     }

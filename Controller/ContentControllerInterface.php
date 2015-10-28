@@ -10,6 +10,7 @@
 
 namespace Darvin\ContentBundle\Controller;
 
+use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -24,6 +25,12 @@ interface ContentControllerInterface
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function showAction(Request $request, $content);
+
+    /**
+     * @param \Doctrine\ORM\QueryBuilder $qb     Query builder
+     * @param string                     $locale Locale
+     */
+    public function handleQueryBuilder(QueryBuilder $qb, $locale);
 
     /**
      * @return string
