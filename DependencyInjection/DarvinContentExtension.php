@@ -40,7 +40,7 @@ class DarvinContentExtension extends Extension
 
         $container->setParameter(
             'knp.doctrine_behaviors.translatable_subscriber.translatable_trait',
-            'Darvin\\ContentBundle\\Traits\\TranslatableTrait'
+            'Darvin\ContentBundle\Traits\TranslatableTrait'
         );
     }
 }
