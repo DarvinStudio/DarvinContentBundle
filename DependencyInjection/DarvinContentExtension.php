@@ -39,6 +39,10 @@ class DarvinContentExtension extends Extension
         $loader->load('widget.yml');
 
         $container->setParameter(
+            'knp.doctrine_behaviors.translatable_subscriber.current_locale_callable.class',
+            'Darvin\ContentBundle\Translatable\CurrentLocaleCallable'
+        );
+        $container->setParameter(
             'knp.doctrine_behaviors.translatable_subscriber.translatable_trait',
             'Darvin\ContentBundle\Traits\TranslatableTrait'
         );
