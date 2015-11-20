@@ -20,7 +20,6 @@ services:
         class: %darvin_content.slug.subscriber.class%
         arguments:
             - "@darvin_utils.mapping.metadata_factory"
-            - "@property_accessor"
             - "@darvin_content.slug.map_item_factory"
         tags:
             - { name: doctrine.event_subscriber, priority: 100 }

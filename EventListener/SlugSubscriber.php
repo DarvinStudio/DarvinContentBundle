@@ -20,7 +20,6 @@ use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Events;
-use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 /**
  * Slug event subscriber
@@ -33,27 +32,17 @@ class SlugSubscriber extends AbstractOnFlushListener implements EventSubscriber
     private $metadataFactory;
 
     /**
-     * @var \Symfony\Component\PropertyAccess\PropertyAccessorInterface
-     */
-    private $propertyAccessor;
-
-    /**
      * @var \Darvin\ContentBundle\Slug\SlugMapItemFactory
      */
     private $slugMapItemFactory;
 
     /**
-     * @param \Darvin\Utils\Mapping\MetadataFactoryInterface              $metadataFactory    Metadata factory
-     * @param \Symfony\Component\PropertyAccess\PropertyAccessorInterface $propertyAccessor   Property accessor
-     * @param \Darvin\ContentBundle\Slug\SlugMapItemFactory               $slugMapItemFactory Slug map item factory
+     * @param \Darvin\Utils\Mapping\MetadataFactoryInterface $metadataFactory    Metadata factory
+     * @param \Darvin\ContentBundle\Slug\SlugMapItemFactory  $slugMapItemFactory Slug map item factory
      */
-    public function __construct(
-        MetadataFactoryInterface $metadataFactory,
-        PropertyAccessorInterface $propertyAccessor,
-        SlugMapItemFactory $slugMapItemFactory
-    ) {
+    public function __construct(MetadataFactoryInterface $metadataFactory, SlugMapItemFactory $slugMapItemFactory)
+    {
         $this->metadataFactory = $metadataFactory;
-        $this->propertyAccessor = $propertyAccessor;
         $this->slugMapItemFactory = $slugMapItemFactory;
     }
 
