@@ -155,6 +155,12 @@ class SlugSubscriber extends AbstractOnFlushListener implements EventSubscriber
     {
         $entityClass = ClassUtils::getClass($entity);
 
+        $meta = $this->metadataFactory->getMetadata($this->em->getClassMetadata($entityClass));
+
+        if (!isset($meta['slugs']) || empty($meta['slugs'])) {
+            return;
+        }
+
         $slugMapItems = $this->getSlugMapItems($entityClass, $this->getEntityId($entity, $entityClass));
 
         foreach ($slugMapItems as $slugMapItem) {
