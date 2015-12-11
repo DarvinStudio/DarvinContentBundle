@@ -11,16 +11,22 @@
 namespace Darvin\ContentBundle\Command;
 
 use Darvin\ContentBundle\Translatable\TranslatableException;
-use Darvin\Utils\Command\AbstractContainerAwareCommand;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Translations create command
  */
-class TranslationsCreateCommand extends AbstractContainerAwareCommand
+class TranslationsCreateCommand extends ContainerAwareCommand
 {
+    /**
+     * @var \Symfony\Component\Console\Style\SymfonyStyle
+     */
+    private $io;
+
     /**
      * {@inheritdoc}
      */
@@ -42,7 +48,7 @@ EOF
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        parent::execute($input, $output);
+        $this->io = new SymfonyStyle($input, $output);
 
         $targetLocale = $input->getArgument('locale');
 
@@ -86,7 +92,7 @@ EOF
                 $em->persist($translationClone);
 
                 $ids = $doctrineMeta->getIdentifierValues($translation);
-                $this->info($translationClass.' '.reset($ids));
+                $this->io->comment($translationClass.' '.reset($ids));
             }
 
             $em->flush();

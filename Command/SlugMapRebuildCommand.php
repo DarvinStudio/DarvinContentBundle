@@ -11,14 +11,15 @@
 namespace Darvin\ContentBundle\Command;
 
 use Darvin\ContentBundle\Entity\SlugMapItem;
-use Darvin\Utils\Command\AbstractContainerAwareCommand;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Slug map rebuild command
  */
-class SlugMapRebuildCommand extends AbstractContainerAwareCommand
+class SlugMapRebuildCommand extends ContainerAwareCommand
 {
     /**
      * {@inheritdoc}
@@ -35,7 +36,7 @@ class SlugMapRebuildCommand extends AbstractContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        parent::execute($input, $output);
+        $io = new SymfonyStyle($input, $output);
 
         $this->truncateSlugMap();
 
@@ -62,7 +63,7 @@ class SlugMapRebuildCommand extends AbstractContainerAwareCommand
                     $em->persist($slugMapItem);
                 }
 
-                $this->info($doctrineMeta->getName().' '.implode('', $doctrineMeta->getIdentifierValues($entity)));
+                $io->comment($doctrineMeta->getName().' '.implode('', $doctrineMeta->getIdentifierValues($entity)));
             }
         }
 
