@@ -53,7 +53,7 @@ class TranslationJoiner implements TranslationJoinerInterface
         $entityClass = $rootEntities[0];
 
         if (!$this->isTranslatable($entityClass)) {
-            throw new TranslatableException(sprintf('Entity class "%s" is not translatable.', $entityClass));
+            throw new TranslatableException(sprintf('Class "%s" is not translatable.', $entityClass));
         }
 
         $rootAliases = $qb->getRootAliases();

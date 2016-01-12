@@ -4,6 +4,8 @@ parameters:
     darvin_content.translatable.manager.translation_locale_property:         locale
     darvin_content.translatable.manager.translations_property:               translations
 
+    darvin_content.translatable.translations_initializer.class: Darvin\ContentBundle\Translatable\TranslationsInitializer
+
     darvin_content.translatable.translation_joiner.class: Darvin\ContentBundle\Translatable\TranslationJoiner
 
 services:
@@ -17,6 +19,13 @@ services:
             - %knp.doctrine_behaviors.translatable_subscriber.translatable_trait%
             - %darvin_content.translatable.manager.translation_locale_property%
             - %darvin_content.translatable.manager.translations_property%
+
+    darvin_content.translatable.translations_initializer:
+        class: %darvin_content.translatable.translations_initializer.class%
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@darvin_content.translatable.manager"
+            - "@knp.doctrine_behaviors.translatable_subscriber"
 
     darvin_content.translatable.translation_joiner:
         class: %darvin_content.translatable.translation_joiner.class%
