@@ -3,7 +3,7 @@ parameters:
 
     darvin_content.slug.map_item_factory.class: Darvin\ContentBundle\Slug\SlugMapItemFactory
 
-    darvin_content.slug.subscriber.class: Darvin\ContentBundle\EventListener\SlugSubscriber
+    darvin_content.slug.map_subscriber.class: Darvin\ContentBundle\EventListener\SlugMapSubscriber
 
 services:
     darvin_content.slug.handler.unique:
@@ -16,8 +16,8 @@ services:
         arguments:
             - "@property_accessor"
 
-    darvin_content.slug.subscriber:
-        class: %darvin_content.slug.subscriber.class%
+    darvin_content.slug.map_subscriber:
+        class: %darvin_content.slug.map_subscriber.class%
         arguments:
             - "@darvin_utils.mapping.metadata_factory"
             - "@darvin_content.slug.map_item_factory"

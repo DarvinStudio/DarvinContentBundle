@@ -22,9 +22,9 @@ use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Events;
 
 /**
- * Slug event subscriber
+ * Slug map event subscriber
  */
-class SlugSubscriber extends AbstractOnFlushListener implements EventSubscriber
+class SlugMapSubscriber extends AbstractOnFlushListener implements EventSubscriber
 {
     /**
      * @var \Darvin\Utils\Mapping\MetadataFactoryInterface
