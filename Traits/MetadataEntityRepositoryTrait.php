@@ -23,9 +23,9 @@ trait MetadataEntityRepositoryTrait
      *
      * @return MetadataEntityRepositoryTrait
      */
-    protected function addEnabledFilter(QueryBuilder $qb, $alias = 'o')
+    public function addNotHiddenFilter(QueryBuilder $qb, $alias = 'o')
     {
-        $qb->andWhere($alias.'.enabled = :enabled')->setParameter('enabled', true);
+        $qb->andWhere($alias.'.hidden = :hidden')->setParameter('hidden', false);
 
         return $this;
     }
@@ -36,9 +36,9 @@ trait MetadataEntityRepositoryTrait
      *
      * @return MetadataEntityRepositoryTrait
      */
-    protected function addNotHiddenFilter(QueryBuilder $qb, $alias = 'o')
+    protected function addEnabledFilter(QueryBuilder $qb, $alias = 'o')
     {
-        $qb->andWhere($alias.'.hidden = :hidden')->setParameter('hidden', false);
+        $qb->andWhere($alias.'.enabled = :enabled')->setParameter('enabled', true);
 
         return $this;
     }
