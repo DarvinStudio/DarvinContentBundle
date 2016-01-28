@@ -69,7 +69,7 @@ trait TranslatableTrait
 
         $callback = array($translation, $method);
 
-        if (!is_callable($callback)) {
+        if (!method_exists($translation, $method)) {
             throw new TranslatableException(
                 sprintf('Method "%s::%s()" does not exist.', ClassUtils::getClass($translation), $method)
             );
