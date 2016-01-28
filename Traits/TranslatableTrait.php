@@ -10,6 +10,8 @@
 
 namespace Darvin\ContentBundle\Traits;
 
+use Darvin\ContentBundle\Translatable\TranslatableException;
+use Doctrine\Common\Util\ClassUtils;
 use Knp\DoctrineBehaviors\Model\Translatable\Translatable;
 
 /**
@@ -65,6 +67,14 @@ trait TranslatableTrait
             $method = substr_replace($method, 'is', 0, 3);
         }
 
-        return call_user_func_array(array($translation, $method), $arguments);
+        $callback = array($translation, $method);
+
+        if (!is_callable($callback)) {
+            throw new TranslatableException(
+                sprintf('Method "%s::%s()" does not exist.', ClassUtils::getClass($translation), $method)
+            );
+        }
+
+        return call_user_func_array($callback, $arguments);
     }
 }
