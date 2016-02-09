@@ -1,2 +1,2 @@
 widget:
-    placeholder_not_unique: Widget with same placeholder already exists
+    placeholder_not_unique: Widget with placeholder "%placeholder%" already exists

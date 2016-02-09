@@ -39,7 +39,9 @@ class WidgetPlaceholderUniqueValidator extends ConstraintValidator
     public function validate($placeholder, Constraint $constraint)
     {
         if (!$this->widgetPool->isWidgetUnique($placeholder)) {
-            $this->context->addViolation($constraint->message);
+            $this->context->addViolation($constraint->message, array(
+                '%placeholder%' => $placeholder,
+            ));
         }
     }
 }

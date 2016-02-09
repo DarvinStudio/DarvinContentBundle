@@ -1,2 +1,2 @@
 widget:
-    placeholder_not_unique: Виджет с такой меткой уже существует
+    placeholder_not_unique: Виджет с меткой «%placeholder%» уже существует
