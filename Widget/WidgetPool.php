@@ -30,6 +30,11 @@ class WidgetPool implements WidgetPoolInterface
     private $widgets;
 
     /**
+     * @var array
+     */
+    private $placeholderCounts;
+
+    /**
      * @var bool
      */
     private $initialized;
@@ -40,22 +45,28 @@ class WidgetPool implements WidgetPoolInterface
     public function __construct(EventDispatcherInterface $eventDispatcher)
     {
         $this->eventDispatcher = $eventDispatcher;
-        $this->widgets = array();
+        $this->widgets = $this->placeholderCounts = array();
         $this->initialized = false;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function addWidget(WidgetInterface $widget)
+    public function addWidget(WidgetInterface $widget, $duplicatePlaceholderException = true)
     {
         $placeholder = $widget->getPlaceholder();
 
-        if (isset($this->widgets[$placeholder])) {
+        if (isset($this->widgets[$placeholder]) && $duplicatePlaceholderException) {
             throw new WidgetException(sprintf('Widget with placeholder "%s" already added.', $placeholder));
         }
 
         $this->widgets[$placeholder] = $widget;
+
+        if (!isset($this->placeholderCounts[$placeholder])) {
+            $this->placeholderCounts[$placeholder] = 0;
+        }
+
+        $this->placeholderCounts[$placeholder]++;
     }
 
     /**
@@ -66,6 +77,16 @@ class WidgetPool implements WidgetPoolInterface
         $this->init();
 
         return $this->widgets;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isWidgetUnique($placeholder)
+    {
+        $this->init();
+
+        return !isset($this->placeholderCounts[$placeholder]) || 1 === $this->placeholderCounts[$placeholder];
     }
 
     private function init()

@@ -16,12 +16,20 @@ namespace Darvin\ContentBundle\Widget;
 interface WidgetPoolInterface
 {
     /**
-     * @param \Darvin\ContentBundle\Widget\WidgetInterface $widget Widget
+     * @param \Darvin\ContentBundle\Widget\WidgetInterface $widget                        Widget
+     * @param bool                                         $duplicatePlaceholderException Whether to throw exception on duplicate widget placeholder
      */
-    public function addWidget(WidgetInterface $widget);
+    public function addWidget(WidgetInterface $widget, $duplicatePlaceholderException = true);
 
     /**
      * @return \Darvin\ContentBundle\Widget\WidgetInterface[]
      */
     public function getAllWidgets();
+
+    /**
+     * @param string $placeholder Widget placeholder
+     *
+     * @return bool
+     */
+    public function isWidgetUnique($placeholder);
 }
