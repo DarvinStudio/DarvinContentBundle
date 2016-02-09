@@ -74,8 +74,8 @@ class WidgetPool implements WidgetPoolInterface
             return;
         }
 
-        $this->eventDispatcher->dispatch(Events::WIDGET_POOL_INIT, new WidgetPoolEvent($this));
-
         $this->initialized = true;
+
+        $this->eventDispatcher->dispatch(Events::WIDGET_POOL_INIT, new WidgetPoolEvent($this));
     }
 }
