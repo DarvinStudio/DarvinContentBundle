@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Slug map item
  *
  * @ORM\Entity(repositoryClass="Darvin\ContentBundle\Repository\SlugMapItemRepository")
- * @ORM\Table(name="slug_map")
+ * @ORM\Table(name="content_slug_map")
  */
 class SlugMapItem
 {
