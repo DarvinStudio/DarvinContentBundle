@@ -11,6 +11,7 @@
 namespace Darvin\ContentBundle;
 
 use Darvin\ContentBundle\DependencyInjection\Compiler\AddContentControllersPass;
+use Darvin\ContentBundle\DependencyInjection\Compiler\AddWidgetFactoriesPass;
 use Darvin\ContentBundle\DependencyInjection\Compiler\AddWidgetsPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -27,6 +28,7 @@ class DarvinContentBundle extends Bundle
     {
         $container
             ->addCompilerPass(new AddContentControllersPass())
+            ->addCompilerPass(new AddWidgetFactoriesPass())
             ->addCompilerPass(new AddWidgetsPass());
     }
 }

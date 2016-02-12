@@ -10,24 +10,20 @@
 
 namespace Darvin\ContentBundle\Widget;
 
-use Darvin\ContentBundle\Event\Events;
-use Darvin\ContentBundle\Event\WidgetPoolEvent;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-
 /**
  * Widget pool
  */
 class WidgetPool implements WidgetPoolInterface
 {
     /**
-     * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
-     */
-    private $eventDispatcher;
-
-    /**
      * @var \Darvin\ContentBundle\Widget\WidgetInterface[]
      */
     private $widgets;
+
+    /**
+     * @var \Darvin\ContentBundle\Widget\WidgetFactoryInterface[]
+     */
+    private $widgetFactories;
 
     /**
      * @var array
@@ -40,12 +36,11 @@ class WidgetPool implements WidgetPoolInterface
     private $initialized;
 
     /**
-     * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher Event dispatcher
+     * Constructor
      */
-    public function __construct(EventDispatcherInterface $eventDispatcher)
+    public function __construct()
     {
-        $this->eventDispatcher = $eventDispatcher;
-        $this->widgets = $this->placeholderCounts = array();
+        $this->widgets = $this->widgetFactories = $this->placeholderCounts = array();
         $this->initialized = false;
     }
 
@@ -57,7 +52,7 @@ class WidgetPool implements WidgetPoolInterface
         $placeholder = $widget->getPlaceholder();
 
         if (isset($this->widgets[$placeholder]) && $duplicatePlaceholderException) {
-            throw new WidgetException(sprintf('Widget with placeholder "%s" already added.', $placeholder));
+            throw new WidgetException(sprintf('Widget with placeholder "%s" already added to pool.', $placeholder));
         }
 
         $this->widgets[$placeholder] = $widget;
@@ -67,6 +62,20 @@ class WidgetPool implements WidgetPoolInterface
         }
 
         $this->placeholderCounts[$placeholder]++;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addWidgetFactory(WidgetFactoryInterface $widgetFactory)
+    {
+        $class = get_class($widgetFactory);
+
+        if (isset($this->widgetFactories[$class])) {
+            throw new WidgetException(sprintf('Widget factory "%s" already added to pool.', $class));
+        }
+
+        $this->widgetFactories[$class] = $widgetFactory;
     }
 
     /**
@@ -97,6 +106,10 @@ class WidgetPool implements WidgetPoolInterface
 
         $this->initialized = true;
 
-        $this->eventDispatcher->dispatch(Events::WIDGET_POOL_INIT, new WidgetPoolEvent($this));
+        foreach ($this->widgetFactories as $widgetFactory) {
+            foreach ($widgetFactory->createWidgets() as $widget) {
+                $this->addWidget($widget, false);
+            }
+        }
     }
 }
