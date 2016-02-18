@@ -38,7 +38,7 @@ class UniqueSlugHandler implements SlugHandlerInterface
             $slug = $originalSlug.'-'.$index;
         } while (in_array($slug, $similarSlugs));
 
-        $suffix.='-'.$index;
+        $suffix .= '-'.$index;
     }
 
     /**
