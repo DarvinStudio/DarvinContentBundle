@@ -52,12 +52,22 @@ class TranslatableManager implements TranslatableManagerInterface
     /**
      * @var string
      */
+    private $translationTrait;
+
+    /**
+     * @var string
+     */
     private $translationsProperty;
 
     /**
      * @var array
      */
-    private $checkedEntityClasses;
+    private $checkedIfTranslatable;
+
+    /**
+     * @var array
+     */
+    private $checkedIfTranslation;
 
     /**
      * @var array
@@ -71,6 +81,7 @@ class TranslatableManager implements TranslatableManagerInterface
      * @param bool                                            $isReflectionRecursive           Is reflection recursive
      * @param string                                          $translatableTrait               Translatable trait
      * @param string                                          $translationLocaleProperty       Translation locale property name
+     * @param string                                          $translationTrait                Translation trait
      * @param string                                          $translationsProperty            Translations property name
      */
     public function __construct(
@@ -80,6 +91,7 @@ class TranslatableManager implements TranslatableManagerInterface
         $isReflectionRecursive,
         $translatableTrait,
         $translationLocaleProperty,
+        $translationTrait,
         $translationsProperty
     ) {
         $this->classAnalyzer = $classAnalyzer;
@@ -88,9 +100,9 @@ class TranslatableManager implements TranslatableManagerInterface
         $this->isReflectionRecursive = $isReflectionRecursive;
         $this->translatableTrait = $translatableTrait;
         $this->translationLocaleProperty = $translationLocaleProperty;
+        $this->translationTrait = $translationTrait;
         $this->translationsProperty = $translationsProperty;
-        $this->checkedEntityClasses = array();
-        $this->translationClasses = array();
+        $this->checkedIfTranslatable = $this->checkedIfTranslation = $this->translationClasses = array();
     }
 
     /**
@@ -114,15 +126,31 @@ class TranslatableManager implements TranslatableManagerInterface
      */
     public function isTranslatable($entityClass)
     {
-        if (!isset($this->checkedEntityClasses[$entityClass])) {
-            $this->checkedEntityClasses[$entityClass] = $this->classAnalyzer->hasTrait(
+        if (!isset($this->checkedIfTranslatable[$entityClass])) {
+            $this->checkedIfTranslatable[$entityClass] = $this->classAnalyzer->hasTrait(
                 $this->getDoctrineMetadata($entityClass)->getReflectionClass(),
                 $this->translatableTrait,
                 $this->isReflectionRecursive
             );
         }
 
-        return $this->checkedEntityClasses[$entityClass];
+        return $this->checkedIfTranslatable[$entityClass];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isTranslation($entityClass)
+    {
+        if (!isset($this->checkedIfTranslation[$entityClass])) {
+            $this->checkedIfTranslation[$entityClass] = $this->classAnalyzer->hasTrait(
+                $this->getDoctrineMetadata($entityClass)->getReflectionClass(),
+                $this->translationTrait,
+                $this->isReflectionRecursive
+            );
+        }
+
+        return $this->checkedIfTranslation[$entityClass];
     }
 
     /**

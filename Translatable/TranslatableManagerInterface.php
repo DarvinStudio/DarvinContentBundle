@@ -30,6 +30,13 @@ interface TranslatableManagerInterface
     public function isTranslatable($entityClass);
 
     /**
+     * @param string $entityClass Entity class
+     *
+     * @return bool
+     */
+    public function isTranslation($entityClass);
+
+    /**
      * @return string
      */
     public function getTranslationLocaleProperty();

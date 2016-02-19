@@ -18,6 +18,7 @@ services:
             - %knp.doctrine_behaviors.reflection.is_recursive%
             - %knp.doctrine_behaviors.translatable_subscriber.translatable_trait%
             - %darvin_content.translatable.manager.translation_locale_property%
+            - %knp.doctrine_behaviors.translatable_subscriber.translation_trait%
             - %darvin_content.translatable.manager.translations_property%
 
     darvin_content.translatable.translations_initializer:
