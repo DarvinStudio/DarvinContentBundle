@@ -29,7 +29,7 @@ class SlugMapSubscriber extends AbstractOnFlushListener implements EventSubscrib
     /**
      * @var \Darvin\Utils\Mapping\MetadataFactoryInterface
      */
-    private $metadataFactory;
+    private $extendedMetadataFactory;
 
     /**
      * @var \Darvin\ContentBundle\Slug\SlugMapItemFactory
@@ -37,12 +37,12 @@ class SlugMapSubscriber extends AbstractOnFlushListener implements EventSubscrib
     private $slugMapItemFactory;
 
     /**
-     * @param \Darvin\Utils\Mapping\MetadataFactoryInterface $metadataFactory    Metadata factory
-     * @param \Darvin\ContentBundle\Slug\SlugMapItemFactory  $slugMapItemFactory Slug map item factory
+     * @param \Darvin\Utils\Mapping\MetadataFactoryInterface $extendedMetadataFactory Extended metadata factory
+     * @param \Darvin\ContentBundle\Slug\SlugMapItemFactory  $slugMapItemFactory      Slug map item factory
      */
-    public function __construct(MetadataFactoryInterface $metadataFactory, SlugMapItemFactory $slugMapItemFactory)
+    public function __construct(MetadataFactoryInterface $extendedMetadataFactory, SlugMapItemFactory $slugMapItemFactory)
     {
-        $this->metadataFactory = $metadataFactory;
+        $this->extendedMetadataFactory = $extendedMetadataFactory;
         $this->slugMapItemFactory = $slugMapItemFactory;
     }
 
@@ -82,14 +82,12 @@ class SlugMapSubscriber extends AbstractOnFlushListener implements EventSubscrib
 
         $entityClass = ClassUtils::getClass($entity);
 
-        $doctrineMeta = $this->em->getClassMetadata($entityClass);
-
-        $meta = $this->metadataFactory->getMetadata($doctrineMeta);
+        $meta = $this->extendedMetadataFactory->getExtendedMetadata($entityClass);
 
         if (!isset($meta['slugs']) || empty($meta['slugs'])) {
             return;
         }
-        foreach ($this->slugMapItemFactory->createItems($entity, $meta['slugs'], $doctrineMeta) as $slugMapItem) {
+        foreach ($this->slugMapItemFactory->createItems($entity, $meta['slugs'], $this->em->getClassMetadata($entityClass)) as $slugMapItem) {
             $this->em->persist($slugMapItem);
         }
 
@@ -155,7 +153,7 @@ class SlugMapSubscriber extends AbstractOnFlushListener implements EventSubscrib
     {
         $entityClass = ClassUtils::getClass($entity);
 
-        $meta = $this->metadataFactory->getMetadata($this->em->getClassMetadata($entityClass));
+        $meta = $this->extendedMetadataFactory->getExtendedMetadata($entityClass);
 
         if (!isset($meta['slugs']) || empty($meta['slugs'])) {
             return;
@@ -177,7 +175,7 @@ class SlugMapSubscriber extends AbstractOnFlushListener implements EventSubscrib
     {
         $entityClass = ClassUtils::getClass($entity);
 
-        $meta = $this->metadataFactory->getMetadata($this->em->getClassMetadata($entityClass));
+        $meta = $this->extendedMetadataFactory->getExtendedMetadata($entityClass);
 
         if (!isset($meta['slugs']) || empty($meta['slugs'])) {
             return;
