@@ -41,7 +41,7 @@ class SlugMapRebuildCommand extends ContainerAwareCommand
         $this->truncateSlugMap();
 
         $em = $this->getEntityManager();
-        $darvinMetadataFactory = $this->getDarvinMetadataFactory();
+        $extendedMetadataFactory = $this->getExtendedMetadataFactory();
         $slugMapItemFactory = $this->getSlugMapItemFactory();
 
         /** @var \Doctrine\ORM\Mapping\ClassMetadataInfo $doctrineMeta */
@@ -50,16 +50,16 @@ class SlugMapRebuildCommand extends ContainerAwareCommand
                 continue;
             }
 
-            $darvinMeta = $darvinMetadataFactory->getMetadata($doctrineMeta);
+            $extendedMeta = $extendedMetadataFactory->getExtendedMetadata($doctrineMeta->getName());
 
-            if (!isset($darvinMeta['slugs']) || empty($darvinMeta['slugs'])) {
+            if (!isset($extendedMeta['slugs']) || empty($extendedMeta['slugs'])) {
                 continue;
             }
 
             $entities = $em->getRepository($doctrineMeta->getName())->findAll();
 
             foreach ($entities as $entity) {
-                foreach ($slugMapItemFactory->createItems($entity, $darvinMeta['slugs'], $doctrineMeta) as $slugMapItem) {
+                foreach ($slugMapItemFactory->createItems($entity, $extendedMeta['slugs'], $doctrineMeta) as $slugMapItem) {
                     $em->persist($slugMapItem);
                 }
 
@@ -81,19 +81,19 @@ class SlugMapRebuildCommand extends ContainerAwareCommand
     }
 
     /**
-     * @return \Darvin\Utils\Mapping\MetadataFactoryInterface
-     */
-    private function getDarvinMetadataFactory()
-    {
-        return $this->getContainer()->get('darvin_utils.mapping.metadata_factory');
-    }
-
-    /**
      * @return \Doctrine\ORM\EntityManager
      */
     private function getEntityManager()
     {
         return $this->getContainer()->get('doctrine.orm.entity_manager');
+    }
+
+    /**
+     * @return \Darvin\Utils\Mapping\MetadataFactoryInterface
+     */
+    private function getExtendedMetadataFactory()
+    {
+        return $this->getContainer()->get('darvin_utils.mapping.metadata_factory');
     }
 
     /**
