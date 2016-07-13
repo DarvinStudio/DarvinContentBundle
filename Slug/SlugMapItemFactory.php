@@ -43,7 +43,7 @@ class SlugMapItemFactory
      */
     public function createItems($object, array $slugsMeta, ClassMetadata $doctrineMeta)
     {
-        $items = array();
+        $items = [];
 
         if (empty($slugsMeta)) {
             return $items;

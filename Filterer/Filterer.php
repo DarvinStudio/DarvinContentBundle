@@ -62,7 +62,7 @@ class Filterer implements FiltererInterface
         $this->translatableManager = $translatableManager;
         $this->translationJoiner = $translationJoiner;
         $this->optionsResolver = new OptionsResolver();
-        $this->doctrineMetadata = array();
+        $this->doctrineMetadata = [];
 
         $this->configureOptions($this->optionsResolver);
     }
@@ -70,7 +70,7 @@ class Filterer implements FiltererInterface
     /**
      * {@inheritdoc}
      */
-    public function filter(QueryBuilder $qb, array $filterData = null, array $options = array())
+    public function filter(QueryBuilder $qb, array $filterData = null, array $options = [])
     {
         if (empty($filterData)) {
             return;
@@ -112,9 +112,11 @@ class Filterer implements FiltererInterface
     private function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setDefaults(array(
-                'non_strict_comparison_fields' => array(),
-            ))
+            ->setDefaults(
+                [
+                'non_strict_comparison_fields' => [],
+                ]
+            )
             ->setAllowedTypes('non_strict_comparison_fields', 'array');
     }
 

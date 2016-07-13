@@ -28,6 +28,6 @@ abstract class AbstractWidget implements WidgetInterface
      */
     public function getOptions()
     {
-        return array();
+        return [];
     }
 }

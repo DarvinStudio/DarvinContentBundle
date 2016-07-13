@@ -24,7 +24,7 @@ class SlugMapItemRepository extends EntityRepository
      *
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function getByEntityBuilder($entityClass, $entityId, array $properties = array())
+    public function getByEntityBuilder($entityClass, $entityId, array $properties = [])
     {
         $qb = $this->createDefaultQueryBuilder()
             ->andWhere('o.objectClass = :entity_class')

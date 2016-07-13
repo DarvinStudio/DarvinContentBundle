@@ -79,7 +79,7 @@ class SortedByEntityJoiner implements SortedByEntityJoinerInterface
         $parts = explode('.', $sortedByPropertyPath);
         $partsCount = count($parts);
 
-        if (!in_array($partsCount, array(2, 3))) {
+        if (!in_array($partsCount, [2, 3])) {
             throw new SortingException(sprintf('Property path must consist of 2 or 3 parts, %d provided.', $partsCount));
         }
 

@@ -51,10 +51,10 @@ class SlugMapSubscriber extends AbstractOnFlushListener implements EventSubscrib
      */
     public function getSubscribedEvents()
     {
-        return array(
+        return [
             Events::onFlush,
             Events::postPersist,
-        );
+        ];
     }
 
     /**
@@ -65,8 +65,8 @@ class SlugMapSubscriber extends AbstractOnFlushListener implements EventSubscrib
         parent::onFlush($args);
 
         $this
-            ->onDelete(array($this, 'deleteSlugMapItems'))
-            ->onUpdate(array($this, 'updateSlugMapItems'));
+            ->onDelete([$this, 'deleteSlugMapItems'])
+            ->onUpdate([$this, 'updateSlugMapItems']);
     }
 
     /**
@@ -110,15 +110,15 @@ class SlugMapSubscriber extends AbstractOnFlushListener implements EventSubscrib
             ->set('o.slug', 'CONCAT(:new_slug, SUBSTRING(o.slug, :old_slug_length + 1, LENGTH(o.slug)))')
             ->where('SUBSTRING(o.slug, 1, :old_slug_length) = :old_slug');
 
-        $entitiesToUpdate = array();
+        $entitiesToUpdate = [];
 
         foreach ($changeSet as $oldSlug => $newSlug) {
             foreach ($slugMapItemRepository->getSimilarSlugsBuilder($oldSlug)->getQuery()->getArrayResult() as $slugMapItem) {
                 if (!isset($entitiesToUpdate[$slugMapItem['objectClass']])) {
-                    $entitiesToUpdate[$slugMapItem['objectClass']] = array();
+                    $entitiesToUpdate[$slugMapItem['objectClass']] = [];
                 }
 
-                $entitiesToUpdate[$slugMapItem['objectClass']][$slugMapItem['property']] = array($oldSlug, $newSlug);
+                $entitiesToUpdate[$slugMapItem['objectClass']][$slugMapItem['property']] = [$oldSlug, $newSlug];
             }
 
             $slugMapItemUpdateQb
@@ -223,7 +223,7 @@ class SlugMapSubscriber extends AbstractOnFlushListener implements EventSubscrib
      *
      * @return \Darvin\ContentBundle\Entity\SlugMapItem[]
      */
-    private function getSlugMapItems($entityClass, $entityId, array $properties = array())
+    private function getSlugMapItems($entityClass, $entityId, array $properties = [])
     {
         return $this->getSlugMapItemRepository()->getByEntityBuilder($entityClass, $entityId, $properties)->getQuery()->getResult();
     }

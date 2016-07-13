@@ -25,7 +25,7 @@ class ContentControllerPool
      */
     public function __construct()
     {
-        $this->controllers = array();
+        $this->controllers = [];
     }
 
     /**

@@ -31,7 +31,7 @@ class WidgetEmbedder implements WidgetEmbedderInterface
     public function __construct(WidgetPoolInterface $widgetPool)
     {
         $this->widgetPool = $widgetPool;
-        $this->widgetContents = array();
+        $this->widgetContents = [];
     }
 
     /**

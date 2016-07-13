@@ -38,9 +38,10 @@ class AddWidgetFactoriesPass implements CompilerPassInterface
             $reference = new Reference($id);
 
             foreach ($tags as $tag) {
-                $poolDefinition->addMethodCall('addWidgetFactory', array(
+                $poolDefinition->addMethodCall('addWidgetFactory', [
                     $reference,
-                ));
+                ]
+                );
             }
         }
     }

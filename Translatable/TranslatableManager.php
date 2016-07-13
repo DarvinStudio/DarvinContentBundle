@@ -102,7 +102,7 @@ class TranslatableManager implements TranslatableManagerInterface
         $this->translationLocaleProperty = $translationLocaleProperty;
         $this->translationTrait = $translationTrait;
         $this->translationsProperty = $translationsProperty;
-        $this->checkedIfTranslatable = $this->checkedIfTranslation = $this->translationClasses = array();
+        $this->checkedIfTranslatable = $this->checkedIfTranslation = $this->translationClasses = [];
     }
 
     /**
@@ -115,7 +115,9 @@ class TranslatableManager implements TranslatableManagerInterface
                 throw new TranslatableException(sprintf('Class "%s" is not translatable.', $entityClass));
             }
 
-            $this->translationClasses[$entityClass] = call_user_func(array($entityClass, $this->getTranslationEntityClassMethod));
+            $this->translationClasses[$entityClass] = call_user_func(
+                [$entityClass, $this->getTranslationEntityClassMethod]
+            );
         }
 
         return $this->translationClasses[$entityClass];

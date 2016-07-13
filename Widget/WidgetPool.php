@@ -40,7 +40,7 @@ class WidgetPool implements WidgetPoolInterface
      */
     public function __construct()
     {
-        $this->widgets = $this->widgetFactories = $this->placeholderCounts = array();
+        $this->widgets = $this->widgetFactories = $this->placeholderCounts = [];
         $this->initialized = false;
     }
 

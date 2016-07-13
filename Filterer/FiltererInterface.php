@@ -22,5 +22,5 @@ interface FiltererInterface
      * @param array                      $filterData Filter data
      * @param array                      $options    Options
      */
-    public function filter(QueryBuilder $qb, array $filterData = null, array $options = array());
+    public function filter(QueryBuilder $qb, array $filterData = null, array $options = []);
 }

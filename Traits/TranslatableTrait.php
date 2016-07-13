@@ -29,7 +29,7 @@ trait TranslatableTrait
      */
     public function __set($property, $value)
     {
-        return $this->proxyCurrentLocaleTranslation('set'.ucfirst($property), array($value));
+        return $this->proxyCurrentLocaleTranslation('set'.ucfirst($property), [$value]);
     }
 
     /**
@@ -56,7 +56,7 @@ trait TranslatableTrait
     /**
      * {@inheritdoc}
      */
-    protected function proxyCurrentLocaleTranslation($method, array $arguments = array())
+    protected function proxyCurrentLocaleTranslation($method, array $arguments = [])
     {
         $translation = $this->translate($this->getCurrentLocale());
 
@@ -67,7 +67,7 @@ trait TranslatableTrait
             $method = substr_replace($method, 'is', 0, 3);
         }
 
-        $callback = array($translation, $method);
+        $callback = [$translation, $method];
 
         if (!method_exists($translation, $method)) {
             throw new TranslatableException(

@@ -35,9 +35,9 @@ class WidgetExtension extends \Twig_Extension
      */
     public function getFilters()
     {
-        return array(
-            new \Twig_SimpleFilter('content_embed_widgets', array($this->widgetEmbedder, 'embed'), array('is_safe' => array('html'))),
-        );
+        return [
+            new \Twig_SimpleFilter('content_embed_widgets', [$this->widgetEmbedder, 'embed'], ['is_safe' => ['html']]),
+        ];
     }
 
     /**
