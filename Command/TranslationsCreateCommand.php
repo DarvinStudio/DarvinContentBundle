@@ -38,11 +38,9 @@ class TranslationsCreateCommand extends ContainerAwareCommand
 Creates translations for all translatable entities and specified locale by cloning default locale translations.
 EOF
             )
-            ->setDefinition(
-                [
+            ->setDefinition([
                 new InputArgument('locale', InputArgument::REQUIRED),
-                ]
-            );
+            ]);
     }
 
     /**
@@ -80,11 +78,9 @@ EOF
         $localeProperty = $this->getTranslatableManager()->getTranslationLocaleProperty();
 
         foreach ($translationClasses as $translationClass) {
-            $defaultLocaleTranslations = $em->getRepository($translationClass)->findBy(
-                [
+            $defaultLocaleTranslations = $em->getRepository($translationClass)->findBy([
                 $localeProperty => $defaultLocale,
-                ]
-            );
+            ]);
 
             foreach ($defaultLocaleTranslations as $translation) {
                 $doctrineMeta = $em->getClassMetadata($translationClass);

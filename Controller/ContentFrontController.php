@@ -101,9 +101,9 @@ class ContentFrontController extends Controller
      */
     private function getSlugMapItem($slug)
     {
-        $slugMapItem = $this->getSlugMapItemRepository()->findOneBy(array(
+        $slugMapItem = $this->getSlugMapItemRepository()->findOneBy([
             'slug' => $slug,
-        ));
+        ]);
 
         if (empty($slugMapItem)) {
             throw $this->createNotFoundException(sprintf('Unable to find slug map item by slug "%s".', $slug));

@@ -112,11 +112,9 @@ class Filterer implements FiltererInterface
     private function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setDefaults(
-                [
+            ->setDefaults([
                 'non_strict_comparison_fields' => [],
-                ]
-            )
+            ])
             ->setAllowedTypes('non_strict_comparison_fields', 'array');
     }
 
