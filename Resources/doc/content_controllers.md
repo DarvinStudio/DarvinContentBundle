@@ -24,7 +24,7 @@ parameters:
 
 services:
     app.page.controller:
-        class: %app.page.controller.class%
+        class: "%app.page.controller.class%"
         calls:
             - [ setContainer, [ "@service_container" ] ]
         tags:

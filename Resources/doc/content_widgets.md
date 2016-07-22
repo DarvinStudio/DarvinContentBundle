@@ -40,7 +40,7 @@ parameters:
 
 services:
     app.widget.foo:
-        class: %app.widget.foo.class%
+        class: "%app.widget.foo.class%"
         tags:
             - { name: darvin_content.widget }
 ```
