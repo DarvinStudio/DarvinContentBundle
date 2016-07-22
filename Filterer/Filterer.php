@@ -70,7 +70,7 @@ class Filterer implements FiltererInterface
     /**
      * {@inheritdoc}
      */
-    public function filter(QueryBuilder $qb, array $filterData = null, array $options = [])
+    public function filter(QueryBuilder $qb, array $filterData = null, array $options = [], $conjunction = true)
     {
         if (empty($filterData)) {
             return;
@@ -95,15 +95,7 @@ class Filterer implements FiltererInterface
             throw new FiltererException(sprintf('Options are invalid: "%s".', $ex->getMessage()));
         }
 
-        $rootAlias = $rootAliases[0];
-
-        $rootEntities = $qb->getRootEntities();
-        $entityClass = $rootEntities[0];
-
-        foreach ($filterData as $field => $value) {
-            $strictComparison = !in_array($field, $options['non_strict_comparison_fields']);
-            $this->addConstraint($qb, $field, $value, $entityClass, $rootAlias, $strictComparison);
-        }
+        $this->addConstraints($qb, $filterData, $options, $conjunction, $rootAliases[0]);
     }
 
     /**
@@ -119,16 +111,41 @@ class Filterer implements FiltererInterface
     }
 
     /**
+     * @param \Doctrine\ORM\QueryBuilder $qb          Query builder
+     * @param array                      $filterData  Filter data
+     * @param array                      $options     Options
+     * @param bool                       $conjunction Whether to use conjunction (otherwise - disjunction)
+     * @param string                     $rootAlias   Query builder root alias
+     */
+    private function addConstraints(QueryBuilder $qb, array $filterData, array $options, $conjunction, $rootAlias)
+    {
+        $rootEntities = $qb->getRootEntities();
+        $entityClass = $rootEntities[0];
+
+        $where = [];
+
+        foreach ($filterData as $field => $value) {
+            $strictComparison = !in_array($field, $options['non_strict_comparison_fields']);
+
+            $where[] = $this->buildConstraint($qb, $field, $entityClass, $rootAlias, $strictComparison);
+
+            $qb->setParameter($field, $strictComparison ? $value : '%'.$value.'%');
+        }
+
+        $qb->andWhere(implode($conjunction ? ' AND ' : ' OR ', $where));
+    }
+
+    /**
      * @param \Doctrine\ORM\QueryBuilder $qb               Query builder
      * @param string                     $field            Constraint field
-     * @param mixed                      $value            Constraint value
      * @param string                     $entityClass      Entity class
      * @param string                     $rootAlias        Query builder root alias
      * @param bool                       $strictComparison Whether to use strict comparison
      *
+     * @return string
      * @throws \Darvin\ContentBundle\Filterer\FiltererException
      */
-    private function addConstraint(QueryBuilder $qb, $field, $value, $entityClass, $rootAlias, $strictComparison)
+    private function buildConstraint(QueryBuilder $qb, $field, $entityClass, $rootAlias, $strictComparison)
     {
         $property = preg_replace('/(From|To)$/', '', $field);
 
@@ -147,11 +164,7 @@ class Filterer implements FiltererInterface
             $rootAlias = $joinAlias;
         }
 
-        $where = sprintf('%s.%s %s :%s', $rootAlias, $property, $this->getConstraintExpression($field, $strictComparison), $field);
-
-        $qb
-            ->andWhere($where)
-            ->setParameter($field, $strictComparison ? $value : '%'.$value.'%');
+        return sprintf('%s.%s %s :%s', $rootAlias, $property, $this->getConstraintExpression($field, $strictComparison), $field);
     }
 
     /**

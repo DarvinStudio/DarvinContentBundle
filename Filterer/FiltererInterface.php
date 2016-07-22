@@ -18,9 +18,10 @@ use Doctrine\ORM\QueryBuilder;
 interface FiltererInterface
 {
     /**
-     * @param \Doctrine\ORM\QueryBuilder $qb         Query builder
-     * @param array                      $filterData Filter data
-     * @param array                      $options    Options
+     * @param \Doctrine\ORM\QueryBuilder $qb          Query builder
+     * @param array                      $filterData  Filter data
+     * @param array                      $options     Options
+     * @param bool                       $conjunction Whether to use conjunction (otherwise - disjunction)
      */
-    public function filter(QueryBuilder $qb, array $filterData = null, array $options = []);
+    public function filter(QueryBuilder $qb, array $filterData = null, array $options = [], $conjunction = true);
 }
