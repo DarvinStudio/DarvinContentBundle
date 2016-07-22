@@ -3,4 +3,4 @@ parameters:
 
 services:
     darvin_content.controller.pool:
-        class: %darvin_content.controller.pool.class%
+        class: "%darvin_content.controller.pool.class%"

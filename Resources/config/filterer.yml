@@ -3,7 +3,7 @@ parameters:
 
 services:
     darvin_content.filterer:
-        class: %darvin_content.filterer.class%
+        class: "%darvin_content.filterer.class%"
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@darvin_content.translatable.manager"

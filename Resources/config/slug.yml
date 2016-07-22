@@ -7,17 +7,17 @@ parameters:
 
 services:
     darvin_content.slug.handler.unique:
-        class: %darvin_content.slug.handler.unique.class%
+        class: "%darvin_content.slug.handler.unique.class%"
         tags:
             - { name: darvin_utils.slug_handler }
 
     darvin_content.slug.map_item_factory:
-        class: %darvin_content.slug.map_item_factory.class%
+        class: "%darvin_content.slug.map_item_factory.class%"
         arguments:
             - "@property_accessor"
 
     darvin_content.slug.map_subscriber:
-        class: %darvin_content.slug.map_subscriber.class%
+        class: "%darvin_content.slug.map_subscriber.class%"
         arguments:
             - "@darvin_utils.mapping.metadata_factory"
             - "@darvin_content.slug.map_item_factory"

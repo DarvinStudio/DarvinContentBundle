@@ -9,17 +9,17 @@ parameters:
 
 services:
     darvin_content.widget.embedder:
-        class: %darvin_content.widget.embedder.class%
+        class: "%darvin_content.widget.embedder.class%"
         arguments:
             - "@darvin_content.widget.pool"
 
     darvin_content.widget.pool:
-        class: %darvin_content.widget.pool.class%
+        class: "%darvin_content.widget.pool.class%"
         arguments:
             - "@event_dispatcher"
 
     darvin_content.widget.twig_extension:
-        class:  %darvin_content.widget.twig_extension.class%
+        class:  "%darvin_content.widget.twig_extension.class%"
         public: false
         arguments:
             - "@darvin_content.widget.embedder"
@@ -27,7 +27,7 @@ services:
             - { name: twig.extension }
 
     darvin_content.widget.validator.placeholder_unique:
-        class: %darvin_content.widget.validator.placeholder_unique.class%
+        class: "%darvin_content.widget.validator.placeholder_unique.class%"
         arguments:
             - "@darvin_content.widget.pool"
         tags:

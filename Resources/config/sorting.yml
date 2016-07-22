@@ -3,7 +3,7 @@ parameters:
 
 services:
     darvin_content.sorting.sorted_by_entity_joiner:
-        class: %darvin_content.sorting.sorted_by_entity_joiner.class%
+        class: "%darvin_content.sorting.sorted_by_entity_joiner.class%"
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@darvin_content.translatable.manager"
