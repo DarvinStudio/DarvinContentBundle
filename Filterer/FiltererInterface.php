@@ -22,6 +22,8 @@ interface FiltererInterface
      * @param array                      $filterData  Filter data
      * @param array                      $options     Options
      * @param bool                       $conjunction Whether to use conjunction (otherwise - disjunction)
+     *
+     * @throws \Darvin\ContentBundle\Filterer\FiltererException
      */
     public function filter(QueryBuilder $qb, array $filterData = null, array $options = [], $conjunction = true);
 }
