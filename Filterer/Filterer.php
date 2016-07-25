@@ -159,7 +159,7 @@ class Filterer implements FiltererInterface
             }
 
             $joinAlias = $this->translatableManager->getTranslationsProperty();
-            $this->translationJoiner->joinTranslation($qb, null, $joinAlias, true);
+            $this->translationJoiner->joinTranslation($qb, false, null, $joinAlias, true);
 
             $rootAlias = $joinAlias;
         }

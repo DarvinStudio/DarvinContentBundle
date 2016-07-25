@@ -113,7 +113,7 @@ class SortedByEntityJoiner implements SortedByEntityJoinerInterface
         if ($this->translatableManager->isTranslatable($doctrineMeta->getName())
             && $firstPart === $this->translatableManager->getTranslationsProperty()
         ) {
-            $this->translationJoiner->joinTranslation($qb, $locale);
+            $this->translationJoiner->joinTranslation($qb, false, $locale);
 
             return;
         }
@@ -184,7 +184,7 @@ class SortedByEntityJoiner implements SortedByEntityJoinerInterface
             );
         }
 
-        $this->translationJoiner->joinTranslation($qb, $locale, $firstPart);
+        $this->translationJoiner->joinTranslation($qb, false, $locale, $firstPart);
     }
 
     /**

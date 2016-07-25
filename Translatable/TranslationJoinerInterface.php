@@ -19,12 +19,12 @@ interface TranslationJoinerInterface
 {
     /**
      * @param \Doctrine\ORM\QueryBuilder $qb        Query builder
+     * @param bool                       $addSelect Whether to add select
      * @param string                     $locale    Locale
      * @param string                     $joinAlias Join alias
      * @param bool                       $inner     Whether to use inner join instead of left (default)
-     * @param bool                       $addSelect Whether to add select
      */
-    public function joinTranslation(QueryBuilder $qb, $locale = null, $joinAlias = null, $inner = false, $addSelect = false);
+    public function joinTranslation(QueryBuilder $qb, $addSelect = false, $locale = null, $joinAlias = null, $inner = false);
 
     /**
      * @param string $entityClass Entity class
