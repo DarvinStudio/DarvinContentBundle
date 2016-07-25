@@ -42,7 +42,7 @@ class TranslationJoiner implements TranslationJoinerInterface
     /**
      * {@inheritdoc}
      */
-    public function joinTranslation(QueryBuilder $qb, $locale = null, $joinAlias = null, $inner = false)
+    public function joinTranslation(QueryBuilder $qb, $locale = null, $joinAlias = null, $inner = false, $addSelect = false)
     {
         $rootEntities = $qb->getRootEntities();
 
@@ -73,6 +73,9 @@ class TranslationJoiner implements TranslationJoinerInterface
         if (empty($sameAliasJoin)) {
             $inner ? $qb->innerJoin($join, $joinAlias) : $qb->leftJoin($join, $joinAlias);
 
+            if ($addSelect) {
+                $qb->addSelect($joinAlias);
+            }
             if (empty($locale)) {
                 $locale = $this->getLocaleFromRequest();
             }
