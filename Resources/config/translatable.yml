@@ -1,8 +1,9 @@
 parameters:
-    darvin_content.translatable.manager.class:                               Darvin\ContentBundle\Translatable\TranslatableManager
-    darvin_content.translatable.manager.get_translation_entity_class_method: getTranslationEntityClass
-    darvin_content.translatable.manager.translation_locale_property:         locale
-    darvin_content.translatable.manager.translations_property:               translations
+    darvin_content.translatable.manager.class:                                Darvin\ContentBundle\Translatable\TranslatableManager
+    darvin_content.translatable.manager.get_translatable_entity_class_method: getTranslatableEntityClass
+    darvin_content.translatable.manager.get_translation_entity_class_method:  getTranslationEntityClass
+    darvin_content.translatable.manager.translation_locale_property:          locale
+    darvin_content.translatable.manager.translations_property:                translations
 
     darvin_content.translatable.translations_initializer.class: Darvin\ContentBundle\Translatable\TranslationsInitializer
 
@@ -14,12 +15,15 @@ services:
         arguments:
             - "@knp.doctrine_behaviors.reflection.class_analyzer"
             - "@doctrine.orm.entity_manager"
+            - "%darvin_content.translatable.manager.get_translatable_entity_class_method%"
             - "%darvin_content.translatable.manager.get_translation_entity_class_method%"
             - "%knp.doctrine_behaviors.reflection.is_recursive%"
             - "%knp.doctrine_behaviors.translatable_subscriber.translatable_trait%"
             - "%darvin_content.translatable.manager.translation_locale_property%"
             - "%knp.doctrine_behaviors.translatable_subscriber.translation_trait%"
             - "%darvin_content.translatable.manager.translations_property%"
+        tags:
+            - { name: darvin_utils.providable }
 
     darvin_content.translatable.translations_initializer:
         class: "%darvin_content.translatable.translations_initializer.class%"

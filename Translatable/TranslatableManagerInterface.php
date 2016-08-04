@@ -20,6 +20,13 @@ interface TranslatableManagerInterface
      *
      * @return string
      */
+    public function getTranslatableClass($entityClass);
+
+    /**
+     * @param string $entityClass Entity class
+     *
+     * @return string
+     */
     public function getTranslationClass($entityClass);
 
     /**

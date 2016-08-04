@@ -32,6 +32,11 @@ class TranslatableManager implements TranslatableManagerInterface
     /**
      * @var string
      */
+    private $getTranslatableEntityClassMethod;
+
+    /**
+     * @var string
+     */
     private $getTranslationEntityClassMethod;
 
     /**
@@ -72,21 +77,28 @@ class TranslatableManager implements TranslatableManagerInterface
     /**
      * @var array
      */
+    private $translatableClasses;
+
+    /**
+     * @var array
+     */
     private $translationClasses;
 
     /**
-     * @param \Knp\DoctrineBehaviors\Reflection\ClassAnalyzer $classAnalyzer                   Class analyzer
-     * @param \Doctrine\ORM\EntityManager                     $em                              Entity manager
-     * @param string                                          $getTranslationEntityClassMethod Get translation entity class method name
-     * @param bool                                            $isReflectionRecursive           Is reflection recursive
-     * @param string                                          $translatableTrait               Translatable trait
-     * @param string                                          $translationLocaleProperty       Translation locale property name
-     * @param string                                          $translationTrait                Translation trait
-     * @param string                                          $translationsProperty            Translations property name
+     * @param \Knp\DoctrineBehaviors\Reflection\ClassAnalyzer $classAnalyzer                    Class analyzer
+     * @param \Doctrine\ORM\EntityManager                     $em                               Entity manager
+     * @param string                                          $getTranslatableEntityClassMethod Get translatable entity class method name
+     * @param string                                          $getTranslationEntityClassMethod  Get translation entity class method name
+     * @param bool                                            $isReflectionRecursive            Is reflection recursive
+     * @param string                                          $translatableTrait                Translatable trait
+     * @param string                                          $translationLocaleProperty        Translation locale property name
+     * @param string                                          $translationTrait                 Translation trait
+     * @param string                                          $translationsProperty             Translations property name
      */
     public function __construct(
         ClassAnalyzer $classAnalyzer,
         EntityManager $em,
+        $getTranslatableEntityClassMethod,
         $getTranslationEntityClassMethod,
         $isReflectionRecursive,
         $translatableTrait,
@@ -96,13 +108,32 @@ class TranslatableManager implements TranslatableManagerInterface
     ) {
         $this->classAnalyzer = $classAnalyzer;
         $this->em = $em;
+        $this->getTranslatableEntityClassMethod = $getTranslatableEntityClassMethod;
         $this->getTranslationEntityClassMethod = $getTranslationEntityClassMethod;
         $this->isReflectionRecursive = $isReflectionRecursive;
         $this->translatableTrait = $translatableTrait;
         $this->translationLocaleProperty = $translationLocaleProperty;
         $this->translationTrait = $translationTrait;
         $this->translationsProperty = $translationsProperty;
-        $this->checkedIfTranslatable = $this->checkedIfTranslation = $this->translationClasses = [];
+        $this->checkedIfTranslatable = $this->checkedIfTranslation = $this->translatableClasses = $this->translationClasses = [];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTranslatableClass($entityClass)
+    {
+        if (!isset($this->translatableClasses[$entityClass])) {
+            if (!$this->isTranslation($entityClass)) {
+                throw new TranslatableException(sprintf('Class "%s" is not translation.', $entityClass));
+            }
+
+            $this->translatableClasses[$entityClass] = call_user_func(
+                [$entityClass, $this->getTranslatableEntityClassMethod]
+            );
+        }
+
+        return $this->translatableClasses[$entityClass];
     }
 
     /**
