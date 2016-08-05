@@ -10,6 +10,7 @@
 
 namespace Darvin\ContentBundle\DependencyInjection;
 
+use Darvin\ContentBundle\Translatable\CurrentLocaleCallable;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
@@ -40,7 +41,7 @@ class DarvinContentExtension extends Extension
 
         $container->setParameter(
             'knp.doctrine_behaviors.translatable_subscriber.current_locale_callable.class',
-            'Darvin\ContentBundle\Translatable\CurrentLocaleCallable'
+            CurrentLocaleCallable::CURRENT_LOCALE_CALLABLE_CLASS
         );
         $container->setParameter(
             'knp.doctrine_behaviors.translatable_subscriber.translatable_trait',
