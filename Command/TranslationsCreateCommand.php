@@ -13,7 +13,7 @@ namespace Darvin\ContentBundle\Command;
 use Darvin\ContentBundle\Translatable\TranslatableException;
 use Darvin\ContentBundle\Translatable\TranslatableManagerInterface;
 use Doctrine\ORM\EntityManager;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -22,7 +22,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 /**
  * Translations create command
  */
-class TranslationsCreateCommand extends ContainerAwareCommand
+class TranslationsCreateCommand extends Command
 {
     /**
      * @var \Doctrine\ORM\EntityManager
@@ -35,6 +35,11 @@ class TranslationsCreateCommand extends ContainerAwareCommand
     private $translatableManager;
 
     /**
+     * @var string
+     */
+    private $defaultLocale;
+
+    /**
      * @var \Symfony\Component\Console\Style\SymfonyStyle
      */
     private $io;
@@ -43,13 +48,15 @@ class TranslationsCreateCommand extends ContainerAwareCommand
      * @param string                                                          $name                Command name
      * @param \Doctrine\ORM\EntityManager                                     $em                  Entity manager
      * @param \Darvin\ContentBundle\Translatable\TranslatableManagerInterface $translatableManager Translatable manager
+     * @param string                                                          $defaultLocale       Default locale
      */
-    public function __construct($name, EntityManager $em, TranslatableManagerInterface $translatableManager)
+    public function __construct($name, EntityManager $em, TranslatableManagerInterface $translatableManager, $defaultLocale)
     {
         parent::__construct($name);
 
         $this->em = $em;
         $this->translatableManager = $translatableManager;
+        $this->defaultLocale = $defaultLocale;
     }
 
     /**
@@ -95,13 +102,11 @@ EOF
      */
     private function cloneDefaultLocaleTranslations(array $translationClasses, $targetLocale)
     {
-        $defaultLocale = $this->getContainer()->getParameter('locale');
-
         $localeProperty = $this->translatableManager->getTranslationLocaleProperty();
 
         foreach ($translationClasses as $translationClass) {
             $defaultLocaleTranslations = $this->em->getRepository($translationClass)->findBy([
-                $localeProperty => $defaultLocale,
+                $localeProperty => $this->defaultLocale,
             ]);
 
             foreach ($defaultLocaleTranslations as $translation) {
