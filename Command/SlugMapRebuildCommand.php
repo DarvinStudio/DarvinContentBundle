@@ -11,7 +11,10 @@
 namespace Darvin\ContentBundle\Command;
 
 use Darvin\ContentBundle\Entity\SlugMapItem;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Darvin\ContentBundle\Slug\SlugMapItemFactory;
+use Darvin\Utils\Mapping\MetadataFactoryInterface;
+use Doctrine\ORM\EntityManager;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -19,16 +22,44 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 /**
  * Slug map rebuild command
  */
-class SlugMapRebuildCommand extends ContainerAwareCommand
+class SlugMapRebuildCommand extends Command
 {
+    /**
+     * @var \Doctrine\ORM\EntityManager
+     */
+    private $em;
+
+    /**
+     * @var \Darvin\Utils\Mapping\MetadataFactoryInterface
+     */
+    private $metadataFactory;
+
+    /**
+     * @var \Darvin\ContentBundle\Slug\SlugMapItemFactory
+     */
+    private $slugMapItemFactory;
+
+    /**
+     * @param string                                         $name               Command name
+     * @param \Doctrine\ORM\EntityManager                    $em                 Entity manager
+     * @param \Darvin\Utils\Mapping\MetadataFactoryInterface $metadataFactory    Metadata factory
+     * @param \Darvin\ContentBundle\Slug\SlugMapItemFactory  $slugMapItemFactory Slug map item factory
+     */
+    public function __construct($name, EntityManager $em, MetadataFactoryInterface $metadataFactory, SlugMapItemFactory $slugMapItemFactory)
+    {
+        parent::__construct($name);
+
+        $this->em = $em;
+        $this->metadataFactory = $metadataFactory;
+        $this->slugMapItemFactory = $slugMapItemFactory;
+    }
+
     /**
      * {@inheritdoc}
      */
     protected function configure()
     {
-        $this
-            ->setName('darvin:content:slug-map:rebuild')
-            ->setDescription('Rebuilds slug map.');
+        $this->setDescription('Rebuilds slug map.');
     }
 
     /**
@@ -40,67 +71,37 @@ class SlugMapRebuildCommand extends ContainerAwareCommand
 
         $this->truncateSlugMap();
 
-        $em = $this->getEntityManager();
-        $extendedMetadataFactory = $this->getExtendedMetadataFactory();
-        $slugMapItemFactory = $this->getSlugMapItemFactory();
-
         /** @var \Doctrine\ORM\Mapping\ClassMetadataInfo $doctrineMeta */
-        foreach ($em->getMetadataFactory()->getAllMetadata() as $doctrineMeta) {
+        foreach ($this->em->getMetadataFactory()->getAllMetadata() as $doctrineMeta) {
             if ($doctrineMeta->getReflectionClass()->isAbstract()) {
                 continue;
             }
 
-            $extendedMeta = $extendedMetadataFactory->getExtendedMetadata($doctrineMeta->getName());
+            $extendedMeta = $this->metadataFactory->getExtendedMetadata($doctrineMeta->getName());
 
             if (!isset($extendedMeta['slugs']) || empty($extendedMeta['slugs'])) {
                 continue;
             }
 
-            $entities = $em->getRepository($doctrineMeta->getName())->findAll();
+            $entities = $this->em->getRepository($doctrineMeta->getName())->findAll();
 
             foreach ($entities as $entity) {
-                foreach ($slugMapItemFactory->createItems($entity, $extendedMeta['slugs'], $doctrineMeta) as $slugMapItem) {
-                    $em->persist($slugMapItem);
+                foreach ($this->slugMapItemFactory->createItems($entity, $extendedMeta['slugs'], $doctrineMeta) as $slugMapItem) {
+                    $this->em->persist($slugMapItem);
                 }
 
                 $io->comment($doctrineMeta->getName().' '.implode('', $doctrineMeta->getIdentifierValues($entity)));
             }
         }
 
-        $em->flush();
+        $this->em->flush();
     }
 
     private function truncateSlugMap()
     {
-        $em = $this->getEntityManager();
+        $tableName = $this->em->getClassMetadata(SlugMapItem::SLUG_MAP_ITEM_CLASS)->getTableName();
 
-        $tableName = $em->getClassMetadata(SlugMapItem::SLUG_MAP_ITEM_CLASS)->getTableName();
-
-        $connection = $em->getConnection();
+        $connection = $this->em->getConnection();
         $connection->exec($connection->getDriver()->getDatabasePlatform()->getTruncateTableSQL($tableName));
-    }
-
-    /**
-     * @return \Doctrine\ORM\EntityManager
-     */
-    private function getEntityManager()
-    {
-        return $this->getContainer()->get('doctrine.orm.entity_manager');
-    }
-
-    /**
-     * @return \Darvin\Utils\Mapping\MetadataFactoryInterface
-     */
-    private function getExtendedMetadataFactory()
-    {
-        return $this->getContainer()->get('darvin_utils.mapping.metadata_factory');
-    }
-
-    /**
-     * @return \Darvin\ContentBundle\Slug\SlugMapItemFactory
-     */
-    private function getSlugMapItemFactory()
-    {
-        return $this->getContainer()->get('darvin_content.slug.map_item_factory');
     }
 }
