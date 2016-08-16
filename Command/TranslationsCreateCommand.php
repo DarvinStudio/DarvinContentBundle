@@ -11,6 +11,8 @@
 namespace Darvin\ContentBundle\Command;
 
 use Darvin\ContentBundle\Translatable\TranslatableException;
+use Darvin\ContentBundle\Translatable\TranslatableManagerInterface;
+use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -23,9 +25,32 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class TranslationsCreateCommand extends ContainerAwareCommand
 {
     /**
+     * @var \Doctrine\ORM\EntityManager
+     */
+    private $em;
+
+    /**
+     * @var \Darvin\ContentBundle\Translatable\TranslatableManagerInterface
+     */
+    private $translatableManager;
+
+    /**
      * @var \Symfony\Component\Console\Style\SymfonyStyle
      */
     private $io;
+
+    /**
+     * @param string                                                          $name                Command name
+     * @param \Doctrine\ORM\EntityManager                                     $em                  Entity manager
+     * @param \Darvin\ContentBundle\Translatable\TranslatableManagerInterface $translatableManager Translatable manager
+     */
+    public function __construct($name, EntityManager $em, TranslatableManagerInterface $translatableManager)
+    {
+        parent::__construct($name);
+
+        $this->em = $em;
+        $this->translatableManager = $translatableManager;
+    }
 
     /**
      * {@inheritdoc}
@@ -33,7 +58,6 @@ class TranslationsCreateCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('darvin:content:translations:create')
             ->setDescription(<<<EOF
 Creates translations for all translatable entities and specified locale by cloning default locale translations.
 EOF
@@ -73,30 +97,28 @@ EOF
     {
         $defaultLocale = $this->getContainer()->getParameter('locale');
 
-        $em = $this->getEntityManager();
-
-        $localeProperty = $this->getTranslatableManager()->getTranslationLocaleProperty();
+        $localeProperty = $this->translatableManager->getTranslationLocaleProperty();
 
         foreach ($translationClasses as $translationClass) {
-            $defaultLocaleTranslations = $em->getRepository($translationClass)->findBy([
+            $defaultLocaleTranslations = $this->em->getRepository($translationClass)->findBy([
                 $localeProperty => $defaultLocale,
             ]);
 
             foreach ($defaultLocaleTranslations as $translation) {
-                $doctrineMeta = $em->getClassMetadata($translationClass);
+                $doctrineMeta = $this->em->getClassMetadata($translationClass);
 
                 $translationClone = clone $translation;
                 $ids = $doctrineMeta->getIdentifier();
                 $doctrineMeta->setIdentifierValues($translationClone, array_fill_keys($ids, null));
                 $doctrineMeta->setFieldValue($translationClone, $localeProperty, $targetLocale);
-                $em->persist($translationClone);
+                $this->em->persist($translationClone);
 
                 $ids = $doctrineMeta->getIdentifierValues($translation);
                 $this->io->comment($translationClass.' '.reset($ids));
             }
 
-            $em->flush();
-            $em->clear();
+            $this->em->flush();
+            $this->em->clear();
         }
     }
 
@@ -109,12 +131,10 @@ EOF
      */
     private function checkIfTargetLocaleTranslationsExist(array $translationClasses, $targetLocale)
     {
-        $em = $this->getEntityManager();
-
-        $localeProperty = $this->getTranslatableManager()->getTranslationLocaleProperty();
+        $localeProperty = $this->translatableManager->getTranslationLocaleProperty();
 
         foreach ($translationClasses as $translationClass) {
-            $translationsCount = $em->getRepository($translationClass)->createQueryBuilder('o')
+            $translationsCount = $this->em->getRepository($translationClass)->createQueryBuilder('o')
                 ->select('COUNT(o)')
                 ->where(sprintf('o.%s = :%1$s', $localeProperty))
                 ->setParameter($localeProperty, $targetLocale)
@@ -138,31 +158,13 @@ EOF
     {
         $translationClasses = [];
 
-        $translatableManager = $this->getTranslatableManager();
-
         /** @var \Doctrine\ORM\Mapping\ClassMetadataInfo $doctrineMeta */
-        foreach ($this->getEntityManager()->getMetadataFactory()->getAllMetadata() as $doctrineMeta) {
-            if ($translatableManager->isTranslatable($doctrineMeta->getName())) {
-                $translationClasses[] = $translatableManager->getTranslationClass($doctrineMeta->getName());
+        foreach ($this->em->getMetadataFactory()->getAllMetadata() as $doctrineMeta) {
+            if ($this->translatableManager->isTranslatable($doctrineMeta->getName())) {
+                $translationClasses[] = $this->translatableManager->getTranslationClass($doctrineMeta->getName());
             }
         }
 
         return $translationClasses;
-    }
-
-    /**
-     * @return \Doctrine\ORM\EntityManager
-     */
-    private function getEntityManager()
-    {
-        return $this->getContainer()->get('doctrine.orm.entity_manager');
-    }
-
-    /**
-     * @return \Darvin\ContentBundle\Translatable\TranslatableManagerInterface
-     */
-    private function getTranslatableManager()
-    {
-        return $this->getContainer()->get('darvin_content.translatable.manager');
     }
 }
