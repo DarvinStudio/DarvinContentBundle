@@ -40,7 +40,17 @@ class AddContentControllersPass implements CompilerPassInterface
 
         $poolDefinition = $container->getDefinition(self::POOL_ID);
 
+        $containerReference = new Reference('service_container');
+
         foreach ($controllerIds as $id => $attr) {
+            $controllerDefinition = $container->getDefinition($id);
+
+            if (in_array('Symfony\Component\DependencyInjection\ContainerAwareInterface', class_implements($controllerDefinition->getClass()))) {
+                $controllerDefinition->addMethodCall('setContainer', [
+                    $containerReference,
+                ]);
+            }
+
             $poolDefinition->addMethodCall('addController', [
                 new Reference($id),
             ]);
