@@ -28,13 +28,16 @@ class AddContentControllersPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        if (!$container->hasDefinition(self::POOL_ID)) {
-            return;
-        }
+        $this->addContentControllers($container, array_keys($container->findTaggedServiceIds(self::TAG_CONTENT_CONTROLLER)));
+    }
 
-        $controllerIds = $container->findTaggedServiceIds(self::TAG_CONTENT_CONTROLLER);
-
-        if (empty($controllerIds)) {
+    /**
+     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container DI container
+     * @param string[]                                                $ids       Service IDs
+     */
+    public function addContentControllers(ContainerBuilder $container, array $ids)
+    {
+        if (empty($ids) || !$container->hasDefinition(self::POOL_ID)) {
             return;
         }
 
@@ -42,7 +45,7 @@ class AddContentControllersPass implements CompilerPassInterface
 
         $containerReference = new Reference('service_container');
 
-        foreach ($controllerIds as $id => $attr) {
+        foreach ($ids as $id) {
             $controllerDefinition = $container->getDefinition($id);
 
             if (in_array('Symfony\Component\DependencyInjection\ContainerAwareInterface', class_implements($controllerDefinition->getClass()))) {
