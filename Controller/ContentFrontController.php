@@ -31,15 +31,11 @@ class ContentFrontController extends Controller
     {
         $slugMapItem = $this->getSlugMapItem($slug);
 
-        $controllerPool = $this->getContentControllerPool();
-
-        if (!$controllerPool->hasController($slugMapItem->getObjectClass())) {
-            throw $this->createNotFoundException(
-                sprintf('Content controller for class "%s" does not exist.', $slugMapItem->getObjectClass())
-            );
+        try {
+            $contentController = $this->getContentControllerPool()->getController($slugMapItem->getObjectClass());
+        } catch (ControllerException $ex) {
+            throw $this->createNotFoundException($ex->getMessage(), $ex);
         }
-
-        $contentController = $controllerPool->getController($slugMapItem->getObjectClass());
 
         $content = $this->getContent(
             $slugMapItem->getObjectClass(),

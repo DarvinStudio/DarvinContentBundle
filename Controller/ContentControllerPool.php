@@ -48,19 +48,19 @@ class ContentControllerPool
      * @param string $contentClass Content class
      *
      * @return \Darvin\ContentBundle\Controller\ContentControllerInterface
+     * @throws \Darvin\ContentBundle\Controller\ControllerException
      */
     public function getController($contentClass)
     {
-        return $this->controllers[$contentClass];
-    }
+        if (isset($this->controllers[$contentClass])) {
+            return $this->controllers[$contentClass];
+        }
+        foreach (class_parents($contentClass) as $parent) {
+            if (isset($this->controllers[$parent])) {
+                return $this->controllers[$parent];
+            }
+        }
 
-    /**
-     * @param string $contentClass Content class
-     *
-     * @return bool
-     */
-    public function hasController($contentClass)
-    {
-        return isset($this->controllers[$contentClass]);
+        throw new ControllerException(sprintf('Content controller for class "%s" does not exist.', $contentClass));
     }
 }
