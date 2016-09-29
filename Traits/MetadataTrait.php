@@ -83,13 +83,12 @@ trait MetadataTrait
     protected $metaKeywords;
 
     /**
-     * @param bool $enabled Is enabled
-     * @param bool $hidden  Is hidden
+     * Constructor
      */
-    public function __construct($enabled = true, $hidden = false)
+    public function __construct()
     {
-        $this->enabled = $enabled;
-        $this->hidden = $hidden;
+        $this->enabled = true;
+        $this->hidden = false;
     }
 
     /**
