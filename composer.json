@@ -12,8 +12,8 @@
         }
     ],
     "require": {
-        "darvinstudio/darvin-utils-bundle": "*@dev",
-        "knplabs/doctrine-behaviors":       "1.1.*"
+        "darvinstudio/darvin-utils-bundle": "@dev",
+        "knplabs/doctrine-behaviors":       "^1.1"
     },
     "autoload": {
         "psr-4": { "Darvin\\ContentBundle\\": "" }
