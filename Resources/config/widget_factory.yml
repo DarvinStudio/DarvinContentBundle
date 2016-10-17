@@ -1,0 +1,12 @@
+parameters:
+    darvin_content.widget.factory.forward_to_controller.class: Darvin\ContentBundle\Widget\ForwardToController\ForwardToControllerWidgetFactory
+
+services:
+    darvin_content.widget.factory.forward_to_controller:
+        class: "%darvin_content.widget.factory.forward_to_controller.class%"
+        arguments:
+            - "@http_kernel"
+            - "@request_stack"
+            - "%darvin_content.widgets.forward_to_controller%"
+        tags:
+            - { name: darvin_content.widget_factory }
