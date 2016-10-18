@@ -18,9 +18,9 @@ abstract class AbstractWidget implements WidgetInterface
     /**
      * {@inheritdoc}
      */
-    public function getPlaceholder()
+    public function getSluggableEntityClasses()
     {
-        return '%'.$this->getName().'%';
+        return [];
     }
 
     /**
@@ -29,5 +29,13 @@ abstract class AbstractWidget implements WidgetInterface
     public function getOptions()
     {
         return [];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPlaceholder()
+    {
+        return '%'.$this->getName().'%';
     }
 }

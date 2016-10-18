@@ -21,6 +21,16 @@ interface WidgetInterface
     public function getContent();
 
     /**
+     * @return string[]
+     */
+    public function getSluggableEntityClasses();
+
+    /**
+     * @return array
+     */
+    public function getOptions();
+
+    /**
      * @return string
      */
     public function getPlaceholder();
@@ -29,9 +39,4 @@ interface WidgetInterface
      * @return string
      */
     public function getName();
-
-    /**
-     * @return array
-     */
-    public function getOptions();
 }

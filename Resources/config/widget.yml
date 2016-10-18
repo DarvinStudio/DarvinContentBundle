@@ -29,6 +29,8 @@ services:
         class: "%darvin_content.widget.pool.class%"
         arguments:
             - "@event_dispatcher"
+        tags:
+            - { name: darvin_utils.providable }
 
     darvin_content.widget.twig_extension:
         class:  "%darvin_content.widget.twig_extension.class%"

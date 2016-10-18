@@ -20,6 +20,11 @@ class Widget implements WidgetInterface
         return 'bar';
     }
 
+    public function getSluggableEntityClasses()
+    {
+        return [];
+    }
+
     public function getPlaceholder()
     {
         return '%foo%';
