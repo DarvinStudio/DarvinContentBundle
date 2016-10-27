@@ -27,6 +27,9 @@ class ForwardToControllerWidget extends AbstractWidget
     /** @var string */
     private $controller;
 
+    /** @var string[] */
+    private $sluggableEntityClasses;
+
     /** @var  array */
     private $options;
 
@@ -36,14 +39,22 @@ class ForwardToControllerWidget extends AbstractWidget
      * @param RequestStack $requestStack
      * @param string $name
      * @param string $controller
+     * @param string[] $sluggableEntityClasses
      * @param array $options
      */
-    public function __construct(HttpKernelInterface $httpKernel, RequestStack $requestStack, $name, $controller, array $options)
-    {
+    public function __construct(
+        HttpKernelInterface $httpKernel,
+        RequestStack $requestStack,
+        $name,
+        $controller,
+        array $sluggableEntityClasses,
+        array $options
+    ) {
         $this->httpKernel = $httpKernel;
         $this->requestStack = $requestStack;
         $this->name = $name;
         $this->controller = $controller;
+        $this->sluggableEntityClasses = $sluggableEntityClasses;
         $this->options = $options;
     }
 
@@ -53,26 +64,33 @@ class ForwardToControllerWidget extends AbstractWidget
     public function getContent()
     {
         $request = $this->requestStack->getCurrentRequest()->duplicate(null, null, [
-            '_controller' => $this->controller
+            '_controller' => $this->controller,
         ]);
 
         return $this->httpKernel->handle($request, HttpKernelInterface::SUB_REQUEST)->getContent();
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
+     */
+    public function getSluggableEntityClasses()
+    {
+        return array_merge(parent::getSluggableEntityClasses(), $this->sluggableEntityClasses);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getOptions()
+    {
+        return array_merge(parent::getOptions(), $this->options);
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getOptions()
-    {
-        $parent = parent::getOptions();
-        return array_merge($this->options, $parent);
     }
 }
