@@ -47,7 +47,6 @@ services:
         arguments:
             - "%darvin_content.slug.rebuild_command.name%"
             - "@doctrine.orm.entity_manager"
-            - "@darvin_utils.mapping.metadata_factory"
             - "@darvin_utils.sluggable.manager"
         tags:
             - { name: console.command }
