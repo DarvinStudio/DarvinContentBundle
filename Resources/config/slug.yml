@@ -7,6 +7,9 @@ parameters:
     darvin_content.slug.map_rebuild_command.name:  darvin:content:slug-map:rebuild
 
     darvin_content.slug.map_subscriber.class: Darvin\ContentBundle\EventListener\SlugMapSubscriber
+    
+    darvin_content.slug.rebuild_command.class: Darvin\ContentBundle\Command\RebuildSlugsCommand
+    darvin_content.slug.rebuild_command.name:  darvin:content:slugs:rebuild
 
 services:
     darvin_content.slug.handler.unique:
@@ -38,3 +41,13 @@ services:
         tags:
             - { name: doctrine.event_subscriber, priority: 100 }
             - { name: kernel.event_listener,     event: darvin_utils.post_slugs_update, method: postSlugsUpdate }
+
+    darvin_content.slug.rebuild_command:
+        class: "%darvin_content.slug.rebuild_command.class%"
+        arguments:
+            - "%darvin_content.slug.rebuild_command.name%"
+            - "@doctrine.orm.entity_manager"
+            - "@darvin_utils.mapping.metadata_factory"
+            - "@darvin_utils.sluggable.manager"
+        tags:
+            - { name: console.command }
