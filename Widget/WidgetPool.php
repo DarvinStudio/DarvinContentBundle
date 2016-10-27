@@ -81,6 +81,20 @@ class WidgetPool implements WidgetPoolInterface
     /**
      * {@inheritdoc}
      */
+    public function getWidget($placeholder)
+    {
+        $this->init();
+
+        if (!isset($this->widgets[$placeholder])) {
+            throw new WidgetException(sprintf('Widget with placeholder "%s" does not exist.', $placeholder));
+        }
+
+        return $this->widgets[$placeholder];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getAllWidgets()
     {
         $this->init();
