@@ -66,7 +66,7 @@ class RebuildSlugsCommand extends Command
                 continue;
             }
             foreach ($this->em->getRepository($meta->getName())->findAll() as $entity) {
-                if ($this->sluggableManager->generateSlugs($entity, true)) {
+                if ($this->sluggableManager->generateSlugs($entity)) {
                     $io->success(implode(' ', array_merge([$meta->getName()], $meta->getIdentifierValues($entity))));
                 }
             }
