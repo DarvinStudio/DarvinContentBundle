@@ -21,6 +21,11 @@ class WidgetPool implements WidgetPoolInterface
     private $widgets;
 
     /**
+     * @var \Darvin\ContentBundle\Widget\WidgetInterface[]
+     */
+    private $widgetByNames;
+
+    /**
      * @var \Darvin\ContentBundle\Widget\WidgetFactoryInterface[]
      */
     private $widgetFactories;
@@ -40,7 +45,7 @@ class WidgetPool implements WidgetPoolInterface
      */
     public function __construct()
     {
-        $this->widgets = $this->widgetFactories = $this->placeholderCounts = [];
+        $this->widgets = $this->widgetByNames = $this->widgetFactories = $this->placeholderCounts = [];
         $this->initialized = false;
     }
 
@@ -62,6 +67,8 @@ class WidgetPool implements WidgetPoolInterface
         }
 
         $this->placeholderCounts[$placeholder]++;
+
+        $this->widgetByNames[$widget->getName()] = $widget;
     }
 
     /**
@@ -81,15 +88,15 @@ class WidgetPool implements WidgetPoolInterface
     /**
      * {@inheritdoc}
      */
-    public function getWidget($placeholder)
+    public function getWidget($name)
     {
         $this->init();
 
-        if (!isset($this->widgets[$placeholder])) {
-            throw new WidgetException(sprintf('Widget with placeholder "%s" does not exist.', $placeholder));
+        if (!isset($this->widgets[$name])) {
+            throw new WidgetException(sprintf('Widget "%s" does not exist.', $name));
         }
 
-        return $this->widgets[$placeholder];
+        return $this->widgets[$name];
     }
 
     /**

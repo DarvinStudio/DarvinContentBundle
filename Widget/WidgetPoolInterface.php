@@ -27,12 +27,12 @@ interface WidgetPoolInterface
     public function addWidgetFactory(WidgetFactoryInterface $widgetFactory);
 
     /**
-     * @param string $placeholder Widget placeholder
+     * @param string $name Widget name
      *
      * @return \Darvin\ContentBundle\Widget\WidgetInterface
      * @throws \Darvin\ContentBundle\Widget\WidgetException
      */
-    public function getWidget($placeholder);
+    public function getWidget($name);
 
     /**
      * @return \Darvin\ContentBundle\Widget\WidgetInterface[]
