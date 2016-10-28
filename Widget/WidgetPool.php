@@ -92,11 +92,11 @@ class WidgetPool implements WidgetPoolInterface
     {
         $this->init();
 
-        if (!isset($this->widgets[$name])) {
+        if (!isset($this->widgetByNames[$name])) {
             throw new WidgetException(sprintf('Widget "%s" does not exist.', $name));
         }
 
-        return $this->widgets[$name];
+        return $this->widgetByNames[$name];
     }
 
     /**
