@@ -9,11 +9,11 @@
 namespace Darvin\ContentBundle\Widget\ForwardToController;
 
 
-use Darvin\ContentBundle\Widget\AbstractWidget;
+use Darvin\AdminBundle\CKEditor\AbstractCKEditorWidget;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
-class ForwardToControllerWidget extends AbstractWidget
+class ForwardToControllerWidget extends AbstractCKEditorWidget
 {
     /** @var  HttpKernelInterface */
     private $httpKernel;
