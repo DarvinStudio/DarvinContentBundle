@@ -34,7 +34,7 @@ class ForwardToControllerWidgetFactory implements WidgetFactoryInterface
     /**
      * @var array
      */
-    private $requiredParams = ['controller', 'ckeditor_plugin_path'];
+    private $requiredParams = ['controller'];
 
     /**
      * ForwardToControllerWidgetFactory constructor.
@@ -71,7 +71,6 @@ class ForwardToControllerWidgetFactory implements WidgetFactoryInterface
             $controller = $setting['controller'];
             $sluggableEntityClasses = isset($setting['sluggable_entity_classes']) ? $setting['sluggable_entity_classes'] : [];
             $options = isset($setting['options']) ? $setting['options'] : [];
-            $options['ckeditor_plugin_path'] = $setting['ckeditor_plugin_path'];
 
             $widgets[] = new ForwardToControllerWidget(
                 $this->httpKernel,
