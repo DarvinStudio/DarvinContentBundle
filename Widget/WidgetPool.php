@@ -21,11 +21,6 @@ class WidgetPool implements WidgetPoolInterface
     private $widgets;
 
     /**
-     * @var \Darvin\ContentBundle\Widget\WidgetInterface[]
-     */
-    private $widgetByNames;
-
-    /**
      * @var \Darvin\ContentBundle\Widget\WidgetFactoryInterface[]
      */
     private $widgetFactories;
@@ -33,7 +28,7 @@ class WidgetPool implements WidgetPoolInterface
     /**
      * @var array
      */
-    private $placeholderCounts;
+    private $nameCounts;
 
     /**
      * @var bool
@@ -45,30 +40,28 @@ class WidgetPool implements WidgetPoolInterface
      */
     public function __construct()
     {
-        $this->widgets = $this->widgetByNames = $this->widgetFactories = $this->placeholderCounts = [];
+        $this->widgets = $this->widgetFactories = $this->nameCounts = [];
         $this->initialized = false;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function addWidget(WidgetInterface $widget, $duplicatePlaceholderException = true)
+    public function addWidget(WidgetInterface $widget, $duplicateNameException = true)
     {
-        $placeholder = $widget->getPlaceholder();
+        $name = $widget->getName();
 
-        if (isset($this->widgets[$placeholder]) && $duplicatePlaceholderException) {
-            throw new WidgetException(sprintf('Widget with placeholder "%s" already added to pool.', $placeholder));
+        if (isset($this->widgets[$name]) && $duplicateNameException) {
+            throw new WidgetException(sprintf('Widget "%s" already added to pool.', $name));
         }
 
-        $this->widgets[$placeholder] = $widget;
+        $this->widgets[$name] = $widget;
 
-        if (!isset($this->placeholderCounts[$placeholder])) {
-            $this->placeholderCounts[$placeholder] = 0;
+        if (!isset($this->nameCounts[$name])) {
+            $this->nameCounts[$name] = 0;
         }
 
-        $this->placeholderCounts[$placeholder]++;
-
-        $this->widgetByNames[$widget->getName()] = $widget;
+        $this->nameCounts[$name]++;
     }
 
     /**
@@ -92,11 +85,11 @@ class WidgetPool implements WidgetPoolInterface
     {
         $this->init();
 
-        if (!isset($this->widgetByNames[$name])) {
+        if (!isset($this->widgets[$name])) {
             throw new WidgetException(sprintf('Widget "%s" does not exist.', $name));
         }
 
-        return $this->widgetByNames[$name];
+        return $this->widgets[$name];
     }
 
     /**
@@ -112,11 +105,11 @@ class WidgetPool implements WidgetPoolInterface
     /**
      * {@inheritdoc}
      */
-    public function isWidgetUnique($placeholder)
+    public function isWidgetUnique($name)
     {
         $this->init();
 
-        return !isset($this->placeholderCounts[$placeholder]) || 1 === $this->placeholderCounts[$placeholder];
+        return !isset($this->nameCounts[$name]) || 1 === $this->nameCounts[$name];
     }
 
     private function init()

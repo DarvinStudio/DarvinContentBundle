@@ -45,7 +45,7 @@ abstract class AbstractWidget implements WidgetInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @return string
      */
     public function getPlaceholder()
     {

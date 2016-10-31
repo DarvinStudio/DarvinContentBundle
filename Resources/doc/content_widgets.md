@@ -30,11 +30,6 @@ class Widget implements WidgetInterface
         return [];
     }
 
-    public function getPlaceholder()
-    {
-        return '%foo%';
-    }
-
     public function getName()
     {
         return 'foo';

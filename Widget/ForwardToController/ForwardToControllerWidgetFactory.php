@@ -8,12 +8,14 @@
 
 namespace Darvin\ContentBundle\Widget\ForwardToController;
 
-
 use Darvin\ContentBundle\Widget\WidgetException;
 use Darvin\ContentBundle\Widget\WidgetFactoryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
+/**
+ * Forward-to-controller widget factory
+ */
 class ForwardToControllerWidgetFactory implements WidgetFactoryInterface
 {
     /** @var  HttpKernelInterface */
@@ -84,6 +86,11 @@ class ForwardToControllerWidgetFactory implements WidgetFactoryInterface
         return $widgets;
     }
 
+    /**
+     * @param array $setting Setting
+     *
+     * @throws \Darvin\ContentBundle\Widget\WidgetException
+     */
     private function validateWidgetSetting(array $setting)
     {
         foreach ($this->requiredParams as $param) {
