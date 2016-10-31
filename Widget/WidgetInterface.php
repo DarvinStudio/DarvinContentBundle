@@ -28,7 +28,7 @@ interface WidgetInterface
     /**
      * @return array
      */
-    public function getOptions();
+    public function getResolvedOptions();
 
     /**
      * @return string
