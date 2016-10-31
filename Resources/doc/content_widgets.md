@@ -25,6 +25,11 @@ class Widget implements WidgetInterface
         return [];
     }
 
+    public function getResolvedOptions()
+    {
+        return [];
+    }
+
     public function getPlaceholder()
     {
         return '%foo%';
