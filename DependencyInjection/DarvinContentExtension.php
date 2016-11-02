@@ -42,8 +42,8 @@ class DarvinContentExtension extends Extension
 
         $container->setParameter(
             'darvin_content.widgets.forward_to_controller',
-            $config['widgets']['forward_to_controller'])
-        ;
+            $config['widgets']['forward_to_controller']
+        );
 
         $container->setParameter(
             'knp.doctrine_behaviors.translatable_subscriber.current_locale_callable.class',

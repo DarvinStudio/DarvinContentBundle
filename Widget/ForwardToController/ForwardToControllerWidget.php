@@ -37,12 +37,13 @@ class ForwardToControllerWidget extends AbstractCKEditorWidget
 
     /**
      * ForwardToControllerWidget constructor.
-     * @param HttpKernelInterface $httpKernel
-     * @param RequestStack $requestStack
-     * @param string $name
-     * @param string $controller
-     * @param string[] $sluggableEntityClasses
-     * @param array $options
+     *
+     * @param \Symfony\Component\HttpKernel\HttpKernelInterface $httpKernel             HTTP kernel
+     * @param \Symfony\Component\HttpFoundation\RequestStack    $requestStack           Request stack
+     * @param string                                            $name                   Widget name
+     * @param string                                            $controller             Controller
+     * @param string[]                                          $sluggableEntityClasses Sluggable entity classes
+     * @param array                                             $options                Options
      */
     public function __construct(
         HttpKernelInterface $httpKernel,

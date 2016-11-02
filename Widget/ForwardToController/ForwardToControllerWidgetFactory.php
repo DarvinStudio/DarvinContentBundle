@@ -38,17 +38,13 @@ class ForwardToControllerWidgetFactory implements WidgetFactoryInterface
 
     /**
      * ForwardToControllerWidgetFactory constructor.
-     * @param HttpKernelInterface $httpKernel
-     * @param RequestStack $requestStack
-     * @param array $controllers
-     * @param array $requiredParams
+     *
+     * @param \Symfony\Component\HttpKernel\HttpKernelInterface $httpKernel     HTTP kernel
+     * @param \Symfony\Component\HttpFoundation\RequestStack    $requestStack   Request stack
+     * @param array                                             $controllers    Controllers
+     * @param array                                             $requiredParams Required parameters
      */
-    public function __construct(
-        HttpKernelInterface $httpKernel,
-        RequestStack $requestStack,
-        array $controllers,
-        $requiredParams = []
-    )
+    public function __construct(HttpKernelInterface $httpKernel, RequestStack $requestStack, array $controllers, $requiredParams = [])
     {
         $this->httpKernel = $httpKernel;
         $this->requestStack = $requestStack;
@@ -65,7 +61,7 @@ class ForwardToControllerWidgetFactory implements WidgetFactoryInterface
     public function createWidgets()
     {
         $widgets = [];
-        foreach ($this->controllers as $name=>$setting) {
+        foreach ($this->controllers as $name => $setting) {
             $this->validateWidgetSetting($setting);
 
             $controller = $setting['controller'];
