@@ -39,12 +39,4 @@ class WidgetExtension extends \Twig_Extension
             new \Twig_SimpleFilter('content_embed_widgets', [$this->widgetEmbedder, 'embed'], ['is_safe' => ['html']]),
         ];
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'darvin_content_widget_extension';
-    }
 }
