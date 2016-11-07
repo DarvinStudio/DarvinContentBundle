@@ -12,7 +12,7 @@
         }
     ],
     "require": {
-        "darvinstudio/darvin-utils-bundle": "@dev",
+        "darvinstudio/darvin-utils-bundle": "*",
         "knplabs/doctrine-behaviors":       "^1.1"
     },
     "autoload": {
