@@ -37,6 +37,7 @@ services:
         public: false
         arguments:
             - "@darvin_content.widget.embedder"
+            - "@darvin_content.widget.pool"
         tags:
             - { name: twig.extension }
 
