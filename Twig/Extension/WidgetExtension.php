@@ -56,6 +56,7 @@ class WidgetExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
+            new \Twig_SimpleFunction('content_widget_exists', [$this->widgetPool, 'widgetExists']),
             new \Twig_SimpleFunction('content_widget_render', [$this, 'renderWidget'], [
                 'is_safe' => ['html'],
             ]),

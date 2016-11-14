@@ -35,6 +35,13 @@ interface WidgetPoolInterface
     public function getWidget($name);
 
     /**
+     * @param string $name Widget name
+     *
+     * @return bool
+     */
+    public function widgetExists($name);
+
+    /**
      * @return \Darvin\ContentBundle\Widget\WidgetInterface[]
      */
     public function getAllWidgets();
