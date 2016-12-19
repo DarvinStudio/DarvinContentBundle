@@ -118,7 +118,7 @@ class SortedByEntityJoiner implements SortedByEntityJoinerInterface
             return;
         }
         if (!$doctrineMeta->hasAssociation($firstPart)) {
-            throw $this->createPropertyIsNotAssociationException($doctrineMeta->getName(), $firstPart);
+            return;
         }
 
         $join = $qbRootAlias.'.'.$firstPart;
@@ -159,7 +159,7 @@ class SortedByEntityJoiner implements SortedByEntityJoinerInterface
         list($firstPart, $secondPart) = $propertyPathParts;
 
         if (!$doctrineMeta->hasAssociation($firstPart)) {
-            throw $this->createPropertyIsNotAssociationException($doctrineMeta->getName(), $firstPart);
+            return;
         }
 
         $associatedEntity = $doctrineMeta->associationMappings[$firstPart]['targetEntity'];
@@ -185,16 +185,5 @@ class SortedByEntityJoiner implements SortedByEntityJoinerInterface
         }
 
         $this->translationJoiner->joinTranslation($qb, false, $locale, $firstPart);
-    }
-
-    /**
-     * @param string $entityClass Entity class
-     * @param string $property    Property name
-     *
-     * @return \Darvin\ContentBundle\Sorting\SortingException
-     */
-    private function createPropertyIsNotAssociationException($entityClass, $property)
-    {
-        return new SortingException(sprintf('Property "%s::$%s" is not valid association.', $entityClass, $property));
     }
 }

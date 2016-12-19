@@ -13,22 +13,22 @@ namespace Darvin\ContentBundle\Validator\Constraints;
 use Symfony\Component\Validator\Constraint;
 
 /**
- * Widget placeholder unique validation constraint
+ * Widget name unique validation constraint
  *
  * @Annotation
  */
-class WidgetPlaceholderUnique extends Constraint
+class WidgetNameUnique extends Constraint
 {
     /**
      * @var string
      */
-    public $message = 'widget.placeholder_not_unique';
+    public $message = 'widget.name_not_unique';
 
     /**
      * {@inheritdoc}
      */
     public function validatedBy()
     {
-        return 'darvin_content_widget_placeholder_unique';
+        return 'darvin_content_widget_name_unique';
     }
 }

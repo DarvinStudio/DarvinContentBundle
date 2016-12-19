@@ -16,10 +16,10 @@ namespace Darvin\ContentBundle\Widget;
 interface WidgetPoolInterface
 {
     /**
-     * @param \Darvin\ContentBundle\Widget\WidgetInterface $widget                        Widget
-     * @param bool                                         $duplicatePlaceholderException Whether to throw exception on duplicate widget placeholder
+     * @param \Darvin\ContentBundle\Widget\WidgetInterface $widget                 Widget
+     * @param bool                                         $duplicateNameException Whether to throw exception on duplicate widget name
      */
-    public function addWidget(WidgetInterface $widget, $duplicatePlaceholderException = true);
+    public function addWidget(WidgetInterface $widget, $duplicateNameException = true);
 
     /**
      * @param \Darvin\ContentBundle\Widget\WidgetFactoryInterface $widgetFactory Widget factory
@@ -27,14 +27,29 @@ interface WidgetPoolInterface
     public function addWidgetFactory(WidgetFactoryInterface $widgetFactory);
 
     /**
+     * @param string $name Widget name
+     *
+     * @return \Darvin\ContentBundle\Widget\WidgetInterface
+     * @throws \Darvin\ContentBundle\Widget\WidgetException
+     */
+    public function getWidget($name);
+
+    /**
+     * @param string $name Widget name
+     *
+     * @return bool
+     */
+    public function widgetExists($name);
+
+    /**
      * @return \Darvin\ContentBundle\Widget\WidgetInterface[]
      */
     public function getAllWidgets();
 
     /**
-     * @param string $placeholder Widget placeholder
+     * @param string $name Widget name
      *
      * @return bool
      */
-    public function isWidgetUnique($placeholder);
+    public function isWidgetUnique($name);
 }

@@ -15,9 +15,9 @@ use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
 /**
- * Widget placeholder unique constraint validator
+ * Widget name unique constraint validator
  */
-class WidgetPlaceholderUniqueValidator extends ConstraintValidator
+class WidgetNameUniqueValidator extends ConstraintValidator
 {
     /**
      * @var \Darvin\ContentBundle\Widget\WidgetPoolInterface
@@ -33,14 +33,14 @@ class WidgetPlaceholderUniqueValidator extends ConstraintValidator
     }
 
     /**
-     * @param string                                                                                                      $placeholder Widget placeholder
-     * @param \Darvin\ContentBundle\Validator\Constraints\WidgetPlaceholderUnique|\Symfony\Component\Validator\Constraint $constraint  Constraint
+     * @param string                                                                                               $name       Widget name
+     * @param \Darvin\ContentBundle\Validator\Constraints\WidgetNameUnique|\Symfony\Component\Validator\Constraint $constraint Constraint
      */
-    public function validate($placeholder, Constraint $constraint)
+    public function validate($name, Constraint $constraint)
     {
-        if (!$this->widgetPool->isWidgetUnique($placeholder)) {
+        if (!$this->widgetPool->isWidgetUnique($name)) {
             $this->context->addViolation($constraint->message, [
-                '%placeholder%' => $placeholder,
+                '%name%' => $name,
             ]);
         }
     }

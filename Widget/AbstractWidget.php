@@ -10,13 +10,42 @@
 
 namespace Darvin\ContentBundle\Widget;
 
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
 /**
  * Widget abstract implementation
  */
 abstract class AbstractWidget implements WidgetInterface
 {
     /**
+     * @var array
+     */
+    private $resolvedOptions;
+
+    /**
      * {@inheritdoc}
+     */
+    public function getResolvedOptions()
+    {
+        if (null === $this->resolvedOptions) {
+            $resolver = new OptionsResolver();
+            $this->configureOptions($resolver);
+            $this->resolvedOptions = $resolver->resolve($this->getOptions());
+        }
+
+        return $this->resolvedOptions;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSluggableEntityClasses()
+    {
+        return [];
+    }
+
+    /**
+     * @return string
      */
     public function getPlaceholder()
     {
@@ -24,9 +53,17 @@ abstract class AbstractWidget implements WidgetInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param \Symfony\Component\OptionsResolver\OptionsResolver $resolver Options resolver
      */
-    public function getOptions()
+    protected function configureOptions(OptionsResolver $resolver)
+    {
+
+    }
+
+    /**
+     * @return array
+     */
+    protected function getOptions()
     {
         return [];
     }

@@ -21,17 +21,17 @@ interface WidgetInterface
     public function getContent();
 
     /**
-     * @return string
+     * @return string[]
      */
-    public function getPlaceholder();
+    public function getSluggableEntityClasses();
+
+    /**
+     * @return array
+     */
+    public function getResolvedOptions();
 
     /**
      * @return string
      */
     public function getName();
-
-    /**
-     * @return array
-     */
-    public function getOptions();
 }

@@ -8,7 +8,7 @@ parameters:
 
     darvin_content.widget.twig_extension.class: Darvin\ContentBundle\Twig\Extension\WidgetExtension
 
-    darvin_content.widget.validator.placeholder_unique.class: Darvin\ContentBundle\Validator\WidgetPlaceholderUniqueValidator
+    darvin_content.widget.validator.name_unique.class: Darvin\ContentBundle\Validator\WidgetNameUniqueValidator
 
 services:
     darvin_content.widget.embedder:
@@ -29,18 +29,21 @@ services:
         class: "%darvin_content.widget.pool.class%"
         arguments:
             - "@event_dispatcher"
+        tags:
+            - { name: darvin_utils.providable }
 
     darvin_content.widget.twig_extension:
         class:  "%darvin_content.widget.twig_extension.class%"
         public: false
         arguments:
             - "@darvin_content.widget.embedder"
+            - "@darvin_content.widget.pool"
         tags:
             - { name: twig.extension }
 
-    darvin_content.widget.validator.placeholder_unique:
-        class: "%darvin_content.widget.validator.placeholder_unique.class%"
+    darvin_content.widget.validator.name_unique:
+        class: "%darvin_content.widget.validator.name_unique.class%"
         arguments:
             - "@darvin_content.widget.pool"
         tags:
-            - { name: validator.constraint_validator, alias: darvin_content_widget_placeholder_unique }
+            - { name: validator.constraint_validator, alias: darvin_content_widget_name_unique }

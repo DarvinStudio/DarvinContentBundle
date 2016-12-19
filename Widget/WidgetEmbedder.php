@@ -43,7 +43,7 @@ class WidgetEmbedder implements WidgetEmbedderInterface
             return $content;
         }
         foreach ($this->widgetPool->getAllWidgets() as $widget) {
-            $placeholder = $widget->getPlaceholder();
+            $placeholder = '%'.$widget->getName().'%';
 
             if (false === strpos($content, $placeholder)) {
                 continue;
@@ -62,8 +62,10 @@ class WidgetEmbedder implements WidgetEmbedderInterface
      */
     private function getWidgetContent(WidgetInterface $widget)
     {
-        $placeholder = $widget->getPlaceholder();
+        if (!isset($this->widgetContents[$widget->getName()])) {
+            $this->widgetContents[$widget->getName()] = $widget->getContent();
+        }
 
-        return isset($this->widgetContents[$placeholder]) ? $this->widgetContents[$placeholder] : $widget->getContent();
+        return $this->widgetContents[$widget->getName()];
     }
 }

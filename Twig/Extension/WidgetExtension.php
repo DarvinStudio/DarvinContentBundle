@@ -11,6 +11,7 @@
 namespace Darvin\ContentBundle\Twig\Extension;
 
 use Darvin\ContentBundle\Widget\WidgetEmbedderInterface;
+use Darvin\ContentBundle\Widget\WidgetPoolInterface;
 
 /**
  * Widget Twig extension
@@ -23,11 +24,18 @@ class WidgetExtension extends \Twig_Extension
     private $widgetEmbedder;
 
     /**
-     * @param \Darvin\ContentBundle\Widget\WidgetEmbedderInterface $widgetEmbedder Widget embedder
+     * @var \Darvin\ContentBundle\Widget\WidgetPoolInterface
      */
-    public function __construct(WidgetEmbedderInterface $widgetEmbedder)
+    private $widgetPool;
+
+    /**
+     * @param \Darvin\ContentBundle\Widget\WidgetEmbedderInterface $widgetEmbedder Widget embedder
+     * @param \Darvin\ContentBundle\Widget\WidgetPoolInterface     $widgetPool     Widget pool
+     */
+    public function __construct(WidgetEmbedderInterface $widgetEmbedder, WidgetPoolInterface $widgetPool)
     {
         $this->widgetEmbedder = $widgetEmbedder;
+        $this->widgetPool = $widgetPool;
     }
 
     /**
@@ -36,15 +44,32 @@ class WidgetExtension extends \Twig_Extension
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('content_embed_widgets', [$this->widgetEmbedder, 'embed'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFilter('content_embed_widgets', [$this->widgetEmbedder, 'embed'], [
+                'is_safe' => ['html'],
+            ]),
         ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getFunctions()
     {
-        return 'darvin_content_widget_extension';
+        return [
+            new \Twig_SimpleFunction('content_widget_exists', [$this->widgetPool, 'widgetExists']),
+            new \Twig_SimpleFunction('content_widget_render', [$this, 'renderWidget'], [
+                'is_safe' => ['html'],
+            ]),
+        ];
+    }
+
+    /**
+     * @param string $name Widget name
+     *
+     * @return string
+     */
+    public function renderWidget($name)
+    {
+        return $this->widgetPool->getWidget($name)->getContent();
     }
 }

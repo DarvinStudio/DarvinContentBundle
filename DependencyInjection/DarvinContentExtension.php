@@ -28,8 +28,8 @@ class DarvinContentExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-//        $configuration = new Configuration();
-//        $config = $this->processConfiguration($configuration, $configs);
+        $configuration = new Configuration();
+        $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('controller.yml');
@@ -38,6 +38,12 @@ class DarvinContentExtension extends Extension
         $loader->load('sorting.yml');
         $loader->load('translatable.yml');
         $loader->load('widget.yml');
+        $loader->load('widget_factory.yml');
+
+        $container->setParameter(
+            'darvin_content.widgets.forward_to_controller',
+            $config['widgets']['forward_to_controller']
+        );
 
         $container->setParameter(
             'knp.doctrine_behaviors.translatable_subscriber.current_locale_callable.class',

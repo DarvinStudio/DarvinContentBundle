@@ -103,6 +103,15 @@ class SlugMapSubscriber extends AbstractOnFlushListener implements EventSubscrib
 
         $changeSet = $event->getChangeSet();
 
+        foreach ($changeSet as $oldSlug => $newSlug) {
+            if (empty($oldSlug)) {
+                unset($changeSet[$oldSlug]);
+            }
+        }
+        if (empty($changeSet)) {
+            return;
+        }
+
         $slugMapItemRepository = $this->getSlugMapItemRepository();
 
         $slugMapItemUpdateQb = $this->em->createQueryBuilder()

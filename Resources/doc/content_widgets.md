@@ -20,9 +20,14 @@ class Widget implements WidgetInterface
         return 'bar';
     }
 
-    public function getPlaceholder()
+    public function getSluggableEntityClasses()
     {
-        return '%foo%';
+        return [];
+    }
+
+    public function getResolvedOptions()
+    {
+        return [];
     }
 
     public function getName()
