@@ -1,2 +1,2 @@
 widget:
-    name_not_unique: 'القطعة "اسم ٪ ٪" موجود بالفعل'
+    name_not_unique: 'القطعة "%name%"موجود بالفعل'
