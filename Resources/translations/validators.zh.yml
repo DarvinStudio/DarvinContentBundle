@@ -1,0 +1,2 @@
+widget:
+    name_not_unique: '部件"%name%"已经存在'
