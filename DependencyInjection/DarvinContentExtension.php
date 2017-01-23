@@ -10,6 +10,7 @@
 
 namespace Darvin\ContentBundle\DependencyInjection;
 
+use Darvin\ContentBundle\Traits\TranslatableTrait;
 use Darvin\ContentBundle\Translatable\CurrentLocaleCallable;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -40,18 +41,9 @@ class DarvinContentExtension extends Extension
         $loader->load('widget.yml');
         $loader->load('widget_factory.yml');
 
-        $container->setParameter(
-            'darvin_content.widgets.forward_to_controller',
-            $config['widgets']['forward_to_controller']
-        );
+        $container->setParameter('darvin_content.widgets.forward_to_controller', $config['widgets']['forward_to_controller']);
 
-        $container->setParameter(
-            'knp.doctrine_behaviors.translatable_subscriber.current_locale_callable.class',
-            CurrentLocaleCallable::class
-        );
-        $container->setParameter(
-            'knp.doctrine_behaviors.translatable_subscriber.translatable_trait',
-            'Darvin\ContentBundle\Traits\TranslatableTrait'
-        );
+        $container->setParameter('knp.doctrine_behaviors.translatable_subscriber.current_locale_callable.class', CurrentLocaleCallable::class);
+        $container->setParameter('knp.doctrine_behaviors.translatable_subscriber.translatable_trait', TranslatableTrait::class);
     }
 }

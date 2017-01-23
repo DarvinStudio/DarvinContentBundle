@@ -11,6 +11,7 @@
 namespace Darvin\ContentBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
@@ -48,7 +49,7 @@ class AddContentControllersPass implements CompilerPassInterface
         foreach ($ids as $id) {
             $controllerDefinition = $container->getDefinition($id);
 
-            if (in_array('Symfony\Component\DependencyInjection\ContainerAwareInterface', class_implements($controllerDefinition->getClass()))) {
+            if (in_array(ContainerAwareInterface::class, class_implements($controllerDefinition->getClass()))) {
                 $controllerDefinition->addMethodCall('setContainer', [
                     $containerReference,
                 ]);
