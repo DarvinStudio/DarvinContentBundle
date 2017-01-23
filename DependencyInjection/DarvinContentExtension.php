@@ -47,7 +47,7 @@ class DarvinContentExtension extends Extension
 
         $container->setParameter(
             'knp.doctrine_behaviors.translatable_subscriber.current_locale_callable.class',
-            CurrentLocaleCallable::CURRENT_LOCALE_CALLABLE_CLASS
+            CurrentLocaleCallable::class
         );
         $container->setParameter(
             'knp.doctrine_behaviors.translatable_subscriber.translatable_trait',

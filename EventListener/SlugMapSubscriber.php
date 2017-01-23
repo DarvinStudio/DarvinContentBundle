@@ -115,7 +115,7 @@ class SlugMapSubscriber extends AbstractOnFlushListener implements EventSubscrib
         $slugMapItemRepository = $this->getSlugMapItemRepository();
 
         $slugMapItemUpdateQb = $this->em->createQueryBuilder()
-            ->update(SlugMapItem::SLUG_MAP_ITEM_CLASS, 'o')
+            ->update(SlugMapItem::class, 'o')
             ->set('o.slug', 'CONCAT(:new_slug, SUBSTRING(o.slug, :old_slug_length + 1, LENGTH(o.slug)))')
             ->where('SUBSTRING(o.slug, 1, :old_slug_length) = :old_slug');
 
@@ -242,6 +242,6 @@ class SlugMapSubscriber extends AbstractOnFlushListener implements EventSubscrib
      */
     private function getSlugMapItemRepository()
     {
-        return $this->em->getRepository(SlugMapItem::SLUG_MAP_ITEM_CLASS);
+        return $this->em->getRepository(SlugMapItem::class);
     }
 }

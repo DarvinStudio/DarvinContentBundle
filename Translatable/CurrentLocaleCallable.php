@@ -17,8 +17,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class CurrentLocaleCallable
 {
-    const CURRENT_LOCALE_CALLABLE_CLASS = __CLASS__;
-
     /**
      * @var \Symfony\Component\DependencyInjection\ContainerInterface
      */

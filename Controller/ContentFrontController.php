@@ -120,7 +120,7 @@ class ContentFrontController extends Controller
      */
     private function getSlugMapItemRepository()
     {
-        return $this->getDoctrine()->getRepository(SlugMapItem::SLUG_MAP_ITEM_CLASS);
+        return $this->getDoctrine()->getRepository(SlugMapItem::class);
     }
 
     /**

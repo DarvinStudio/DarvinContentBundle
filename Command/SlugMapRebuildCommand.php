@@ -99,7 +99,7 @@ class SlugMapRebuildCommand extends Command
 
     private function truncateSlugMap()
     {
-        $tableName = $this->em->getClassMetadata(SlugMapItem::SLUG_MAP_ITEM_CLASS)->getTableName();
+        $tableName = $this->em->getClassMetadata(SlugMapItem::class)->getTableName();
 
         $connection = $this->em->getConnection();
         $connection->exec($connection->getDriver()->getDatabasePlatform()->getTruncateTableSQL($tableName));
