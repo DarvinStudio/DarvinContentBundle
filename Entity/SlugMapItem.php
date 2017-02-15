@@ -10,6 +10,7 @@
 
 namespace Darvin\ContentBundle\Entity;
 
+use Darvin\Utils\Mapping\Annotation as Darvin;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -56,6 +57,13 @@ class SlugMapItem
      * @ORM\Column(type="string")
      */
     private $property;
+
+    /**
+     * @var object
+     *
+     * @Darvin\CustomObject(classPropertyPath="objectClass", initPropertyValuePath="objectId")
+     */
+    private $object;
 
     /**
      * @param string $slug        Slug
@@ -157,5 +165,25 @@ class SlugMapItem
     public function getProperty()
     {
         return $this->property;
+    }
+
+    /**
+     * @param object $object object
+     *
+     * @return SlugMapItem
+     */
+    public function setObject($object)
+    {
+        $this->object = $object;
+
+        return $this;
+    }
+
+    /**
+     * @return object
+     */
+    public function getObject()
+    {
+        return $this->object;
     }
 }
