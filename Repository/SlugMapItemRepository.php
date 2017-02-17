@@ -10,7 +10,6 @@
 
 namespace Darvin\ContentBundle\Repository;
 
-use Darvin\ContentBundle\Entity\SlugMapItem;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -37,19 +36,16 @@ class SlugMapItemRepository extends EntityRepository
     }
 
     /**
-     * @param \Darvin\ContentBundle\Entity\SlugMapItem $slugMapItem Slug map item
+     * @param string $slug      Slug
+     * @param string $separator Slug parts separator
      *
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function getChildrenBuilder(SlugMapItem $slugMapItem)
+    public function getBySlugChildrenBuilder($slug, $separator)
     {
         return $this->createDefaultQueryBuilder()
-            ->andWhere('o.objectClass = :object_class')
-            ->setParameter('object_class', $slugMapItem->getObjectClass())
-            ->andWhere('o.property = :property')
-            ->setParameter('property', $slugMapItem->getProperty())
             ->andWhere('o.slug LIKE :slug')
-            ->setParameter('slug', $slugMapItem->getSlug().'/%');
+            ->setParameter('slug', $slug.$separator.'%');
     }
 
     /**
