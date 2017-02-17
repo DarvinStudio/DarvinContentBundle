@@ -36,16 +36,37 @@ class SlugMapItemRepository extends EntityRepository
     }
 
     /**
-     * @param string $slug      Slug
-     * @param string $separator Slug parts separator
+     * @param string[] $slugs Slugs
      *
-     * @return \Doctrine\ORM\QueryBuilder
+     * @return array Key - slug, value - array of child slug map item entities
      */
-    public function getBySlugChildrenBuilder($slug, $separator)
+    public function getBySlugsChildren(array $slugs)
     {
-        return $this->createDefaultQueryBuilder()
-            ->andWhere('o.slug LIKE :slug')
-            ->setParameter('slug', $slug.$separator.'%');
+        if (empty($slugs)) {
+            return [];
+        }
+
+        $qb = $this->createDefaultQueryBuilder();
+        $orX = $qb->expr()->orX();
+
+        foreach ($slugs as $key => $slug) {
+            $param = 'slug_'.$key;
+            $orX->add('o.slug LIKE :'.$param);
+            $qb->setParameter($param, $slug.'%');
+        }
+
+        $children = array_fill_keys($slugs, []);
+
+        /** @var \Darvin\ContentBundle\Entity\SlugMapItem $slugMapItem */
+        foreach ($qb->andWhere($orX)->getQuery()->getResult() as $slugMapItem) {
+            foreach ($slugs as $slug) {
+                if (0 === strpos($slugMapItem->getSlug(), $slug)) {
+                    $children[$slug][] = $slugMapItem;
+                }
+            }
+        }
+
+        return $children;
     }
 
     /**
