@@ -29,17 +29,21 @@ class DarvinContentExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $configuration = new Configuration();
-        $config = $this->processConfiguration($configuration, $configs);
+        $config = $this->processConfiguration(new Configuration(), $configs);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('controller.yml');
-        $loader->load('filterer.yml');
-        $loader->load('slug.yml');
-        $loader->load('sorting.yml');
-        $loader->load('translatable.yml');
-        $loader->load('widget.yml');
-        $loader->load('widget_factory.yml');
+
+        foreach ([
+            'controller',
+            'filterer',
+            'slug',
+            'sorting',
+            'translatable',
+            'widget',
+            'widget_factory',
+        ] as $resource) {
+            $loader->load($resource.'.yml');
+        }
 
         $container->setParameter('darvin_content.widgets.forward_to_controller', $config['widgets']['forward_to_controller']);
 
