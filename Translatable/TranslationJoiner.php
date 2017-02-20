@@ -11,8 +11,8 @@
 namespace Darvin\ContentBundle\Translatable;
 
 use Darvin\Utils\Doctrine\ORM\QueryBuilderUtil;
+use Darvin\Utils\Locale\LocaleProviderInterface;
 use Doctrine\ORM\QueryBuilder;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Translation joiner
@@ -20,9 +20,9 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class TranslationJoiner implements TranslationJoinerInterface
 {
     /**
-     * @var \Symfony\Component\HttpFoundation\RequestStack
+     * @var \Darvin\Utils\Locale\LocaleProviderInterface
      */
-    private $requestStack;
+    private $localeProvider;
 
     /**
      * @var \Darvin\ContentBundle\Translatable\TranslatableManagerInterface
@@ -30,12 +30,12 @@ class TranslationJoiner implements TranslationJoinerInterface
     private $translatableManager;
 
     /**
-     * @param \Symfony\Component\HttpFoundation\RequestStack                  $requestStack        Request stack
+     * @param \Darvin\Utils\Locale\LocaleProviderInterface                    $localeProvider      Locale provider
      * @param \Darvin\ContentBundle\Translatable\TranslatableManagerInterface $translatableManager Translatable manager
      */
-    public function __construct(RequestStack $requestStack, TranslatableManagerInterface $translatableManager)
+    public function __construct(LocaleProviderInterface $localeProvider, TranslatableManagerInterface $translatableManager)
     {
-        $this->requestStack = $requestStack;
+        $this->localeProvider = $localeProvider;
         $this->translatableManager = $translatableManager;
     }
 
@@ -77,7 +77,7 @@ class TranslationJoiner implements TranslationJoinerInterface
                 $qb->addSelect($joinAlias);
             }
             if (empty($locale)) {
-                $locale = $this->getLocaleFromRequest();
+                $locale = $this->localeProvider->getCurrentLocale();
             }
 
             $qb
@@ -104,20 +104,5 @@ class TranslationJoiner implements TranslationJoinerInterface
     public function isTranslatable($entityClass)
     {
         return $this->translatableManager->isTranslatable($entityClass);
-    }
-
-    /**
-     * @return string
-     * @throws \Darvin\ContentBundle\Translatable\TranslatableException
-     */
-    private function getLocaleFromRequest()
-    {
-        $request = $this->requestStack->getCurrentRequest();
-
-        if (empty($request)) {
-            throw new TranslatableException('Unable to get locale from current request: request is empty.');
-        }
-
-        return $request->getLocale();
     }
 }

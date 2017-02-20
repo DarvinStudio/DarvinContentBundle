@@ -35,16 +35,14 @@ class CurrentLocaleCallable
      */
     public function __invoke()
     {
-        $request = $this->getRequestStack()->getCurrentRequest();
-
-        return !empty($request) ? $request->getLocale() : null;
+        return $this->getLocaleProvider()->getCurrentLocale();
     }
 
     /**
-     * @return \Symfony\Component\HttpFoundation\RequestStack
+     * @return \Darvin\Utils\Locale\LocaleProviderInterface
      */
-    private function getRequestStack()
+    private function getLocaleProvider()
     {
-        return $this->container->get('request_stack');
+        return $this->container->get('darvin_utils.locale.provider');
     }
 }
