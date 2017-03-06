@@ -102,6 +102,7 @@ class SlugMapRebuildCommand extends Command
         $tableName = $this->em->getClassMetadata(SlugMapItem::class)->getTableName();
 
         $connection = $this->em->getConnection();
+        $connection->exec('SET foreign_key_checks = 0');
         $connection->exec($connection->getDriver()->getDatabasePlatform()->getTruncateTableSQL($tableName));
     }
 }
