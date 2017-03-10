@@ -71,10 +71,17 @@ class SlugMapRebuildCommand extends Command
 
         $this->truncateSlugMap();
 
-        /** @var \Doctrine\ORM\Mapping\ClassMetadataInfo $doctrineMeta */
-        foreach ($this->em->getMetadataFactory()->getAllMetadata() as $doctrineMeta) {
+        /** @var \Doctrine\ORM\Mapping\ClassMetadataInfo[] $allDoctrineMeta */
+        $allDoctrineMeta = $this->em->getMetadataFactory()->getAllMetadata();
+
+        foreach ($allDoctrineMeta as $doctrineMeta) {
             if ($doctrineMeta->getReflectionClass()->isAbstract()) {
                 continue;
+            }
+            foreach ($allDoctrineMeta as $otherDoctrineMeta) {
+                if (in_array($doctrineMeta->getName(), class_parents($otherDoctrineMeta->getName()))) {
+                    continue 2;
+                }
             }
 
             $extendedMeta = $this->metadataFactory->getExtendedMetadata($doctrineMeta->getName());
