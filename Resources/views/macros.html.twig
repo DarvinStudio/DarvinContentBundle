@@ -1,7 +1,36 @@
+{% macro heading(heading) %}
+
+    {%- import 'DarvinContentBundle::macros.html.twig' as darvin_content -%}
+
+    {{- heading }}{{ darvin_content.page_number() -}}
+{% endmacro %}
+
 {% macro meta_tags(description, keywords) %}
 
-    {% if description %}<meta name="description" content="{{ description }}">{% endif %}
+    {%- import 'DarvinContentBundle::macros.html.twig' as darvin_content -%}
 
-    {% if keywords %}<meta name="keywords" content="{{ keywords }}">{% endif %}
+    {%- if description -%}
+        <meta name="description" content="{{ description }}{{ darvin_content.page_number() }}">
+    {% endif %}
+    {%- if keywords -%}
+        <meta name="keywords" content="{{ keywords }}{{ darvin_content.page_number() }}">
+    {% endif %}
+{% endmacro %}
 
+{% macro meta_title(title) %}
+
+    {%- import 'DarvinContentBundle::macros.html.twig' as darvin_content -%}
+
+    {{- title }}{{ darvin_content.page_number() -}}
+{% endmacro %}
+
+{% macro page_number() %}
+
+    {%- set number = app.request.attributes.get(constant('Darvin\\ContentBundle\\EventListener\\SetPageToRequestSubscriber::ATTR_NAME'), -1) -%}
+
+    {% if number > 1 %}
+        {%- trans with {'%number%': number} %}macro.page_number.number{% endtrans -%}
+    {% elseif number == 0 %}
+        {%- trans with {'%number%': number} %}macro.page_number.all{% endtrans -%}
+    {% endif %}
 {% endmacro %}

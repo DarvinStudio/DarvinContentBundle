@@ -1,0 +1,4 @@
+macro:
+    page_number:
+        all:    "&nbsp;&mdash;&nbsp;full&nbsp;list"
+        number: "&nbsp;&mdash;&nbsp;page&nbsp;%number%"

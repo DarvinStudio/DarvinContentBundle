@@ -1,0 +1,4 @@
+macro:
+    page_number:
+        all: '&nbsp;&mdash;&nbsp;完整的名单'
+        number: '&nbsp;&mdash;&nbsp;页面&nbsp;%number%'

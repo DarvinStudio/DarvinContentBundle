@@ -1,0 +1,4 @@
+macro:
+    page_number:
+        all:    "&nbsp;&mdash;&nbsp;полный&nbsp;список"
+        number: "&nbsp;&mdash;&nbsp;страница&nbsp;%number%"

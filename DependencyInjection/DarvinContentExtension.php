@@ -36,6 +36,7 @@ class DarvinContentExtension extends Extension
         foreach ([
             'controller',
             'filterer',
+            'pagination',
             'slug',
             'sorting',
             'translatable',

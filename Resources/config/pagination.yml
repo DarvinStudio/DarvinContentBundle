@@ -1,0 +1,10 @@
+parameters:
+    darvin_content.pagination.set_page_to_request_subscriber.class: Darvin\ContentBundle\EventListener\SetPageToRequestSubscriber
+
+services:
+    darvin_content.pagination.set_page_to_request_subscriber:
+        class: "%darvin_content.pagination.set_page_to_request_subscriber.class%"
+        arguments:
+            - "@request_stack"
+        tags:
+            - { name: knp_paginator.subscriber }
