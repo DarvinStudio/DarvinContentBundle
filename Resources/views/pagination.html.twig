@@ -46,12 +46,12 @@
         {% endblock %}
 
         {% block all %}
-            {% if 0 == current %}
-                <span class="all">{% trans %}pagination.all{% endtrans %}</span>
-            {% else %}
+            {% if 0 != current %}
                 <span class="all">
                     <a href="{{ path(route, query|merge({(pageParameterName): 0})) }}">{% trans %}pagination.all{% endtrans %}</a>
                 </span>
+            {% else %}
+                <span class="all">{% trans %}pagination.all{% endtrans %}</span>
             {% endif %}
         {% endblock %}
 
