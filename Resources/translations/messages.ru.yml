@@ -2,3 +2,11 @@ macro:
     page_number:
         all:    "&nbsp;&mdash;&nbsp;полный&nbsp;список"
         number: "&nbsp;&mdash;&nbsp;страница&nbsp;%number%"
+
+pagination:
+    all:      Показать все
+    first:    "&lt;&lt;"
+    last:     "&gt;&gt;"
+    next:     "&gt;"
+    page:     "%page%"
+    previous: "&lt;"

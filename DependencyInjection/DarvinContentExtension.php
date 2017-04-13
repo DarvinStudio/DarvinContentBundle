@@ -14,15 +14,17 @@ use Darvin\ContentBundle\Traits\TranslatableTrait;
 use Darvin\ContentBundle\Translatable\CurrentLocaleCallable;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * This is the class that loads and manages your bundle configuration
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
-class DarvinContentExtension extends Extension
+class DarvinContentExtension extends Extension implements PrependExtensionInterface
 {
     /**
      * {@inheritdoc}
@@ -50,5 +52,21 @@ class DarvinContentExtension extends Extension
 
         $container->setParameter('knp.doctrine_behaviors.translatable_subscriber.current_locale_callable.class', CurrentLocaleCallable::class);
         $container->setParameter('knp.doctrine_behaviors.translatable_subscriber.translatable_trait', TranslatableTrait::class);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function prepend(ContainerBuilder $container)
+    {
+        $fileLocator = new FileLocator(__DIR__.'/../Resources/config/app');
+
+        foreach ([
+            'knp_paginator',
+        ] as $extension) {
+            if ($container->hasExtension($extension)) {
+                $container->prependExtensionConfig($extension, Yaml::parse(file_get_contents($fileLocator->locate($extension.'.yml')))[$extension]);
+            }
+        }
     }
 }

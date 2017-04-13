@@ -2,3 +2,11 @@ macro:
     page_number:
         all: '&nbsp;&mdash;&nbsp;كامل&nbsp;قائمة'
         number: '&nbsp;&mdash;&nbsp;الصفحة&nbsp;%number%'
+
+pagination:
+    all: 'عرض كل'
+    first: '&lt;&lt;'
+    last: '&gt;&gt;'
+    next: '&gt;'
+    page: '%page%'
+    previous: '&lt;'
