@@ -26,6 +26,11 @@ interface WidgetInterface
     public function getSluggableEntityClasses();
 
     /**
+     * @return object[]|null
+     */
+    public function getSluggableEntities();
+
+    /**
      * @return array
      */
     public function getResolvedOptions();

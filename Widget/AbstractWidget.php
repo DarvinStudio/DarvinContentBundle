@@ -45,6 +45,14 @@ abstract class AbstractWidget implements WidgetInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getSluggableEntities()
+    {
+        return null;
+    }
+
+    /**
      * @return string
      */
     public function getPlaceholder()
