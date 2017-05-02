@@ -26,9 +26,11 @@ interface WidgetInterface
     public function getSluggableEntityClasses();
 
     /**
-     * @return object[]|null
+     * @param object $entity Entity
+     *
+     * @return bool
      */
-    public function getSluggableEntities();
+    public function isEntitySluggable($entity);
 
     /**
      * @return array

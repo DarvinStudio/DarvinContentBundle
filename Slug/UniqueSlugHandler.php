@@ -12,6 +12,7 @@ namespace Darvin\ContentBundle\Slug;
 
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\Utils\Sluggable\SlugHandlerInterface;
+use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManager;
 
 /**
@@ -22,11 +23,23 @@ class UniqueSlugHandler implements SlugHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function handle(&$slug, &$suffix, EntityManager $em)
+    public function handle($entity, &$slug, &$suffix, EntityManager $em)
     {
         $similarSlugs = $this->getSlugMapItemRepository($em)->getSimilarSlugs($slug);
 
-        if (empty($similarSlugs) || !in_array($slug, $similarSlugs)) {
+        if (!isset($similarSlugs[$slug])) {
+            return;
+        }
+
+        $entityClass = ClassUtils::getClass($entity);
+        $entityId    = $entity->getId();
+
+        foreach ($similarSlugs as $similarSlug => $params) {
+            if ($params['objectClass'] === $entityClass && (int) $params['objectId'] === $entityId) {
+                unset($similarSlugs[$similarSlug]);
+            }
+        }
+        if (!isset($similarSlugs[$slug])) {
             return;
         }
 
@@ -36,7 +49,7 @@ class UniqueSlugHandler implements SlugHandlerInterface
         do {
             $index++;
             $slug = $originalSlug.'-'.$index;
-        } while (in_array($slug, $similarSlugs));
+        } while (isset($similarSlugs[$slug]));
 
         $suffix .= '-'.$index;
     }
