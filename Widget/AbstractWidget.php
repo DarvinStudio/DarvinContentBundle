@@ -10,7 +10,6 @@
 
 namespace Darvin\ContentBundle\Widget;
 
-use Doctrine\Common\Util\ClassUtils;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -50,7 +49,13 @@ abstract class AbstractWidget implements WidgetInterface
      */
     public function isEntitySluggable($entity)
     {
-        return in_array(ClassUtils::getClass($entity), $this->getSluggableEntityClasses());
+        foreach ($this->getSluggableEntityClasses() as $sluggable) {
+            if ($entity instanceof $sluggable) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
