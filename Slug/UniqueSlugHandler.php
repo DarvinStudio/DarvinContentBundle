@@ -12,7 +12,6 @@ namespace Darvin\ContentBundle\Slug;
 
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\Utils\Sluggable\SlugHandlerInterface;
-use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManager;
 
 /**
@@ -21,37 +20,56 @@ use Doctrine\ORM\EntityManager;
 class UniqueSlugHandler implements SlugHandlerInterface
 {
     /**
+     * @var array
+     */
+    private $similarSlugs;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->similarSlugs = [];
+    }
+
+    /**
      * {@inheritdoc}
      */
-    public function handle($entity, &$slug, &$suffix, EntityManager $em)
+    public function handle(&$slug, &$suffix, EntityManager $em)
     {
-        $similarSlugs = $this->getSlugMapItemRepository($em)->getSimilarSlugs($slug);
-
-        if (!isset($similarSlugs[$slug])) {
-            return;
-        }
-
-        $entityClass = ClassUtils::getClass($entity);
-        $entityId    = $entity->getId();
-
-        foreach ($similarSlugs as $similarSlug => $params) {
-            if ($params['objectClass'] === $entityClass && (int) $params['objectId'] === $entityId) {
-                unset($similarSlugs[$similarSlug]);
-            }
-        }
-        if (!isset($similarSlugs[$slug])) {
-            return;
-        }
-
         $originalSlug = $slug;
-        $index = 0;
 
-        do {
-            $index++;
-            $slug = $originalSlug.'-'.$index;
-        } while (isset($similarSlugs[$slug]));
+        $similarSlugs = $this->getSimilarSlugs($originalSlug, $em);
 
-        $suffix .= '-'.$index;
+        if (isset($similarSlugs[$slug])) {
+            $index = 0;
+
+            do {
+                $index++;
+                $slug = $originalSlug.'-'.$index;
+            } while (isset($similarSlugs[$slug]));
+
+            $suffix .= '-'.$index;
+        }
+
+        $this->similarSlugs[$originalSlug][$slug] = $slug;
+    }
+
+    /**
+     * @param string                      $originalSlug Original slug
+     * @param \Doctrine\ORM\EntityManager $em           Entity manager
+     *
+     * @return string[]
+     */
+    private function getSimilarSlugs($originalSlug, EntityManager $em)
+    {
+        if (!isset($this->similarSlugs[$originalSlug])) {
+            $similarSlugs = $this->getSlugMapItemRepository($em)->getSimilarSlugs($originalSlug);
+
+            $this->similarSlugs[$originalSlug] = array_combine($similarSlugs, $similarSlugs);
+        }
+
+        return $this->similarSlugs[$originalSlug];
     }
 
     /**
