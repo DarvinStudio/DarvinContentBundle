@@ -76,20 +76,7 @@ class SlugMapItemRepository extends EntityRepository
      */
     public function getSimilarSlugs($slug)
     {
-        $result = [];
-
-        $rows = $this->getSimilarSlugsBuilder($slug)
-            ->select('o.slug')
-            ->addSelect('o.objectClass')
-            ->addSelect('o.objectId')
-            ->getQuery()
-            ->getScalarResult();
-
-        foreach ($rows as $row) {
-            $result[$row['slug']] = $row;
-        }
-
-        return $result;
+        return array_column($this->getSimilarSlugsBuilder($slug)->select('o.slug')->getQuery()->getScalarResult(), 'slug');
     }
 
     /**
