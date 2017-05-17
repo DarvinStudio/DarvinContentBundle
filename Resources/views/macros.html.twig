@@ -9,11 +9,32 @@
 
     {%- import 'DarvinContentBundle::macros.html.twig' as darvin_content -%}
 
-    {%- if description -%}
+    {%- if description %}
+
         <meta name="description" content="{{ description }}{{ darvin_content.page_number() }}">
     {% endif %}
-    {%- if keywords -%}
+    {% if keywords %}
+
         <meta name="keywords" content="{{ keywords }}{{ darvin_content.page_number() }}">
+    {% endif %}
+
+    {%- set page_params  = app.request.attributes.get(constant('Darvin\\ContentBundle\\EventListener\\Pagination\\PagerSubscriber::REQUEST_ATTR_PAGE_PARAMS')) -%}
+    {%- set page_numbers = {} -%}
+
+    {%- for page_param in page_params if 1 == app.request.query.get(page_param) -%}
+
+        {%- set page_numbers = page_numbers|merge({(page_param): null}) -%}
+
+    {%- endfor -%}
+    {%- if page_numbers is not empty -%}
+
+        {%- set canonical = path(
+            app.request.attributes.get('_route'),
+            app.request.attributes.get('_route_params')|merge(app.request.query.all)|merge(page_numbers)
+        ) %}
+
+        <link rel="canonical" href="{{ canonical }}">
+
     {% endif %}
 {% endmacro %}
 
@@ -26,7 +47,7 @@
 
 {% macro page_number() %}
 
-    {%- set number = app.request.attributes.get(constant('Darvin\\ContentBundle\\EventListener\\SetPageToRequestSubscriber::ATTR_NAME'), -1) -%}
+    {%- set number = app.request.attributes.get(constant('Darvin\\ContentBundle\\EventListener\\Pagination\\PagerSubscriber::REQUEST_ATTR_PAGE_NUMBER'), -1) -%}
 
     {% if number > 1 %}
         {%- trans with {'%number%': number} %}macro.page_number.number{% endtrans -%}
