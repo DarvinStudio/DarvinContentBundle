@@ -1,9 +1,16 @@
 parameters:
-    darvin_content.pagination.set_page_to_request_subscriber.class: Darvin\ContentBundle\EventListener\SetPageToRequestSubscriber
+    darvin_content.pagination.page_not_found_exception_listener.class: Darvin\ContentBundle\EventListener\Pagination\PageNotFoundExceptionListener
+
+    darvin_content.pagination.pager_subscriber.class: Darvin\ContentBundle\EventListener\Pagination\PagerSubscriber
 
 services:
-    darvin_content.pagination.set_page_to_request_subscriber:
-        class: "%darvin_content.pagination.set_page_to_request_subscriber.class%"
+    darvin_content.pagination.page_not_found_exception_listener:
+        class: "%darvin_content.pagination.page_not_found_exception_listener.class%"
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }
+
+    darvin_content.pagination.pager_subscriber:
+        class: "%darvin_content.pagination.pager_subscriber.class%"
         arguments:
             - "@request_stack"
         tags:
