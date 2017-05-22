@@ -12,6 +12,7 @@ namespace Darvin\ContentBundle\Slug;
 
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\Utils\Sluggable\SlugHandlerInterface;
+use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManager;
 
 /**
@@ -35,41 +36,71 @@ class UniqueSlugHandler implements SlugHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function handle(&$slug, &$suffix, EntityManager $em)
+    public function handle($entity, &$slug, &$suffix, EntityManager $em)
     {
         $originalSlug = $slug;
 
-        $similarSlugs = $this->getSimilarSlugs($originalSlug, $em);
+        $entityClass = ClassUtils::getClass($entity);
+        $entityIds   = $em->getClassMetadata($entityClass)->getIdentifierValues($entity);
+        $entityId    = reset($entityIds);
 
-        if (isset($similarSlugs[$slug])) {
+        $similarSlugs = $this->getSimilarSlugs($em, $slug);
+
+        if (!$this->isSlugUnique($slug, $entityClass, $entityId, $similarSlugs)) {
             $index = 0;
 
             do {
                 $index++;
                 $slug = $originalSlug.'-'.$index;
-            } while (isset($similarSlugs[$slug]));
+            } while (!$this->isSlugUnique($slug, $entityClass, $entityId, $similarSlugs));
 
             $suffix .= '-'.$index;
         }
 
-        $this->similarSlugs[$originalSlug][$slug] = $slug;
+        $this->similarSlugs[$originalSlug][] = $this->similarSlugs[$slug][] = [
+            'slug'         => $slug,
+            'object_class' => $entityClass,
+            'object_id'    => $entityId,
+        ];
     }
 
     /**
-     * @param string                      $originalSlug Original slug
-     * @param \Doctrine\ORM\EntityManager $em           Entity manager
+     * @param string $slug         Slug
+     * @param string $entityClass  Entity class
+     * @param mixed  $entityId     Entity ID
+     * @param array  $similarSlugs Similar slugs
      *
-     * @return string[]
+     * @return bool
      */
-    private function getSimilarSlugs($originalSlug, EntityManager $em)
+    private function isSlugUnique($slug, $entityClass, $entityId, array $similarSlugs)
     {
-        if (!isset($this->similarSlugs[$originalSlug])) {
-            $similarSlugs = $this->getSlugMapItemRepository($em)->getSimilarSlugs($originalSlug);
-
-            $this->similarSlugs[$originalSlug] = array_combine($similarSlugs, $similarSlugs);
+        if (empty($similarSlugs)) {
+            return true;
+        }
+        foreach ($similarSlugs as $similar) {
+            if ($slug === $similar['slug']
+                && !(($entityClass === $similar['object_class'] || in_array($similar['object_class'], class_parents($entityClass))) && $entityId == $similar['object_id'])
+            ) {
+                return false;
+            }
         }
 
-        return $this->similarSlugs[$originalSlug];
+        return true;
+    }
+
+    /**
+     * @param \Doctrine\ORM\EntityManager $em   Entity manager
+     * @param string                      $slug Slug
+     *
+     * @return array
+     */
+    private function getSimilarSlugs(EntityManager $em, $slug)
+    {
+        if (!isset($this->similarSlugs[$slug])) {
+            $this->similarSlugs[$slug] = $this->getSlugMapItemRepository($em)->getSimilarSlugs($slug);
+        }
+
+        return $this->similarSlugs[$slug];
     }
 
     /**
