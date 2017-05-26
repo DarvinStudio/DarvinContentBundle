@@ -12,6 +12,7 @@ namespace Darvin\ContentBundle\DependencyInjection;
 
 use Darvin\ContentBundle\Traits\TranslatableTrait;
 use Darvin\ContentBundle\Translatable\CurrentLocaleCallable;
+use Darvin\Utils\DependencyInjection\ConfigInjector;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
@@ -31,7 +32,7 @@ class DarvinContentExtension extends Extension implements PrependExtensionInterf
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $config = $this->processConfiguration(new Configuration(), $configs);
+        (new ConfigInjector())->inject($this->processConfiguration(new Configuration(), $configs), $container, $this->getAlias());
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
 
@@ -47,8 +48,6 @@ class DarvinContentExtension extends Extension implements PrependExtensionInterf
         ] as $resource) {
             $loader->load($resource.'.yml');
         }
-
-        $container->setParameter('darvin_content.widgets.forward_to_controller', $config['widgets']['forward_to_controller']);
 
         $container->setParameter('knp.doctrine_behaviors.translatable_subscriber.current_locale_callable.class', CurrentLocaleCallable::class);
         $container->setParameter('knp.doctrine_behaviors.translatable_subscriber.translatable_trait', TranslatableTrait::class);
