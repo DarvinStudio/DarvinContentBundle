@@ -43,10 +43,14 @@ class AddWidgetsPass implements CompilerPassInterface
 
         $poolDefinition = $container->getDefinition(self::POOL_ID);
 
+        $blacklist = $container->getParameter('darvin_content.widgets.blacklist');
+
         foreach ($ids as $id) {
-            $poolDefinition->addMethodCall('addWidget', [
-                new Reference($id),
-            ]);
+            if (!in_array($id, $blacklist)) {
+                $poolDefinition->addMethodCall('addWidget', [
+                    new Reference($id),
+                ]);
+            }
         }
     }
 }

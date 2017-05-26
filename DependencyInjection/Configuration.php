@@ -26,39 +26,25 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('darvin_content');
-        $rootNode
+        $treeBuilder->root('darvin_content')
             ->children()
-                ->arrayNode('widgets')
-                    ->addDefaultsIfNotSet()
+                ->arrayNode('widgets')->addDefaultsIfNotSet()
                     ->children()
-                        ->arrayNode('forward_to_controller')
-                            ->defaultValue([])
-                            ->useAttributeAsKey('name')
+                        ->arrayNode('blacklist')->prototype('scalar')->end()->info('Blacklist of widget service IDs.')->end()
+                        ->arrayNode('forward_to_controller')->useAttributeAsKey('name')
                             ->prototype('array')
                                 ->children()
-                                    ->scalarNode('controller')
-                                        ->isRequired()
-                                    ->end()
-                                    ->arrayNode('sluggable_entity_classes')
-                                        ->prototype('scalar')->end()
-                                    ->end()
-                                    ->arrayNode('options')
-                                        ->useAttributeAsKey('name')
-                                        ->prototype('scalar')->end()
-                                    ->end()
+                                    ->scalarNode('controller')->isRequired()->end()
+                                    ->arrayNode('sluggable_entity_classes')->prototype('scalar')->end()->end()
+                                    ->arrayNode('options')->useAttributeAsKey('name')->prototype('scalar')->end()->end()
                                 ->end()
                             ->end()
                         ->end()
                     ->end()
                 ->end()
-            ->end()
-        ;
-
-
-        // Here you should define the parameters that are allowed to
-        // configure your bundle. See the documentation linked above for
-        // more information on that topic.
+                ->arrayNode('widget_factories')->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('blacklist')->prototype('scalar')->end()->info('Blacklist of widget factory service IDs.');
 
         return $treeBuilder;
     }

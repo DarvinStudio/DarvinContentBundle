@@ -34,10 +34,14 @@ class AddWidgetFactoriesPass implements CompilerPassInterface
 
         $poolDefinition = $container->getDefinition(self::POOL_ID);
 
+        $blacklist = $container->getParameter('darvin_content.widget_factories.blacklist');
+
         foreach ($container->findTaggedServiceIds(self::TAG_WIDGET_FACTORY) as $id => $attr) {
-            $poolDefinition->addMethodCall('addWidgetFactory', [
-                new Reference($id),
-            ]);
+            if (!in_array($id, $blacklist)) {
+                $poolDefinition->addMethodCall('addWidgetFactory', [
+                    new Reference($id),
+                ]);
+            }
         }
     }
 }
