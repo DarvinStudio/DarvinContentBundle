@@ -30,7 +30,7 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->arrayNode('widgets')->addDefaultsIfNotSet()
                     ->children()
-                        ->arrayNode('blacklist')->prototype('scalar')->end()->info('Blacklist of widget service IDs.')->end()
+                        ->arrayNode('blacklist')->prototype('scalar')->end()->info('Blacklist of widget names or service IDs.')->end()
                         ->arrayNode('forward_to_controller')->useAttributeAsKey('name')
                             ->prototype('array')
                                 ->children()
