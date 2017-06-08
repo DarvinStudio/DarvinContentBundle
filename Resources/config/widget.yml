@@ -28,7 +28,7 @@ services:
     darvin_content.widget.pool:
         class: "%darvin_content.widget.pool.class%"
         arguments:
-            - "@event_dispatcher"
+            - "%darvin_content.widgets.blacklist%"
         tags:
             - { name: darvin_utils.providable }
 

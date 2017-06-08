@@ -16,6 +16,11 @@ namespace Darvin\ContentBundle\Widget;
 class WidgetPool implements WidgetPoolInterface
 {
     /**
+     * @var string[]
+     */
+    private $widgetBlacklist;
+
+    /**
      * @var \Darvin\ContentBundle\Widget\WidgetInterface[]
      */
     private $widgets;
@@ -36,10 +41,12 @@ class WidgetPool implements WidgetPoolInterface
     private $initialized;
 
     /**
-     * Constructor
+     * @param string[] $widgetBlacklist Blacklist of widget names or services IDs
      */
-    public function __construct()
+    public function __construct(array $widgetBlacklist)
     {
+        $this->widgetBlacklist = $widgetBlacklist;
+
         $this->widgets = $this->widgetFactories = $this->nameCounts = [];
         $this->initialized = false;
     }
@@ -51,6 +58,9 @@ class WidgetPool implements WidgetPoolInterface
     {
         $name = $widget->getName();
 
+        if (in_array($name, $this->widgetBlacklist)) {
+            return;
+        }
         if (isset($this->widgets[$name]) && $duplicateNameException) {
             throw new WidgetException(sprintf('Widget "%s" already added to pool.', $name));
         }
