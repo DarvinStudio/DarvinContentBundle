@@ -37,6 +37,7 @@ class DarvinContentExtension extends Extension implements PrependExtensionInterf
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
 
         foreach ([
+            'canonical_url',
             'controller',
             'filterer',
             'pagination',
@@ -67,5 +68,13 @@ class DarvinContentExtension extends Extension implements PrependExtensionInterf
                 $container->prependExtensionConfig($extension, Yaml::parse(file_get_contents($fileLocator->locate($extension.'.yml')))[$extension]);
             }
         }
+
+        $container->prependExtensionConfig($this->getAlias(), [
+            'canonical_url' => [
+                'parameter_whitelist' => [
+                    'page',
+                ],
+            ],
+        ]);
     }
 }
