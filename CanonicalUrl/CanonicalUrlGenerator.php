@@ -66,7 +66,7 @@ class CanonicalUrlGenerator
      */
     public function generate()
     {
-        $request = $this->requestStack->getMasterRequest();
+        $request = $this->requestStack->getCurrentRequest();
 
         if (empty($request)) {
             return null;
