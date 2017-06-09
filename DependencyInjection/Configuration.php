@@ -28,6 +28,20 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $treeBuilder->root('darvin_content')
             ->children()
+                ->arrayNode('canonical_url')->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('parameter_whitelist')
+                            ->prototype('scalar')
+                                ->validate()
+                                    ->ifTrue(function ($pattern) {
+                                        return false === @preg_match('/^'.$pattern.'$/', null);
+                                    })
+                                    ->thenInvalid('%s is not valid pattern.')
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
                 ->arrayNode('widgets')->addDefaultsIfNotSet()
                     ->children()
                         ->arrayNode('blacklist')->prototype('scalar')->end()->info('Blacklist of widget names or service IDs.')->end()
