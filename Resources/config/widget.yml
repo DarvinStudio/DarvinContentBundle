@@ -14,6 +14,7 @@ services:
     darvin_content.widget.embedder:
         class: "%darvin_content.widget.embedder.class%"
         arguments:
+            - "@request_stack"
             - "@darvin_content.widget.pool"
 
     darvin_content.widget.list_command:

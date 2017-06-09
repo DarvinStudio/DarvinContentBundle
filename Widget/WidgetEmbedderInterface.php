@@ -16,9 +16,10 @@ namespace Darvin\ContentBundle\Widget;
 interface WidgetEmbedderInterface
 {
     /**
-     * @param string $content Content
+     * @param string $content                   Content
+     * @param bool   $onlyWidgetsOnNonFirstPage Whether to render only widgets on non-first page
      *
      * @return string
      */
-    public function embed($content);
+    public function embed($content, $onlyWidgetsOnNonFirstPage = false);
 }

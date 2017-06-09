@@ -83,7 +83,7 @@ class CanonicalUrlGenerator
         $whitelist = $this->queryParamWhitelist;
 
         foreach ($request->attributes->get(PagerSubscriber::REQUEST_ATTR_PAGE_PARAMS, []) as $name) {
-            if (isset($params[$name]) && '1' === (string) $params[$name]) {
+            if (isset($params[$name]) && 1 === (int) $params[$name]) {
                 continue;
             }
 
