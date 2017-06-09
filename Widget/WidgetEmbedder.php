@@ -10,11 +10,19 @@
 
 namespace Darvin\ContentBundle\Widget;
 
+use Darvin\ContentBundle\EventListener\Pagination\PagerSubscriber;
+use Symfony\Component\HttpFoundation\RequestStack;
+
 /**
  * Widget embedder
  */
 class WidgetEmbedder implements WidgetEmbedderInterface
 {
+    /**
+     * @var \Symfony\Component\HttpFoundation\RequestStack
+     */
+    private $requestStack;
+
     /**
      * @var \Darvin\ContentBundle\Widget\WidgetPoolInterface
      */
@@ -26,33 +34,50 @@ class WidgetEmbedder implements WidgetEmbedderInterface
     private $widgetContents;
 
     /**
-     * @param \Darvin\ContentBundle\Widget\WidgetPoolInterface $widgetPool Widget pool
+     * @param \Symfony\Component\HttpFoundation\RequestStack   $requestStack Request stack
+     * @param \Darvin\ContentBundle\Widget\WidgetPoolInterface $widgetPool   Widget pool
      */
-    public function __construct(WidgetPoolInterface $widgetPool)
+    public function __construct(RequestStack $requestStack, WidgetPoolInterface $widgetPool)
     {
+        $this->requestStack = $requestStack;
         $this->widgetPool = $widgetPool;
+
         $this->widgetContents = [];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function embed($content)
+    public function embed($content, $onlyWidgetsOnNonFirstPage = false)
     {
         if (empty($content)) {
             return $content;
         }
+
+        $replacements = [];
+
         foreach ($this->widgetPool->getAllWidgets() as $widget) {
             $placeholder = '%'.$widget->getName().'%';
 
-            if (false === strpos($content, $placeholder)) {
-                continue;
+            if (false !== strpos($content, $placeholder)) {
+                $replacements[$placeholder] = $this->getWidgetContent($widget);
             }
-
-            $content = str_replace($placeholder, $this->getWidgetContent($widget), $content);
+        }
+        if (!$onlyWidgetsOnNonFirstPage) {
+            return strtr($content, $replacements);
         }
 
-        return $content;
+        $request = $this->requestStack->getCurrentRequest();
+
+        if (!empty($request)) {
+            foreach ($request->attributes->get(PagerSubscriber::REQUEST_ATTR_PAGE_PARAMS, []) as $param) {
+                if (1 !== (int) $request->query->get($param)) {
+                    return implode($replacements);
+                }
+            }
+        }
+
+        return strtr($content, $replacements);
     }
 
     /**
