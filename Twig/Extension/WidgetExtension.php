@@ -10,8 +10,7 @@
 
 namespace Darvin\ContentBundle\Twig\Extension;
 
-use Darvin\ContentBundle\Widget\WidgetEmbedderInterface;
-use Darvin\ContentBundle\Widget\WidgetPoolInterface;
+use Darvin\Utils\Service\ServiceProviderInterface;
 
 /**
  * Widget Twig extension
@@ -19,23 +18,23 @@ use Darvin\ContentBundle\Widget\WidgetPoolInterface;
 class WidgetExtension extends \Twig_Extension
 {
     /**
-     * @var \Darvin\ContentBundle\Widget\WidgetEmbedderInterface
+     * @var \Darvin\Utils\Service\ServiceProviderInterface
      */
-    private $widgetEmbedder;
+    private $widgetEmbedderProvider;
 
     /**
-     * @var \Darvin\ContentBundle\Widget\WidgetPoolInterface
+     * @var \Darvin\Utils\Service\ServiceProviderInterface
      */
-    private $widgetPool;
+    private $widgetPoolProvider;
 
     /**
-     * @param \Darvin\ContentBundle\Widget\WidgetEmbedderInterface $widgetEmbedder Widget embedder
-     * @param \Darvin\ContentBundle\Widget\WidgetPoolInterface     $widgetPool     Widget pool
+     * @param \Darvin\Utils\Service\ServiceProviderInterface $widgetEmbedderProvider Widget embedder service provider
+     * @param \Darvin\Utils\Service\ServiceProviderInterface $widgetPoolProvider     Widget pool service provider
      */
-    public function __construct(WidgetEmbedderInterface $widgetEmbedder, WidgetPoolInterface $widgetPool)
+    public function __construct(ServiceProviderInterface $widgetEmbedderProvider, ServiceProviderInterface $widgetPoolProvider)
     {
-        $this->widgetEmbedder = $widgetEmbedder;
-        $this->widgetPool = $widgetPool;
+        $this->widgetEmbedderProvider = $widgetEmbedderProvider;
+        $this->widgetPoolProvider = $widgetPoolProvider;
     }
 
     /**
@@ -44,7 +43,7 @@ class WidgetExtension extends \Twig_Extension
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('content_embed_widgets', [$this->widgetEmbedder, 'embed'], [
+            new \Twig_SimpleFilter('content_embed_widgets', [$this->getWidgetEmbedder(), 'embed'], [
                 'is_safe' => ['html'],
             ]),
         ];
@@ -56,7 +55,7 @@ class WidgetExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('content_widget_exists', [$this->widgetPool, 'widgetExists']),
+            new \Twig_SimpleFunction('content_widget_exists', [$this->getWidgetPool(), 'widgetExists']),
             new \Twig_SimpleFunction('content_widget_render', [$this, 'renderWidget'], [
                 'is_safe' => ['html'],
             ]),
@@ -70,6 +69,22 @@ class WidgetExtension extends \Twig_Extension
      */
     public function renderWidget($name)
     {
-        return $this->widgetPool->getWidget($name)->getContent();
+        return $this->getWidgetPool()->getWidget($name)->getContent();
+    }
+
+    /**
+     * @return \Darvin\ContentBundle\Widget\WidgetEmbedderInterface
+     */
+    private function getWidgetEmbedder()
+    {
+        return $this->widgetEmbedderProvider->getService();
+    }
+
+    /**
+     * @return \Darvin\ContentBundle\Widget\WidgetPoolInterface
+     */
+    private function getWidgetPool()
+    {
+        return $this->widgetPoolProvider->getService();
     }
 }
