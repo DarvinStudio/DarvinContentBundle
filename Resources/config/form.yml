@@ -1,0 +1,11 @@
+parameters:
+    darvin_content.form.type_guesser.translatable.class: Darvin\ContentBundle\Form\TypeGuesser\TranslatableTypeGuesser
+
+services:
+    darvin_content.form.type_guesser.translatable:
+        class: "%darvin_content.form.type_guesser.translatable.class%"
+        arguments:
+            - "@form.type_guesser.doctrine"
+            - "@darvin_content.translatable.manager"
+        tags:
+            - { name: form.type_guesser }
