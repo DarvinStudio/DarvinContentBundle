@@ -40,6 +40,7 @@ class DarvinContentExtension extends Extension implements PrependExtensionInterf
             'canonical_url',
             'controller',
             'filterer',
+            'form',
             'pagination',
             'slug',
             'sorting',
