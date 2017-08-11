@@ -160,11 +160,15 @@ class TranslatableManager implements TranslatableManagerInterface
     public function isTranslatable($entityClass)
     {
         if (!isset($this->checkedIfTranslatable[$entityClass])) {
-            $this->checkedIfTranslatable[$entityClass] = $this->classAnalyzer->hasTrait(
-                $this->getDoctrineMetadata($entityClass)->getReflectionClass(),
-                $this->translatableTrait,
-                $this->isReflectionRecursive
-            );
+            $meta = $this->getDoctrineMetadata($entityClass);
+
+            $this->checkedIfTranslatable[$entityClass] = !empty($meta)
+                ? $this->classAnalyzer->hasTrait(
+                    $meta->getReflectionClass(),
+                    $this->translatableTrait,
+                    $this->isReflectionRecursive
+                )
+                : false;
         }
 
         return $this->checkedIfTranslatable[$entityClass];
@@ -176,11 +180,15 @@ class TranslatableManager implements TranslatableManagerInterface
     public function isTranslation($entityClass)
     {
         if (!isset($this->checkedIfTranslation[$entityClass])) {
-            $this->checkedIfTranslation[$entityClass] = $this->classAnalyzer->hasTrait(
-                $this->getDoctrineMetadata($entityClass)->getReflectionClass(),
-                $this->translationTrait,
-                $this->isReflectionRecursive
-            );
+            $meta = $this->getDoctrineMetadata($entityClass);
+
+            $this->checkedIfTranslation[$entityClass] = !empty($meta)
+                ? $this->classAnalyzer->hasTrait(
+                    $meta->getReflectionClass(),
+                    $this->translationTrait,
+                    $this->isReflectionRecursive
+                )
+                : false;
         }
 
         return $this->checkedIfTranslation[$entityClass];
@@ -203,17 +211,16 @@ class TranslatableManager implements TranslatableManagerInterface
     }
 
     /**
-     * @param string $entityClass Entity class
+     * @param string $class Class
      *
-     * @return \Doctrine\ORM\Mapping\ClassMetadataInfo
-     * @throws \Darvin\ContentBundle\Translatable\TranslatableException
+     * @return \Doctrine\ORM\Mapping\ClassMetadataInfo|null
      */
-    private function getDoctrineMetadata($entityClass)
+    private function getDoctrineMetadata($class)
     {
         try {
-            return $this->em->getClassMetadata($entityClass);
+            return $this->em->getClassMetadata($class);
         } catch (MappingException $ex) {
-            throw new TranslatableException(sprintf('Unable to get Doctrine metadata for class "%s".', $entityClass));
+            return null;
         }
     }
 }
