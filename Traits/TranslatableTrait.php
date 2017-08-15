@@ -11,6 +11,7 @@
 namespace Darvin\ContentBundle\Traits;
 
 use Darvin\ContentBundle\Translatable\TranslatableException;
+use Darvin\Utils\Mapping\Annotation\Clonable;
 use Doctrine\Common\Util\ClassUtils;
 use Knp\DoctrineBehaviors\Model\Translatable\Translatable;
 
@@ -20,6 +21,15 @@ use Knp\DoctrineBehaviors\Model\Translatable\Translatable;
 trait TranslatableTrait
 {
     use Translatable;
+
+    /**
+     * Will be merged with persisted translations on mergeNewTranslations call
+     *
+     * @see mergeNewTranslations
+     *
+     * @Clonable\Skip
+     */
+    protected $newTranslations;
 
     /**
      * @param string $property Property name
