@@ -1,11 +1,23 @@
 parameters:
-    darvin_content.form.type_guesser.translatable.class: Darvin\ContentBundle\Form\TypeGuesser\TranslatableTypeGuesser
+    darvin_content.form.type_guesser.translatable.abstract.class: Darvin\ContentBundle\Form\TypeGuesser\TranslatableTypeGuesser
 
 services:
-    darvin_content.form.type_guesser.translatable:
-        class: "%darvin_content.form.type_guesser.translatable.class%"
+    darvin_content.form.type_guesser.translatable.abstract:
+        class:    "%darvin_content.form.type_guesser.translatable.abstract.class%"
+        abstract: true
+        arguments:
+            - "@darvin_content.translatable.manager"
+
+    darvin_content.form.type_guesser.translatable.doctrine:
+        parent: darvin_content.form.type_guesser.translatable.abstract
         arguments:
             - "@form.type_guesser.doctrine"
-            - "@darvin_content.translatable.manager"
+        tags:
+            - { name: form.type_guesser }
+
+    darvin_content.form.type_guesser.translatable.validator:
+        parent: darvin_content.form.type_guesser.translatable.abstract
+        arguments:
+            - "@form.type_guesser.validator"
         tags:
             - { name: form.type_guesser }
