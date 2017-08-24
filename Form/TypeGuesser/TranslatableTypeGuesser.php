@@ -20,23 +20,23 @@ use Symfony\Component\Form\Guess\Guess;
 class TranslatableTypeGuesser implements FormTypeGuesserInterface
 {
     /**
-     * @var \Symfony\Component\Form\FormTypeGuesserInterface
-     */
-    private $genericTypeGuesser;
-
-    /**
      * @var \Darvin\ContentBundle\Translatable\TranslatableManagerInterface
      */
     private $translatableManager;
 
     /**
-     * @param \Symfony\Component\Form\FormTypeGuesserInterface                $genericTypeGuesser  Generic form type guesser
-     * @param \Darvin\ContentBundle\Translatable\TranslatableManagerInterface $translatableManager Translatable manager
+     * @var \Symfony\Component\Form\FormTypeGuesserInterface
      */
-    public function __construct(FormTypeGuesserInterface $genericTypeGuesser, TranslatableManagerInterface $translatableManager)
+    private $genericTypeGuesser;
+
+    /**
+     * @param \Darvin\ContentBundle\Translatable\TranslatableManagerInterface $translatableManager Translatable manager
+     * @param \Symfony\Component\Form\FormTypeGuesserInterface                $genericTypeGuesser  Generic form type guesser
+     */
+    public function __construct(TranslatableManagerInterface $translatableManager, FormTypeGuesserInterface $genericTypeGuesser)
     {
-        $this->genericTypeGuesser = $genericTypeGuesser;
         $this->translatableManager = $translatableManager;
+        $this->genericTypeGuesser = $genericTypeGuesser;
     }
 
     /**
