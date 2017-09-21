@@ -51,7 +51,7 @@
                     <a href="{{ path(route, query|merge({(pageParameterName): 0})) }}">{% trans %}pagination.all{% endtrans %}</a>
                 </span>
             {% else %}
-                <span class="all">{% trans %}pagination.all{% endtrans %}</span>
+                <span class="all current">{% trans %}pagination.all{% endtrans %}</span>
             {% endif %}
         {% endblock %}
 
