@@ -5,6 +5,8 @@ parameters:
     darvin_content.translatable.manager.translation_locale_property:          locale
     darvin_content.translatable.manager.translations_property:                translations
 
+    darvin_content.translatable.refresh_updated_at_event_subscriber.class: Darvin\ContentBundle\EventListener\RefreshTranslatableUpdatedAtSubscriber
+
     darvin_content.translatable.translations_create_command.class: Darvin\ContentBundle\Command\TranslationsCreateCommand
     darvin_content.translatable.translations_create_command.name:  darvin:content:translations:create
 
@@ -27,6 +29,16 @@ services:
             - "%darvin_content.translatable.manager.translations_property%"
         tags:
             - { name: darvin_utils.providable }
+
+    darvin_content.translatable.refresh_updated_at_event_subscriber:
+        class:  "%darvin_content.translatable.refresh_updated_at_event_subscriber.class%"
+        public: false
+        arguments:
+            - "@darvin_utils.mapping.metadata_factory"
+            - "@property_accessor"
+            - "@darvin_content.translatable.manager"
+        tags:
+            - { name: doctrine.event_subscriber }
 
     darvin_content.translatable.translations_create_command:
         class: "%darvin_content.translatable.translations_create_command.class%"
