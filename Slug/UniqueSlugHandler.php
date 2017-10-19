@@ -78,8 +78,14 @@ class UniqueSlugHandler implements SlugHandlerInterface
             return true;
         }
         foreach ($similarSlugs as $similar) {
-            if ($slug === $similar['slug']
-                && !(($entityClass === $similar['object_class'] || in_array($similar['object_class'], class_parents($entityClass))) && $entityId == $similar['object_id'])
+            if ($slug !== $similar['slug']) {
+                continue;
+            }
+            if (empty($entityId)) {
+                return false;
+            }
+            if (!($entityId == $similar['object_id']
+                && ($entityClass === $similar['object_class'] || in_array($similar['object_class'], class_parents($entityClass))))
             ) {
                 return false;
             }
