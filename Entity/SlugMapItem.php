@@ -33,28 +33,28 @@ class SlugMapItem
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=2550)
+     * @ORM\Column(length=2550)
      */
     private $slug;
 
     /**
      * @var string
      *
-     * @ORM\Column(type="string")
+     * @ORM\Column
      */
     private $objectClass;
 
     /**
      * @var string
      *
-     * @ORM\Column(type="string")
+     * @ORM\Column
      */
     private $objectId;
 
     /**
      * @var string
      *
-     * @ORM\Column(type="string")
+     * @ORM\Column
      */
     private $property;
 

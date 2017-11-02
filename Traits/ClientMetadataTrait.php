@@ -20,14 +20,14 @@ trait ClientMetadataTrait
     /**
      * @var string
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(nullable=true)
      */
     private $clientIp;
 
     /**
      * @var string
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(nullable=true)
      */
     private $userAgent;
 
