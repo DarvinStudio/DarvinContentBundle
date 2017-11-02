@@ -24,6 +24,7 @@ trait MetadataTrait
      * @var bool
      *
      * @ORM\Column(type="boolean")
+     *
      * @Gedmo\Versioned
      */
     protected $enabled;
@@ -32,6 +33,7 @@ trait MetadataTrait
      * @var bool
      *
      * @ORM\Column(type="boolean")
+     *
      * @Gedmo\Versioned
      */
     protected $hidden;
@@ -39,8 +41,10 @@ trait MetadataTrait
     /**
      * @var string
      *
-     * @ORM\Column(type="string")
+     * @ORM\Column
+     *
      * @Assert\NotBlank
+     *
      * @Gedmo\Versioned
      */
     protected $title;
@@ -48,8 +52,10 @@ trait MetadataTrait
     /**
      * @var string
      *
-     * @ORM\Column(type="string")
+     * @ORM\Column
+     *
      * @Darvin\DefaultValue(sourcePropertyPath="title")
+     *
      * @Gedmo\Versioned
      */
     protected $heading;
@@ -57,8 +63,10 @@ trait MetadataTrait
     /**
      * @var string
      *
-     * @ORM\Column(type="string")
+     * @ORM\Column
+     *
      * @Darvin\DefaultValue(sourcePropertyPath="title")
+     *
      * @Gedmo\Versioned
      */
     protected $metaTitle;
@@ -66,8 +74,10 @@ trait MetadataTrait
     /**
      * @var string
      *
-     * @ORM\Column(type="string")
+     * @ORM\Column
+     *
      * @Darvin\DefaultValue(sourcePropertyPath="title")
+     *
      * @Gedmo\Versioned
      */
     protected $metaDescription;
@@ -75,8 +85,10 @@ trait MetadataTrait
     /**
      * @var string
      *
-     * @ORM\Column(type="string")
+     * @ORM\Column
+     *
      * @Darvin\DefaultValue(sourcePropertyPath="title")
+     *
      * @Gedmo\Versioned
      */
     protected $metaKeywords;

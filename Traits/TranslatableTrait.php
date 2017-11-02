@@ -60,19 +60,25 @@ trait TranslatableTrait
     {
         $translation = $this->translate($this->getCurrentLocale());
 
+        $getter = $isser = null;
+
         if (!method_exists($translation, $method) && !preg_match('/^(get|is)/', $method)) {
-            $method = 'get'.ucfirst($method);
+            $method = $getter = 'get'.ucfirst($method);
         }
         if (!method_exists($translation, $method) && 0 === strpos($method, 'get')) {
-            $method = substr_replace($method, 'is', 0, 3);
+            $method = $isser = substr_replace($method, 'is', 0, 3);
         }
 
         $callback = [$translation, $method];
 
         if (!method_exists($translation, $method)) {
-            throw new TranslatableException(
-                sprintf('Method "%s::%s()" does not exist.', ClassUtils::getClass($translation), $method)
-            );
+            throw new TranslatableException(sprintf(
+                'Methods "%s()" and "%s()" not exist in class "%s" and it\'s translation "%s".',
+                $getter,
+                $isser,
+                ClassUtils::getClass($this),
+                ClassUtils::getClass($translation)
+            ));
         }
 
         return call_user_func_array($callback, $arguments);

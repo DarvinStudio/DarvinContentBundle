@@ -71,7 +71,7 @@ class WidgetEmbedder implements WidgetEmbedderInterface
 
         if (!empty($request)) {
             foreach ($request->attributes->get(PagerSubscriber::REQUEST_ATTR_PAGE_PARAMS, []) as $param) {
-                if (1 !== (int) $request->query->get($param)) {
+                if (1 !== (int)$request->query->get($param)) {
                     return implode($replacements);
                 }
             }
