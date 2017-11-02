@@ -91,9 +91,9 @@ class PagerSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $pageNumber = (int) $page;
+        $pageNumber = (int)$page;
 
-        if ((string) $pageNumber !== (string) $page || $pageNumber < 0 || $pageNumber > $pagination->getPageCount()) {
+        if ((string)$pageNumber !== (string)$page || $pageNumber < 0 || $pageNumber > $pagination->getPageCount()) {
             throw new PageNotFoundException();
         }
     }
