@@ -20,6 +20,7 @@ interface WidgetEmbedderInterface
      * @param bool   $onlyWidgetsOnNonFirstPage Whether to render only widgets on non-first page
      *
      * @return string
+     * @throws \Darvin\ContentBundle\Widget\Embedder\Exception\HttpException
      */
     public function embed($content, $onlyWidgetsOnNonFirstPage = false);
 }
