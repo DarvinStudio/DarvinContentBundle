@@ -11,7 +11,9 @@
 namespace Darvin\ContentBundle\Widget;
 
 use Darvin\ContentBundle\EventListener\Pagination\PagerSubscriber;
+use Darvin\ContentBundle\Widget\Embedder\Exception\HttpException;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Exception\HttpException as KernelHttpException;
 
 /**
  * Widget embedder
@@ -84,11 +86,16 @@ class WidgetEmbedder implements WidgetEmbedderInterface
      * @param \Darvin\ContentBundle\Widget\WidgetInterface $widget Widget
      *
      * @return string
+     * @throws \Darvin\ContentBundle\Widget\Embedder\Exception\HttpException
      */
     private function getWidgetContent(WidgetInterface $widget)
     {
         if (!isset($this->widgetContents[$widget->getName()])) {
-            $this->widgetContents[$widget->getName()] = $widget->getContent();
+            try {
+                $this->widgetContents[$widget->getName()] = $widget->getContent();
+            } catch (KernelHttpException $ex) {
+                throw new HttpException($ex);
+            }
         }
 
         return $this->widgetContents[$widget->getName()];
