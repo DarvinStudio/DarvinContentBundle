@@ -18,23 +18,11 @@ use Symfony\Component\HttpKernel\Exception\HttpException as KernelHttpException;
 class HttpException extends WidgetEmbedderException
 {
     /**
-     * @param string                                                $message             Message
-     * @param int                                                   $code                Code
      * @param \Symfony\Component\HttpKernel\Exception\HttpException $kernelHttpException Kernel HTTP exception
      */
-    public function __construct($message = '', $code = 0, KernelHttpException $kernelHttpException)
+    public function __construct(KernelHttpException $kernelHttpException)
     {
-        parent::__construct($message, $code, $kernelHttpException);
-    }
-
-    /**
-     * @param \Symfony\Component\HttpKernel\Exception\HttpException $kernelHttpException Kernel HTTP exception
-     *
-     * @return HttpException
-     */
-    public static function create(KernelHttpException $kernelHttpException)
-    {
-        return new self('', 0, $kernelHttpException);
+        parent::__construct('', 0, $kernelHttpException);
     }
 
     /**

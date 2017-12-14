@@ -94,7 +94,7 @@ class WidgetEmbedder implements WidgetEmbedderInterface
             try {
                 $this->widgetContents[$widget->getName()] = $widget->getContent();
             } catch (KernelHttpException $ex) {
-                throw HttpException::create($ex);
+                throw new HttpException($ex);
             }
         }
 

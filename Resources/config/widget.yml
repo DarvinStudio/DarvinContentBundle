@@ -3,6 +3,8 @@ parameters:
 
     darvin_content.widget.embedder.http_exception_event_subscriber.class: Darvin\ContentBundle\EventListener\Widget\Embedder\HttpExceptionSubscriber
 
+    darvin_content.widget.embedder.redirect_event_subscriber.class: Darvin\ContentBundle\EventListener\Widget\Embedder\RedirectSubscriber
+
     darvin_content.widget.list_command.class: Darvin\ContentBundle\Command\ListWidgetsCommand
     darvin_content.widget.list_command.name:  darvin:content:widget:list
 
@@ -23,6 +25,11 @@ services:
 
     darvin_content.widget.embedder.http_exception_event_subscriber:
         class: "%darvin_content.widget.embedder.http_exception_event_subscriber.class%"
+        tags:
+            - { name: kernel.event_subscriber }
+
+    darvin_content.widget.embedder.redirect_event_subscriber:
+        class: "%darvin_content.widget.embedder.redirect_event_subscriber.class%"
         tags:
             - { name: kernel.event_subscriber }
 
