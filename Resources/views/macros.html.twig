@@ -1,3 +1,17 @@
+{% macro alternate_links(locales) %}
+    {%- if app.request and app.request.attributes.has('_route') and app.request.attributes.has('_locale') -%}
+        {%- for locale in locales -%}
+
+            {% set url = url(
+                app.request.attributes.get('_route'),
+                app.request.attributes.get('_route_params', {})|merge({'_locale': locale})|merge(app.request.query.all)
+            ) %}
+
+            <link rel="alternate" hreflang="{{ locale }}" href="{{ url }}">
+        {%- endfor -%}
+    {%- endif -%}
+{% endmacro %}
+
 {% macro heading(heading) %}
 
     {%- import 'DarvinContentBundle::macros.html.twig' as darvin_content -%}
