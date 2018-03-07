@@ -19,6 +19,7 @@ use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
+use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Events;
 
 /**
@@ -37,6 +38,11 @@ class SlugMapSubscriber extends AbstractOnFlushListener implements EventSubscrib
     private $slugMapItemFactory;
 
     /**
+     * @var bool
+     */
+    private $flushNeeded;
+
+    /**
      * @param \Darvin\Utils\Mapping\MetadataFactoryInterface $extendedMetadataFactory Extended metadata factory
      * @param \Darvin\ContentBundle\Slug\SlugMapItemFactory  $slugMapItemFactory      Slug map item factory
      */
@@ -44,6 +50,8 @@ class SlugMapSubscriber extends AbstractOnFlushListener implements EventSubscrib
     {
         $this->extendedMetadataFactory = $extendedMetadataFactory;
         $this->slugMapItemFactory = $slugMapItemFactory;
+
+        $this->flushNeeded = false;
     }
 
     /**
@@ -53,6 +61,7 @@ class SlugMapSubscriber extends AbstractOnFlushListener implements EventSubscrib
     {
         return [
             Events::onFlush,
+            Events::postFlush,
             Events::postPersist,
         ];
     }
@@ -91,7 +100,19 @@ class SlugMapSubscriber extends AbstractOnFlushListener implements EventSubscrib
             $this->em->persist($slugMapItem);
         }
 
-        $this->em->flush();
+        $this->flushNeeded = true;
+    }
+
+    /**
+     * @param \Doctrine\ORM\Event\PostFlushEventArgs $args Event arguments
+     */
+    public function postFlush(PostFlushEventArgs $args)
+    {
+        if ($this->flushNeeded) {
+            $this->flushNeeded = false;
+
+            $args->getEntityManager()->flush();
+        }
     }
 
     /**
