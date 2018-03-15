@@ -11,3 +11,5 @@
 7.1.3: Add "alternate_links()" macro.
 
 7.1.4: Save new slug map items in the "post flush" event instead of "post persist".
+
+7.1.5: Filterer: allow to filter by "many-to-many" associations.
