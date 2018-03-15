@@ -12,8 +12,10 @@ namespace Darvin\ContentBundle\Filterer;
 
 use Darvin\ContentBundle\Translatable\TranslatableManagerInterface;
 use Darvin\ContentBundle\Translatable\TranslationJoinerInterface;
+use Darvin\Utils\Doctrine\ORM\QueryBuilderUtil;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\OptionsResolver\Exception\ExceptionInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -147,11 +149,19 @@ class Filterer implements FiltererInterface
      */
     private function buildConstraint(QueryBuilder $qb, $field, $entityClass, $rootAlias, $strictComparison)
     {
+        $meta = $this->getDoctrineMetadata($entityClass);
+
+        if (isset($meta->associationMappings[$field]) && ClassMetadataInfo::MANY_TO_MANY === $meta->associationMappings[$field]['type']) {
+            if (null === QueryBuilderUtil::findJoinByAlias($qb, $rootAlias, $field)) {
+                $qb->innerJoin(sprintf('%s.%s', $rootAlias, $field), $field);
+            }
+
+            return sprintf('%s = :%1$s', $field);
+        }
+
         $property = preg_replace('/(From|To)$/', '', $field);
 
-        $doctrineMeta = $this->getDoctrineMetadata($entityClass);
-
-        if (!isset($doctrineMeta->associationMappings[$property]) && !isset($doctrineMeta->fieldMappings[$property])) {
+        if (!isset($meta->associationMappings[$property]) && !isset($meta->fieldMappings[$property])) {
             if (!$this->translatableManager->isTranslatable($entityClass)) {
                 throw new FiltererException(
                     sprintf('Property "%s::$%s" is not association or mapped field.', $entityClass, $property)
