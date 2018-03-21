@@ -13,3 +13,5 @@
 7.1.4: Save new slug map items in the "post flush" event instead of "post persist".
 
 7.1.5: Filterer: allow to filter by "many-to-many" associations.
+
+7.2.0: Dispatch filterer build constraint event.
