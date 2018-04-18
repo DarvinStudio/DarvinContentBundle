@@ -10,6 +10,8 @@
 
 namespace Darvin\ContentBundle\Filterer;
 
+use Darvin\ContentBundle\Event\Filterer\BuildConstraintEvent;
+use Darvin\ContentBundle\Event\Filterer\FiltererEvents;
 use Darvin\ContentBundle\Translatable\TranslatableManagerInterface;
 use Darvin\ContentBundle\Translatable\TranslationJoinerInterface;
 use Darvin\Utils\Doctrine\ORM\QueryBuilderUtil;
@@ -17,6 +19,7 @@ use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\OptionsResolver\Exception\ExceptionInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -29,6 +32,11 @@ class Filterer implements FiltererInterface
      * @var \Doctrine\ORM\EntityManager
      */
     private $em;
+
+    /**
+     * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+     */
+    private $eventDispatcher;
 
     /**
      * @var \Darvin\ContentBundle\Translatable\TranslatableManagerInterface
@@ -52,15 +60,18 @@ class Filterer implements FiltererInterface
 
     /**
      * @param \Doctrine\ORM\EntityManager                                     $em                  Entity manager
+     * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface     $eventDispatcher     Event dispatcher
      * @param \Darvin\ContentBundle\Translatable\TranslatableManagerInterface $translatableManager Translatable manager
      * @param \Darvin\ContentBundle\Translatable\TranslationJoinerInterface   $translationJoiner   Translation joiner
      */
     public function __construct(
         EntityManager $em,
+        EventDispatcherInterface $eventDispatcher,
         TranslatableManagerInterface $translatableManager,
         TranslationJoinerInterface $translationJoiner
     ) {
         $this->em = $em;
+        $this->eventDispatcher = $eventDispatcher;
         $this->translatableManager = $translatableManager;
         $this->translationJoiner = $translationJoiner;
         $this->optionsResolver = new OptionsResolver();
@@ -129,9 +140,13 @@ class Filterer implements FiltererInterface
         foreach ($filterData as $field => $value) {
             $strictComparison = !in_array($field, $options['non_strict_comparison_fields']);
 
-            $where[] = $this->buildConstraint($qb, $field, $entityClass, $rootAlias, $strictComparison);
+            $event = new BuildConstraintEvent($qb, $field, $value, $entityClass, $rootAlias, $strictComparison);
 
-            $qb->setParameter($field, $strictComparison ? $value : '%'.$value.'%');
+            $this->eventDispatcher->dispatch(FiltererEvents::BUILD_CONSTRAINT, $event);
+
+            $where[] = null !== $event->getConstraint()
+                ? $event->getConstraint()
+                : $this->buildConstraint($qb, $field, $value, $entityClass, $rootAlias, $strictComparison);
         }
 
         $qb->andWhere(implode($conjunction ? ' AND ' : ' OR ', $where));
@@ -139,7 +154,8 @@ class Filterer implements FiltererInterface
 
     /**
      * @param \Doctrine\ORM\QueryBuilder $qb               Query builder
-     * @param string                     $field            Constraint field
+     * @param string                     $field            Field
+     * @param mixed                      $value            Value
      * @param string                     $entityClass      Entity class
      * @param string                     $rootAlias        Query builder root alias
      * @param bool                       $strictComparison Whether to use strict comparison
@@ -147,8 +163,10 @@ class Filterer implements FiltererInterface
      * @return string
      * @throws \Darvin\ContentBundle\Filterer\FiltererException
      */
-    private function buildConstraint(QueryBuilder $qb, $field, $entityClass, $rootAlias, $strictComparison)
+    private function buildConstraint(QueryBuilder $qb, $field, $value, $entityClass, $rootAlias, $strictComparison)
     {
+        $qb->setParameter($field, $strictComparison ? $value : '%'.$value.'%');
+
         $meta = $this->getDoctrineMetadata($entityClass);
 
         if (isset($meta->associationMappings[$field]) && ClassMetadataInfo::MANY_TO_MANY === $meta->associationMappings[$field]['type']) {
