@@ -36,11 +36,12 @@ class SlugMapItemRepository extends EntityRepository
     }
 
     /**
-     * @param string[] $slugs Slugs
+     * @param string[] $slugs          Slugs
+     * @param string[] $classBlacklist Object class blacklist
      *
      * @return array Key - slug, value - array of child slug map item entities
      */
-    public function getBySlugsChildren(array $slugs)
+    public function getBySlugsChildren(array $slugs, array $classBlacklist = [])
     {
         if (empty($slugs)) {
             return [];
@@ -53,6 +54,11 @@ class SlugMapItemRepository extends EntityRepository
             $param = 'slug_'.$key;
             $orX->add('o.slug LIKE :'.$param);
             $qb->setParameter($param, $slug.'%');
+        }
+        if (!empty($classBlacklist)) {
+            $qb
+                ->andWhere($qb->expr()->notIn('o.objectClass', ':class_blacklist'))
+                ->setParameter('class_blacklist', $classBlacklist);
         }
 
         $children = array_fill_keys($slugs, []);
