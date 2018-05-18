@@ -7,9 +7,6 @@ parameters:
 
     darvin_content.translatable.refresh_updated_at_event_subscriber.class: Darvin\ContentBundle\EventListener\RefreshTranslatableUpdatedAtSubscriber
 
-    darvin_content.translatable.translations_create_command.class: Darvin\ContentBundle\Command\TranslationsCreateCommand
-    darvin_content.translatable.translations_create_command.name:  darvin:content:translations:create
-
     darvin_content.translatable.translations_initializer.class: Darvin\ContentBundle\Translatable\TranslationsInitializer
 
     darvin_content.translatable.translation_joiner.class: Darvin\ContentBundle\Translatable\TranslationJoiner
@@ -39,16 +36,6 @@ services:
             - "@darvin_content.translatable.manager"
         tags:
             - { name: doctrine.event_subscriber }
-
-    darvin_content.translatable.translations_create_command:
-        class: "%darvin_content.translatable.translations_create_command.class%"
-        arguments:
-            - "%darvin_content.translatable.translations_create_command.name%"
-            - "@doctrine.orm.entity_manager"
-            - "@darvin_content.translatable.manager"
-            - "%locale%"
-        tags:
-            - { name: console.command }
 
     darvin_content.translatable.translations_initializer:
         class: "%darvin_content.translatable.translations_initializer.class%"

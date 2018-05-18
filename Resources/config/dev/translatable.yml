@@ -1,0 +1,14 @@
+parameters:
+    darvin_content.translatable.translations_create_command.class: Darvin\ContentBundle\Command\TranslationsCreateCommand
+    darvin_content.translatable.translations_create_command.name:  darvin:content:translations:create
+
+services:
+    darvin_content.translatable.translations_create_command:
+        class: "%darvin_content.translatable.translations_create_command.class%"
+        arguments:
+            - "%darvin_content.translatable.translations_create_command.name%"
+            - "@doctrine.orm.entity_manager"
+            - "@darvin_content.translatable.manager"
+            - "%locale%"
+        tags:
+            - { name: console.command }

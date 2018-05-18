@@ -50,6 +50,15 @@ class DarvinContentExtension extends Extension implements PrependExtensionInterf
         ] as $resource) {
             $loader->load($resource.'.yml');
         }
+        if ('dev' === $container->getParameter('kernel.environment')) {
+            foreach ([
+                'slug',
+                'translatable',
+                'widget',
+            ] as $resource) {
+                $loader->load(sprintf('dev/%s.yml', $resource));
+            }
+        }
 
         $container->setParameter('knp.doctrine_behaviors.translatable_subscriber.current_locale_callable.class', CurrentLocaleCallable::class);
         $container->setParameter('knp.doctrine_behaviors.translatable_subscriber.translatable_trait', TranslatableTrait::class);
