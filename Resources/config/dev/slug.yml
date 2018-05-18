@@ -1,0 +1,28 @@
+parameters:
+    darvin_content.slug.map_rebuild_command.class: Darvin\ContentBundle\Command\SlugMapRebuildCommand
+    darvin_content.slug.map_rebuild_command.name:  darvin:content:slug-map:rebuild
+
+    darvin_content.slug.rebuild_command.class: Darvin\ContentBundle\Command\RebuildSlugsCommand
+    darvin_content.slug.rebuild_command.name:  darvin:content:slugs:rebuild
+
+services:
+    darvin_content.slug.map_rebuild_command:
+        class: "%darvin_content.slug.map_rebuild_command.class%"
+        arguments:
+            - "%darvin_content.slug.map_rebuild_command.name%"
+            - "@doctrine.orm.entity_manager"
+            - "@darvin_utils.mapping.metadata_factory"
+            - "@darvin_content.slug.map_item_factory"
+        tags:
+            - { name: console.command }
+
+    darvin_content.slug.rebuild_command:
+        class: "%darvin_content.slug.rebuild_command.class%"
+        arguments:
+            - "%darvin_content.slug.rebuild_command.name%"
+            - "@doctrine.orm.entity_manager"
+            - "@darvin_utils.mapping.metadata_factory"
+            - "@property_accessor"
+            - "@darvin_utils.sluggable.manager"
+        tags:
+            - { name: console.command }

@@ -17,3 +17,5 @@
 7.2.0: Dispatch filterer build constraint event.
 
 7.2.1: Allow to blacklist object classes in "Darvin\ContentBundle\Repository\SlugMapItemRepository::getBySlugsChildren()".
+
+7.2.2: Init commands only in "dev" environment.
