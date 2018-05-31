@@ -12,6 +12,7 @@ namespace Darvin\ContentBundle\Command;
 
 use Darvin\ContentBundle\Translatable\TranslatableException;
 use Darvin\ContentBundle\Translatable\TranslatableManagerInterface;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -112,15 +113,26 @@ EOF
             ]);
 
             foreach ($defaultLocaleTranslations as $translation) {
-                $doctrineMeta = $this->em->getClassMetadata($translationClass);
+                $meta = $this->em->getClassMetadata($translationClass);
 
                 $translationClone = clone $translation;
-                $ids = $doctrineMeta->getIdentifier();
-                $doctrineMeta->setIdentifierValues($translationClone, array_fill_keys($ids, null));
-                $doctrineMeta->setFieldValue($translationClone, $localeProperty, $targetLocale);
+                $ids = $meta->getIdentifier();
+                $meta->setIdentifierValues($translationClone, array_fill_keys($ids, null));
+                $meta->setFieldValue($translationClone, $localeProperty, $targetLocale);
+
+                foreach ($meta->getAssociationNames() as $property) {
+                    if ('translatable' !== $property) {
+                        $meta->setFieldValue(
+                            $translationClone,
+                            $property,
+                            $meta->isCollectionValuedAssociation($property) ? new ArrayCollection() : null
+                        );
+                    }
+                }
+
                 $this->em->persist($translationClone);
 
-                $ids = $doctrineMeta->getIdentifierValues($translation);
+                $ids = $meta->getIdentifierValues($translation);
                 $this->io->comment($translationClass.' '.reset($ids));
             }
 
@@ -175,18 +187,10 @@ EOF
                 $classes[$class] = $class;
             }
         }
-
-        $toRemove = [];
-
         foreach ($classes as $class) {
             foreach (class_parents($class) as $parent) {
-                if (isset($classes[$parent])) {
-                    $toRemove[] = $class;
-                }
+                unset($classes[$parent]);
             }
-        }
-        foreach ($toRemove as $class) {
-            unset($classes[$class]);
         }
 
         return $classes;
