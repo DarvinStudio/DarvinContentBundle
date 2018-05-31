@@ -63,7 +63,7 @@ trait MetadataTrait
     /**
      * @var string
      *
-     * @ORM\Column
+     * @ORM\Column(length=1024)
      *
      * @Darvin\DefaultValue(sourcePropertyPath="title")
      *
@@ -74,7 +74,7 @@ trait MetadataTrait
     /**
      * @var string
      *
-     * @ORM\Column
+     * @ORM\Column(type="text")
      *
      * @Darvin\DefaultValue(sourcePropertyPath="title")
      *
@@ -85,7 +85,7 @@ trait MetadataTrait
     /**
      * @var string
      *
-     * @ORM\Column
+     * @ORM\Column(type="text")
      *
      * @Darvin\DefaultValue(sourcePropertyPath="title")
      *

@@ -19,3 +19,9 @@
 7.2.1: Allow to blacklist object classes in "Darvin\ContentBundle\Repository\SlugMapItemRepository::getBySlugsChildren()".
 
 7.2.2: Init commands only in "dev" environment.
+
+7.3.0:
+
+- increase database limits for meta tags;
+
+- fix create translations command.
