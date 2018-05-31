@@ -83,15 +83,15 @@ EOF
 
         $targetLocale = $input->getArgument('locale');
 
-        $translationClasses = $this->getTranslationClasses();
+        $classes = $this->getTranslationClasses();
 
-        if (empty($translationClasses)) {
+        if (empty($classes)) {
             return;
         }
 
         $this
-            ->checkIfTargetLocaleTranslationsExist($translationClasses, $targetLocale)
-            ->cloneDefaultLocaleTranslations($translationClasses, $targetLocale);
+            ->checkIfTargetLocaleTranslationsExist($classes, $targetLocale)
+            ->cloneDefaultLocaleTranslations($classes, $targetLocale);
     }
 
     /**
@@ -102,6 +102,8 @@ EOF
      */
     private function cloneDefaultLocaleTranslations(array $translationClasses, $targetLocale)
     {
+        $this->em->getConnection()->beginTransaction();
+
         $localeProperty = $this->translatableManager->getTranslationLocaleProperty();
 
         foreach ($translationClasses as $translationClass) {
@@ -125,6 +127,8 @@ EOF
             $this->em->flush();
             $this->em->clear();
         }
+
+        $this->em->getConnection()->commit();
     }
 
     /**
@@ -161,15 +165,30 @@ EOF
      */
     private function getTranslationClasses()
     {
-        $translationClasses = [];
+        $classes = [];
 
-        /** @var \Doctrine\ORM\Mapping\ClassMetadataInfo $doctrineMeta */
-        foreach ($this->em->getMetadataFactory()->getAllMetadata() as $doctrineMeta) {
-            if ($this->translatableManager->isTranslatable($doctrineMeta->getName())) {
-                $translationClasses[] = $this->translatableManager->getTranslationClass($doctrineMeta->getName());
+        /** @var \Doctrine\ORM\Mapping\ClassMetadataInfo $meta */
+        foreach ($this->em->getMetadataFactory()->getAllMetadata() as $meta) {
+            if ($this->translatableManager->isTranslatable($meta->getName())) {
+                $class = $this->translatableManager->getTranslationClass($meta->getName());
+
+                $classes[$class] = $class;
             }
         }
 
-        return $translationClasses;
+        $toRemove = [];
+
+        foreach ($classes as $class) {
+            foreach (class_parents($class) as $parent) {
+                if (isset($classes[$parent])) {
+                    $toRemove[] = $class;
+                }
+            }
+        }
+        foreach ($toRemove as $class) {
+            unset($classes[$class]);
+        }
+
+        return $classes;
     }
 }
