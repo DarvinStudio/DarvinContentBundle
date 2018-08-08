@@ -1,8 +1,7 @@
 macro:
     page_number:
-        all: '&nbsp;&mdash;&nbsp;完整的名单'
-        number: '&nbsp;&mdash;&nbsp;页面&nbsp;%number%'
-
+        all: ' —完整的列表'
+        number: ' —网页 %number%'
 pagination:
     all: 显示所有
     first: '&lt;&lt;'
