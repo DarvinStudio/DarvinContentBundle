@@ -1,8 +1,7 @@
 macro:
     page_number:
-        all: '&nbsp;&mdash;&nbsp;كامل&nbsp;قائمة'
-        number: '&nbsp;&mdash;&nbsp;الصفحة&nbsp;%number%'
-
+        all: ' — القائمة الكاملة'
+        number: ' صفحة %number%'
 pagination:
     all: 'عرض كل'
     first: '&lt;&lt;'

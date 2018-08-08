@@ -1,10 +1,9 @@
 macro:
     page_number:
-        all: '&nbsp;&mdash;&nbsp;liste&nbsp;complète'
-        number: '&nbsp;&mdash;&nbsp;page&nbsp;%number%'
-
+        all: ' — la liste complète'
+        number: ' — page %number%'
 pagination:
-    all: Afficher tous les
+    all: 'Afficher tous les'
     first: '&lt;&lt;'
     last: '&gt;&gt;'
     next: '&gt;'

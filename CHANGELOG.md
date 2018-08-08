@@ -25,3 +25,5 @@
 - increase database limits for meta tags;
 
 - fix create translations command.
+
+7.3.2: Remove non-breaking spaces from page number macro translations.

@@ -1,7 +1,7 @@
 macro:
     page_number:
-        all:    "&nbsp;&mdash;&nbsp;полный&nbsp;список"
-        number: "&nbsp;&mdash;&nbsp;страница&nbsp;%number%"
+        all:    " &mdash; полный список"
+        number: " &mdash; страница %number%"
 
 pagination:
     all:      Показать все
