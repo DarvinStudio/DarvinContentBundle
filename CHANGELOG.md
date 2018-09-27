@@ -27,3 +27,5 @@
 - fix create translations command.
 
 7.3.2: Remove non-breaking spaces from page number macro translations.
+
+7.3.3: Force make services public by default.

@@ -6,6 +6,9 @@ parameters:
     darvin_content.slug.map_subscriber.class: Darvin\ContentBundle\EventListener\SlugMapSubscriber
 
 services:
+    _defaults:
+        public: true
+
     darvin_content.slug.handler.unique:
         class: "%darvin_content.slug.handler.unique.class%"
         tags:
