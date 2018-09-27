@@ -12,6 +12,9 @@ parameters:
     darvin_content.translatable.translation_joiner.class: Darvin\ContentBundle\Translatable\TranslationJoiner
 
 services:
+    _defaults:
+        public: true
+
     darvin_content.translatable.manager:
         class: "%darvin_content.translatable.manager.class%"
         arguments:

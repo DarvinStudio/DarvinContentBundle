@@ -3,6 +3,9 @@ parameters:
     darvin_content.translatable.translations_create_command.name:  darvin:content:translations:create
 
 services:
+    _defaults:
+        public: true
+
     darvin_content.translatable.translations_create_command:
         class: "%darvin_content.translatable.translations_create_command.class%"
         arguments:

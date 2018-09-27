@@ -2,6 +2,9 @@ parameters:
     darvin_content.filterer.class: Darvin\ContentBundle\Filterer\Filterer
 
 services:
+    _defaults:
+        public: true
+
     darvin_content.filterer:
         class: "%darvin_content.filterer.class%"
         arguments:

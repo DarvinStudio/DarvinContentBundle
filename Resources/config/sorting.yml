@@ -2,6 +2,9 @@ parameters:
     darvin_content.sorting.sorted_by_entity_joiner.class: Darvin\ContentBundle\Sorting\SortedByEntityJoiner
 
 services:
+    _defaults:
+        public: true
+
     darvin_content.sorting.sorted_by_entity_joiner:
         class: "%darvin_content.sorting.sorted_by_entity_joiner.class%"
         arguments:

@@ -6,6 +6,9 @@ parameters:
     darvin_content.slug.rebuild_command.name:  darvin:content:slugs:rebuild
 
 services:
+    _defaults:
+        public: true
+
     darvin_content.slug.map_rebuild_command:
         class: "%darvin_content.slug.map_rebuild_command.class%"
         arguments:

@@ -4,6 +4,9 @@ parameters:
     darvin_content.pagination.pager_subscriber.class: Darvin\ContentBundle\EventListener\Pagination\PagerSubscriber
 
 services:
+    _defaults:
+        public: true
+
     darvin_content.pagination.page_not_found_exception_listener:
         class: "%darvin_content.pagination.page_not_found_exception_listener.class%"
         tags:

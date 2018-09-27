@@ -4,6 +4,9 @@ parameters:
     darvin_content.canonical_url.twig_extension.class: Darvin\ContentBundle\Twig\Extension\CanonicalUrlExtension
 
 services:
+    _defaults:
+        public: true
+
     darvin_content.canonical_url.generator:
         class:  "%darvin_content.canonical_url.generator.class%"
         public: false
