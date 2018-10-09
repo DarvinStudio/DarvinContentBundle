@@ -118,7 +118,7 @@ class SlugMapSubscriber implements EventSubscriber
     /**
      * @param \Darvin\Utils\Event\SlugsUpdateEvent $event Event
      */
-    public function postSlugsUpdate(SlugsUpdateEvent $event)
+    public function slugsUpdated(SlugsUpdateEvent $event)
     {
         $changeSet = $event->getChangeSet();
         $em        = $event->getEntityManager();

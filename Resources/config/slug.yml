@@ -27,4 +27,4 @@ services:
             - "@darvin_content.slug.map_item_factory"
         tags:
             - { name: doctrine.event_subscriber, priority: 100 }
-            - { name: kernel.event_listener,     event: darvin_utils.post_slugs_update, method: postSlugsUpdate }
+            - { name: kernel.event_listener,     event: darvin_utils.sluggable.slugs_updated, method: slugsUpdated }
