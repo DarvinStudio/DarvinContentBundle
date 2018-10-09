@@ -13,10 +13,9 @@ namespace Darvin\ContentBundle\EventListener;
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Slug\SlugMapItemFactory;
 use Darvin\Utils\Event\SlugsUpdateEvent;
-use Darvin\Utils\EventListener\AbstractOnFlushListener;
 use Darvin\Utils\Mapping\MetadataFactoryInterface;
 use Doctrine\Common\EventSubscriber;
-use Doctrine\Common\Util\ClassUtils;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
@@ -25,7 +24,7 @@ use Doctrine\ORM\Events;
 /**
  * Slug map event subscriber
  */
-class SlugMapSubscriber extends AbstractOnFlushListener implements EventSubscriber
+class SlugMapSubscriber implements EventSubscriber
 {
     /**
      * @var \Darvin\Utils\Mapping\MetadataFactoryInterface
@@ -71,33 +70,34 @@ class SlugMapSubscriber extends AbstractOnFlushListener implements EventSubscrib
      */
     public function onFlush(OnFlushEventArgs $args)
     {
-        parent::onFlush($args);
+        $em = $args->getEntityManager();
+        $uow = $em->getUnitOfWork();
 
-        $this
-            ->onDelete([$this, 'deleteSlugMapItems'])
-            ->onUpdate([$this, 'updateSlugMapItems']);
+        foreach ($uow->getScheduledEntityDeletions() as $entity) {
+            $this->deleteSlugMapItems($em, $entity);
+        }
+        foreach ($uow->getScheduledEntityUpdates() as $entity) {
+            $this->updateSlugMapItems($em, $entity);
+        }
     }
 
     /**
      * @param \Doctrine\ORM\Event\LifecycleEventArgs $args Event arguments
-     *
-     * @throws \Darvin\ContentBundle\Slug\SlugException
      */
     public function postPersist(LifecycleEventArgs $args)
     {
-        $this->init($args->getEntityManager(), $args->getEntityManager()->getUnitOfWork());
-
+        $em     = $args->getEntityManager();
         $entity = $args->getEntity();
 
-        $entityClass = ClassUtils::getClass($entity);
+        $entityClass = get_class($entity);
 
         $meta = $this->extendedMetadataFactory->getExtendedMetadata($entityClass);
 
         if (!isset($meta['slugs']) || empty($meta['slugs'])) {
             return;
         }
-        foreach ($this->slugMapItemFactory->createItems($entity, $meta['slugs'], $this->em->getClassMetadata($entityClass)) as $slugMapItem) {
-            $this->em->persist($slugMapItem);
+        foreach ($this->slugMapItemFactory->createItems($entity, $meta['slugs'], $em->getClassMetadata($entityClass)) as $slugMapItem) {
+            $em->persist($slugMapItem);
         }
 
         $this->flushNeeded = true;
@@ -120,9 +120,8 @@ class SlugMapSubscriber extends AbstractOnFlushListener implements EventSubscrib
      */
     public function postSlugsUpdate(SlugsUpdateEvent $event)
     {
-        $this->init($event->getEntityManager(), $event->getEntityManager()->getUnitOfWork());
-
         $changeSet = $event->getChangeSet();
+        $em        = $event->getEntityManager();
 
         foreach ($changeSet as $oldSlug => $newSlug) {
             if (empty($oldSlug)) {
@@ -133,9 +132,9 @@ class SlugMapSubscriber extends AbstractOnFlushListener implements EventSubscrib
             return;
         }
 
-        $slugMapItemRepository = $this->getSlugMapItemRepository();
+        $slugMapItemRepository = $this->getSlugMapItemRepository($em);
 
-        $slugMapItemUpdateQb = $this->em->createQueryBuilder()
+        $slugMapItemUpdateQb = $em->createQueryBuilder()
             ->update(SlugMapItem::class, 'o')
             ->set('o.slug', ':new_slug')
             ->where('o.slug = :old_slug');
@@ -163,7 +162,7 @@ class SlugMapSubscriber extends AbstractOnFlushListener implements EventSubscrib
             foreach ($properties as $property => $slugs) {
                 $separator = $config[$property]['separator'];
 
-                $this->em->createQueryBuilder()
+                $em->createQueryBuilder()
                     ->update(SlugMapItem::class, 'o')
                     ->set('o.slug', 'CONCAT(:new_slug, SUBSTRING(o.slug, :old_slug_length + 1, LENGTH(o.slug)))')
                     ->where('SUBSTRING(o.slug, 1, :old_slug_length) = :old_slug')
@@ -172,7 +171,7 @@ class SlugMapSubscriber extends AbstractOnFlushListener implements EventSubscrib
                     ->setParameter('old_slug', $slugs[0].$separator)
                     ->getQuery()
                     ->execute();
-                $this->em->createQueryBuilder()
+                $em->createQueryBuilder()
                     ->update($entityClass, 'o')
                     ->set('o.'.$property, ':new_slug')
                     ->where(sprintf('o.%s = :old_slug', $property))
@@ -180,7 +179,7 @@ class SlugMapSubscriber extends AbstractOnFlushListener implements EventSubscrib
                     ->setParameter('old_slug', $slugs[0])
                     ->getQuery()
                     ->execute();
-                $this->em->createQueryBuilder()
+                $em->createQueryBuilder()
                     ->update($entityClass, 'o')
                     ->set(
                         'o.'.$property,
@@ -197,11 +196,12 @@ class SlugMapSubscriber extends AbstractOnFlushListener implements EventSubscrib
     }
 
     /**
-     * @param object $entity Entity
+     * @param \Doctrine\ORM\EntityManager $em     Entity manager
+     * @param object                      $entity Entity
      */
-    protected function deleteSlugMapItems($entity)
+    private function deleteSlugMapItems(EntityManager $em, $entity)
     {
-        $entityClass = ClassUtils::getClass($entity);
+        $entityClass = get_class($entity);
 
         $meta = $this->extendedMetadataFactory->getExtendedMetadata($entityClass);
 
@@ -209,21 +209,20 @@ class SlugMapSubscriber extends AbstractOnFlushListener implements EventSubscrib
             return;
         }
 
-        $slugMapItems = $this->getSlugMapItems($entityClass, $this->getEntityId($entity, $entityClass));
+        $slugMapItems = $this->getSlugMapItems($em, $entityClass, $this->getEntityId($em, $entity, $entityClass));
 
         foreach ($slugMapItems as $slugMapItem) {
-            $this->em->remove($slugMapItem);
+            $em->remove($slugMapItem);
         }
     }
 
     /**
-     * @param object $entity Entity
-     *
-     * @throws \Darvin\ContentBundle\Slug\SlugException
+     * @param \Doctrine\ORM\EntityManager $em     Entity manager
+     * @param object                      $entity Entity
      */
-    protected function updateSlugMapItems($entity)
+    private function updateSlugMapItems(EntityManager $em, $entity)
     {
-        $entityClass = ClassUtils::getClass($entity);
+        $entityClass = get_class($entity);
 
         $meta = $this->extendedMetadataFactory->getExtendedMetadata($entityClass);
 
@@ -233,7 +232,7 @@ class SlugMapSubscriber extends AbstractOnFlushListener implements EventSubscrib
 
         $properties = array_keys($meta['slugs']);
 
-        $changeSet = $this->uow->getEntityChangeSet($entity);
+        $changeSet = $em->getUnitOfWork()->getEntityChangeSet($entity);
 
         foreach ($properties as $key => $property) {
             if (!isset($changeSet[$property])) {
@@ -244,45 +243,50 @@ class SlugMapSubscriber extends AbstractOnFlushListener implements EventSubscrib
             return;
         }
 
-        $slugMapItems = $this->getSlugMapItems($entityClass, $this->getEntityId($entity, $entityClass), $properties);
+        $slugMapItemMeta = $em->getClassMetadata(SlugMapItem::class);
+        $slugMapItems    = $this->getSlugMapItems($em, $entityClass, $this->getEntityId($em, $entity, $entityClass), $properties);
 
         foreach ($slugMapItems as $slugMapItem) {
             $slugMapItem->setSlug($changeSet[$slugMapItem->getProperty()][1]);
 
-            $this->recomputeChangeSet($slugMapItem);
+            $em->getUnitOfWork()->recomputeSingleEntityChangeSet($slugMapItemMeta, $slugMapItem);
         }
     }
 
     /**
-     * @param object $entity      Entity
-     * @param string $entityClass Entity class
+     * @param \Doctrine\ORM\EntityManager $em          Entity manager
+     * @param object                      $entity      Entity
+     * @param string                      $entityClass Entity class
      *
      * @return mixed
      */
-    private function getEntityId($entity, $entityClass)
+    private function getEntityId(EntityManager $em, $entity, $entityClass)
     {
-        $ids = $this->em->getClassMetadata($entityClass)->getIdentifierValues($entity);
+        $ids = $em->getClassMetadata($entityClass)->getIdentifierValues($entity);
 
         return reset($ids);
     }
 
     /**
-     * @param string $entityClass Entity class
-     * @param mixed  $entityId    Entity ID
-     * @param array  $properties  Slug properties
+     * @param \Doctrine\ORM\EntityManager $em          Entity manager
+     * @param string                      $entityClass Entity class
+     * @param mixed                       $entityId    Entity ID
+     * @param array                       $properties  Slug properties
      *
      * @return \Darvin\ContentBundle\Entity\SlugMapItem[]
      */
-    private function getSlugMapItems($entityClass, $entityId, array $properties = [])
+    private function getSlugMapItems(EntityManager $em, $entityClass, $entityId, array $properties = [])
     {
-        return $this->getSlugMapItemRepository()->getByEntityBuilder($entityClass, $entityId, $properties)->getQuery()->getResult();
+        return $this->getSlugMapItemRepository($em)->getByEntityBuilder($entityClass, $entityId, $properties)->getQuery()->getResult();
     }
 
     /**
+     * @param \Doctrine\ORM\EntityManager $em Entity manager
+     *
      * @return \Darvin\ContentBundle\Repository\SlugMapItemRepository
      */
-    private function getSlugMapItemRepository()
+    private function getSlugMapItemRepository(EntityManager $em)
     {
-        return $this->em->getRepository(SlugMapItem::class);
+        return $em->getRepository(SlugMapItem::class);
     }
 }
