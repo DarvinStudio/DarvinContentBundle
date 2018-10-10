@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2015, Darvin Studio
+ * @copyright Copyright (c) 2015-2018, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -19,37 +19,17 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class AddWidgetsPass implements CompilerPassInterface
 {
-    const POOL_ID = 'darvin_content.widget.pool';
-
-    const TAG_WIDGET = 'darvin_content.widget';
-
     /**
      * {@inheritdoc}
      */
     public function process(ContainerBuilder $container)
     {
-        $this->addWidgets($container, array_keys($container->findTaggedServiceIds(self::TAG_WIDGET)));
-    }
-
-    /**
-     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container DI container
-     * @param string[]                                                $ids       Service IDs
-     */
-    public function addWidgets(ContainerBuilder $container, array $ids)
-    {
-        if (empty($ids) || !$container->hasDefinition(self::POOL_ID)) {
-            return;
-        }
-
-        $poolDefinition = $container->getDefinition(self::POOL_ID);
-
         $blacklist = $container->getParameter('darvin_content.widgets.blacklist');
+        $pool      = $container->getDefinition('darvin_content.widget.pool');
 
-        foreach ($ids as $id) {
+        foreach (array_keys($container->findTaggedServiceIds('darvin_content.widget')) as $id) {
             if (!in_array($id, $blacklist)) {
-                $poolDefinition->addMethodCall('addWidget', [
-                    new Reference($id),
-                ]);
+                $pool->addMethodCall('addWidget', [new Reference($id)]);
             }
         }
     }
