@@ -1,11 +1,5 @@
 darvin_content_show:
     path:         /{slug}/
-    defaults:     { _controller: DarvinContentBundle:ContentFront:show }
-    requirements: { slug: "[0-9a-z_\\-]+|[0-9a-z_\\-]+[0-9a-z_\\-\\/]*[0-9a-z_\\-]+" }
-    methods:      [ get ]
-
-darvin_content_content_show:
-    path:         /{slug}/
-    defaults:     { _controller: DarvinContentBundle:ContentFront:show }
+    defaults:     { _controller: Darvin\ContentBundle\Controller\ContentFrontController::showAction }
     requirements: { slug: "[0-9a-z_\\-]+|[0-9a-z_\\-]+[0-9a-z_\\-\\/]*[0-9a-z_\\-]+" }
     methods:      [ get ]
