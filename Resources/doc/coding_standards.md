@@ -1,2 +1,0 @@
-- [**PSR-2**](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md);
-- [**Symfony Coding Standards**](http://symfony.com/doc/current/contributing/code/standards.html).
