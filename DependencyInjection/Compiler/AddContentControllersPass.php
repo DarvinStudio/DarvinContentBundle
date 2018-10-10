@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2015, Darvin Studio
+ * @copyright Copyright (c) 2015-2018, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -20,44 +20,22 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class AddContentControllersPass implements CompilerPassInterface
 {
-    const POOL_ID = 'darvin_content.controller.pool';
-
-    const TAG_CONTENT_CONTROLLER = 'darvin_content.controller';
-
     /**
      * {@inheritdoc}
      */
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
-        $this->addContentControllers($container, array_keys($container->findTaggedServiceIds(self::TAG_CONTENT_CONTROLLER)));
-    }
+        $containerRef = new Reference('service_container');
+        $pool         = $container->getDefinition('darvin_content.controller.pool');
 
-    /**
-     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container DI container
-     * @param string[]                                                $ids       Service IDs
-     */
-    public function addContentControllers(ContainerBuilder $container, array $ids)
-    {
-        if (empty($ids) || !$container->hasDefinition(self::POOL_ID)) {
-            return;
-        }
+        foreach (array_keys($container->findTaggedServiceIds('darvin_content.controller')) as $id) {
+            $controller = $container->getDefinition($id);
 
-        $poolDefinition = $container->getDefinition(self::POOL_ID);
-
-        $containerReference = new Reference('service_container');
-
-        foreach ($ids as $id) {
-            $controllerDefinition = $container->getDefinition($id);
-
-            if (in_array(ContainerAwareInterface::class, class_implements($controllerDefinition->getClass()))) {
-                $controllerDefinition->addMethodCall('setContainer', [
-                    $containerReference,
-                ]);
+            if (in_array(ContainerAwareInterface::class, class_implements($controller->getClass()))) {
+                $controller->addMethodCall('setContainer', [$containerRef]);
             }
 
-            $poolDefinition->addMethodCall('addController', [
-                new Reference($id),
-            ]);
+            $pool->addMethodCall('addController', [new Reference($id)]);
         }
     }
 }
