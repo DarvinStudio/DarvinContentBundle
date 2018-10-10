@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
  * @copyright Copyright (c) 2016, Darvin Studio
@@ -19,28 +19,17 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class AddWidgetFactoriesPass implements CompilerPassInterface
 {
-    const POOL_ID = 'darvin_content.widget.pool';
-
-    const TAG_WIDGET_FACTORY = 'darvin_content.widget_factory';
-
     /**
      * {@inheritdoc}
      */
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
-        if (!$container->hasDefinition(self::POOL_ID)) {
-            return;
-        }
-
-        $poolDefinition = $container->getDefinition(self::POOL_ID);
-
         $blacklist = $container->getParameter('darvin_content.widget_factories.blacklist');
+        $pool      = $container->getDefinition('darvin_content.widget.pool');
 
-        foreach ($container->findTaggedServiceIds(self::TAG_WIDGET_FACTORY) as $id => $attr) {
+        foreach (array_keys($container->findTaggedServiceIds('darvin_content.widget_factory')) as $id) {
             if (!in_array($id, $blacklist)) {
-                $poolDefinition->addMethodCall('addWidgetFactory', [
-                    new Reference($id),
-                ]);
+                $pool->addMethodCall('addWidgetFactory', [new Reference($id)]);
             }
         }
     }
