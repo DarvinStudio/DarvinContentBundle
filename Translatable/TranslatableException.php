@@ -10,12 +10,10 @@
 
 namespace Darvin\ContentBundle\Translatable;
 
-use Darvin\ContentBundle\Exception\DarvinContentException;
-
 /**
  * Translatable exception
  */
-class TranslatableException extends DarvinContentException
+class TranslatableException extends \Exception
 {
 
 }

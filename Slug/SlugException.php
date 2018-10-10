@@ -10,12 +10,10 @@
 
 namespace Darvin\ContentBundle\Slug;
 
-use Darvin\ContentBundle\Exception\DarvinContentException;
-
 /**
  * Slug exception
  */
-class SlugException extends DarvinContentException
+class SlugException extends \Exception
 {
 
 }

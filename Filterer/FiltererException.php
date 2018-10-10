@@ -10,12 +10,10 @@
 
 namespace Darvin\ContentBundle\Filterer;
 
-use Darvin\ContentBundle\Exception\DarvinContentException;
-
 /**
  * Filterer exception
  */
-class FiltererException extends DarvinContentException
+class FiltererException extends \Exception
 {
 
 }

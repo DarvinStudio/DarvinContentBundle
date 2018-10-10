@@ -10,12 +10,10 @@
 
 namespace Darvin\ContentBundle\Pagination;
 
-use Darvin\ContentBundle\Exception\DarvinContentException;
-
 /**
  * Page not found exception
  */
-class PageNotFoundException extends DarvinContentException
+class PageNotFoundException extends \Exception
 {
     /**
      * {@inheritdoc}

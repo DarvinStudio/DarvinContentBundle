@@ -10,12 +10,10 @@
 
 namespace Darvin\ContentBundle\Controller;
 
-use Darvin\ContentBundle\Exception\DarvinContentException;
-
 /**
  * Controller exception
  */
-class ControllerException extends DarvinContentException
+class ControllerException extends \Exception
 {
 
 }

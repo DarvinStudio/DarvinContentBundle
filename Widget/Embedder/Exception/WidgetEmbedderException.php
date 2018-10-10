@@ -10,12 +10,10 @@
 
 namespace Darvin\ContentBundle\Widget\Embedder\Exception;
 
-use Darvin\ContentBundle\Exception\DarvinContentException;
-
 /**
  * Widget embedder exception
  */
-class WidgetEmbedderException extends DarvinContentException
+class WidgetEmbedderException extends \Exception
 {
 
 }
