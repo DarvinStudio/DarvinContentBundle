@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2017, Darvin Studio
+ * @copyright Copyright (c) 2017-2018, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -18,21 +18,15 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class AddFormNamesToCanonicalUrlWhitelist implements CompilerPassInterface
 {
-    const CANONICAL_URL_GENERATOR_ID = 'darvin_content.canonical_url.generator';
-
     /**
      * {@inheritdoc}
      */
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
-        if (!$container->hasDefinition(self::CANONICAL_URL_GENERATOR_ID)) {
-            return;
-        }
+        $generator = $container->getDefinition('darvin_content.canonical_url.generator');
 
-        $canonicalUrlGeneratorDefinition = $container->getDefinition(self::CANONICAL_URL_GENERATOR_ID);
-
-        foreach ($container->findTaggedServiceIds('form.type') as $id => $attr) {
-            if (0 !== strpos($container->getDefinition($id)->getClass(), 'AppBundle\\')) {
+        foreach (array_keys($container->findTaggedServiceIds('form.type')) as $id) {
+            if (0 !== strpos($container->getDefinition($id)->getClass(), 'App\\')) {
                 continue;
             }
             try {
@@ -42,7 +36,7 @@ class AddFormNamesToCanonicalUrlWhitelist implements CompilerPassInterface
                 continue;
             }
 
-            $canonicalUrlGeneratorDefinition->addMethodCall('addQueryParamToWhitelist', [$formType->getBlockPrefix()]);
+            $generator->addMethodCall('addQueryParamToWhitelist', [$formType->getBlockPrefix()]);
         }
     }
 }
