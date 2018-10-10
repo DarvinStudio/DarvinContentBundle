@@ -22,9 +22,9 @@ class SlugMapItemRepository extends EntityRepository
      * @param mixed  $entityId    Entity ID
      * @param array  $properties  Slug properties
      *
-     * @return \Doctrine\ORM\QueryBuilder
+     * @return \Darvin\ContentBundle\Entity\SlugMapItem[]
      */
-    public function getByEntityBuilder($entityClass, $entityId, array $properties = [])
+    public function getForSlugMapSubscriber($entityClass, $entityId, array $properties = [])
     {
         $qb = $this->createDefaultBuilder()
             ->andWhere('o.objectClass = :entity_class')
@@ -32,7 +32,11 @@ class SlugMapItemRepository extends EntityRepository
             ->andWhere('o.objectId = :entity_id')
             ->setParameter('entity_id', $entityId);
 
-        return !empty($properties) ? $qb->andWhere($qb->expr()->in('o.property', $properties)) : $qb;
+        if (!empty($properties)) {
+            $qb->andWhere($qb->expr()->in('o.property', $properties));
+        }
+
+        return $qb->getQuery()->getResult();
     }
 
     /**

@@ -209,7 +209,7 @@ class SlugMapSubscriber implements EventSubscriber
             return;
         }
 
-        $slugMapItems = $this->getSlugMapItems($em, $entityClass, $this->getEntityId($em, $entity, $entityClass));
+        $slugMapItems = $this->getSlugMapItemRepository($em)->getForSlugMapSubscriber($entityClass, $this->getEntityId($em, $entity, $entityClass));
 
         foreach ($slugMapItems as $slugMapItem) {
             $em->remove($slugMapItem);
@@ -244,7 +244,7 @@ class SlugMapSubscriber implements EventSubscriber
         }
 
         $slugMapItemMeta = $em->getClassMetadata(SlugMapItem::class);
-        $slugMapItems    = $this->getSlugMapItems($em, $entityClass, $this->getEntityId($em, $entity, $entityClass), $properties);
+        $slugMapItems    = $this->getSlugMapItemRepository($em)->getForSlugMapSubscriber($entityClass, $this->getEntityId($em, $entity, $entityClass), $properties);
 
         foreach ($slugMapItems as $slugMapItem) {
             $slugMapItem->setSlug($changeSet[$slugMapItem->getProperty()][1]);
@@ -265,19 +265,6 @@ class SlugMapSubscriber implements EventSubscriber
         $ids = $em->getClassMetadata($entityClass)->getIdentifierValues($entity);
 
         return reset($ids);
-    }
-
-    /**
-     * @param \Doctrine\ORM\EntityManager $em          Entity manager
-     * @param string                      $entityClass Entity class
-     * @param mixed                       $entityId    Entity ID
-     * @param array                       $properties  Slug properties
-     *
-     * @return \Darvin\ContentBundle\Entity\SlugMapItem[]
-     */
-    private function getSlugMapItems(EntityManager $em, $entityClass, $entityId, array $properties = [])
-    {
-        return $this->getSlugMapItemRepository($em)->getByEntityBuilder($entityClass, $entityId, $properties)->getQuery()->getResult();
     }
 
     /**
