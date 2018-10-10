@@ -22,7 +22,7 @@ class AddWidgetsPass implements CompilerPassInterface
     /**
      * {@inheritdoc}
      */
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         $blacklist = $container->getParameter('darvin_content.widgets.blacklist');
         $pool      = $container->getDefinition('darvin_content.widget.pool');
