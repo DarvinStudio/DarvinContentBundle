@@ -10,8 +10,8 @@
 
 namespace Darvin\ContentBundle\Translatable;
 
-use Darvin\Utils\Doctrine\ORM\QueryBuilderUtil;
 use Darvin\Utils\Locale\LocaleProviderInterface;
+use Darvin\Utils\ORM\QueryBuilderUtil;
 use Doctrine\ORM\QueryBuilder;
 
 /**

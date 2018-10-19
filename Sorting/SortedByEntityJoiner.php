@@ -12,7 +12,7 @@ namespace Darvin\ContentBundle\Sorting;
 
 use Darvin\ContentBundle\Translatable\TranslatableManagerInterface;
 use Darvin\ContentBundle\Translatable\TranslationJoinerInterface;
-use Darvin\Utils\Doctrine\ORM\QueryBuilderUtil;
+use Darvin\Utils\ORM\QueryBuilderUtil;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
