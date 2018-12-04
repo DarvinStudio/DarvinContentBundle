@@ -7,11 +7,11 @@ services:
         public: true
 
     darvin_content.translatable.translations_create_command:
-        class: "%darvin_content.translatable.translations_create_command.class%"
+        class: '%darvin_content.translatable.translations_create_command.class%'
         arguments:
-            - "%darvin_content.translatable.translations_create_command.name%"
-            - "@doctrine.orm.entity_manager"
-            - "@darvin_content.translatable.manager"
-            - "%locale%"
+            - '%darvin_content.translatable.translations_create_command.name%'
+            - '@doctrine.orm.entity_manager'
+            - '@darvin_content.translatable.manager'
+            - '%locale%'
         tags:
             - { name: console.command }

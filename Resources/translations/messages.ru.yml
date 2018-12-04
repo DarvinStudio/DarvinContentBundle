@@ -1,12 +1,12 @@
 macro:
     page_number:
-        all:    " &mdash; полный список"
-        number: " &mdash; страница %number%"
+        all:    ' &mdash; полный список'
+        number: ' &mdash; страница %number%'
 
 pagination:
     all:      Показать все
-    first:    "&lt;&lt;"
-    last:     "&gt;&gt;"
-    next:     "&gt;"
-    page:     "%page%"
-    previous: "&lt;"
+    first:    '&lt;&lt;'
+    last:     '&gt;&gt;'
+    next:     '&gt;'
+    page:     '%page%'
+    previous: '&lt;'

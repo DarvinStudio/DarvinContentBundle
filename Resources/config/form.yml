@@ -6,16 +6,16 @@ services:
         public: true
 
     darvin_content.form.type_guesser.translatable.abstract:
-        class:    "%darvin_content.form.type_guesser.translatable.abstract.class%"
+        class:    '%darvin_content.form.type_guesser.translatable.abstract.class%'
         abstract: true
         arguments:
-            - "@darvin_content.translatable.manager"
+            - '@darvin_content.translatable.manager'
 
     darvin_content.form.type_guesser.translatable.doctrine:
         parent: darvin_content.form.type_guesser.translatable.abstract
         public: true
         arguments:
-            - "@form.type_guesser.doctrine"
+            - '@form.type_guesser.doctrine'
         tags:
             - { name: form.type_guesser }
 
@@ -23,6 +23,6 @@ services:
         parent: darvin_content.form.type_guesser.translatable.abstract
         public: true
         arguments:
-            - "@form.type_guesser.validator"
+            - '@form.type_guesser.validator'
         tags:
             - { name: form.type_guesser }

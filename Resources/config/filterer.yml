@@ -6,9 +6,9 @@ services:
         public: true
 
     darvin_content.filterer:
-        class: "%darvin_content.filterer.class%"
+        class: '%darvin_content.filterer.class%'
         arguments:
-            - "@doctrine.orm.entity_manager"
-            - "@event_dispatcher"
-            - "@darvin_content.translatable.manager"
-            - "@darvin_content.translatable.translation_joiner"
+            - '@doctrine.orm.entity_manager'
+            - '@event_dispatcher'
+            - '@darvin_content.translatable.manager'
+            - '@darvin_content.translatable.translation_joiner'

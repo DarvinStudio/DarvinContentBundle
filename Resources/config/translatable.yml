@@ -16,39 +16,39 @@ services:
         public: true
 
     darvin_content.translatable.manager:
-        class: "%darvin_content.translatable.manager.class%"
+        class: '%darvin_content.translatable.manager.class%'
         arguments:
-            - "@knp.doctrine_behaviors.reflection.class_analyzer"
-            - "@doctrine.orm.entity_manager"
-            - "%darvin_content.translatable.manager.get_translatable_entity_class_method%"
-            - "%darvin_content.translatable.manager.get_translation_entity_class_method%"
-            - "%knp.doctrine_behaviors.reflection.is_recursive%"
-            - "%knp.doctrine_behaviors.translatable_subscriber.translatable_trait%"
-            - "%darvin_content.translatable.manager.translation_locale_property%"
-            - "%knp.doctrine_behaviors.translatable_subscriber.translation_trait%"
-            - "%darvin_content.translatable.manager.translations_property%"
+            - '@knp.doctrine_behaviors.reflection.class_analyzer'
+            - '@doctrine.orm.entity_manager'
+            - '%darvin_content.translatable.manager.get_translatable_entity_class_method%'
+            - '%darvin_content.translatable.manager.get_translation_entity_class_method%'
+            - '%knp.doctrine_behaviors.reflection.is_recursive%'
+            - '%knp.doctrine_behaviors.translatable_subscriber.translatable_trait%'
+            - '%darvin_content.translatable.manager.translation_locale_property%'
+            - '%knp.doctrine_behaviors.translatable_subscriber.translation_trait%'
+            - '%darvin_content.translatable.manager.translations_property%'
         tags:
             - { name: darvin_utils.providable }
 
     darvin_content.translatable.refresh_updated_at_event_subscriber:
-        class:  "%darvin_content.translatable.refresh_updated_at_event_subscriber.class%"
+        class:  '%darvin_content.translatable.refresh_updated_at_event_subscriber.class%'
         public: false
         arguments:
-            - "@darvin_utils.mapping.metadata_factory"
-            - "@property_accessor"
-            - "@darvin_content.translatable.manager"
+            - '@darvin_utils.mapping.metadata_factory'
+            - '@property_accessor'
+            - '@darvin_content.translatable.manager'
         tags:
             - { name: doctrine.event_subscriber }
 
     darvin_content.translatable.translations_initializer:
-        class: "%darvin_content.translatable.translations_initializer.class%"
+        class: '%darvin_content.translatable.translations_initializer.class%'
         arguments:
-            - "@doctrine.orm.entity_manager"
-            - "@darvin_content.translatable.manager"
-            - "@knp.doctrine_behaviors.translatable_subscriber"
+            - '@doctrine.orm.entity_manager'
+            - '@darvin_content.translatable.manager'
+            - '@knp.doctrine_behaviors.translatable_subscriber'
 
     darvin_content.translatable.translation_joiner:
-        class: "%darvin_content.translatable.translation_joiner.class%"
+        class: '%darvin_content.translatable.translation_joiner.class%'
         arguments:
-            - "@darvin_utils.locale.provider"
-            - "@darvin_content.translatable.manager"
+            - '@darvin_utils.locale.provider'
+            - '@darvin_content.translatable.manager'

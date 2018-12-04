@@ -10,21 +10,21 @@ services:
         public: true
 
     darvin_content.slug.handler.unique:
-        class: "%darvin_content.slug.handler.unique.class%"
+        class: '%darvin_content.slug.handler.unique.class%'
         tags:
             - { name: darvin_utils.slug_handler }
 
     darvin_content.slug.map_item_factory:
-        class:  "%darvin_content.slug.map_item_factory.class%"
+        class:  '%darvin_content.slug.map_item_factory.class%'
         public: false
         arguments:
-            - "@property_accessor"
+            - '@property_accessor'
 
     darvin_content.slug.map_subscriber:
-        class: "%darvin_content.slug.map_subscriber.class%"
+        class: '%darvin_content.slug.map_subscriber.class%'
         arguments:
-            - "@darvin_utils.mapping.metadata_factory"
-            - "@darvin_content.slug.map_item_factory"
+            - '@darvin_utils.mapping.metadata_factory'
+            - '@darvin_content.slug.map_item_factory'
         tags:
             - { name: doctrine.event_subscriber, priority: 100 }
             - { name: kernel.event_listener,     event: darvin_utils.sluggable.slugs_updated, method: slugsUpdated }

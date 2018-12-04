@@ -8,13 +8,13 @@ services:
         public: true
 
     darvin_content.pagination.page_not_found_exception_listener:
-        class: "%darvin_content.pagination.page_not_found_exception_listener.class%"
+        class: '%darvin_content.pagination.page_not_found_exception_listener.class%'
         tags:
             - { name: kernel.event_listener, event: kernel.exception }
 
     darvin_content.pagination.pager_subscriber:
-        class: "%darvin_content.pagination.pager_subscriber.class%"
+        class: '%darvin_content.pagination.pager_subscriber.class%'
         arguments:
-            - "@request_stack"
+            - '@request_stack'
         tags:
             - { name: knp_paginator.subscriber }

@@ -10,22 +10,22 @@ services:
         public: true
 
     darvin_content.slug.map_rebuild_command:
-        class: "%darvin_content.slug.map_rebuild_command.class%"
+        class: '%darvin_content.slug.map_rebuild_command.class%'
         arguments:
-            - "%darvin_content.slug.map_rebuild_command.name%"
-            - "@doctrine.orm.entity_manager"
-            - "@darvin_utils.mapping.metadata_factory"
-            - "@darvin_content.slug.map_item_factory"
+            - '%darvin_content.slug.map_rebuild_command.name%'
+            - '@doctrine.orm.entity_manager'
+            - '@darvin_utils.mapping.metadata_factory'
+            - '@darvin_content.slug.map_item_factory'
         tags:
             - { name: console.command }
 
     darvin_content.slug.rebuild_command:
-        class: "%darvin_content.slug.rebuild_command.class%"
+        class: '%darvin_content.slug.rebuild_command.class%'
         arguments:
-            - "%darvin_content.slug.rebuild_command.name%"
-            - "@doctrine.orm.entity_manager"
-            - "@darvin_utils.mapping.metadata_factory"
-            - "@property_accessor"
-            - "@darvin_utils.sluggable.manager"
+            - '%darvin_content.slug.rebuild_command.name%'
+            - '@doctrine.orm.entity_manager'
+            - '@darvin_utils.mapping.metadata_factory'
+            - '@property_accessor'
+            - '@darvin_utils.sluggable.manager'
         tags:
             - { name: console.command }
