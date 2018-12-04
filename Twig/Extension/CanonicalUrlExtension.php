@@ -49,7 +49,7 @@ class CanonicalUrlExtension extends \Twig_Extension
      *
      * @return string
      */
-    public function renderCanonicalUrlTag(\Twig_Environment $env, $template = 'DarvinContentBundle::canonical_url.html.twig')
+    public function renderCanonicalUrlTag(\Twig_Environment $env, $template = '@DarvinContent/canonical_url.html.twig')
     {
         $url = $this->canonicalUrlGenerator->generate();
 
