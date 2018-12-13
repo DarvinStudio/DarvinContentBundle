@@ -30,4 +30,8 @@
 
 7.3.3: Force make services public by default.
 
-8.0.0: Remove "darvin_content_content_show" route.
+8.0.0:
+ 
+- Remove "darvin_content_content_show" route.
+
+- Add "allowPageNumberExceed" paginator option.

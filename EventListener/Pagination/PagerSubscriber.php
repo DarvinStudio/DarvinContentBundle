@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2017, Darvin Studio
+ * @copyright Copyright (c) 2017-2018, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -22,8 +22,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class PagerSubscriber implements EventSubscriberInterface
 {
-    const REQUEST_ATTR_PAGE_NUMBER = '_darvin_content_page_number';
-    const REQUEST_ATTR_PAGE_PARAMS = '_darvin_content_page_params';
+    public const REQUEST_ATTR_PAGE_NUMBER = '_darvin_content_page_number';
+    public const REQUEST_ATTR_PAGE_PARAMS = '_darvin_content_page_params';
 
     /**
      * @var \Symfony\Component\HttpFoundation\RequestStack
@@ -41,7 +41,7 @@ class PagerSubscriber implements EventSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             'knp_pager.pagination' => ['setPageAttributesToRequest', 2],
@@ -52,7 +52,7 @@ class PagerSubscriber implements EventSubscriberInterface
     /**
      * @param \Knp\Component\Pager\Event\PaginationEvent $event Event
      */
-    public function setPageAttributesToRequest(PaginationEvent $event)
+    public function setPageAttributesToRequest(PaginationEvent $event): void
     {
         $request = $this->requestStack->getCurrentRequest();
 
@@ -77,7 +77,7 @@ class PagerSubscriber implements EventSubscriberInterface
      *
      * @throws \Darvin\ContentBundle\Pagination\PageNotFoundException
      */
-    public function validatePage(AfterEvent $event)
+    public function validatePage(AfterEvent $event): void
     {
         $pagination = $event->getPaginationView();
 
@@ -93,7 +93,10 @@ class PagerSubscriber implements EventSubscriberInterface
 
         $pageNumber = (int)$page;
 
-        if ((string)$pageNumber !== (string)$page || $pageNumber < 0 || $pageNumber > $pagination->getPageCount()) {
+        if ((string)$pageNumber !== (string)$page
+            || $pageNumber < 0
+            || (!$pagination->getPaginatorOption('allowPageNumberExceed') && $pageNumber > $pagination->getPageCount())
+        ) {
             throw new PageNotFoundException();
         }
     }
