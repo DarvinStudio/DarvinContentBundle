@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
  * @copyright Copyright (c) 2015, Darvin Studio
@@ -19,9 +19,9 @@ use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\ORM\QueryBuilder;
 
 /**
- * Sorted by entity joiner
+ * Sort entity joiner
  */
-class SortedByEntityJoiner implements SortedByEntityJoinerInterface
+class SortEntityJoiner implements SortEntityJoinerInterface
 {
     /**
      * @var \Doctrine\ORM\EntityManager
@@ -56,7 +56,7 @@ class SortedByEntityJoiner implements SortedByEntityJoinerInterface
     /**
      * {@inheritdoc}
      */
-    public function joinEntity(QueryBuilder $qb, $sortedByPropertyPath, $locale)
+    public function joinEntity(QueryBuilder $qb, ?string $sortPropertyPath, string $locale): void
     {
         if (empty($sortedByPropertyPath)) {
             return;
@@ -65,7 +65,7 @@ class SortedByEntityJoiner implements SortedByEntityJoinerInterface
         $rootEntities = $qb->getRootEntities();
 
         if (count($rootEntities) > 1) {
-            throw new SortingException('Only single root entity query builders are supported.');
+            throw new \InvalidArgumentException('Only single root entity query builders are supported.');
         }
 
         $entityClass = $rootEntities[0];
@@ -73,14 +73,14 @@ class SortedByEntityJoiner implements SortedByEntityJoinerInterface
         try {
             $doctrineMeta = $this->em->getClassMetadata($entityClass);
         } catch (MappingException $ex) {
-            throw new SortingException(sprintf('Unable to get Doctrine metadata for class "%s".', $entityClass));
+            throw new \InvalidArgumentException(sprintf('Unable to get Doctrine metadata for class "%s".', $entityClass));
         }
 
         $parts = explode('.', $sortedByPropertyPath);
         $partsCount = count($parts);
 
         if (!in_array($partsCount, [2, 3])) {
-            throw new SortingException(sprintf('Property path must consist of 2 or 3 parts, %d provided.', $partsCount));
+            throw new \InvalidArgumentException(sprintf('Property path must consist of 2 or 3 parts, %d provided.', $partsCount));
         }
 
         $rootAliases = $qb->getRootAliases();
@@ -96,15 +96,15 @@ class SortedByEntityJoiner implements SortedByEntityJoinerInterface
      * @param \Doctrine\ORM\Mapping\ClassMetadataInfo $doctrineMeta      Doctrine metadata
      * @param string                                  $qbRootAlias       Query builder root alias
      *
-     * @throws \Darvin\ContentBundle\Sorting\SortingException
+     * @throws \InvalidArgumentException
      */
     protected function joinBy2PartsPropertyPath(
         QueryBuilder $qb,
         array $propertyPathParts,
-        $locale,
+        string $locale,
         ClassMetadataInfo $doctrineMeta,
-        $qbRootAlias
-    ) {
+        string $qbRootAlias
+    ): void {
         $firstPart = $propertyPathParts[0];
 
         if ('o' === $firstPart) {
@@ -138,7 +138,7 @@ class SortedByEntityJoiner implements SortedByEntityJoinerInterface
                 $sameAliasJoin->getJoin()
             );
 
-            throw new SortingException($message);
+            throw new \InvalidArgumentException($message);
         }
     }
 
@@ -153,9 +153,9 @@ class SortedByEntityJoiner implements SortedByEntityJoinerInterface
     protected function joinBy3PartsPropertyPath(
         QueryBuilder $qb,
         array $propertyPathParts,
-        $locale,
+        string $locale,
         ClassMetadataInfo $doctrineMeta
-    ) {
+    ): void {
         list($firstPart, $secondPart) = $propertyPathParts;
 
         if (!$doctrineMeta->hasAssociation($firstPart)) {

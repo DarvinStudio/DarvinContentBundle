@@ -1,12 +1,12 @@
 parameters:
-    darvin_content.sorting.sorted_by_entity_joiner.class: Darvin\ContentBundle\Sorting\SortedByEntityJoiner
+    darvin_content.sorting.sort_entity_joiner.class: Darvin\ContentBundle\Sorting\SortEntityJoiner
 
 services:
     _defaults:
         public: true
 
-    darvin_content.sorting.sorted_by_entity_joiner:
-        class: '%darvin_content.sorting.sorted_by_entity_joiner.class%'
+    darvin_content.sorting.sort_entity_joiner:
+        class: '%darvin_content.sorting.sort_entity_joiner.class%'
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@darvin_content.translatable.manager'
