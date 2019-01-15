@@ -12,7 +12,6 @@ namespace Darvin\ContentBundle\Slug;
 
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
-use Doctrine\Common\Util\ClassUtils;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 /**
@@ -49,7 +48,7 @@ class SlugMapItemFactory
             return $items;
         }
 
-        $objectClass = ClassUtils::getClass($object);
+        $objectClass = get_class($object);
 
         foreach ($slugsMeta as $slugProperty => $params) {
             if (!$this->propertyAccessor->isReadable($object, $slugProperty)) {

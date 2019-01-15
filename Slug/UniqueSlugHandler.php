@@ -12,7 +12,6 @@ namespace Darvin\ContentBundle\Slug;
 
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\Utils\Sluggable\SlugHandlerInterface;
-use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManager;
 
 /**
@@ -40,7 +39,7 @@ class UniqueSlugHandler implements SlugHandlerInterface
     {
         $originalSlug = $slug;
 
-        $entityClass = ClassUtils::getClass($entity);
+        $entityClass = get_class($entity);
         $entityIds   = $em->getClassMetadata($entityClass)->getIdentifierValues($entity);
         $entityId    = reset($entityIds);
 

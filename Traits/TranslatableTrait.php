@@ -11,7 +11,6 @@
 namespace Darvin\ContentBundle\Traits;
 
 use Darvin\ContentBundle\Translatable\TranslatableException;
-use Doctrine\Common\Util\ClassUtils;
 use Knp\DoctrineBehaviors\Model\Translatable\Translatable;
 
 /**
@@ -76,8 +75,8 @@ trait TranslatableTrait
                 'Methods "%s()" and "%s()" not exist in class "%s" and it\'s translation "%s".',
                 $getter,
                 $isser,
-                ClassUtils::getClass($this),
-                ClassUtils::getClass($translation)
+                get_class($this),
+                get_class($translation)
             ));
         }
 
