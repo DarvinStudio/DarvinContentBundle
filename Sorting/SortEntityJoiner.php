@@ -148,7 +148,7 @@ class SortEntityJoiner implements SortEntityJoinerInterface
      * @param string                                  $locale            Locale
      * @param \Doctrine\ORM\Mapping\ClassMetadataInfo $doctrineMeta      Doctrine metadata
      *
-     * @throws \Darvin\ContentBundle\Sorting\SortingException
+     * @throws \InvalidArgumentException
      */
     protected function joinBy3PartsPropertyPath(
         QueryBuilder $qb,
@@ -173,13 +173,13 @@ class SortEntityJoiner implements SortEntityJoinerInterface
                 $associatedEntity
             );
 
-            throw new SortingException($message);
+            throw new \InvalidArgumentException($message);
         }
 
         $translationsProperty = $this->translatableManager->getTranslationsProperty();
 
         if ($secondPart !== $translationsProperty) {
-            throw new SortingException(
+            throw new \InvalidArgumentException(
                 sprintf('Translations property must have name "%s", "%s" provided.', $translationsProperty, $secondPart)
             );
         }
