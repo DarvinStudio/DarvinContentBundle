@@ -25,8 +25,11 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $treeBuilder->root('darvin_content')
+        $treeBuilder = new TreeBuilder('darvin_content');
+
+        /** @var \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition $root */
+        $root = $treeBuilder->getRootNode();
+        $root
             ->children()
                 ->arrayNode('canonical_url')->addDefaultsIfNotSet()
                     ->children()
