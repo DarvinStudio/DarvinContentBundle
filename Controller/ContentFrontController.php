@@ -12,13 +12,13 @@ namespace Darvin\ContentBundle\Controller;
 
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Doctrine\ORM\EntityRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Content front controller
  */
-class ContentFrontController extends Controller
+class ContentFrontController extends AbstractController
 {
     /**
      * @param \Symfony\Component\HttpFoundation\Request $request Request

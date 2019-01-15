@@ -11,12 +11,12 @@
 namespace Darvin\ContentBundle\Controller;
 
 use Doctrine\ORM\QueryBuilder;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * Content controller abstract implementation
  */
-abstract class AbstractContentController extends Controller implements ContentControllerInterface
+abstract class AbstractContentController extends AbstractController implements ContentControllerInterface
 {
     /**
      * {@inheritdoc}
