@@ -1,3 +1,0 @@
-darvin_content_import_content:
-    resource: '@DarvinContentBundle/Resources/config/routing/content.yml'
-    prefix:   /

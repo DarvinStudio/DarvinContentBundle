@@ -48,7 +48,7 @@ class DarvinContentExtension extends Extension implements PrependExtensionInterf
             'widget',
             'widget_factory',
         ] as $resource) {
-            $loader->load($resource.'.yml');
+            $loader->load($resource.'.yaml');
         }
         if ('dev' === $container->getParameter('kernel.environment')) {
             foreach ([
@@ -56,7 +56,7 @@ class DarvinContentExtension extends Extension implements PrependExtensionInterf
                 'translatable',
                 'widget',
             ] as $resource) {
-                $loader->load(sprintf('dev/%s.yml', $resource));
+                $loader->load(sprintf('dev/%s.yaml', $resource));
             }
         }
 
@@ -75,7 +75,7 @@ class DarvinContentExtension extends Extension implements PrependExtensionInterf
             'knp_paginator',
         ] as $extension) {
             if ($container->hasExtension($extension)) {
-                $container->prependExtensionConfig($extension, Yaml::parse(file_get_contents($fileLocator->locate($extension.'.yml')))[$extension]);
+                $container->prependExtensionConfig($extension, Yaml::parse(file_get_contents($fileLocator->locate($extension.'.yaml')))[$extension]);
             }
         }
     }
