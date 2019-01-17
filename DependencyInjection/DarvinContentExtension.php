@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
  * @copyright Copyright (c) 2015-2018, Darvin Studio
@@ -13,12 +13,11 @@ namespace Darvin\ContentBundle\DependencyInjection;
 use Darvin\ContentBundle\Traits\TranslatableTrait;
 use Darvin\ContentBundle\Translatable\CurrentLocaleCallable;
 use Darvin\Utils\DependencyInjection\ConfigInjector;
-use Symfony\Component\Config\FileLocator;
+use Darvin\Utils\DependencyInjection\ConfigLoader;
+use Darvin\Utils\DependencyInjection\ExtensionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
-use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Symfony\Component\Yaml\Yaml;
 
 /**
  * This is the class that loads and manages your bundle configuration
@@ -30,13 +29,11 @@ class DarvinContentExtension extends Extension implements PrependExtensionInterf
     /**
      * {@inheritdoc}
      */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         (new ConfigInjector())->inject($this->processConfiguration(new Configuration(), $configs), $container, $this->getAlias());
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-
-        foreach ([
+        (new ConfigLoader($container, __DIR__.'/../Resources/config'))->load([
             'canonical_url',
             'controller',
             'filterer',
@@ -47,18 +44,11 @@ class DarvinContentExtension extends Extension implements PrependExtensionInterf
             'translatable',
             'widget',
             'widget_factory',
-        ] as $resource) {
-            $loader->load($resource.'.yaml');
-        }
-        if ('dev' === $container->getParameter('kernel.environment')) {
-            foreach ([
-                'slug',
-                'translatable',
-                'widget',
-            ] as $resource) {
-                $loader->load(sprintf('dev/%s.yaml', $resource));
-            }
-        }
+
+            'dev/slug'         => ['env' => 'dev'],
+            'dev/translatable' => ['env' => 'dev'],
+            'dev/widget'       => ['env' => 'dev'],
+        ]);
 
         $container->setParameter('knp.doctrine_behaviors.translatable_subscriber.current_locale_callable.class', CurrentLocaleCallable::class);
         $container->setParameter('knp.doctrine_behaviors.translatable_subscriber.translatable_trait', TranslatableTrait::class);
@@ -67,16 +57,8 @@ class DarvinContentExtension extends Extension implements PrependExtensionInterf
     /**
      * {@inheritdoc}
      */
-    public function prepend(ContainerBuilder $container)
+    public function prepend(ContainerBuilder $container): void
     {
-        $fileLocator = new FileLocator(__DIR__.'/../Resources/config/app');
-
-        foreach ([
-            'knp_paginator',
-        ] as $extension) {
-            if ($container->hasExtension($extension)) {
-                $container->prependExtensionConfig($extension, Yaml::parse(file_get_contents($fileLocator->locate($extension.'.yaml')))[$extension]);
-            }
-        }
+        (new ExtensionConfigurator(__DIR__.'/../Resources/config/app'))->configure($container, 'knp_paginator');
     }
 }
