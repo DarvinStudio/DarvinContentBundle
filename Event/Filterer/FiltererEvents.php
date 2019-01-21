@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
  * @copyright Copyright (c) 2018, Darvin Studio
@@ -15,5 +15,5 @@ namespace Darvin\ContentBundle\Event\Filterer;
  */
 final class FiltererEvents
 {
-    const BUILD_CONSTRAINT = 'darvin_content.filterer.build_constraint';
+    public const BUILD_CONSTRAINT = 'darvin_content.filterer.build_constraint';
 }
