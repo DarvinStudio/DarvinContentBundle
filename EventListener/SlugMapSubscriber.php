@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2015-2018, Darvin Studio
+ * @copyright Copyright (c) 2015-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -11,6 +11,7 @@
 namespace Darvin\ContentBundle\EventListener;
 
 use Darvin\ContentBundle\Entity\SlugMapItem;
+use Darvin\ContentBundle\Repository\SlugMapItemRepository;
 use Darvin\ContentBundle\Slug\SlugMapItemFactory;
 use Darvin\Utils\Event\SlugsUpdateEvent;
 use Darvin\Utils\Mapping\MetadataFactoryInterface;
@@ -56,7 +57,7 @@ class SlugMapSubscriber implements EventSubscriber
     /**
      * {@inheritdoc}
      */
-    public function getSubscribedEvents()
+    public function getSubscribedEvents(): array
     {
         return [
             Events::onFlush,
@@ -68,7 +69,7 @@ class SlugMapSubscriber implements EventSubscriber
     /**
      * {@inheritdoc}
      */
-    public function onFlush(OnFlushEventArgs $args)
+    public function onFlush(OnFlushEventArgs $args): void
     {
         $em = $args->getEntityManager();
         $uow = $em->getUnitOfWork();
@@ -84,7 +85,7 @@ class SlugMapSubscriber implements EventSubscriber
     /**
      * @param \Doctrine\ORM\Event\LifecycleEventArgs $args Event arguments
      */
-    public function postPersist(LifecycleEventArgs $args)
+    public function postPersist(LifecycleEventArgs $args): void
     {
         $em     = $args->getEntityManager();
         $entity = $args->getEntity();
@@ -106,7 +107,7 @@ class SlugMapSubscriber implements EventSubscriber
     /**
      * @param \Doctrine\ORM\Event\PostFlushEventArgs $args Event arguments
      */
-    public function postFlush(PostFlushEventArgs $args)
+    public function postFlush(PostFlushEventArgs $args): void
     {
         if ($this->flushNeeded) {
             $this->flushNeeded = false;
@@ -118,7 +119,7 @@ class SlugMapSubscriber implements EventSubscriber
     /**
      * @param \Darvin\Utils\Event\SlugsUpdateEvent $event Event
      */
-    public function slugsUpdated(SlugsUpdateEvent $event)
+    public function slugsUpdated(SlugsUpdateEvent $event): void
     {
         $changeSet = $event->getChangeSet();
         $em        = $event->getEntityManager();
@@ -199,7 +200,7 @@ class SlugMapSubscriber implements EventSubscriber
      * @param \Doctrine\ORM\EntityManager $em     Entity manager
      * @param object                      $entity Entity
      */
-    private function deleteSlugMapItems(EntityManager $em, $entity)
+    private function deleteSlugMapItems(EntityManager $em, $entity): void
     {
         $entityClass = get_class($entity);
 
@@ -220,7 +221,7 @@ class SlugMapSubscriber implements EventSubscriber
      * @param \Doctrine\ORM\EntityManager $em     Entity manager
      * @param object                      $entity Entity
      */
-    private function updateSlugMapItems(EntityManager $em, $entity)
+    private function updateSlugMapItems(EntityManager $em, $entity): void
     {
         $entityClass = get_class($entity);
 
@@ -260,7 +261,7 @@ class SlugMapSubscriber implements EventSubscriber
      *
      * @return mixed
      */
-    private function getEntityId(EntityManager $em, $entity, $entityClass)
+    private function getEntityId(EntityManager $em, $entity, string $entityClass)
     {
         $ids = $em->getClassMetadata($entityClass)->getIdentifierValues($entity);
 
@@ -272,7 +273,7 @@ class SlugMapSubscriber implements EventSubscriber
      *
      * @return \Darvin\ContentBundle\Repository\SlugMapItemRepository
      */
-    private function getSlugMapItemRepository(EntityManager $em)
+    private function getSlugMapItemRepository(EntityManager $em): SlugMapItemRepository
     {
         return $em->getRepository(SlugMapItem::class);
     }
