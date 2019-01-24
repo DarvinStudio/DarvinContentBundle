@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2015, Darvin Studio
+ * @copyright Copyright (c) 2015-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -23,12 +23,12 @@ class Configuration implements ConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder('darvin_content');
+        $builder = new TreeBuilder('darvin_content');
 
         /** @var \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition $root */
-        $root = $treeBuilder->getRootNode();
+        $root = $builder->getRootNode();
         $root
             ->children()
                 ->arrayNode('canonical_url')->addDefaultsIfNotSet()
@@ -45,7 +45,7 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
-                ->arrayNode('widgets')->addDefaultsIfNotSet()
+                ->arrayNode('widget')->addDefaultsIfNotSet()
                     ->children()
                         ->arrayNode('blacklist')->prototype('scalar')->end()->info('Blacklist of widget names or service IDs.')->end()
                         ->arrayNode('forward_to_controller')->useAttributeAsKey('name')
@@ -59,10 +59,10 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
-                ->arrayNode('widget_factories')->addDefaultsIfNotSet()
+                ->arrayNode('widget_factory')->addDefaultsIfNotSet()
                     ->children()
                         ->arrayNode('blacklist')->prototype('scalar')->end()->info('Blacklist of widget factory service IDs.');
 
-        return $treeBuilder;
+        return $builder;
     }
 }

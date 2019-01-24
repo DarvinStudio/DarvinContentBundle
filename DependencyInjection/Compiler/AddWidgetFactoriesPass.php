@@ -24,7 +24,7 @@ class AddWidgetFactoriesPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container): void
     {
-        $blacklist = $container->getParameter('darvin_content.widget_factories.blacklist');
+        $blacklist = $container->getParameter('darvin_content.widget_factory.blacklist');
         $pool      = $container->getDefinition('darvin_content.widget.pool');
 
         foreach (array_keys($container->findTaggedServiceIds('darvin_content.widget_factory')) as $id) {

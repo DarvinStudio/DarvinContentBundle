@@ -10,6 +10,6 @@ services:
         arguments:
             - '@http_kernel'
             - '@request_stack'
-            - '%darvin_content.widgets.forward_to_controller%'
+            - '%darvin_content.widget.forward_to_controller%'
         tags:
             - { name: darvin_content.widget_factory }
