@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2016, Darvin Studio
+ * @copyright Copyright (c) 2016-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -52,7 +52,7 @@ class RebuildSlugsCommand extends Command
      * @param \Darvin\Utils\Sluggable\SluggableManagerInterface           $sluggableManager Sluggable manager
      */
     public function __construct(
-        $name,
+        string $name,
         EntityManager $em,
         MetadataFactoryInterface $metadataFactory,
         PropertyAccessorInterface $propertyAccessor,
@@ -69,7 +69,7 @@ class RebuildSlugsCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Rebuilds all slugs.');
     }

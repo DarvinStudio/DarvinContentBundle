@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2016, Darvin Studio
+ * @copyright Copyright (c) 2016-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -38,7 +38,7 @@ class ListWidgetsCommand extends Command
      * @param \Symfony\Component\HttpFoundation\RequestStack   $requestStack Request stack
      * @param \Darvin\ContentBundle\Widget\WidgetPoolInterface $widgetPool   Widget pool
      */
-    public function __construct($name, RequestStack $requestStack, WidgetPoolInterface $widgetPool)
+    public function __construct(string $name, RequestStack $requestStack, WidgetPoolInterface $widgetPool)
     {
         parent::__construct($name);
 
@@ -49,7 +49,7 @@ class ListWidgetsCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Displays list of existing content widget placeholders.');
     }

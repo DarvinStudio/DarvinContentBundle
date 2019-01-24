@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2015-2018, Darvin Studio
+ * @copyright Copyright (c) 2015-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -51,7 +51,7 @@ class TranslationsCreateCommand extends Command
      * @param \Darvin\ContentBundle\Translatable\TranslatableManagerInterface $translatableManager Translatable manager
      * @param string                                                          $defaultLocale       Default locale
      */
-    public function __construct($name, EntityManager $em, TranslatableManagerInterface $translatableManager, $defaultLocale)
+    public function __construct(string $name, EntityManager $em, TranslatableManagerInterface $translatableManager, string $defaultLocale)
     {
         parent::__construct($name);
 
@@ -63,7 +63,7 @@ class TranslationsCreateCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription(<<<EOF
@@ -90,9 +90,8 @@ EOF
             return;
         }
 
-        $this
-            ->checkIfTargetLocaleTranslationsExist($classes, $targetLocale)
-            ->cloneDefaultLocaleTranslations($classes, $targetLocale);
+        $this->checkIfTargetLocaleTranslationsExist($classes, $targetLocale);
+        $this->cloneDefaultLocaleTranslations($classes, $targetLocale);
     }
 
     /**
@@ -101,7 +100,7 @@ EOF
      *
      * @throws \Darvin\ContentBundle\Translatable\TranslatableException
      */
-    private function cloneDefaultLocaleTranslations(array $translationClasses, $targetLocale)
+    private function cloneDefaultLocaleTranslations(array $translationClasses, string $targetLocale): void
     {
         $this->em->getConnection()->beginTransaction();
 
@@ -147,10 +146,9 @@ EOF
      * @param array  $translationClasses Translation classes
      * @param string $targetLocale       Target locale
      *
-     * @return TranslationsCreateCommand
      * @throws \Darvin\ContentBundle\Translatable\TranslatableException
      */
-    private function checkIfTargetLocaleTranslationsExist(array $translationClasses, $targetLocale)
+    private function checkIfTargetLocaleTranslationsExist(array $translationClasses, string $targetLocale): void
     {
         $localeProperty = $this->translatableManager->getTranslationLocaleProperty();
 
@@ -168,14 +166,12 @@ EOF
                 );
             }
         }
-
-        return $this;
     }
 
     /**
      * @return array
      */
-    private function getTranslationClasses()
+    private function getTranslationClasses(): array
     {
         $classes = [];
 

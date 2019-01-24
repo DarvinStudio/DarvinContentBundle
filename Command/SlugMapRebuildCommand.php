@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2015, Darvin Studio
+ * @copyright Copyright (c) 2015-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -45,7 +45,7 @@ class SlugMapRebuildCommand extends Command
      * @param \Darvin\Utils\Mapping\MetadataFactoryInterface $metadataFactory    Metadata factory
      * @param \Darvin\ContentBundle\Slug\SlugMapItemFactory  $slugMapItemFactory Slug map item factory
      */
-    public function __construct($name, EntityManager $em, MetadataFactoryInterface $metadataFactory, SlugMapItemFactory $slugMapItemFactory)
+    public function __construct(string $name, EntityManager $em, MetadataFactoryInterface $metadataFactory, SlugMapItemFactory $slugMapItemFactory)
     {
         parent::__construct($name);
 
@@ -57,7 +57,7 @@ class SlugMapRebuildCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Rebuilds slug map.');
     }
@@ -104,7 +104,7 @@ class SlugMapRebuildCommand extends Command
         $this->em->flush();
     }
 
-    private function truncateSlugMap()
+    private function truncateSlugMap(): void
     {
         $tableName = $this->em->getClassMetadata(SlugMapItem::class)->getTableName();
 
