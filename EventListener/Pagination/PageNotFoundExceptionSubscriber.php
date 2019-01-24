@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2017, Darvin Studio
+ * @copyright Copyright (c) 2017-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -11,18 +11,30 @@
 namespace Darvin\ContentBundle\EventListener\Pagination;
 
 use Darvin\ContentBundle\Pagination\PageNotFoundException;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
- * Page not found exception event listener
+ * Page not found exception event subscriber
  */
-class PageNotFoundExceptionListener
+class PageNotFoundExceptionSubscriber implements EventSubscriberInterface
 {
+    /**
+     * {@inheritdoc}
+     */
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            KernelEvents::EXCEPTION => 'setHttpException',
+        ];
+    }
+
     /**
      * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event Event
      */
-    public function onKernelException(GetResponseForExceptionEvent $event)
+    public function setHttpException(GetResponseForExceptionEvent $event): void
     {
         $pageNotFoundException = $this->getPageNotFoundException($event);
 
@@ -36,7 +48,7 @@ class PageNotFoundExceptionListener
      *
      * @return \Darvin\ContentBundle\Pagination\PageNotFoundException|null
      */
-    private function getPageNotFoundException(GetResponseForExceptionEvent $event)
+    private function getPageNotFoundException(GetResponseForExceptionEvent $event): ?PageNotFoundException
     {
         $exception = $event->getException();
 
