@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2017, Darvin Studio
+ * @copyright Copyright (c) 2017-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -24,7 +24,7 @@ class RedirectSubscriber implements EventSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             KernelEvents::EXCEPTION => 'redirect',
@@ -34,7 +34,7 @@ class RedirectSubscriber implements EventSubscriberInterface
     /**
      * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event Event
      */
-    public function redirect(GetResponseForExceptionEvent $event)
+    public function redirect(GetResponseForExceptionEvent $event): void
     {
         $exception = $event->getException();
 
