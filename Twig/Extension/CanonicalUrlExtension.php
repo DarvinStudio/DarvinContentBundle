@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2017, Darvin Studio
+ * @copyright Copyright (c) 2017-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -10,22 +10,25 @@
 
 namespace Darvin\ContentBundle\Twig\Extension;
 
-use Darvin\ContentBundle\CanonicalUrl\CanonicalUrlGenerator;
+use Darvin\ContentBundle\CanonicalUrl\CanonicalUrlGeneratorInterface;
+use Twig\Environment;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 /**
  * Canonical URL Twig extension
  */
-class CanonicalUrlExtension extends \Twig_Extension
+class CanonicalUrlExtension extends AbstractExtension
 {
     /**
-     * @var \Darvin\ContentBundle\CanonicalUrl\CanonicalUrlGenerator
+     * @var \Darvin\ContentBundle\CanonicalUrl\CanonicalUrlGeneratorInterface
      */
     private $canonicalUrlGenerator;
 
     /**
-     * @param \Darvin\ContentBundle\CanonicalUrl\CanonicalUrlGenerator $canonicalUrlGenerator Canonical URL generator
+     * @param \Darvin\ContentBundle\CanonicalUrl\CanonicalUrlGeneratorInterface $canonicalUrlGenerator Canonical URL generator
      */
-    public function __construct(CanonicalUrlGenerator $canonicalUrlGenerator)
+    public function __construct(CanonicalUrlGeneratorInterface $canonicalUrlGenerator)
     {
         $this->canonicalUrlGenerator = $canonicalUrlGenerator;
     }
@@ -33,31 +36,29 @@ class CanonicalUrlExtension extends \Twig_Extension
     /**
      * {@inheritdoc}
      */
-    public function getFunctions()
+    public function getFunctions(): iterable
     {
-        return [
-            new \Twig_SimpleFunction('content_canonical_url', [$this, 'renderCanonicalUrlTag'], [
-                'needs_environment' => true,
-                'is_safe'           => ['html'],
-            ]),
-        ];
+        yield new TwigFunction('content_canonical_url', [$this, 'renderCanonicalUrlTag'], [
+            'needs_environment' => true,
+            'is_safe'           => ['html'],
+        ]);
     }
 
     /**
-     * @param \Twig_Environment $env      Environment
+     * @param \Twig\Environment $twig     Twig
      * @param string            $template Template
      *
-     * @return string
+     * @return string|null
      */
-    public function renderCanonicalUrlTag(\Twig_Environment $env, $template = '@DarvinContent/canonical_url.html.twig')
+    public function renderCanonicalUrlTag(Environment $twig, string $template = '@DarvinContent/canonical_url.html.twig'): ?string
     {
-        $url = $this->canonicalUrlGenerator->generate();
+        $url = $this->canonicalUrlGenerator->generateCanonicalUrl();
 
         if (empty($url)) {
             return null;
         }
 
-        return $env->render($template, [
+        return $twig->render($template, [
             'url' => $url,
         ]);
     }

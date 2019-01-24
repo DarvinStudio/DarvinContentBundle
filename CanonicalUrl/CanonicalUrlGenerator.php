@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2017-2018, Darvin Studio
+ * @copyright Copyright (c) 2017-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -17,7 +17,7 @@ use Symfony\Component\Routing\RouterInterface;
 /**
  * Canonical URL generator
  */
-class CanonicalUrlGenerator
+class CanonicalUrlGenerator implements CanonicalUrlGeneratorInterface
 {
     /**
      * @var \Symfony\Component\HttpFoundation\RequestStack
@@ -47,14 +47,14 @@ class CanonicalUrlGenerator
         $this->queryParamWhitelist = [];
 
         foreach ($queryParamWhitelist as $name) {
-            $this->addQueryParamToWhitelist($name);
+            $this->whitelistQueryParam($name);
         }
     }
 
     /**
      * @param string $name Request query parameter name
      */
-    public function addQueryParamToWhitelist($name)
+    public function whitelistQueryParam(string $name): void
     {
         $pattern = $this->createPattern($name);
         $this->queryParamWhitelist[$pattern] = $pattern;
@@ -63,7 +63,7 @@ class CanonicalUrlGenerator
     /**
      * @return string|null
      */
-    public function generate()
+    public function generateCanonicalUrl(): ?string
     {
         $request = $this->requestStack->getCurrentRequest();
 
@@ -106,7 +106,7 @@ class CanonicalUrlGenerator
      *
      * @return string
      */
-    private function createPattern($text)
+    private function createPattern(string $text): string
     {
         return '/^'.$text.'$/';
     }
