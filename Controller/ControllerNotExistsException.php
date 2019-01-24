@@ -10,19 +10,16 @@
 
 namespace Darvin\ContentBundle\Controller;
 
-use Doctrine\ORM\QueryBuilder;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-
 /**
- * Content controller abstract implementation
+ * Content controller not exists exception
  */
-abstract class AbstractContentController extends AbstractController implements ContentControllerInterface
+class ControllerNotExistsException extends \Exception
 {
     /**
-     * {@inheritdoc}
+     * @param string $contentClass Content class
      */
-    public function handleQueryBuilder(QueryBuilder $qb, string $locale): void
+    public function __construct(string $contentClass)
     {
-
+        parent::__construct(sprintf('Content controller for class "%s" does not exist.', $contentClass));
     }
 }

@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2015, Darvin Studio
+ * @copyright Copyright (c) 2015-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -11,9 +11,12 @@
 namespace Darvin\ContentBundle\Controller;
 
 use Darvin\ContentBundle\Entity\SlugMapItem;
+use Darvin\ContentBundle\Repository\SlugMapItemRepository;
+use Darvin\ContentBundle\Translatable\TranslationJoinerInterface;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Content front controller
@@ -27,13 +30,13 @@ class ContentFrontController extends AbstractController
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public function showAction(Request $request, $slug)
+    public function showAction(Request $request, string $slug): Response
     {
         $slugMapItem = $this->getSlugMapItem($slug);
 
         try {
             $contentController = $this->getContentControllerPool()->getController($slugMapItem->getObjectClass());
-        } catch (ControllerException $ex) {
+        } catch (ControllerNotExistsException $ex) {
             throw $this->createNotFoundException($ex->getMessage(), $ex);
         }
 
@@ -65,7 +68,7 @@ class ContentFrontController extends AbstractController
      *
      * @return object
      */
-    private function getContent($objectClass, $objectId, $locale, ContentControllerInterface $contentController)
+    private function getContent(string $objectClass, string $objectId, string $locale, ContentControllerInterface $contentController)
     {
         $repository = $this->getDoctrine()->getRepository($objectClass);
 
@@ -94,7 +97,7 @@ class ContentFrontController extends AbstractController
      * @return \Darvin\ContentBundle\Entity\SlugMapItem
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    private function getSlugMapItem($slug)
+    private function getSlugMapItem(string $slug): SlugMapItem
     {
         $slugMapItem = $this->getSlugMapItemRepository()->findOneBy([
             'slug' => $slug,
@@ -108,9 +111,9 @@ class ContentFrontController extends AbstractController
     }
 
     /**
-     * @return \Darvin\ContentBundle\Controller\ContentControllerPool
+     * @return \Darvin\ContentBundle\Controller\ContentControllerPoolInterface
      */
-    private function getContentControllerPool()
+    private function getContentControllerPool(): ContentControllerPoolInterface
     {
         return $this->get('darvin_content.controller.pool');
     }
@@ -118,7 +121,7 @@ class ContentFrontController extends AbstractController
     /**
      * @return \Darvin\ContentBundle\Repository\SlugMapItemRepository
      */
-    private function getSlugMapItemRepository()
+    private function getSlugMapItemRepository(): SlugMapItemRepository
     {
         return $this->getDoctrine()->getRepository(SlugMapItem::class);
     }
@@ -126,7 +129,7 @@ class ContentFrontController extends AbstractController
     /**
      * @return \Darvin\ContentBundle\Translatable\TranslationJoinerInterface
      */
-    private function getTranslationJoiner()
+    private function getTranslationJoiner(): TranslationJoinerInterface
     {
         return $this->get('darvin_content.translatable.translation_joiner');
     }
