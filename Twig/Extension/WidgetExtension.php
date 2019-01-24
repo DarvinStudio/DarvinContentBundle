@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2015, Darvin Studio
+ * @copyright Copyright (c) 2015-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -10,12 +10,17 @@
 
 namespace Darvin\ContentBundle\Twig\Extension;
 
+use Darvin\ContentBundle\Widget\WidgetEmbedderInterface;
+use Darvin\ContentBundle\Widget\WidgetPoolInterface;
 use Darvin\Utils\Service\ServiceProviderInterface;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
+use Twig\TwigFunction;
 
 /**
  * Widget Twig extension
  */
-class WidgetExtension extends \Twig_Extension
+class WidgetExtension extends AbstractExtension
 {
     /**
      * @var \Darvin\Utils\Service\ServiceProviderInterface
@@ -40,23 +45,21 @@ class WidgetExtension extends \Twig_Extension
     /**
      * {@inheritdoc}
      */
-    public function getFilters()
+    public function getFilters(): iterable
     {
-        return [
-            new \Twig_SimpleFilter('content_embed_widgets', [$this->getWidgetEmbedder(), 'embed'], [
-                'is_safe' => ['html'],
-            ]),
-        ];
+        yield new TwigFilter('content_embed_widgets', [$this->getWidgetEmbedder(), 'embed'], [
+            'is_safe' => ['html'],
+        ]);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getFunctions()
+    public function getFunctions(): iterable
     {
         return [
-            new \Twig_SimpleFunction('content_widget_exists', [$this->getWidgetPool(), 'widgetExists']),
-            new \Twig_SimpleFunction('content_widget_render', [$this, 'renderWidget'], [
+            new TwigFunction('content_widget_exists', [$this->getWidgetPool(), 'widgetExists']),
+            new TwigFunction('content_widget_render', [$this, 'renderWidget'], [
                 'is_safe' => ['html'],
             ]),
         ];
@@ -65,9 +68,9 @@ class WidgetExtension extends \Twig_Extension
     /**
      * @param string $name Widget name
      *
-     * @return string
+     * @return string|null
      */
-    public function renderWidget($name)
+    public function renderWidget(string $name): ?string
     {
         return $this->getWidgetPool()->getWidget($name)->getContent();
     }
@@ -75,7 +78,7 @@ class WidgetExtension extends \Twig_Extension
     /**
      * @return \Darvin\ContentBundle\Widget\WidgetEmbedderInterface
      */
-    private function getWidgetEmbedder()
+    private function getWidgetEmbedder(): WidgetEmbedderInterface
     {
         return $this->widgetEmbedderProvider->getService();
     }
@@ -83,7 +86,7 @@ class WidgetExtension extends \Twig_Extension
     /**
      * @return \Darvin\ContentBundle\Widget\WidgetPoolInterface
      */
-    private function getWidgetPool()
+    private function getWidgetPool(): WidgetPoolInterface
     {
         return $this->widgetPoolProvider->getService();
     }
