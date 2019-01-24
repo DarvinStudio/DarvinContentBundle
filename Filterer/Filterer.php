@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2015-2018, Darvin Studio
+ * @copyright Copyright (c) 2015-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -83,7 +83,7 @@ class Filterer implements FiltererInterface
     /**
      * {@inheritdoc}
      */
-    public function filter(QueryBuilder $qb, array $filterData = null, array $options = [], $conjunction = true)
+    public function filter(QueryBuilder $qb, array $filterData = null, array $options = [], bool $conjunction = true): void
     {
         if (empty($filterData)) {
             return;
@@ -100,12 +100,12 @@ class Filterer implements FiltererInterface
         $rootAliases = $qb->getRootAliases();
 
         if (count($rootAliases) > 1) {
-            throw new FiltererException('Only single root alias query builders are supported.');
+            throw new \InvalidArgumentException('Only single root alias query builders are supported.');
         }
         try {
             $options = $this->optionsResolver->resolve($options);
         } catch (ExceptionInterface $ex) {
-            throw new FiltererException(sprintf('Options are invalid: "%s".', $ex->getMessage()));
+            throw new \InvalidArgumentException(sprintf('Options are invalid: "%s".', $ex->getMessage()));
         }
 
         $this->addConstraints($qb, $filterData, $options, $conjunction, $rootAliases[0]);
@@ -114,7 +114,7 @@ class Filterer implements FiltererInterface
     /**
      * @param \Symfony\Component\OptionsResolver\OptionsResolver $resolver Options resolver
      */
-    private function configureOptions(OptionsResolver $resolver)
+    private function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefaults([
@@ -130,7 +130,7 @@ class Filterer implements FiltererInterface
      * @param bool                       $conjunction Whether to use conjunction (otherwise - disjunction)
      * @param string                     $rootAlias   Query builder root alias
      */
-    private function addConstraints(QueryBuilder $qb, array $filterData, array $options, $conjunction, $rootAlias)
+    private function addConstraints(QueryBuilder $qb, array $filterData, array $options, bool $conjunction, string $rootAlias): void
     {
         $rootEntities = $qb->getRootEntities();
         $entityClass = $rootEntities[0];
@@ -161,9 +161,9 @@ class Filterer implements FiltererInterface
      * @param bool                       $strictComparison Whether to use strict comparison
      *
      * @return string
-     * @throws \Darvin\ContentBundle\Filterer\FiltererException
+     * @throws \InvalidArgumentException
      */
-    private function buildConstraint(QueryBuilder $qb, $field, $value, $entityClass, $rootAlias, $strictComparison)
+    private function buildConstraint(QueryBuilder $qb, string $field, $value, string $entityClass, string $rootAlias, bool $strictComparison): string
     {
         $qb->setParameter($field, $strictComparison ? $value : '%'.$value.'%');
 
@@ -181,7 +181,7 @@ class Filterer implements FiltererInterface
 
         if (!isset($meta->associationMappings[$property]) && !isset($meta->fieldMappings[$property])) {
             if (!$this->translatableManager->isTranslatable($entityClass)) {
-                throw new FiltererException(
+                throw new \InvalidArgumentException(
                     sprintf('Property "%s::$%s" is not association or mapped field.', $entityClass, $property)
                 );
             }
@@ -201,7 +201,7 @@ class Filterer implements FiltererInterface
      *
      * @return string
      */
-    private function getConstraintExpression($field, $strictComparison)
+    private function getConstraintExpression(string $field, bool $strictComparison): string
     {
         if (preg_match('/From$/', $field)) {
             return '>=';
@@ -217,15 +217,15 @@ class Filterer implements FiltererInterface
      * @param string $entityClass Entity class
      *
      * @return \Doctrine\ORM\Mapping\ClassMetadataInfo
-     * @throws \Darvin\ContentBundle\Filterer\FiltererException
+     * @throws \InvalidArgumentException
      */
-    private function getDoctrineMetadata($entityClass)
+    private function getDoctrineMetadata(string $entityClass): ClassMetadataInfo
     {
         if (!isset($this->doctrineMetadata[$entityClass])) {
             try {
                 $this->doctrineMetadata[$entityClass] = $this->em->getClassMetadata($entityClass);
             } catch (MappingException $ex) {
-                throw new FiltererException(sprintf('Unable to get Doctrine metadata for class "%s".', $entityClass));
+                throw new \InvalidArgumentException(sprintf('Unable to get Doctrine metadata for class "%s".', $entityClass));
             }
         }
 

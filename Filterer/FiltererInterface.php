@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2015, Darvin Studio
+ * @copyright Copyright (c) 2015-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -23,7 +23,7 @@ interface FiltererInterface
      * @param array                      $options     Options
      * @param bool                       $conjunction Whether to use conjunction (otherwise - disjunction)
      *
-     * @throws \Darvin\ContentBundle\Filterer\FiltererException
+     * @throws \InvalidArgumentException
      */
-    public function filter(QueryBuilder $qb, array $filterData = null, array $options = [], $conjunction = true);
+    public function filter(QueryBuilder $qb, array $filterData = null, array $options = [], bool $conjunction = true): void;
 }
