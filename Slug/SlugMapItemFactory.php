@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2015, Darvin Studio
+ * @copyright Copyright (c) 2015-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -38,9 +38,9 @@ class SlugMapItemFactory
      * @param \Doctrine\Common\Persistence\Mapping\ClassMetadata $doctrineMeta Doctrine metadata
      *
      * @return \Darvin\ContentBundle\Entity\SlugMapItem[]
-     * @throws \Darvin\ContentBundle\Slug\SlugException
+     * @throws \LogicException
      */
-    public function createItems($object, array $slugsMeta, ClassMetadata $doctrineMeta)
+    public function createItems($object, array $slugsMeta, ClassMetadata $doctrineMeta): array
     {
         $items = [];
 
@@ -52,7 +52,7 @@ class SlugMapItemFactory
 
         foreach ($slugsMeta as $slugProperty => $params) {
             if (!$this->propertyAccessor->isReadable($object, $slugProperty)) {
-                throw new SlugException(sprintf('Property "%s::$%s" is not readable.', $objectClass, $slugProperty));
+                throw new \LogicException(sprintf('Property "%s::$%s" is not readable.', $objectClass, $slugProperty));
             }
 
             $slug = $this->propertyAccessor->getValue($object, $slugProperty);
