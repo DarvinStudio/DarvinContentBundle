@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2016, Darvin Studio
+ * @copyright Copyright (c) 2016-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -11,13 +11,13 @@
 namespace Darvin\ContentBundle\Translatable;
 
 /**
- * Translations initializer
+ * Translation initializer
  */
-interface TranslationsInitializerInterface
+interface TranslationInitializerInterface
 {
     /**
      * @param object $entity  Entity
      * @param array  $locales Locales to create translations for
      */
-    public function initializeTranslations($entity, array $locales);
+    public function initializeTranslations($entity, array $locales): void;
 }

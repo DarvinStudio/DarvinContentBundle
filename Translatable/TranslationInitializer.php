@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2016, Darvin Studio
+ * @copyright Copyright (c) 2016-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -15,9 +15,9 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Knp\DoctrineBehaviors\ORM\Translatable\TranslatableSubscriber;
 
 /**
- * Translations initializer
+ * Translation initializer
  */
-class TranslationsInitializer implements TranslationsInitializerInterface
+class TranslationInitializer implements TranslationInitializerInterface
 {
     /**
      * @var \Doctrine\ORM\EntityManager
@@ -52,7 +52,7 @@ class TranslationsInitializer implements TranslationsInitializerInterface
     /**
      * {@inheritdoc}
      */
-    public function initializeTranslations($entity, array $locales)
+    public function initializeTranslations($entity, array $locales): void
     {
         $class = get_class($entity);
 
