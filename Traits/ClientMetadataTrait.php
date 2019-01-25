@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2015, Darvin Studio
+ * @copyright Copyright (c) 2015-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -18,33 +18,33 @@ use Doctrine\ORM\Mapping as ORM;
 trait ClientMetadataTrait
 {
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(nullable=true)
      */
     private $clientIp;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(nullable=true)
      */
     private $userAgent;
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getClientIp()
+    public function getClientIp(): ?string
     {
         return $this->clientIp;
     }
 
     /**
-     * @param string $clientIp clientIp
+     * @param string|null $clientIp clientIp
      *
      * @return ClientMetadataTrait
      */
-    public function setClientIp($clientIp)
+    public function setClientIp(?string $clientIp): ClientMetadataTrait
     {
         $this->clientIp = $clientIp;
 
@@ -52,19 +52,19 @@ trait ClientMetadataTrait
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getUserAgent()
+    public function getUserAgent(): ?string
     {
         return $this->userAgent;
     }
 
     /**
-     * @param string $userAgent userAgent
+     * @param string|null $userAgent userAgent
      *
      * @return ClientMetadataTrait
      */
-    public function setUserAgent($userAgent)
+    public function setUserAgent(?string $userAgent): ClientMetadataTrait
     {
         $this->userAgent = $userAgent;
 
