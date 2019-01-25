@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2015, Darvin Studio
+ * @copyright Copyright (c) 2015-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -19,37 +19,39 @@ interface TranslatableManagerInterface
      * @param string $entityClass Entity class
      *
      * @return string
+     * @throws \Darvin\ContentBundle\Translatable\TranslatableException
      */
-    public function getTranslatableClass($entityClass);
+    public function getTranslatableClass(string $entityClass): string;
 
     /**
      * @param string $entityClass Entity class
      *
      * @return string
+     * @throws \Darvin\ContentBundle\Translatable\TranslatableException
      */
-    public function getTranslationClass($entityClass);
-
-    /**
-     * @param string $entityClass Entity class
-     *
-     * @return bool
-     */
-    public function isTranslatable($entityClass);
+    public function getTranslationClass(string $entityClass): string;
 
     /**
      * @param string $entityClass Entity class
      *
      * @return bool
      */
-    public function isTranslation($entityClass);
+    public function isTranslatable(string $entityClass): bool;
+
+    /**
+     * @param string $entityClass Entity class
+     *
+     * @return bool
+     */
+    public function isTranslation(string $entityClass): bool;
 
     /**
      * @return string
      */
-    public function getTranslationLocaleProperty();
+    public function getTranslationLocaleProperty(): string;
 
     /**
      * @return string
      */
-    public function getTranslationsProperty();
+    public function getTranslationsProperty(): string;
 }

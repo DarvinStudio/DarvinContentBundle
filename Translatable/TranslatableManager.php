@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2015, Darvin Studio
+ * @copyright Copyright (c) 2015-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -12,6 +12,7 @@ namespace Darvin\ContentBundle\Translatable;
 
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 /**
@@ -98,13 +99,13 @@ class TranslatableManager implements TranslatableManagerInterface
     public function __construct(
         ClassAnalyzer $classAnalyzer,
         EntityManager $em,
-        $getTranslatableEntityClassMethod,
-        $getTranslationEntityClassMethod,
-        $isReflectionRecursive,
-        $translatableTrait,
-        $translationLocaleProperty,
-        $translationTrait,
-        $translationsProperty
+        string $getTranslatableEntityClassMethod,
+        string $getTranslationEntityClassMethod,
+        bool $isReflectionRecursive,
+        string $translatableTrait,
+        string $translationLocaleProperty,
+        string $translationTrait,
+        string $translationsProperty
     ) {
         $this->classAnalyzer = $classAnalyzer;
         $this->em = $em;
@@ -121,7 +122,7 @@ class TranslatableManager implements TranslatableManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getTranslatableClass($entityClass)
+    public function getTranslatableClass(string $entityClass): string
     {
         if (!isset($this->translatableClasses[$entityClass])) {
             if (!$this->isTranslation($entityClass)) {
@@ -139,7 +140,7 @@ class TranslatableManager implements TranslatableManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getTranslationClass($entityClass)
+    public function getTranslationClass(string $entityClass): string
     {
         if (!isset($this->translationClasses[$entityClass])) {
             if (!$this->isTranslatable($entityClass)) {
@@ -157,7 +158,7 @@ class TranslatableManager implements TranslatableManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function isTranslatable($entityClass)
+    public function isTranslatable(string $entityClass): bool
     {
         if (!isset($this->checkedIfTranslatable[$entityClass])) {
             $meta = $this->getDoctrineMetadata($entityClass);
@@ -177,7 +178,7 @@ class TranslatableManager implements TranslatableManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function isTranslation($entityClass)
+    public function isTranslation(string $entityClass): bool
     {
         if (!isset($this->checkedIfTranslation[$entityClass])) {
             $meta = $this->getDoctrineMetadata($entityClass);
@@ -197,7 +198,7 @@ class TranslatableManager implements TranslatableManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getTranslationLocaleProperty()
+    public function getTranslationLocaleProperty(): string
     {
         return $this->translationLocaleProperty;
     }
@@ -205,7 +206,7 @@ class TranslatableManager implements TranslatableManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getTranslationsProperty()
+    public function getTranslationsProperty(): string
     {
         return $this->translationsProperty;
     }
@@ -215,7 +216,7 @@ class TranslatableManager implements TranslatableManagerInterface
      *
      * @return \Doctrine\ORM\Mapping\ClassMetadataInfo|null
      */
-    private function getDoctrineMetadata($class)
+    private function getDoctrineMetadata(string $class): ?ClassMetadataInfo
     {
         try {
             return $this->em->getClassMetadata($class);
