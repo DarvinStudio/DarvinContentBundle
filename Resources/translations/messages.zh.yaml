@@ -1,3 +1,5 @@
+content:
+    empty: 在建设中
 macro:
     page_number:
         all: ' —完整的列表'

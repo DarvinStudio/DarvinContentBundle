@@ -1,3 +1,6 @@
+content:
+    empty: Страница в разработке
+
 macro:
     page_number:
         all:    ' &mdash; полный список'

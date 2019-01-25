@@ -1,3 +1,6 @@
+content:
+    empty: Under Construction
+
 macro:
     page_number:
         all:    ' &mdash; full list'

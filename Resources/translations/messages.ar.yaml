@@ -1,3 +1,5 @@
+content:
+    empty: 'تحت الإنشاء'
 macro:
     page_number:
         all: ' — القائمة الكاملة'

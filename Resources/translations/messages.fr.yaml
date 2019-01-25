@@ -1,3 +1,5 @@
+content:
+    empty: 'En Cours De Construction'
 macro:
     page_number:
         all: ' — la liste complète'
