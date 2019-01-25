@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2015, Darvin Studio
+ * @copyright Copyright (c) 2015-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -26,7 +26,7 @@ trait TranslatableTrait
      *
      * @return mixed
      */
-    public function __set($property, $value)
+    public function __set(string $property, $value)
     {
         return $this->proxyCurrentLocaleTranslation('set'.ucfirst($property), [$value]);
     }
@@ -36,7 +36,7 @@ trait TranslatableTrait
      *
      * @return mixed
      */
-    public function __get($property)
+    public function __get(string $property)
     {
         return $this->proxyCurrentLocaleTranslation('get'.ucfirst($property));
     }
@@ -47,7 +47,7 @@ trait TranslatableTrait
      *
      * @return mixed
      */
-    public function __call($method, array $args)
+    public function __call(string $method, array $args)
     {
         return $this->proxyCurrentLocaleTranslation($method, $args);
     }
@@ -55,7 +55,7 @@ trait TranslatableTrait
     /**
      * {@inheritdoc}
      */
-    protected function proxyCurrentLocaleTranslation($method, array $arguments = [])
+    protected function proxyCurrentLocaleTranslation(string $method, array $arguments = [])
     {
         $translation = $this->translate($this->getCurrentLocale());
 
