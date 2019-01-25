@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2017, Darvin Studio
+ * @copyright Copyright (c) 2017-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -13,6 +13,8 @@ namespace Darvin\ContentBundle\Form\TypeGuesser;
 use Darvin\ContentBundle\Translatable\TranslatableManagerInterface;
 use Symfony\Component\Form\FormTypeGuesserInterface;
 use Symfony\Component\Form\Guess\Guess;
+use Symfony\Component\Form\Guess\TypeGuess;
+use Symfony\Component\Form\Guess\ValueGuess;
 
 /**
  * Translatable form type guesser
@@ -42,7 +44,7 @@ class TranslatableTypeGuesser implements FormTypeGuesserInterface
     /**
      * {@inheritdoc}
      */
-    public function guessType($class, $property)
+    public function guessType($class, $property): ?TypeGuess
     {
         return $this->guess($class, $property, __FUNCTION__);
     }
@@ -50,7 +52,7 @@ class TranslatableTypeGuesser implements FormTypeGuesserInterface
     /**
      * {@inheritdoc}
      */
-    public function guessRequired($class, $property)
+    public function guessRequired($class, $property): ?ValueGuess
     {
         return $this->guess($class, $property, __FUNCTION__);
     }
@@ -58,7 +60,7 @@ class TranslatableTypeGuesser implements FormTypeGuesserInterface
     /**
      * {@inheritdoc}
      */
-    public function guessMaxLength($class, $property)
+    public function guessMaxLength($class, $property): ?ValueGuess
     {
         return $this->guess($class, $property, __FUNCTION__);
     }
@@ -66,7 +68,7 @@ class TranslatableTypeGuesser implements FormTypeGuesserInterface
     /**
      * {@inheritdoc}
      */
-    public function guessPattern($class, $property)
+    public function guessPattern($class, $property): ?ValueGuess
     {
         return $this->guess($class, $property, __FUNCTION__);
     }
@@ -78,7 +80,7 @@ class TranslatableTypeGuesser implements FormTypeGuesserInterface
      *
      * @return \Symfony\Component\Form\Guess\Guess|null
      */
-    private function guess($class, $property, $method)
+    private function guess(string $class, string $property, string $method): ?Guess
     {
         if (!$this->translatableManager->isTranslatable($class)) {
             return null;
