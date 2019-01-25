@@ -23,7 +23,7 @@ trait MetadataEntityRepositoryTrait
      *
      * @return MetadataEntityRepositoryTrait
      */
-    public function addNotHiddenFilter(QueryBuilder $qb, string $alias = 'translations'): MetadataEntityRepositoryTrait
+    public function addNotHiddenFilter(QueryBuilder $qb, string $alias = 'translations')
     {
         $qb->andWhere($alias.'.hidden = :hidden')->setParameter('hidden', false);
 
@@ -36,7 +36,7 @@ trait MetadataEntityRepositoryTrait
      *
      * @return MetadataEntityRepositoryTrait
      */
-    protected function addEnabledFilter(QueryBuilder $qb, string $alias = 'translations'): MetadataEntityRepositoryTrait
+    protected function addEnabledFilter(QueryBuilder $qb, string $alias = 'translations')
     {
         $qb->andWhere($alias.'.enabled = :enabled')->setParameter('enabled', true);
 

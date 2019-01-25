@@ -44,7 +44,7 @@ trait ClientMetadataTrait
      *
      * @return ClientMetadataTrait
      */
-    public function setClientIp(?string $clientIp): ClientMetadataTrait
+    public function setClientIp(?string $clientIp)
     {
         $this->clientIp = $clientIp;
 
@@ -64,7 +64,7 @@ trait ClientMetadataTrait
      *
      * @return ClientMetadataTrait
      */
-    public function setUserAgent(?string $userAgent): ClientMetadataTrait
+    public function setUserAgent(?string $userAgent)
     {
         $this->userAgent = $userAgent;
 

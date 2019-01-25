@@ -24,7 +24,7 @@ trait TranslatableRepositoryTrait
      *
      * @return TranslatableRepositoryTrait
      */
-    protected function joinTranslations(QueryBuilder $qb, ?string $locale = null, bool $addSelect = true): TranslatableRepositoryTrait
+    protected function joinTranslations(QueryBuilder $qb, ?string $locale = null, bool $addSelect = true)
     {
         $qb->innerJoin('o.translations', 'translations');
 
