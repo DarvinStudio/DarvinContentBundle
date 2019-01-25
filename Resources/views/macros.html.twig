@@ -19,15 +19,12 @@
     {{- heading }}{{ darvin_content.page_number() -}}
 {% endmacro %}
 
-{% macro meta_tags(description, keywords) %}
+{% macro meta_tags(description) %}
 
     {%- import '@DarvinContent/macros.html.twig' as darvin_content -%}
 
     {%- if description -%}
         <meta name="description" content="{{ description }}{{ darvin_content.page_number() }}">
-    {% endif %}
-    {%- if keywords -%}
-        <meta name="keywords" content="{{ keywords }}{{ darvin_content.page_number() }}">
     {% endif %}
 {% endmacro %}
 

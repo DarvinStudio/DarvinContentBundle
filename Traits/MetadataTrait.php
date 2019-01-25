@@ -83,17 +83,6 @@ trait MetadataTrait
     protected $metaDescription;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(type="text")
-     *
-     * @Darvin\DefaultValue(sourcePropertyPath="title")
-     *
-     * @Gedmo\Versioned
-     */
-    protected $metaKeywords;
-
-    /**
      * Constructor
      */
     public function __construct()
@@ -220,25 +209,5 @@ trait MetadataTrait
     public function getMetaDescription()
     {
         return $this->metaDescription;
-    }
-
-    /**
-     * @param string $metaKeywords metaKeywords
-     *
-     * @return MetadataTrait
-     */
-    public function setMetaKeywords($metaKeywords)
-    {
-        $this->metaKeywords = $metaKeywords;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMetaKeywords()
-    {
-        return $this->metaKeywords;
     }
 }
