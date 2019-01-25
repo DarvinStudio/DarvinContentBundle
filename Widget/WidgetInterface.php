@@ -33,11 +33,6 @@ interface WidgetInterface
     public function isEntitySluggable($entity);
 
     /**
-     * @return array
-     */
-    public function getResolvedOptions();
-
-    /**
      * @return string
      */
     public function getName();
