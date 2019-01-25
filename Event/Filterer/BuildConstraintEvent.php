@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2018, Darvin Studio
+ * @copyright Copyright (c) 2018-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -61,7 +61,7 @@ class BuildConstraintEvent extends Event
      * @param string                     $rootAlias        Query builder root alias
      * @param bool                       $strictComparison Whether to use strict comparison
      */
-    public function __construct(QueryBuilder $queryBuilder, $field, $value, $entityClass, $rootAlias, $strictComparison)
+    public function __construct(QueryBuilder $queryBuilder, string $field, $value, string $entityClass, string $rootAlias, bool $strictComparison)
     {
         $this->queryBuilder = $queryBuilder;
         $this->field = $field;
@@ -74,7 +74,7 @@ class BuildConstraintEvent extends Event
     /**
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function getQueryBuilder()
+    public function getQueryBuilder(): QueryBuilder
     {
         return $this->queryBuilder;
     }
@@ -82,7 +82,7 @@ class BuildConstraintEvent extends Event
     /**
      * @return string
      */
-    public function getField()
+    public function getField(): string
     {
         return $this->field;
     }
@@ -98,7 +98,7 @@ class BuildConstraintEvent extends Event
     /**
      * @return string
      */
-    public function getEntityClass()
+    public function getEntityClass(): string
     {
         return $this->entityClass;
     }
@@ -106,7 +106,7 @@ class BuildConstraintEvent extends Event
     /**
      * @return string
      */
-    public function getRootAlias()
+    public function getRootAlias(): string
     {
         return $this->rootAlias;
     }
@@ -114,7 +114,7 @@ class BuildConstraintEvent extends Event
     /**
      * @return bool
      */
-    public function isStrictComparison()
+    public function isStrictComparison(): bool
     {
         return $this->strictComparison;
     }
@@ -122,7 +122,7 @@ class BuildConstraintEvent extends Event
     /**
      * @return null|string
      */
-    public function getConstraint()
+    public function getConstraint(): ?string
     {
         return $this->constraint;
     }
@@ -132,7 +132,7 @@ class BuildConstraintEvent extends Event
      *
      * @return BuildConstraintEvent
      */
-    public function setConstraint($constraint)
+    public function setConstraint(?string $constraint): BuildConstraintEvent
     {
         $this->constraint = $constraint;
 
