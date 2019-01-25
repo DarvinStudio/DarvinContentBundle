@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2015, Darvin Studio
+ * @copyright Copyright (c) 2015-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -11,6 +11,7 @@
 namespace Darvin\ContentBundle\Slug;
 
 use Darvin\ContentBundle\Entity\SlugMapItem;
+use Darvin\ContentBundle\Repository\SlugMapItemRepository;
 use Darvin\Utils\Sluggable\SlugHandlerInterface;
 use Doctrine\ORM\EntityManager;
 
@@ -35,7 +36,7 @@ class UniqueSlugHandler implements SlugHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function handle($entity, &$slug, &$suffix, EntityManager $em)
+    public function handle(string &$slug, string &$suffix, $entity, EntityManager $em): void
     {
         $originalSlug = $slug;
 
@@ -71,7 +72,7 @@ class UniqueSlugHandler implements SlugHandlerInterface
      *
      * @return bool
      */
-    private function isSlugUnique($slug, $entityClass, $entityId, array $similarSlugs)
+    private function isSlugUnique(string $slug, string $entityClass, $entityId, array $similarSlugs): bool
     {
         if (empty($similarSlugs)) {
             return true;
@@ -99,7 +100,7 @@ class UniqueSlugHandler implements SlugHandlerInterface
      *
      * @return array
      */
-    private function getSimilarSlugs(EntityManager $em, $slug)
+    private function getSimilarSlugs(EntityManager $em, string $slug): array
     {
         if (!isset($this->similarSlugs[$slug])) {
             $this->similarSlugs[$slug] = $this->getSlugMapItemRepository($em)->getSimilarSlugs($slug);
@@ -113,7 +114,7 @@ class UniqueSlugHandler implements SlugHandlerInterface
      *
      * @return \Darvin\ContentBundle\Repository\SlugMapItemRepository
      */
-    private function getSlugMapItemRepository(EntityManager $em)
+    private function getSlugMapItemRepository(EntityManager $em): SlugMapItemRepository
     {
         return $em->getRepository(SlugMapItem::class);
     }
