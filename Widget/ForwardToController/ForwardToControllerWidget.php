@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: levsemin
@@ -48,8 +48,8 @@ class ForwardToControllerWidget extends AbstractCKEditorWidget
     public function __construct(
         HttpKernelInterface $httpKernel,
         RequestStack $requestStack,
-        $name,
-        $controller,
+        string $name,
+        string $controller,
         array $sluggableEntityClasses,
         array $options
     ) {
@@ -62,9 +62,9 @@ class ForwardToControllerWidget extends AbstractCKEditorWidget
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
-    public function getContent()
+    public function getContent(): ?string
     {
         $request = $this->requestStack->getCurrentRequest()->duplicate(null, null, [
             '_controller' => $this->controller,
@@ -76,15 +76,15 @@ class ForwardToControllerWidget extends AbstractCKEditorWidget
     /**
      * {@inheritdoc}
      */
-    public function getSluggableEntityClasses()
+    public function getSluggableEntityClasses(): iterable
     {
-        return array_merge(parent::getSluggableEntityClasses(), $this->sluggableEntityClasses);
+        return $this->sluggableEntityClasses;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getOptions()
+    public function getOptions(): array
     {
         return array_merge(parent::getOptions(), $this->options);
     }
@@ -92,7 +92,7 @@ class ForwardToControllerWidget extends AbstractCKEditorWidget
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }

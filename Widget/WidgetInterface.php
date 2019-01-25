@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2015, Darvin Studio
+ * @copyright Copyright (c) 2015-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -16,24 +16,24 @@ namespace Darvin\ContentBundle\Widget;
 interface WidgetInterface
 {
     /**
-     * @return string
+     * @return string|null
      */
-    public function getContent();
+    public function getContent(): ?string;
 
     /**
-     * @return string[]
+     * @return iterable|string[]
      */
-    public function getSluggableEntityClasses();
+    public function getSluggableEntityClasses(): iterable;
 
     /**
      * @param object $entity Entity
      *
      * @return bool
      */
-    public function isEntitySluggable($entity);
+    public function isSluggable($entity): bool;
 
     /**
      * @return string
      */
-    public function getName();
+    public function getName(): string;
 }

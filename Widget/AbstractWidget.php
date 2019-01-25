@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2015, Darvin Studio
+ * @copyright Copyright (c) 2015-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -10,15 +10,22 @@
 
 namespace Darvin\ContentBundle\Widget;
 
+use Darvin\Utils\Strings\StringsUtil;
+
 /**
  * Widget abstract implementation
  */
 abstract class AbstractWidget implements WidgetInterface
 {
     /**
+     * @var string|null
+     */
+    private $name = null;
+
+    /**
      * {@inheritdoc}
      */
-    public function getSluggableEntityClasses()
+    public function getSluggableEntityClasses(): iterable
     {
         return [];
     }
@@ -26,7 +33,7 @@ abstract class AbstractWidget implements WidgetInterface
     /**
      * {@inheritdoc}
      */
-    public function isEntitySluggable($entity)
+    public function isSluggable($entity): bool
     {
         foreach ($this->getSluggableEntityClasses() as $sluggable) {
             if ($entity instanceof $sluggable) {
@@ -38,9 +45,21 @@ abstract class AbstractWidget implements WidgetInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getName(): string
+    {
+        if (null === $this->name) {
+            $this->name = StringsUtil::toUnderscore(preg_replace('/^.*\\\|Widget$/', '', get_class($this)));
+        }
+
+        return $this->name;
+    }
+
+    /**
      * @return string
      */
-    public function getPlaceholder()
+    public function getPlaceholder(): string
     {
         return '%'.$this->getName().'%';
     }
