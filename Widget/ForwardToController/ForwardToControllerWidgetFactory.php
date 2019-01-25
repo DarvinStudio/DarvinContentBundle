@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: levsemin
@@ -43,7 +43,7 @@ class ForwardToControllerWidgetFactory implements WidgetFactoryInterface
      * @param array                                             $controllers    Controllers
      * @param array                                             $requiredParams Required parameters
      */
-    public function __construct(HttpKernelInterface $httpKernel, RequestStack $requestStack, array $controllers, $requiredParams = [])
+    public function __construct(HttpKernelInterface $httpKernel, RequestStack $requestStack, array $controllers, array $requiredParams = [])
     {
         $this->httpKernel = $httpKernel;
         $this->requestStack = $requestStack;
@@ -55,11 +55,10 @@ class ForwardToControllerWidgetFactory implements WidgetFactoryInterface
     }
 
     /**
-     * @return \Darvin\ContentBundle\Widget\WidgetInterface[]
+     * {@inheritdoc}
      */
-    public function createWidgets()
+    public function createWidgets(): iterable
     {
-        $widgets = [];
         foreach ($this->controllers as $name => $setting) {
             $this->validateWidgetSetting($setting);
 
@@ -67,7 +66,7 @@ class ForwardToControllerWidgetFactory implements WidgetFactoryInterface
             $sluggableEntityClasses = isset($setting['sluggable_entity_classes']) ? $setting['sluggable_entity_classes'] : [];
             $options = isset($setting['options']) ? $setting['options'] : [];
 
-            $widgets[] = new ForwardToControllerWidget(
+            yield new ForwardToControllerWidget(
                 $this->httpKernel,
                 $this->requestStack,
                 $name,
@@ -76,8 +75,6 @@ class ForwardToControllerWidgetFactory implements WidgetFactoryInterface
                 $options
             );
         }
-
-        return $widgets;
     }
 
     /**
@@ -85,7 +82,7 @@ class ForwardToControllerWidgetFactory implements WidgetFactoryInterface
      *
      * @throws \InvalidArgumentException
      */
-    private function validateWidgetSetting(array $setting)
+    private function validateWidgetSetting(array $setting): void
     {
         foreach ($this->requiredParams as $param) {
             if (!isset($setting[$param])) {
