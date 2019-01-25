@@ -63,7 +63,7 @@ class TranslationInitializer implements TranslationInitializerInterface
         $this->translatableSubscriber->postLoad(new LifecycleEventArgs($entity, $this->em));
 
         /** @var \Knp\DoctrineBehaviors\Model\Translatable\Translatable $entity */
-        $translationClass = $entity->getTranslationEntityClass();
+        $translationClass = $entity::getTranslationEntityClass();
 
         foreach ($locales as $locale) {
             /** @var \Knp\DoctrineBehaviors\Model\Translatable\Translation $translation */

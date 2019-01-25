@@ -97,8 +97,6 @@ EOF
     /**
      * @param array  $translationClasses Translation classes
      * @param string $targetLocale       Target locale
-     *
-     * @throws \Darvin\ContentBundle\Translatable\TranslatableException
      */
     private function cloneDefaultLocaleTranslations(array $translationClasses, string $targetLocale): void
     {
