@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2015, Darvin Studio
+ * @copyright Copyright (c) 2015-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -54,9 +54,12 @@ class WidgetPool implements WidgetPoolInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param \Darvin\ContentBundle\Widget\WidgetInterface $widget                 Widget
+     * @param bool                                         $duplicateNameException Whether to throw exception on duplicate widget name
+     *
+     * @throws \InvalidArgumentException
      */
-    public function addWidget(WidgetInterface $widget, $duplicateNameException = true)
+    public function addWidget(WidgetInterface $widget, bool $duplicateNameException = true): void
     {
         $name = $widget->getName();
 
@@ -77,9 +80,11 @@ class WidgetPool implements WidgetPoolInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param \Darvin\ContentBundle\Widget\WidgetFactoryInterface $widgetFactory Widget factory
+     *
+     * @throws \InvalidArgumentException
      */
-    public function addWidgetFactory(WidgetFactoryInterface $widgetFactory)
+    public function addWidgetFactory(WidgetFactoryInterface $widgetFactory): void
     {
         $class = get_class($widgetFactory);
 
@@ -93,7 +98,7 @@ class WidgetPool implements WidgetPoolInterface
     /**
      * {@inheritdoc}
      */
-    public function getWidget($name)
+    public function getWidget(string $name): WidgetInterface
     {
         $this->init();
 
@@ -107,7 +112,7 @@ class WidgetPool implements WidgetPoolInterface
     /**
      * {@inheritdoc}
      */
-    public function widgetExists($name)
+    public function widgetExists(string $name): bool
     {
         $this->init();
 
@@ -117,7 +122,7 @@ class WidgetPool implements WidgetPoolInterface
     /**
      * {@inheritdoc}
      */
-    public function getAllWidgets()
+    public function getAllWidgets(): iterable
     {
         $this->init();
 
@@ -127,14 +132,14 @@ class WidgetPool implements WidgetPoolInterface
     /**
      * {@inheritdoc}
      */
-    public function isWidgetUnique($name)
+    public function isWidgetUnique(string $name): bool
     {
         $this->init();
 
         return !isset($this->nameCounts[$name]) || 1 === $this->nameCounts[$name];
     }
 
-    private function init()
+    private function init(): void
     {
         if ($this->initialized) {
             return;

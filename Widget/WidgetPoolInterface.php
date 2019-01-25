@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2015, Darvin Studio
+ * @copyright Copyright (c) 2015-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -16,40 +16,29 @@ namespace Darvin\ContentBundle\Widget;
 interface WidgetPoolInterface
 {
     /**
-     * @param \Darvin\ContentBundle\Widget\WidgetInterface $widget                 Widget
-     * @param bool                                         $duplicateNameException Whether to throw exception on duplicate widget name
-     */
-    public function addWidget(WidgetInterface $widget, $duplicateNameException = true);
-
-    /**
-     * @param \Darvin\ContentBundle\Widget\WidgetFactoryInterface $widgetFactory Widget factory
-     */
-    public function addWidgetFactory(WidgetFactoryInterface $widgetFactory);
-
-    /**
      * @param string $name Widget name
      *
      * @return \Darvin\ContentBundle\Widget\WidgetInterface
      * @throws \Darvin\ContentBundle\Widget\Exception\WidgetNotExistsException
      */
-    public function getWidget($name);
+    public function getWidget(string $name): WidgetInterface;
 
     /**
      * @param string $name Widget name
      *
      * @return bool
      */
-    public function widgetExists($name);
+    public function widgetExists(string $name): bool;
 
     /**
-     * @return \Darvin\ContentBundle\Widget\WidgetInterface[]
+     * @return iterable|\Darvin\ContentBundle\Widget\WidgetInterface[]
      */
-    public function getAllWidgets();
+    public function getAllWidgets(): iterable;
 
     /**
      * @param string $name Widget name
      *
      * @return bool
      */
-    public function isWidgetUnique($name);
+    public function isWidgetUnique(string $name): bool;
 }

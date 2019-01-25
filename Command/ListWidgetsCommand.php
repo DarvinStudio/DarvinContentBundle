@@ -51,7 +51,7 @@ class ListWidgetsCommand extends Command
      */
     protected function configure(): void
     {
-        $this->setDescription('Displays list of existing content widget placeholders.');
+        $this->setDescription('Displays list of existing content widget names.');
     }
 
     /**
@@ -61,9 +61,14 @@ class ListWidgetsCommand extends Command
     {
         $this->requestStack->push(new Request());
 
-        $placeholders = array_keys($this->widgetPool->getAllWidgets());
-        sort($placeholders);
+        $names = [];
 
-        (new SymfonyStyle($input, $output))->listing($placeholders);
+        foreach ($this->widgetPool->getAllWidgets() as $widget) {
+            $names[] = $widget->getName();
+        }
+
+        sort($names);
+
+        (new SymfonyStyle($input, $output))->listing($names);
     }
 }
