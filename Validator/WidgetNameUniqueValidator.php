@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2016, Darvin Studio
+ * @copyright Copyright (c) 2016-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -36,7 +36,7 @@ class WidgetNameUniqueValidator extends ConstraintValidator
      * @param string                                                                                               $name       Widget name
      * @param \Darvin\ContentBundle\Validator\Constraints\WidgetNameUnique|\Symfony\Component\Validator\Constraint $constraint Constraint
      */
-    public function validate($name, Constraint $constraint)
+    public function validate($name, Constraint $constraint): void
     {
         if (!$this->widgetPool->isWidgetUnique($name)) {
             $this->context->addViolation($constraint->message, [
