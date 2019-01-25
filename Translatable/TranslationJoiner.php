@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2015-2016, Darvin Studio
+ * @copyright Copyright (c) 2015-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -42,7 +42,7 @@ class TranslationJoiner implements TranslationJoinerInterface
     /**
      * {@inheritdoc}
      */
-    public function joinTranslation(QueryBuilder $qb, $addSelect = false, $locale = null, $joinAlias = null, $inner = false)
+    public function joinTranslation(QueryBuilder $qb, bool $addSelect = false, ?string $locale = null, ?string $joinAlias = null, bool $inner = false): void
     {
         $rootEntities = $qb->getRootEntities();
 
@@ -101,7 +101,7 @@ class TranslationJoiner implements TranslationJoinerInterface
     /**
      * {@inheritdoc}
      */
-    public function isTranslatable($entityClass)
+    public function isTranslatable(string $entityClass): bool
     {
         return $this->translatableManager->isTranslatable($entityClass);
     }

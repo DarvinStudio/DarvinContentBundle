@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2015, Darvin Studio
+ * @copyright Copyright (c) 2015-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -20,16 +20,18 @@ interface TranslationJoinerInterface
     /**
      * @param \Doctrine\ORM\QueryBuilder $qb        Query builder
      * @param bool                       $addSelect Whether to add select
-     * @param string                     $locale    Locale
-     * @param string                     $joinAlias Join alias
+     * @param string|null                $locale    Locale
+     * @param string|null                $joinAlias Join alias
      * @param bool                       $inner     Whether to use inner join instead of left (default)
+     *
+     * @throws \Darvin\ContentBundle\Translatable\TranslatableException
      */
-    public function joinTranslation(QueryBuilder $qb, $addSelect = false, $locale = null, $joinAlias = null, $inner = false);
+    public function joinTranslation(QueryBuilder $qb, bool $addSelect = false, ?string $locale = null, ?string $joinAlias = null, bool $inner = false): void;
 
     /**
      * @param string $entityClass Entity class
      *
      * @return bool
      */
-    public function isTranslatable($entityClass);
+    public function isTranslatable(string $entityClass): bool;
 }

@@ -18,6 +18,8 @@ interface TranslationInitializerInterface
     /**
      * @param object $entity  Entity
      * @param array  $locales Locales to create translations for
+     *
+     * @throws \Darvin\ContentBundle\Translatable\TranslatableException
      */
     public function initializeTranslations($entity, array $locales): void;
 }
