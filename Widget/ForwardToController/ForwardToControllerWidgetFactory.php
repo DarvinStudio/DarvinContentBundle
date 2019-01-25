@@ -8,7 +8,6 @@
 
 namespace Darvin\ContentBundle\Widget\ForwardToController;
 
-use Darvin\ContentBundle\Widget\WidgetException;
 use Darvin\ContentBundle\Widget\WidgetFactoryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -84,13 +83,13 @@ class ForwardToControllerWidgetFactory implements WidgetFactoryInterface
     /**
      * @param array $setting Setting
      *
-     * @throws \Darvin\ContentBundle\Widget\WidgetException
+     * @throws \InvalidArgumentException
      */
     private function validateWidgetSetting(array $setting)
     {
         foreach ($this->requiredParams as $param) {
             if (!isset($setting[$param])) {
-                new WidgetException(sprintf('"%s" param must be set for "ForwardToController" widget', $param));
+                throw new \InvalidArgumentException(sprintf('"%s" param must be set for "ForwardToController" widget', $param));
             }
         }
     }

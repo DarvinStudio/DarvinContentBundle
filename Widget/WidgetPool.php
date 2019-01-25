@@ -10,6 +10,8 @@
 
 namespace Darvin\ContentBundle\Widget;
 
+use Darvin\ContentBundle\Widget\Exception\WidgetNotExistsException;
+
 /**
  * Widget pool
  */
@@ -62,7 +64,7 @@ class WidgetPool implements WidgetPoolInterface
             return;
         }
         if (isset($this->widgets[$name]) && $duplicateNameException) {
-            throw new WidgetException(sprintf('Widget "%s" already added to pool.', $name));
+            throw new \InvalidArgumentException(sprintf('Widget "%s" already added to pool.', $name));
         }
 
         $this->widgets[$name] = $widget;
@@ -82,7 +84,7 @@ class WidgetPool implements WidgetPoolInterface
         $class = get_class($widgetFactory);
 
         if (isset($this->widgetFactories[$class])) {
-            throw new WidgetException(sprintf('Widget factory "%s" already added to pool.', $class));
+            throw new \InvalidArgumentException(sprintf('Widget factory "%s" already added to pool.', $class));
         }
 
         $this->widgetFactories[$class] = $widgetFactory;
@@ -96,7 +98,7 @@ class WidgetPool implements WidgetPoolInterface
         $this->init();
 
         if (!$this->widgetExists($name)) {
-            throw new WidgetException(sprintf('Widget "%s" does not exist.', $name));
+            throw new WidgetNotExistsException($name);
         }
 
         return $this->widgets[$name];

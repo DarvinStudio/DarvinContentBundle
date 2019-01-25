@@ -30,7 +30,7 @@ interface WidgetPoolInterface
      * @param string $name Widget name
      *
      * @return \Darvin\ContentBundle\Widget\WidgetInterface
-     * @throws \Darvin\ContentBundle\Widget\WidgetException
+     * @throws \Darvin\ContentBundle\Widget\Exception\WidgetNotExistsException
      */
     public function getWidget($name);
 
