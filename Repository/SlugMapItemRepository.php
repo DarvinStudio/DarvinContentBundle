@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2015-2018, Darvin Studio
+ * @copyright Copyright (c) 2015-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -11,6 +11,7 @@
 namespace Darvin\ContentBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * Slug map item entity repository
@@ -18,45 +19,26 @@ use Doctrine\ORM\EntityRepository;
 class SlugMapItemRepository extends EntityRepository
 {
     /**
-     * @param string $entityClass Entity class
-     * @param mixed  $entityId    Entity ID
-     * @param array  $properties  Slug properties
-     *
-     * @return \Darvin\ContentBundle\Entity\SlugMapItem[]
-     */
-    public function getForSlugMapSubscriber($entityClass, $entityId, array $properties = [])
-    {
-        $qb = $this->createDefaultBuilder()
-            ->andWhere('o.objectClass = :entity_class')
-            ->setParameter('entity_class', $entityClass)
-            ->andWhere('o.objectId = :entity_id')
-            ->setParameter('entity_id', $entityId);
-
-        if (!empty($properties)) {
-            $qb->andWhere($qb->expr()->in('o.property', $properties));
-        }
-
-        return $qb->getQuery()->getResult();
-    }
-
-    /**
      * @param string[] $slugs          Slugs
      * @param string[] $classBlacklist Object class blacklist
      *
      * @return array Key - slug, value - array of child slug map item entities
      */
-    public function getBySlugsChildren(array $slugs, array $classBlacklist = [])
+    public function getChildrenBySlugs(array $slugs, array $classBlacklist = []): array
     {
         if (empty($slugs)) {
             return [];
         }
 
         $qb = $this->createDefaultBuilder();
+
         $orX = $qb->expr()->orX();
 
         foreach ($slugs as $key => $slug) {
             $param = 'slug_'.$key;
+
             $orX->add('o.slug LIKE :'.$param);
+
             $qb->setParameter($param, $slug.'%');
         }
         if (!empty($classBlacklist)) {
@@ -80,11 +62,33 @@ class SlugMapItemRepository extends EntityRepository
     }
 
     /**
+     * @param string $entityClass Entity class
+     * @param mixed  $entityId    Entity ID
+     * @param array  $properties  Slug properties
+     *
+     * @return \Darvin\ContentBundle\Entity\SlugMapItem[]
+     */
+    public function getForSlugMapSubscriber(string $entityClass, $entityId, array $properties = []): array
+    {
+        $qb = $this->createDefaultBuilder()
+            ->andWhere('o.objectClass = :entity_class')
+            ->setParameter('entity_class', $entityClass)
+            ->andWhere('o.objectId = :entity_id')
+            ->setParameter('entity_id', $entityId);
+
+        if (!empty($properties)) {
+            $qb->andWhere($qb->expr()->in('o.property', $properties));
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
      * @param string $slug Slug
      *
      * @return array
      */
-    public function getSimilarSlugs($slug)
+    public function getSimilarSlugs(string $slug): array
     {
         return $this->getSimilarSlugsBuilder($slug)
             ->select('o.slug')
@@ -99,7 +103,7 @@ class SlugMapItemRepository extends EntityRepository
      *
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function getSimilarSlugsBuilder($slug)
+    public function getSimilarSlugsBuilder(string $slug): QueryBuilder
     {
         return $this->createDefaultBuilder()
             ->andWhere('o.slug LIKE :slug')
@@ -109,7 +113,7 @@ class SlugMapItemRepository extends EntityRepository
     /**
      * @return \Doctrine\ORM\QueryBuilder
      */
-    private function createDefaultBuilder()
+    private function createDefaultBuilder(): QueryBuilder
     {
         return $this->createQueryBuilder('o');
     }
