@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2017, Darvin Studio
+ * @copyright Copyright (c) 2017-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -19,12 +19,12 @@ trait TranslatableRepositoryTrait
 {
     /**
      * @param \Doctrine\ORM\QueryBuilder $qb        Query builder
-     * @param string                     $locale    Locale
+     * @param string|null                $locale    Locale
      * @param bool                       $addSelect Whether to add select
      *
      * @return TranslatableRepositoryTrait
      */
-    protected function joinTranslations(QueryBuilder $qb, $locale = null, $addSelect = true)
+    protected function joinTranslations(QueryBuilder $qb, ?string $locale = null, bool $addSelect = true): TranslatableRepositoryTrait
     {
         $qb->innerJoin('o.translations', 'translations');
 
