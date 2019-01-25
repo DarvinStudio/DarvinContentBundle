@@ -24,9 +24,7 @@ parameters:
 
 services:
     app.page.controller:
-        class: "%app.page.controller.class%"
-        calls:
-            - [ setContainer, [ "@service_container" ] ]
+        class: '%app.page.controller.class%'
         tags:
             - { name: darvin_content.controller }
 ```
