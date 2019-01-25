@@ -13,24 +13,19 @@
 ```php
 use Darvin\ContentBundle\Widget\WidgetInterface;
 
-class Widget implements WidgetInterface
+class FooWidget implements WidgetInterface
 {
-    public function getContent()
+    public function getContent(): ?string
     {
         return 'bar';
     }
 
-    public function getSluggableEntityClasses()
+    public function getSluggableEntityClasses(): iterable
     {
         return [];
     }
 
-    public function getResolvedOptions()
-    {
-        return [];
-    }
-
-    public function getName()
+    public function getName(): string
     {
         return 'foo';
     }
@@ -45,7 +40,7 @@ parameters:
 
 services:
     app.widget.foo:
-        class: "%app.widget.foo.class%"
+        class: '%app.widget.foo.class%'
         tags:
             - { name: darvin_content.widget }
 ```
