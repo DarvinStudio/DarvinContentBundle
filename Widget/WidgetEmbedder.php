@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2015, Darvin Studio
+ * @copyright Copyright (c) 2015-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -50,7 +50,7 @@ class WidgetEmbedder implements WidgetEmbedderInterface
     /**
      * {@inheritdoc}
      */
-    public function embed($content, $onlyWidgetsOnNonFirstPage = false)
+    public function embed(?string $content, bool $onlyWidgetsOnNonFirstPage = false): ?string
     {
         if (empty($content)) {
             return $content;
@@ -85,12 +85,12 @@ class WidgetEmbedder implements WidgetEmbedderInterface
     /**
      * @param \Darvin\ContentBundle\Widget\WidgetInterface $widget Widget
      *
-     * @return string
+     * @return string|null
      * @throws \Darvin\ContentBundle\Widget\Embedder\Exception\HttpException
      */
-    private function getWidgetContent(WidgetInterface $widget)
+    private function getWidgetContent(WidgetInterface $widget): ?string
     {
-        if (!isset($this->widgetContents[$widget->getName()])) {
+        if (!array_key_exists($widget->getName(), $this->widgetContents)) {
             try {
                 $this->widgetContents[$widget->getName()] = $widget->getContent();
             } catch (KernelHttpException $ex) {

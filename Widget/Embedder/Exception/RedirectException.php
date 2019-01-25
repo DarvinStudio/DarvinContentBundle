@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2017, Darvin Studio
+ * @copyright Copyright (c) 2017-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -25,7 +25,7 @@ class RedirectException extends WidgetEmbedderException
      * @param int    $status  Status
      * @param array  $headers Headers
      */
-    public function __construct($url, $status = 302, array $headers = [])
+    public function __construct(string $url, int $status = 302, array $headers = [])
     {
         parent::__construct($url, $status);
 
@@ -35,7 +35,7 @@ class RedirectException extends WidgetEmbedderException
     /**
      * @return string
      */
-    public function getUrl()
+    public function getUrl(): string
     {
         return $this->message;
     }
@@ -43,7 +43,7 @@ class RedirectException extends WidgetEmbedderException
     /**
      * @return int
      */
-    public function getStatus()
+    public function getStatus(): int
     {
         return $this->code;
     }
@@ -51,7 +51,7 @@ class RedirectException extends WidgetEmbedderException
     /**
      * @return array
      */
-    public function getHeaders()
+    public function getHeaders(): array
     {
         return $this->headers;
     }
