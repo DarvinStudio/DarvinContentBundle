@@ -34,7 +34,7 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('canonical_url')->addDefaultsIfNotSet()
                     ->children()
                         ->arrayNode('parameter_whitelist')
-                            ->prototype('scalar')
+                            ->prototype('scalar')->cannotBeEmpty()
                                 ->validate()
                                     ->ifTrue(function ($pattern) {
                                         return false === @preg_match('/^'.$pattern.'$/', null);
@@ -47,12 +47,12 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->arrayNode('widget')->addDefaultsIfNotSet()
                     ->children()
-                        ->arrayNode('blacklist')->prototype('scalar')->end()->info('Blacklist of widget names or service IDs.')->end()
+                        ->arrayNode('blacklist')->prototype('scalar')->cannotBeEmpty()->end()->info('Blacklist of widget names or service IDs.')->end()
                         ->arrayNode('forward_to_controller')->useAttributeAsKey('name')
                             ->prototype('array')
                                 ->children()
-                                    ->scalarNode('controller')->isRequired()->end()
-                                    ->arrayNode('sluggable_entity_classes')->prototype('scalar')->end()->end()
+                                    ->scalarNode('controller')->isRequired()->cannotBeEmpty()->end()
+                                    ->arrayNode('sluggable_entity_classes')->prototype('scalar')->cannotBeEmpty()->end()->end()
                                     ->arrayNode('options')->useAttributeAsKey('name')->prototype('scalar')->end()->end()
                                 ->end()
                             ->end()
@@ -61,7 +61,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->arrayNode('widget_factory')->addDefaultsIfNotSet()
                     ->children()
-                        ->arrayNode('blacklist')->prototype('scalar')->end()->info('Blacklist of widget factory service IDs.');
+                        ->arrayNode('blacklist')->prototype('scalar')->cannotBeEmpty()->end()->info('Blacklist of widget factory service IDs.');
 
         return $builder;
     }
