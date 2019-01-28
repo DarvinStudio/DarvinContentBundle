@@ -17,7 +17,7 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 /**
  * Slug map item factory
  */
-class SlugMapItemFactory
+class SlugMapItemFactory implements SlugMapItemFactoryInterface
 {
     /**
      * @var \Symfony\Component\PropertyAccess\PropertyAccessorInterface
@@ -33,12 +33,7 @@ class SlugMapItemFactory
     }
 
     /**
-     * @param object                                             $object       Object
-     * @param array                                              $slugsMeta    Slugs metadata
-     * @param \Doctrine\Common\Persistence\Mapping\ClassMetadata $doctrineMeta Doctrine metadata
-     *
-     * @return \Darvin\ContentBundle\Entity\SlugMapItem[]
-     * @throws \LogicException
+     * {@inheritDoc}
      */
     public function createItems($object, array $slugsMeta, ClassMetadata $doctrineMeta): array
     {

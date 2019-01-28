@@ -11,7 +11,7 @@
 namespace Darvin\ContentBundle\Command;
 
 use Darvin\ContentBundle\Entity\SlugMapItem;
-use Darvin\ContentBundle\Slug\SlugMapItemFactory;
+use Darvin\ContentBundle\Slug\SlugMapItemFactoryInterface;
 use Darvin\Utils\Mapping\MetadataFactoryInterface;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Console\Command\Command;
@@ -35,17 +35,17 @@ class SlugMapRebuildCommand extends Command
     private $metadataFactory;
 
     /**
-     * @var \Darvin\ContentBundle\Slug\SlugMapItemFactory
+     * @var \Darvin\ContentBundle\Slug\SlugMapItemFactoryInterface
      */
     private $slugMapItemFactory;
 
     /**
-     * @param string                                         $name               Command name
-     * @param \Doctrine\ORM\EntityManager                    $em                 Entity manager
-     * @param \Darvin\Utils\Mapping\MetadataFactoryInterface $metadataFactory    Metadata factory
-     * @param \Darvin\ContentBundle\Slug\SlugMapItemFactory  $slugMapItemFactory Slug map item factory
+     * @param string                                                 $name               Command name
+     * @param \Doctrine\ORM\EntityManager                            $em                 Entity manager
+     * @param \Darvin\Utils\Mapping\MetadataFactoryInterface         $metadataFactory    Metadata factory
+     * @param \Darvin\ContentBundle\Slug\SlugMapItemFactoryInterface $slugMapItemFactory Slug map item factory
      */
-    public function __construct(string $name, EntityManager $em, MetadataFactoryInterface $metadataFactory, SlugMapItemFactory $slugMapItemFactory)
+    public function __construct(string $name, EntityManager $em, MetadataFactoryInterface $metadataFactory, SlugMapItemFactoryInterface $slugMapItemFactory)
     {
         parent::__construct($name);
 

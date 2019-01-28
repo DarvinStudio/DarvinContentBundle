@@ -12,7 +12,7 @@ namespace Darvin\ContentBundle\EventListener;
 
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Repository\SlugMapItemRepository;
-use Darvin\ContentBundle\Slug\SlugMapItemFactory;
+use Darvin\ContentBundle\Slug\SlugMapItemFactoryInterface;
 use Darvin\Utils\Event\SlugsUpdateEvent;
 use Darvin\Utils\Mapping\MetadataFactoryInterface;
 use Doctrine\Common\EventSubscriber;
@@ -33,7 +33,7 @@ class SlugMapSubscriber implements EventSubscriber
     private $extendedMetadataFactory;
 
     /**
-     * @var \Darvin\ContentBundle\Slug\SlugMapItemFactory
+     * @var \Darvin\ContentBundle\Slug\SlugMapItemFactoryInterface
      */
     private $slugMapItemFactory;
 
@@ -43,10 +43,10 @@ class SlugMapSubscriber implements EventSubscriber
     private $flushNeeded;
 
     /**
-     * @param \Darvin\Utils\Mapping\MetadataFactoryInterface $extendedMetadataFactory Extended metadata factory
-     * @param \Darvin\ContentBundle\Slug\SlugMapItemFactory  $slugMapItemFactory      Slug map item factory
+     * @param \Darvin\Utils\Mapping\MetadataFactoryInterface         $extendedMetadataFactory Extended metadata factory
+     * @param \Darvin\ContentBundle\Slug\SlugMapItemFactoryInterface $slugMapItemFactory      Slug map item factory
      */
-    public function __construct(MetadataFactoryInterface $extendedMetadataFactory, SlugMapItemFactory $slugMapItemFactory)
+    public function __construct(MetadataFactoryInterface $extendedMetadataFactory, SlugMapItemFactoryInterface $slugMapItemFactory)
     {
         $this->extendedMetadataFactory = $extendedMetadataFactory;
         $this->slugMapItemFactory = $slugMapItemFactory;
