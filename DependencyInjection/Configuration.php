@@ -37,7 +37,7 @@ class Configuration implements ConfigurationInterface
                             ->prototype('scalar')->cannotBeEmpty()
                                 ->validate()
                                     ->ifTrue(function ($pattern) {
-                                        return false === @preg_match('/^'.$pattern.'$/', null);
+                                        return false === @preg_match('/^'.$pattern.'$/', '');
                                     })
                                     ->thenInvalid('%s is not valid pattern.')
                                 ->end()
