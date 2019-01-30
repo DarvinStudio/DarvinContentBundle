@@ -81,10 +81,13 @@ class SlugMapItemRepository extends EntityRepository
             return [];
         }
 
-        $qb = $this->createBuilderByClassesAndId($classes, $id);
+        $qb = $this->createDefaultBuilder();
+        $this
+            ->addObjectClassesFilter($qb, $classes)
+            ->addObjectIdFilter($qb, $id);
 
         if (!empty($properties)) {
-            $qb->andWhere($qb->expr()->in('o.property', $properties));
+            $this->addPropertiesFilter($qb, $properties);
         }
 
         return $qb->getQuery()->getResult();
@@ -102,7 +105,12 @@ class SlugMapItemRepository extends EntityRepository
             return null;
         }
 
-        return $this->createBuilderByClassesAndId($classes, $id)
+        $qb = $this->createDefaultBuilder();
+        $this
+            ->addObjectClassesFilter($qb, $classes)
+            ->addObjectIdFilter($qb, $id);
+
+        return $qb
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
@@ -136,23 +144,19 @@ class SlugMapItemRepository extends EntityRepository
     }
 
     /**
-     * @param string[] $classes Object classes
-     * @param mixed    $id      Object ID
+     * @param \Doctrine\ORM\QueryBuilder $qb      Query builder
+     * @param string[]                   $classes Object classes
      *
-     * @return \Doctrine\ORM\QueryBuilder
+     * @return SlugMapItemRepository
      * @throws \InvalidArgumentException
      */
-    private function createBuilderByClassesAndId(array $classes, $id): QueryBuilder
+    private function addObjectClassesFilter(QueryBuilder $qb, array $classes): SlugMapItemRepository
     {
         if (empty($classes)) {
             throw new \InvalidArgumentException('Array of object classes is empty.');
         }
 
         $classes = array_values(array_unique($classes));
-
-        $qb = $this->createDefaultBuilder()
-            ->andWhere('o.objectId = :object_id')
-            ->setParameter('object_id', $id);
 
         $orX = $qb->expr()->orX();
 
@@ -166,7 +170,38 @@ class SlugMapItemRepository extends EntityRepository
 
         $qb->andWhere($orX);
 
-        return $qb;
+        return $this;
+    }
+
+    /**
+     * @param \Doctrine\ORM\QueryBuilder $qb Query builder
+     * @param mixed                      $id Object ID
+     *
+     * @return SlugMapItemRepository
+     */
+    private function addObjectIdFilter(QueryBuilder $qb, $id): SlugMapItemRepository
+    {
+        $qb->andWhere('o.objectId = :object_id')->setParameter('object_id', $id);
+
+        return $this;
+    }
+
+    /**
+     * @param \Doctrine\ORM\QueryBuilder $qb         Query builder
+     * @param string[]                   $properties Properties
+     *
+     * @return SlugMapItemRepository
+     * @throws \InvalidArgumentException
+     */
+    private function addPropertiesFilter(QueryBuilder $qb, array $properties): SlugMapItemRepository
+    {
+        if (empty($properties)) {
+            throw new \InvalidArgumentException('Array of properties is empty.');
+        }
+
+        $qb->andWhere($qb->expr()->in('o.property', $properties));
+
+        return $this;
     }
 
     /**
