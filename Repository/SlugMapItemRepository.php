@@ -134,6 +134,21 @@ class SlugMapItemRepository extends EntityRepository
     }
 
     /**
+     * @param string $slug Slug
+     *
+     * @return \Darvin\ContentBundle\Entity\SlugMapItem[]
+     */
+    public function getParentsBySlug(string $slug): array
+    {
+        return $this->createDefaultBuilder()
+            ->andWhere(':slug LIKE CONCAT(o.slug, \'%\')')
+            ->andWhere('o.slug != :slug')
+            ->setParameter('slug', $slug)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
      * @param string $slug          Slug
      * @param int    $hydrationMode Result hydration mode
      *
