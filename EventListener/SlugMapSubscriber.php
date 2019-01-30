@@ -15,6 +15,7 @@ use Darvin\ContentBundle\Repository\SlugMapItemRepository;
 use Darvin\ContentBundle\Slug\SlugMapItemFactoryInterface;
 use Darvin\Utils\Event\SlugsUpdateEvent;
 use Darvin\Utils\Mapping\MetadataFactoryInterface;
+use Darvin\Utils\ORM\EntityResolverInterface;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
@@ -27,6 +28,11 @@ use Doctrine\ORM\Events;
  */
 class SlugMapSubscriber implements EventSubscriber
 {
+    /**
+     * @var \Darvin\Utils\ORM\EntityResolverInterface
+     */
+    private $entityResolver;
+
     /**
      * @var \Darvin\Utils\Mapping\MetadataFactoryInterface
      */
@@ -43,11 +49,16 @@ class SlugMapSubscriber implements EventSubscriber
     private $flushNeeded;
 
     /**
+     * @param \Darvin\Utils\ORM\EntityResolverInterface              $entityResolver          Entity resolver
      * @param \Darvin\Utils\Mapping\MetadataFactoryInterface         $extendedMetadataFactory Extended metadata factory
      * @param \Darvin\ContentBundle\Slug\SlugMapItemFactoryInterface $slugMapItemFactory      Slug map item factory
      */
-    public function __construct(MetadataFactoryInterface $extendedMetadataFactory, SlugMapItemFactoryInterface $slugMapItemFactory)
-    {
+    public function __construct(
+        EntityResolverInterface $entityResolver,
+        MetadataFactoryInterface $extendedMetadataFactory,
+        SlugMapItemFactoryInterface $slugMapItemFactory
+    ) {
+        $this->entityResolver = $entityResolver;
         $this->extendedMetadataFactory = $extendedMetadataFactory;
         $this->slugMapItemFactory = $slugMapItemFactory;
 
@@ -210,7 +221,13 @@ class SlugMapSubscriber implements EventSubscriber
             return;
         }
 
-        $slugMapItems = $this->getSlugMapItemRepository($em)->getForSlugMapSubscriber($entityClass, $this->getEntityId($em, $entity, $entityClass));
+        $slugMapItems = $this->getSlugMapItemRepository($em)->getForSlugMapSubscriber(
+            [
+                $entityClass,
+                $this->entityResolver->reverseResolve($entityClass),
+            ],
+            $this->getEntityId($em, $entity, $entityClass)
+        );
 
         foreach ($slugMapItems as $slugMapItem) {
             $em->remove($slugMapItem);
@@ -245,7 +262,14 @@ class SlugMapSubscriber implements EventSubscriber
         }
 
         $slugMapItemMeta = $em->getClassMetadata(SlugMapItem::class);
-        $slugMapItems    = $this->getSlugMapItemRepository($em)->getForSlugMapSubscriber($entityClass, $this->getEntityId($em, $entity, $entityClass), $properties);
+        $slugMapItems    = $this->getSlugMapItemRepository($em)->getForSlugMapSubscriber(
+            [
+                $entityClass,
+                $this->entityResolver->reverseResolve($entityClass),
+            ],
+            $this->getEntityId($em, $entity, $entityClass),
+            $properties
+        );
 
         foreach ($slugMapItems as $slugMapItem) {
             $slugMapItem->setSlug($changeSet[$slugMapItem->getProperty()][1]);

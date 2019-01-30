@@ -23,6 +23,7 @@ services:
     darvin_content.slug.map_subscriber:
         class: '%darvin_content.slug.map_subscriber.class%'
         arguments:
+            - '@darvin_utils.orm.entity_resolver'
             - '@darvin_utils.mapping.metadata_factory'
             - '@darvin_content.slug.map_item_factory'
         tags:

@@ -30,17 +30,23 @@ class SlugMapItemRepository extends EntityRepository
             return [];
         }
 
+        $slugs          = array_values(array_unique($slugs));
+        $classBlacklist = array_unique($classBlacklist);
+
         $qb = $this->createDefaultBuilder();
 
         $orX = $qb->expr()->orX();
 
-        foreach ($slugs as $key => $slug) {
-            $param = 'slug_'.$key;
+        foreach ($slugs as $i => $slug) {
+            $param = sprintf('slug_%d', $i);
 
             $orX->add('o.slug LIKE :'.$param);
 
             $qb->setParameter($param, $slug.'%');
         }
+
+        $qb->andWhere($orX);
+
         if (!empty($classBlacklist)) {
             $qb
                 ->andWhere($qb->expr()->notIn('o.objectClass', ':class_blacklist'))
@@ -50,7 +56,7 @@ class SlugMapItemRepository extends EntityRepository
         $children = array_fill_keys($slugs, []);
 
         /** @var \Darvin\ContentBundle\Entity\SlugMapItem $slugMapItem */
-        foreach ($qb->andWhere($orX)->getQuery()->getResult() as $slugMapItem) {
+        foreach ($qb->getQuery()->getResult() as $slugMapItem) {
             foreach ($slugs as $slug) {
                 if (0 === strpos($slugMapItem->getSlug(), $slug)) {
                     $children[$slug][] = $slugMapItem;
@@ -62,23 +68,39 @@ class SlugMapItemRepository extends EntityRepository
     }
 
     /**
-     * @param string $entityClass Entity class
-     * @param mixed  $entityId    Entity ID
-     * @param array  $properties  Slug properties
+     * @param string[] $entityClasses Entity classes
+     * @param mixed    $entityId      Entity ID
+     * @param array    $properties    Slug properties
      *
      * @return \Darvin\ContentBundle\Entity\SlugMapItem[]
      */
-    public function getForSlugMapSubscriber(string $entityClass, $entityId, array $properties = []): array
+    public function getForSlugMapSubscriber(array $entityClasses, $entityId, array $properties = []): array
     {
+        if (empty($entityClasses)) {
+            return [];
+        }
+
+        $entityClasses = array_values(array_unique($entityClasses));
+
         $qb = $this->createDefaultBuilder()
-            ->andWhere('o.objectClass = :entity_class')
-            ->setParameter('entity_class', $entityClass)
             ->andWhere('o.objectId = :entity_id')
             ->setParameter('entity_id', $entityId);
 
         if (!empty($properties)) {
             $qb->andWhere($qb->expr()->in('o.property', $properties));
         }
+
+        $orX = $qb->expr()->orX();
+
+        foreach ($entityClasses as $i => $class) {
+            $param = sprintf('entity_class_%d', $i);
+
+            $orX->add(sprintf('o.objectClass = :%s', $param));
+
+            $qb->setParameter($param, $class);
+        }
+
+        $qb->andWhere($orX);
 
         return $qb->getQuery()->getResult();
     }
