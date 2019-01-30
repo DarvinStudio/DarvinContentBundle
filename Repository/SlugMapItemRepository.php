@@ -10,6 +10,7 @@
 
 namespace Darvin\ContentBundle\Repository;
 
+use Darvin\ContentBundle\Entity\SlugMapItem;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 
@@ -68,41 +69,43 @@ class SlugMapItemRepository extends EntityRepository
     }
 
     /**
-     * @param string[] $entityClasses Entity classes
-     * @param mixed    $entityId      Entity ID
-     * @param array    $properties    Slug properties
+     * @param string[] $classes    Object classes
+     * @param mixed    $id         Object ID
+     * @param array    $properties Slug properties
      *
      * @return \Darvin\ContentBundle\Entity\SlugMapItem[]
      */
-    public function getForSlugMapSubscriber(array $entityClasses, $entityId, array $properties = []): array
+    public function getForSlugMapSubscriber(array $classes, $id, array $properties = []): array
     {
-        if (empty($entityClasses)) {
+        if (empty($classes)) {
             return [];
         }
 
-        $entityClasses = array_values(array_unique($entityClasses));
-
-        $qb = $this->createDefaultBuilder()
-            ->andWhere('o.objectId = :entity_id')
-            ->setParameter('entity_id', $entityId);
+        $qb = $this->createBuilderByClassesAndId($classes, $id);
 
         if (!empty($properties)) {
             $qb->andWhere($qb->expr()->in('o.property', $properties));
         }
 
-        $orX = $qb->expr()->orX();
+        return $qb->getQuery()->getResult();
+    }
 
-        foreach ($entityClasses as $i => $class) {
-            $param = sprintf('entity_class_%d', $i);
-
-            $orX->add(sprintf('o.objectClass = :%s', $param));
-
-            $qb->setParameter($param, $class);
+    /**
+     * @param string[] $classes Object classes
+     * @param mixed    $id      Object ID
+     *
+     * @return \Darvin\ContentBundle\Entity\SlugMapItem|null
+     */
+    public function getOneByClassesAndId(array $classes, $id): ?SlugMapItem
+    {
+        if (empty($classes)) {
+            return null;
         }
 
-        $qb->andWhere($orX);
-
-        return $qb->getQuery()->getResult();
+        return $this->createBuilderByClassesAndId($classes, $id)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     /**
@@ -130,6 +133,40 @@ class SlugMapItemRepository extends EntityRepository
         return $this->createDefaultBuilder()
             ->andWhere('o.slug LIKE :slug')
             ->setParameter('slug', $slug.'%');
+    }
+
+    /**
+     * @param string[] $classes Object classes
+     * @param mixed    $id      Object ID
+     *
+     * @return \Doctrine\ORM\QueryBuilder
+     * @throws \InvalidArgumentException
+     */
+    private function createBuilderByClassesAndId(array $classes, $id): QueryBuilder
+    {
+        if (empty($classes)) {
+            throw new \InvalidArgumentException('Array of object classes is empty.');
+        }
+
+        $classes = array_values(array_unique($classes));
+
+        $qb = $this->createDefaultBuilder()
+            ->andWhere('o.objectId = :object_id')
+            ->setParameter('object_id', $id);
+
+        $orX = $qb->expr()->orX();
+
+        foreach ($classes as $i => $class) {
+            $param = sprintf('object_class_%d', $i);
+
+            $orX->add(sprintf('o.objectClass = :%s', $param));
+
+            $qb->setParameter($param, $class);
+        }
+
+        $qb->andWhere($orX);
+
+        return $qb;
     }
 
     /**
