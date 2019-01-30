@@ -21,6 +21,22 @@ use Doctrine\ORM\QueryBuilder;
 class SlugMapItemRepository extends EntityRepository
 {
     /**
+     * @param string[] $classes  Object classes
+     * @param string   $property Property
+     *
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function getBuilderByClassesAndProperty(array $classes, string $property): QueryBuilder
+    {
+        $qb = $this->createDefaultBuilder();
+        $this
+            ->addObjectClassesFilter($qb, $classes)
+            ->addPropertyFilter($qb, $property);
+
+        return $qb;
+    }
+
+    /**
      * @param string[] $slugs          Slugs
      * @param string[] $classBlacklist Object class blacklist
      *
@@ -188,6 +204,19 @@ class SlugMapItemRepository extends EntityRepository
         }
 
         $qb->andWhere($qb->expr()->in('o.property', $properties));
+
+        return $this;
+    }
+
+    /**
+     * @param \Doctrine\ORM\QueryBuilder $qb       Query builder
+     * @param string                     $property Property
+     *
+     * @return SlugMapItemRepository
+     */
+    private function addPropertyFilter(QueryBuilder $qb, string $property): SlugMapItemRepository
+    {
+        $qb->andWhere('o.property = :property')->setParameter('property', $property);
 
         return $this;
     }
