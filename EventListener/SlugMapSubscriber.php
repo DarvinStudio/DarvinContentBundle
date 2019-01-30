@@ -222,10 +222,7 @@ class SlugMapSubscriber implements EventSubscriber
         }
 
         $slugMapItems = $this->getSlugMapItemRepository($em)->getForSlugMapSubscriber(
-            [
-                $entityClass,
-                $this->entityResolver->reverseResolve($entityClass),
-            ],
+            [$entityClass, $this->entityResolver->reverseResolve($entityClass)],
             $this->getEntityId($em, $entity, $entityClass)
         );
 
@@ -263,10 +260,7 @@ class SlugMapSubscriber implements EventSubscriber
 
         $slugMapItemMeta = $em->getClassMetadata(SlugMapItem::class);
         $slugMapItems    = $this->getSlugMapItemRepository($em)->getForSlugMapSubscriber(
-            [
-                $entityClass,
-                $this->entityResolver->reverseResolve($entityClass),
-            ],
+            [$entityClass, $this->entityResolver->reverseResolve($entityClass)],
             $this->getEntityId($em, $entity, $entityClass),
             $properties
         );
