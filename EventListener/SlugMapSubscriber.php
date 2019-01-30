@@ -17,6 +17,7 @@ use Darvin\Utils\Event\SlugsUpdateEvent;
 use Darvin\Utils\Mapping\MetadataFactoryInterface;
 use Darvin\Utils\ORM\EntityResolverInterface;
 use Doctrine\Common\EventSubscriber;
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
@@ -154,7 +155,7 @@ class SlugMapSubscriber implements EventSubscriber
         $entitiesToUpdate = [];
 
         foreach ($changeSet as $oldSlug => $newSlug) {
-            foreach ($slugMapItemRepository->getSimilar($oldSlug) as $slugMapItem) {
+            foreach ($slugMapItemRepository->getSimilar($oldSlug, AbstractQuery::HYDRATE_ARRAY) as $slugMapItem) {
                 if (!isset($entitiesToUpdate[$slugMapItem['objectClass']])) {
                     $entitiesToUpdate[$slugMapItem['objectClass']] = [];
                 }

@@ -123,7 +123,7 @@ class SlugMapItemRepository extends EntityRepository
      *
      * @return array
      */
-    public function getSimilar(string $slug, int $hydrationMode = AbstractQuery::HYDRATE_ARRAY): array
+    public function getSimilar(string $slug, int $hydrationMode = AbstractQuery::HYDRATE_OBJECT): array
     {
         $qb = $this->createDefaultBuilder();
         $this->addSimilarSlugsFilter($qb, $slug);

@@ -13,6 +13,7 @@ namespace Darvin\ContentBundle\Slug;
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Repository\SlugMapItemRepository;
 use Darvin\Utils\Sluggable\SlugHandlerInterface;
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManager;
 
 /**
@@ -103,7 +104,7 @@ class UniqueSlugHandler implements SlugHandlerInterface
     private function getSimilarSlugs(EntityManager $em, string $slug): array
     {
         if (!isset($this->similarSlugs[$slug])) {
-            $this->similarSlugs[$slug] = $this->getSlugMapItemRepository($em)->getSimilar($slug);
+            $this->similarSlugs[$slug] = $this->getSlugMapItemRepository($em)->getSimilar($slug, AbstractQuery::HYDRATE_ARRAY);
         }
 
         return $this->similarSlugs[$slug];
