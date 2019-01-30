@@ -58,9 +58,9 @@ class UniqueSlugHandler implements SlugHandlerInterface
         }
 
         $this->similarSlugs[$originalSlug][] = $this->similarSlugs[$slug][] = [
-            'slug'         => $slug,
-            'object_class' => $entityClass,
-            'object_id'    => $entityId,
+            'slug'        => $slug,
+            'objectClass' => $entityClass,
+            'objectId'    => $entityId,
         ];
     }
 
@@ -84,8 +84,8 @@ class UniqueSlugHandler implements SlugHandlerInterface
             if (empty($entityId)) {
                 return false;
             }
-            if (!($entityId == $similar['object_id']
-                && ($entityClass === $similar['object_class'] || in_array($similar['object_class'], class_parents($entityClass))))
+            if (!($entityId == $similar['objectId']
+                && ($entityClass === $similar['objectClass'] || in_array($similar['objectClass'], class_parents($entityClass))))
             ) {
                 return false;
             }
@@ -103,7 +103,7 @@ class UniqueSlugHandler implements SlugHandlerInterface
     private function getSimilarSlugs(EntityManager $em, string $slug): array
     {
         if (!isset($this->similarSlugs[$slug])) {
-            $this->similarSlugs[$slug] = $this->getSlugMapItemRepository($em)->getSimilarSlugs($slug);
+            $this->similarSlugs[$slug] = $this->getSlugMapItemRepository($em)->getSimilar($slug);
         }
 
         return $this->similarSlugs[$slug];

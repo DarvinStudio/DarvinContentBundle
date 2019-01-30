@@ -154,7 +154,7 @@ class SlugMapSubscriber implements EventSubscriber
         $entitiesToUpdate = [];
 
         foreach ($changeSet as $oldSlug => $newSlug) {
-            foreach ($slugMapItemRepository->getSimilarSlugsBuilder($oldSlug)->getQuery()->getArrayResult() as $slugMapItem) {
+            foreach ($slugMapItemRepository->getSimilar($oldSlug) as $slugMapItem) {
                 if (!isset($entitiesToUpdate[$slugMapItem['objectClass']])) {
                     $entitiesToUpdate[$slugMapItem['objectClass']] = [];
                 }

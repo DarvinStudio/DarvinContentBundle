@@ -11,6 +11,7 @@
 namespace Darvin\ContentBundle\Repository;
 
 use Darvin\ContentBundle\Entity\SlugMapItem;
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 
@@ -117,30 +118,17 @@ class SlugMapItemRepository extends EntityRepository
     }
 
     /**
-     * @param string $slug Slug
+     * @param string $slug          Slug
+     * @param int    $hydrationMode Result hydration mode
      *
      * @return array
      */
-    public function getSimilarSlugs(string $slug): array
+    public function getSimilar(string $slug, int $hydrationMode = AbstractQuery::HYDRATE_ARRAY): array
     {
-        return $this->getSimilarSlugsBuilder($slug)
-            ->select('o.slug')
-            ->addSelect('o.objectClass object_class')
-            ->addSelect('o.objectId object_id')
-            ->getQuery()
-            ->getScalarResult();
-    }
+        $qb = $this->createDefaultBuilder();
+        $this->addSimilarSlugsFilter($qb, $slug);
 
-    /**
-     * @param string $slug Slug
-     *
-     * @return \Doctrine\ORM\QueryBuilder
-     */
-    public function getSimilarSlugsBuilder(string $slug): QueryBuilder
-    {
-        return $this->createDefaultBuilder()
-            ->andWhere('o.slug LIKE :slug')
-            ->setParameter('slug', $slug.'%');
+        return $qb->getQuery()->getResult($hydrationMode);
     }
 
     /**
@@ -200,6 +188,19 @@ class SlugMapItemRepository extends EntityRepository
         }
 
         $qb->andWhere($qb->expr()->in('o.property', $properties));
+
+        return $this;
+    }
+
+    /**
+     * @param \Doctrine\ORM\QueryBuilder $qb   Query builder
+     * @param string                     $slug Slug
+     *
+     * @return SlugMapItemRepository
+     */
+    private function addSimilarSlugsFilter(QueryBuilder $qb, string $slug): SlugMapItemRepository
+    {
+        $qb->andWhere('o.slug LIKE :slug')->setParameter('slug', $slug.'%');
 
         return $this;
     }
