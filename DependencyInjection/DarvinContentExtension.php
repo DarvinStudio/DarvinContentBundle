@@ -40,6 +40,7 @@ class DarvinContentExtension extends Extension implements PrependExtensionInterf
             'form',
             'pagination',
             'slug',
+            'slug_map',
             'sorting',
             'translatable',
             'widget',
