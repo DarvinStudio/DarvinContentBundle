@@ -3,6 +3,8 @@ parameters:
 
     darvin_content.slug.map_item_factory.class: Darvin\ContentBundle\Slug\SlugMapItemFactory
 
+    darvin_content.slug.map_router.class: Darvin\ContentBundle\Slug\SlugMapRouter
+
     darvin_content.slug.map_subscriber.class: Darvin\ContentBundle\EventListener\SlugMapSubscriber
 
 services:
@@ -19,6 +21,13 @@ services:
         public: false
         arguments:
             - '@property_accessor'
+
+    darvin_content.slug.map_router:
+        class: '%darvin_content.slug.map_router.class%'
+        arguments:
+            - '@router'
+            - '@darvin_utils.homepage.router'
+            - darvin_content_show
 
     darvin_content.slug.map_subscriber:
         class: '%darvin_content.slug.map_subscriber.class%'
