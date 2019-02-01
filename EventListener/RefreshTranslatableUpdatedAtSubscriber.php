@@ -13,6 +13,7 @@ namespace Darvin\ContentBundle\EventListener;
 use Darvin\ContentBundle\Translatable\TranslatableManagerInterface;
 use Darvin\Utils\Mapping\MetadataFactoryInterface;
 use Doctrine\Common\EventSubscriber;
+use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Events;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
@@ -71,7 +72,7 @@ class RefreshTranslatableUpdatedAtSubscriber implements EventSubscriber
         $uow = $em->getUnitOfWork();
 
         foreach ($uow->getScheduledEntityUpdates() as $entity) {
-            $entityClass = get_class($entity);
+            $entityClass = ClassUtils::getClass($entity);
 
             if (!$this->translatableManager->isTranslation($entityClass)) {
                 continue;
@@ -92,7 +93,7 @@ class RefreshTranslatableUpdatedAtSubscriber implements EventSubscriber
 
             $this->propertyAccessor->setValue($translatable, $meta['updatedAt'], new \DateTime());
 
-            $uow->recomputeSingleEntityChangeSet($em->getClassMetadata(get_class($translatable)), $translatable);
+            $uow->recomputeSingleEntityChangeSet($em->getClassMetadata(ClassUtils::getClass($translatable)), $translatable);
         }
     }
 }

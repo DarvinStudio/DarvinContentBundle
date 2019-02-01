@@ -10,6 +10,7 @@
 
 namespace Darvin\ContentBundle\Translatable;
 
+use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Knp\DoctrineBehaviors\ORM\Translatable\TranslatableSubscriber;
@@ -54,7 +55,7 @@ class TranslationInitializer implements TranslationInitializerInterface
      */
     public function initializeTranslations($entity, array $locales): void
     {
-        $class = get_class($entity);
+        $class = ClassUtils::getClass($entity);
 
         if (!$this->translatableManager->isTranslatable($class)) {
             throw new TranslatableException(sprintf('Class "%s" is not translatable.', $class));

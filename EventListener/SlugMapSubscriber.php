@@ -17,6 +17,7 @@ use Darvin\Utils\Event\SlugsUpdateEvent;
 use Darvin\Utils\Mapping\MetadataFactoryInterface;
 use Darvin\Utils\ORM\EntityResolverInterface;
 use Doctrine\Common\EventSubscriber;
+use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
@@ -102,7 +103,7 @@ class SlugMapSubscriber implements EventSubscriber
         $em     = $args->getEntityManager();
         $entity = $args->getEntity();
 
-        $entityClass = get_class($entity);
+        $entityClass = ClassUtils::getClass($entity);
 
         $meta = $this->extendedMetadataFactory->getExtendedMetadata($entityClass);
 
@@ -214,7 +215,7 @@ class SlugMapSubscriber implements EventSubscriber
      */
     private function deleteSlugMapItems(EntityManager $em, $entity): void
     {
-        $entityClass = get_class($entity);
+        $entityClass = ClassUtils::getClass($entity);
 
         $meta = $this->extendedMetadataFactory->getExtendedMetadata($entityClass);
 
@@ -238,7 +239,7 @@ class SlugMapSubscriber implements EventSubscriber
      */
     private function updateSlugMapItems(EntityManager $em, $entity): void
     {
-        $entityClass = get_class($entity);
+        $entityClass = ClassUtils::getClass($entity);
 
         $meta = $this->extendedMetadataFactory->getExtendedMetadata($entityClass);
 
