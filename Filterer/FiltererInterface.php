@@ -19,11 +19,11 @@ interface FiltererInterface
 {
     /**
      * @param \Doctrine\ORM\QueryBuilder $qb          Query builder
-     * @param array                      $filterData  Filter data
+     * @param array|null                 $filterData  Filter data
      * @param array                      $options     Options
      * @param bool                       $conjunction Whether to use conjunction (otherwise - disjunction)
      *
      * @throws \InvalidArgumentException
      */
-    public function filter(QueryBuilder $qb, array $filterData = null, array $options = [], bool $conjunction = true): void;
+    public function filter(QueryBuilder $qb, ?array $filterData = null, array $options = [], bool $conjunction = true): void;
 }

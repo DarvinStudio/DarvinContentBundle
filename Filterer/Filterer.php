@@ -83,7 +83,7 @@ class Filterer implements FiltererInterface
     /**
      * {@inheritdoc}
      */
-    public function filter(QueryBuilder $qb, array $filterData = null, array $options = [], bool $conjunction = true): void
+    public function filter(QueryBuilder $qb, ?array $filterData = null, array $options = [], bool $conjunction = true): void
     {
         if (empty($filterData)) {
             return;
