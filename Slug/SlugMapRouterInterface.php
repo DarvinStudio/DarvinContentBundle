@@ -25,5 +25,5 @@ interface SlugMapRouterInterface
      *
      * @return string|null
      */
-    public function generateUrl(?SlugMapItem $item = null, int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH, array $params = []): ?string;
+    public function generateUrl(?SlugMapItem $item, int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH, array $params = []): ?string;
 }

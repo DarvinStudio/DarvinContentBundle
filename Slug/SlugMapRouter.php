@@ -50,7 +50,7 @@ class SlugMapRouter implements SlugMapRouterInterface
     /**
      * {@inheritDoc}
      */
-    public function generateUrl(?SlugMapItem $item = null, int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH, array $params = []): ?string
+    public function generateUrl(?SlugMapItem $item, int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH, array $params = []): ?string
     {
         if (empty($item)) {
             return null;
