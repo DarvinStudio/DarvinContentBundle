@@ -10,9 +10,6 @@
 
 namespace Darvin\ContentBundle\DependencyInjection;
 
-use Darvin\ContentBundle\Traits\TranslatableTrait;
-use Darvin\ContentBundle\Traits\TranslationTrait;
-use Darvin\ContentBundle\Translatable\CurrentLocaleCallable;
 use Darvin\Utils\DependencyInjection\ConfigInjector;
 use Darvin\Utils\DependencyInjection\ConfigLoader;
 use Darvin\Utils\DependencyInjection\ExtensionConfigurator;
@@ -51,10 +48,6 @@ class DarvinContentExtension extends Extension implements PrependExtensionInterf
             'dev/translatable' => ['env' => 'dev'],
             'dev/widget'       => ['env' => 'dev'],
         ]);
-
-        $container->setParameter('knp.doctrine_behaviors.translatable_subscriber.current_locale_callable.class', CurrentLocaleCallable::class);
-        $container->setParameter('knp.doctrine_behaviors.translatable_subscriber.translatable_trait', TranslatableTrait::class);
-        $container->setParameter('knp.doctrine_behaviors.translatable_subscriber.translation_trait', TranslationTrait::class);
     }
 
     /**
