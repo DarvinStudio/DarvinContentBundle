@@ -41,11 +41,6 @@ class TranslatableManager implements TranslatableManagerInterface
     private $getTranslationEntityClassMethod;
 
     /**
-     * @var bool
-     */
-    private $isReflectionRecursive;
-
-    /**
      * @var string
      */
     private $translatableTrait;
@@ -90,7 +85,6 @@ class TranslatableManager implements TranslatableManagerInterface
      * @param \Doctrine\ORM\EntityManager                     $em                               Entity manager
      * @param string                                          $getTranslatableEntityClassMethod Get translatable entity class method name
      * @param string                                          $getTranslationEntityClassMethod  Get translation entity class method name
-     * @param bool                                            $isReflectionRecursive            Is reflection recursive
      * @param string                                          $translatableTrait                Translatable trait
      * @param string                                          $translationLocaleProperty        Translation locale property name
      * @param string                                          $translationTrait                 Translation trait
@@ -101,7 +95,6 @@ class TranslatableManager implements TranslatableManagerInterface
         EntityManager $em,
         string $getTranslatableEntityClassMethod,
         string $getTranslationEntityClassMethod,
-        bool $isReflectionRecursive,
         string $translatableTrait,
         string $translationLocaleProperty,
         string $translationTrait,
@@ -111,7 +104,6 @@ class TranslatableManager implements TranslatableManagerInterface
         $this->em = $em;
         $this->getTranslatableEntityClassMethod = $getTranslatableEntityClassMethod;
         $this->getTranslationEntityClassMethod = $getTranslationEntityClassMethod;
-        $this->isReflectionRecursive = $isReflectionRecursive;
         $this->translatableTrait = $translatableTrait;
         $this->translationLocaleProperty = $translationLocaleProperty;
         $this->translationTrait = $translationTrait;
@@ -164,11 +156,7 @@ class TranslatableManager implements TranslatableManagerInterface
             $meta = $this->getDoctrineMetadata($entityClass);
 
             $this->checkedIfTranslatable[$entityClass] = !empty($meta)
-                ? $this->classAnalyzer->hasTrait(
-                    $meta->getReflectionClass(),
-                    $this->translatableTrait,
-                    $this->isReflectionRecursive
-                )
+                ? $this->classAnalyzer->hasTrait($meta->getReflectionClass(), $this->translatableTrait)
                 : false;
         }
 
@@ -184,11 +172,7 @@ class TranslatableManager implements TranslatableManagerInterface
             $meta = $this->getDoctrineMetadata($entityClass);
 
             $this->checkedIfTranslation[$entityClass] = !empty($meta)
-                ? $this->classAnalyzer->hasTrait(
-                    $meta->getReflectionClass(),
-                    $this->translationTrait,
-                    $this->isReflectionRecursive
-                )
+                ? $this->classAnalyzer->hasTrait($meta->getReflectionClass(), $this->translationTrait)
                 : false;
         }
 

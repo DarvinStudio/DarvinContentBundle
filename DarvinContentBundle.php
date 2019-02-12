@@ -14,7 +14,7 @@ use Darvin\ContentBundle\DependencyInjection\Compiler\AddContentControllersPass;
 use Darvin\ContentBundle\DependencyInjection\Compiler\AddFormNamesToCanonicalUrlWhitelist;
 use Darvin\ContentBundle\DependencyInjection\Compiler\AddWidgetFactoriesPass;
 use Darvin\ContentBundle\DependencyInjection\Compiler\AddWidgetsPass;
-use Darvin\ContentBundle\DependencyInjection\Compiler\ReplaceTranslatableSubscriberPass;
+use Darvin\ContentBundle\DependencyInjection\Compiler\ReplaceTranslatableServicesPass;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -34,6 +34,6 @@ class DarvinContentBundle extends Bundle
             ->addCompilerPass(new AddWidgetsPass())
             ->addCompilerPass(new AddContentControllersPass(), PassConfig::TYPE_OPTIMIZE)
             ->addCompilerPass(new AddFormNamesToCanonicalUrlWhitelist(), PassConfig::TYPE_BEFORE_REMOVING)
-            ->addCompilerPass(new ReplaceTranslatableSubscriberPass());
+            ->addCompilerPass(new ReplaceTranslatableServicesPass());
     }
 }
