@@ -87,7 +87,11 @@ class PagerSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $page = $pagination->getPage() ?: 1;
+        $page = $pagination->getPage();
+
+        if (null === $page) {
+            $page = 1;
+        }
 
         $pageNumber = (int)$page;
 
