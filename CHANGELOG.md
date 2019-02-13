@@ -30,6 +30,8 @@
 
 7.3.3: Force make services public by default.
 
+7.4.0: Add "nav_links()" macro.
+
 8.0.0:
  
 - Remove "darvin_content_content_show" route.
