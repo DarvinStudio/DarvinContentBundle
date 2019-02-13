@@ -38,6 +38,28 @@
     {{- title }}{{ darvin_content.page_number() -}}
 {% endmacro %}
 
+{% macro nav_links() %}
+    {% if 1 == app.request.attributes.get('_darvin_content_page_params', [])|length %}
+
+        {% set param = app.request.attributes.get('_darvin_content_page_params')|first %}
+
+        {% for name in ['prev', 'next'] %}
+
+            {% set number = app.request.attributes.get('_darvin_content_page_' ~ name) %}
+
+            {% if number %}
+
+                {% set url = url(
+                    app.request.attributes.get('_route'),
+                    app.request.attributes.get('_route_params', {})|merge(app.request.query.all)|merge({(param): number})
+                ) %}
+
+                <link rel="{{ name }}" href="{{ url }}">
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endmacro %}
+
 {% macro page_number() %}
 
     {%- set number = app.request.attributes.get(constant('Darvin\\ContentBundle\\EventListener\\Pagination\\PagerSubscriber::REQUEST_ATTR_PAGE_NUMBER'), -1) -%}

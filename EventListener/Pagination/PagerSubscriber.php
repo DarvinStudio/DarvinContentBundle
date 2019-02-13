@@ -24,6 +24,8 @@ class PagerSubscriber implements EventSubscriberInterface
 {
     const REQUEST_ATTR_PAGE_NUMBER = '_darvin_content_page_number';
     const REQUEST_ATTR_PAGE_PARAMS = '_darvin_content_page_params';
+    const REQUEST_ATTR_PAGE_PREV   = '_darvin_content_page_prev';
+    const REQUEST_ATTR_PAGE_NEXT   = '_darvin_content_page_next';
 
     /**
      * @var \Symfony\Component\HttpFoundation\RequestStack
@@ -45,7 +47,7 @@ class PagerSubscriber implements EventSubscriberInterface
     {
         return [
             'knp_pager.pagination' => ['setPageAttributesToRequest', 2],
-            'knp_pager.after'      => ['validatePage', 2],
+            'knp_pager.after'      => ['after', 2],
         ];
     }
 
@@ -77,7 +79,7 @@ class PagerSubscriber implements EventSubscriberInterface
      *
      * @throws \Darvin\ContentBundle\Pagination\PageNotFoundException
      */
-    public function validatePage(AfterEvent $event)
+    public function after(AfterEvent $event)
     {
         $pagination = $event->getPaginationView();
 
@@ -85,16 +87,23 @@ class PagerSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $page = $pagination->getPage();
-
-        if (null === $page) {
-            return;
-        }
+        $page = $pagination->getPage() ?: 1;
 
         $pageNumber = (int)$page;
 
         if ((string)$pageNumber !== (string)$page || $pageNumber < 0 || $pageNumber > $pagination->getPageCount()) {
             throw new PageNotFoundException();
+        }
+
+        $request = $this->requestStack->getCurrentRequest();
+
+        if (!empty($request)) {
+            if ($page > 1) {
+                $request->attributes->set(self::REQUEST_ATTR_PAGE_PREV, $page - 1);
+            }
+            if ($page < $pagination->getPageCount()) {
+                $request->attributes->set(self::REQUEST_ATTR_PAGE_NEXT, $page + 1);
+            }
         }
     }
 }
