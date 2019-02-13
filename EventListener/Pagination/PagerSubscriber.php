@@ -91,15 +91,15 @@ class PagerSubscriber implements EventSubscriberInterface
 
         if (null === $page) {
             $page = 1;
-        }
+        } else {
+            $pageNumber = (int)$page;
 
-        $pageNumber = (int)$page;
-
-        if ((string)$pageNumber !== (string)$page
-            || $pageNumber < 0
-            || (!$pagination->getPaginatorOption('allowPageNumberExceed') && $pageNumber > $pagination->getPageCount())
-        ) {
-            throw new PageNotFoundException();
+            if ((string)$pageNumber !== (string)$page
+                || $pageNumber < 0
+                || (!$pagination->getPaginatorOption('allowPageNumberExceed') && $pageNumber > $pagination->getPageCount())
+            ) {
+                throw new PageNotFoundException();
+            }
         }
 
         $request = $this->requestStack->getCurrentRequest();
