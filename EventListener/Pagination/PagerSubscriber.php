@@ -89,14 +89,14 @@ class PagerSubscriber implements EventSubscriberInterface
 
         $page = $pagination->getPage();
 
-        if (null !== $page) {
+        if (null === $page) {
+            $page = 1;
+        } else {
             $pageNumber = (int)$page;
 
             if ((string)$pageNumber !== (string)$page || $pageNumber < 0 || $pageNumber > $pagination->getPageCount()) {
                 throw new PageNotFoundException();
             }
-        } else {
-            $page = 1;
         }
 
         $request = $this->requestStack->getCurrentRequest();
