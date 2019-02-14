@@ -1,4 +1,6 @@
 parameters:
+    darvin_content.translatable.initialize_translations_subscriber.class: Darvin\ContentBundle\EventListener\InitializeTranslationsSubscriber
+
     darvin_content.translatable.manager.class:                                Darvin\ContentBundle\Translatable\TranslatableManager
     darvin_content.translatable.manager.get_translatable_entity_class_method: getTranslatableEntityClass
     darvin_content.translatable.manager.get_translation_entity_class_method:  getTranslationEntityClass
@@ -14,6 +16,16 @@ parameters:
 services:
     _defaults:
         public: true
+
+    darvin_content.translatable.initialize_translations_subscriber:
+        class:  '%darvin_content.translatable.initialize_translations_subscriber.class%'
+        public: false
+        arguments:
+            - '@darvin_content.translatable.manager'
+            - '@darvin_content.translatable.translation_initializer'
+            - '%locales%'
+        tags:
+            - { name: doctrine.event_subscriber }
 
     darvin_content.translatable.manager:
         class: '%darvin_content.translatable.manager.class%'
