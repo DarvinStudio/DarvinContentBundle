@@ -1,0 +1,14 @@
+parameters:
+    darvin_content.router.slug_map.class:         Darvin\ContentBundle\Router\SlugMapRouter
+    darvin_content.router.slug_map.content_route: darvin_content_show
+
+services:
+    _defaults:
+        public: true
+
+    darvin_content.router.slug_map:
+        class: '%darvin_content.router.slug_map.class%'
+        arguments:
+            - '@router'
+            - '@darvin_utils.homepage.router'
+            - '%darvin_content.router.slug_map.content_route%'

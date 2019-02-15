@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Darvin\ContentBundle\Slug;
+namespace Darvin\ContentBundle\Router;
 
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
