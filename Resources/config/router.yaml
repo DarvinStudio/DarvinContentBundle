@@ -1,4 +1,6 @@
 parameters:
+    darvin_content.router.entity.class: Darvin\ContentBundle\Router\EntityRouter
+
     darvin_content.router.slug_map.class:         Darvin\ContentBundle\Router\SlugMapRouter
     darvin_content.router.slug_map.content_route: darvin_content_show
 
@@ -6,8 +8,17 @@ services:
     _defaults:
         public: true
 
+    darvin_content.router.entity:
+        class:  '%darvin_content.router.entity.class%'
+        public: false
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@darvin_utils.orm.entity_resolver'
+            - '@darvin_content.router.slug_map'
+
     darvin_content.router.slug_map:
-        class: '%darvin_content.router.slug_map.class%'
+        class:  '%darvin_content.router.slug_map.class%'
+        public: false
         arguments:
             - '@router'
             - '@darvin_utils.homepage.router'
