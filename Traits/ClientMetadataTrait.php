@@ -42,7 +42,7 @@ trait ClientMetadataTrait
     /**
      * @param string|null $clientIp clientIp
      *
-     * @return ClientMetadataTrait
+     * @return self
      */
     public function setClientIp(?string $clientIp)
     {
@@ -62,7 +62,7 @@ trait ClientMetadataTrait
     /**
      * @param string|null $userAgent userAgent
      *
-     * @return ClientMetadataTrait
+     * @return self
      */
     public function setUserAgent(?string $userAgent)
     {

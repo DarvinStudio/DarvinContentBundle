@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
  * @copyright Copyright (c) 2015-2019, Darvin Studio
@@ -92,11 +92,19 @@ trait MetadataTrait
     }
 
     /**
+     * @return boolean
+     */
+    public function isEnabled(): ?bool
+    {
+        return $this->enabled;
+    }
+
+    /**
      * @param boolean $enabled enabled
      *
-     * @return MetadataTrait
+     * @return self
      */
-    public function setEnabled($enabled)
+    public function setEnabled(?bool $enabled)
     {
         $this->enabled = $enabled;
 
@@ -106,17 +114,17 @@ trait MetadataTrait
     /**
      * @return boolean
      */
-    public function isEnabled()
+    public function isHidden(): ?bool
     {
-        return $this->enabled;
+        return $this->hidden;
     }
 
     /**
      * @param boolean $hidden hidden
      *
-     * @return MetadataTrait
+     * @return self
      */
-    public function setHidden($hidden)
+    public function setHidden(?bool $hidden)
     {
         $this->hidden = $hidden;
 
@@ -124,19 +132,19 @@ trait MetadataTrait
     }
 
     /**
-     * @return boolean
+     * @return string
      */
-    public function isHidden()
+    public function getTitle(): ?string
     {
-        return $this->hidden;
+        return $this->title;
     }
 
     /**
      * @param string $title title
      *
-     * @return MetadataTrait
+     * @return self
      */
-    public function setTitle($title)
+    public function setTitle(?string $title)
     {
         $this->title = $title;
 
@@ -146,17 +154,17 @@ trait MetadataTrait
     /**
      * @return string
      */
-    public function getTitle()
+    public function getHeading(): ?string
     {
-        return $this->title;
+        return $this->heading;
     }
 
     /**
      * @param string $heading heading
      *
-     * @return MetadataTrait
+     * @return self
      */
-    public function setHeading($heading)
+    public function setHeading(?string $heading)
     {
         $this->heading = $heading;
 
@@ -166,17 +174,17 @@ trait MetadataTrait
     /**
      * @return string
      */
-    public function getHeading()
+    public function getMetaTitle(): ?string
     {
-        return $this->heading;
+        return $this->metaTitle;
     }
 
     /**
      * @param string $metaTitle metaTitle
      *
-     * @return MetadataTrait
+     * @return self
      */
-    public function setMetaTitle($metaTitle)
+    public function setMetaTitle(?string $metaTitle)
     {
         $this->metaTitle = $metaTitle;
 
@@ -186,28 +194,20 @@ trait MetadataTrait
     /**
      * @return string
      */
-    public function getMetaTitle()
+    public function getMetaDescription(): ?string
     {
-        return $this->metaTitle;
+        return $this->metaDescription;
     }
 
     /**
      * @param string $metaDescription metaDescription
      *
-     * @return MetadataTrait
+     * @return self
      */
-    public function setMetaDescription($metaDescription)
+    public function setMetaDescription(?string $metaDescription)
     {
         $this->metaDescription = $metaDescription;
 
         return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMetaDescription()
-    {
-        return $this->metaDescription;
     }
 }
