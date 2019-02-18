@@ -22,7 +22,7 @@ trait TranslatableRepositoryTrait
      * @param string|null                $locale    Locale
      * @param bool                       $addSelect Whether to add select
      *
-     * @return TranslatableRepositoryTrait
+     * @return self
      */
     protected function joinTranslations(QueryBuilder $qb, ?string $locale = null, bool $addSelect = true)
     {
