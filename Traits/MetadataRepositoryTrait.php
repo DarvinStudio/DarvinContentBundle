@@ -15,13 +15,13 @@ use Doctrine\ORM\QueryBuilder;
 /**
  * Metadata entity repository trait
  */
-trait MetadataEntityRepositoryTrait
+trait MetadataRepositoryTrait
 {
     /**
      * @param \Doctrine\ORM\QueryBuilder $qb    Query builder
      * @param string                     $alias Alias
      *
-     * @return MetadataEntityRepositoryTrait
+     * @return self
      */
     public function addNotHiddenFilter(QueryBuilder $qb, string $alias = 'translations')
     {
@@ -34,7 +34,7 @@ trait MetadataEntityRepositoryTrait
      * @param \Doctrine\ORM\QueryBuilder $qb    Query builder
      * @param string                     $alias Alias
      *
-     * @return MetadataEntityRepositoryTrait
+     * @return self
      */
     protected function addEnabledFilter(QueryBuilder $qb, string $alias = 'translations')
     {
