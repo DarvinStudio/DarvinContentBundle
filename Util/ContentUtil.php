@@ -21,7 +21,7 @@ class ContentUtil
      *
      * @return bool
      */
-    public function isEmpty(?string $content, string $allowedTags = '<img></img>'): bool
+    public static function isEmpty(?string $content, string $allowedTags = '<img></img>'): bool
     {
         if (null === $content) {
             return true;
