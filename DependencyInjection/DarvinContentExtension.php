@@ -33,6 +33,7 @@ class DarvinContentExtension extends Extension implements PrependExtensionInterf
 
         (new ConfigLoader($container, __DIR__.'/../Resources/config'))->load([
             'canonical_url',
+            'content',
             'controller',
             'filterer',
             'form',
