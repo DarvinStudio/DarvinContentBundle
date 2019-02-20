@@ -11,7 +11,7 @@
 namespace Darvin\ContentBundle\Translatable;
 
 use Darvin\Utils\Locale\LocaleProviderInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Translatable current locale callable
@@ -19,12 +19,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class CurrentLocaleCallable
 {
     /**
-     * @var \Symfony\Component\DependencyInjection\ContainerInterface
+     * @var \Psr\Container\ContainerInterface
      */
     private $container;
 
     /**
-     * @param \Symfony\Component\DependencyInjection\ContainerInterface $container DI container
+     * @param \Psr\Container\ContainerInterface $container DI container
      */
     public function __construct(ContainerInterface $container)
     {
