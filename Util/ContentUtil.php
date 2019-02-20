@@ -16,17 +16,18 @@ namespace Darvin\ContentBundle\Util;
 class ContentUtil
 {
     /**
-     * @param string|null $content Content
+     * @param string|null $content     Content
+     * @param string      $allowedTags Allowed tags
      *
      * @return bool
      */
-    public function isEmpty(?string $content): bool
+    public function isEmpty(?string $content, string $allowedTags = '<img></img>'): bool
     {
         if (null === $content) {
             return true;
         }
 
-        $content = strip_tags($content, '<img></img>');
+        $content = strip_tags($content, $allowedTags);
 
         if ('' === $content) {
             return true;
