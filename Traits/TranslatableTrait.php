@@ -11,8 +11,10 @@
 namespace Darvin\ContentBundle\Traits;
 
 use Darvin\ContentBundle\Translatable\TranslatableException;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Util\ClassUtils;
 use Knp\DoctrineBehaviors\Model\Translatable\Translatable;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Translatable
@@ -51,6 +53,16 @@ trait TranslatableTrait
     public function __call(string $method, array $args)
     {
         return $this->proxyCurrentLocaleTranslation($method, $args);
+    }
+
+    /**
+     * @Assert\Valid
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTranslations()
+    {
+        return $this->translations = $this->translations ?: new ArrayCollection();
     }
 
     /**
