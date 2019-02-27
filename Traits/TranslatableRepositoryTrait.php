@@ -37,4 +37,30 @@ trait TranslatableRepositoryTrait
 
         return $this;
     }
+
+    /**
+     * @param \Doctrine\ORM\QueryBuilder $qb        Query builder
+     * @param string|null                $locale    Locale
+     * @param bool                       $addSelect Whether to add select
+     *
+     * @return self
+     */
+    protected function leftJoinTranslations(QueryBuilder $qb, ?string $locale = null, bool $addSelect = true)
+    {
+        $qb->leftJoin('o.translations', 'translations');
+
+        if (!empty($locale)) {
+            $qb
+                ->andWhere($qb->expr()->orX(
+                    'translations.locale IS NULL',
+                    'translations.locale = :locale'
+                ))
+                ->setParameter('locale', $locale);
+        }
+        if ($addSelect) {
+            $qb->addSelect('translations');
+        }
+
+        return $this;
+    }
 }
