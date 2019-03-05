@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
  * @copyright Copyright (c) 2015-2019, Darvin Studio
@@ -68,23 +68,31 @@ class SlugMapItem
     /**
      * @param string $slug        Slug
      * @param string $objectClass Object class
-     * @param string $objectId    Object ID
+     * @param mixed  $objectId    Object ID
      * @param string $property    Slug property
      */
-    public function __construct($slug = null, $objectClass = null, $objectId = null, $property = null)
+    public function __construct(string $slug, string $objectClass, $objectId, string $property)
     {
         $this->slug = $slug;
         $this->objectClass = $objectClass;
-        $this->objectId = $objectId;
+        $this->objectId = (string)$objectId;
         $this->property = $property;
     }
 
     /**
      * @return int
      */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSlug(): ?string
+    {
+        return $this->slug;
     }
 
     /**
@@ -92,7 +100,7 @@ class SlugMapItem
      *
      * @return SlugMapItem
      */
-    public function setSlug($slug)
+    public function setSlug(?string $slug): SlugMapItem
     {
         $this->slug = $slug;
 
@@ -102,9 +110,9 @@ class SlugMapItem
     /**
      * @return string
      */
-    public function getSlug()
+    public function getObjectClass(): ?string
     {
-        return $this->slug;
+        return $this->objectClass;
     }
 
     /**
@@ -112,7 +120,7 @@ class SlugMapItem
      *
      * @return SlugMapItem
      */
-    public function setObjectClass($objectClass)
+    public function setObjectClass(?string $objectClass): SlugMapItem
     {
         $this->objectClass = $objectClass;
 
@@ -122,19 +130,19 @@ class SlugMapItem
     /**
      * @return string
      */
-    public function getObjectClass()
+    public function getObjectId(): ?string
     {
-        return $this->objectClass;
+        return $this->objectId;
     }
 
     /**
-     * @param string $objectId objectId
+     * @param mixed $objectId objectId
      *
      * @return SlugMapItem
      */
-    public function setObjectId($objectId)
+    public function setObjectId($objectId): SlugMapItem
     {
-        $this->objectId = $objectId;
+        $this->objectId = (string)$objectId;
 
         return $this;
     }
@@ -142,9 +150,9 @@ class SlugMapItem
     /**
      * @return string
      */
-    public function getObjectId()
+    public function getProperty(): ?string
     {
-        return $this->objectId;
+        return $this->property;
     }
 
     /**
@@ -152,29 +160,9 @@ class SlugMapItem
      *
      * @return SlugMapItem
      */
-    public function setProperty($property)
+    public function setProperty(?string $property): SlugMapItem
     {
         $this->property = $property;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getProperty()
-    {
-        return $this->property;
-    }
-
-    /**
-     * @param object $object object
-     *
-     * @return SlugMapItem
-     */
-    public function setObject($object)
-    {
-        $this->object = $object;
 
         return $this;
     }
@@ -185,5 +173,17 @@ class SlugMapItem
     public function getObject()
     {
         return $this->object;
+    }
+
+    /**
+     * @param object $object object
+     *
+     * @return SlugMapItem
+     */
+    public function setObject($object): SlugMapItem
+    {
+        $this->object = $object;
+
+        return $this;
     }
 }
