@@ -140,7 +140,7 @@ class TranslatableManager implements TranslatableManagerInterface
             }
 
             $this->translationClasses[$entityClass] = call_user_func(
-                [$entityClass, $this->getTranslationEntityClassMethod]
+                [$this->getDoctrineMetadata($entityClass)->getName(), $this->getTranslationEntityClassMethod]
             );
         }
 
