@@ -94,7 +94,7 @@ class RebuildSlugsCommand extends Command
 
                 foreach ($properties as $property) {
                     // Reset slug
-                    $this->propertyAccessor->setValue($entity, $property, uniqid(mt_rand(), true));
+                    $this->propertyAccessor->setValue($entity, $property, uniqid((string)mt_rand(), true));
                 }
 
                 $this->em->flush();
