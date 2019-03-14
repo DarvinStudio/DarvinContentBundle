@@ -1,2 +1,2 @@
 widget:
-    name_not_unique: Виджет «%name%» уже существует
+    name_unique: Виджет «%name%» уже существует

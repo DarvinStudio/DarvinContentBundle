@@ -22,7 +22,7 @@ class WidgetNameUnique extends Constraint
     /**
      * @var string
      */
-    public $message = 'widget.name_not_unique';
+    public $message = 'widget.name_unique';
 
     /**
      * {@inheritdoc}
