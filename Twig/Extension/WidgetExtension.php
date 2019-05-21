@@ -45,17 +45,19 @@ class WidgetExtension extends AbstractExtension
     /**
      * {@inheritdoc}
      */
-    public function getFilters(): iterable
+    public function getFilters(): array
     {
-        yield new TwigFilter('content_embed_widgets', [$this->getWidgetEmbedder(), 'embed'], [
-            'is_safe' => ['html'],
-        ]);
+        return [
+            new TwigFilter('content_embed_widgets', [$this->getWidgetEmbedder(), 'embed'], [
+                'is_safe' => ['html'],
+            ]),
+        ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getFunctions(): iterable
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('content_widget_exists', [$this->getWidgetPool(), 'widgetExists']),

@@ -36,12 +36,14 @@ class CanonicalUrlExtension extends AbstractExtension
     /**
      * {@inheritdoc}
      */
-    public function getFunctions(): iterable
+    public function getFunctions(): array
     {
-        yield new TwigFunction('content_canonical_url', [$this, 'renderCanonicalUrlTag'], [
-            'needs_environment' => true,
-            'is_safe'           => ['html'],
-        ]);
+        return [
+            new TwigFunction('content_canonical_url', [$this, 'renderCanonicalUrlTag'], [
+                'needs_environment' => true,
+                'is_safe'           => ['html'],
+            ]),
+        ];
     }
 
     /**

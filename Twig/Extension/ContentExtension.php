@@ -22,8 +22,10 @@ class ContentExtension extends AbstractExtension
     /**
      * {@inheritDoc}
      */
-    public function getFunctions(): iterable
+    public function getFunctions(): array
     {
-        yield new TwigFunction('content_empty', [ContentUtil::class, 'isEmpty']);
+        return [
+            new TwigFunction('content_empty', [ContentUtil::class, 'isEmpty']),
+        ];
     }
 }
