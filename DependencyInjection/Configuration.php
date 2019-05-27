@@ -33,14 +33,20 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->arrayNode('canonical_url')->addDefaultsIfNotSet()
                     ->children()
-                        ->arrayNode('parameter_whitelist')
-                            ->prototype('scalar')->cannotBeEmpty()
-                                ->validate()
-                                    ->ifTrue(function ($pattern) {
-                                        return false === @preg_match('/^'.$pattern.'$/', '');
-                                    })
-                                    ->thenInvalid('%s is not valid pattern.')
-                                ->end()
+                        ->arrayNode('parameter_whitelist')->useAttributeAsKey('pattern')->prototype('boolean')->end()
+                            ->validate()
+                                ->ifTrue(function (array $whitelist) {
+                                    foreach (array_keys($whitelist) as $pattern) {
+                                        $pattern = (string)$pattern;
+
+                                        if (false === @preg_match(sprintf('/^%s$/', $pattern), '')) {
+                                            throw new \InvalidArgumentException(sprintf('"%s" is not valid pattern.', $pattern));
+                                        }
+                                    }
+
+                                    return false;
+                                })
+                                ->thenInvalid('')
                             ->end()
                         ->end()
                     ->end()

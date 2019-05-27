@@ -32,6 +32,15 @@
 
 7.4.0: Add "nav_links()" macro.
 
+7.4.3: Allow to disable canonical URL whitelisted parameter:
+
+```yaml
+darvin_content:
+    canonical_url:
+        parameter_whitelist:
+            catalog_filter: false
+```
+
 8.0.0:
  
 - Remove "darvin_content_content_show" route.
