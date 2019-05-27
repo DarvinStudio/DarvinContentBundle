@@ -31,3 +31,12 @@
 7.3.3: Force make services public by default.
 
 7.4.0: Add "nav_links()" macro.
+
+7.4.3: Allow to disable canonical URL whitelisted parameter:
+
+```yaml
+darvin_content:
+    canonical_url:
+        parameter_whitelist:
+            catalog_filter: false
+```

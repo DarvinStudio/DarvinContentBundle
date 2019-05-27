@@ -30,14 +30,29 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->arrayNode('canonical_url')->addDefaultsIfNotSet()
                     ->children()
-                        ->arrayNode('parameter_whitelist')
-                            ->prototype('scalar')
-                                ->validate()
-                                    ->ifTrue(function ($pattern) {
-                                        return false === @preg_match('/^'.$pattern.'$/', null);
-                                    })
-                                    ->thenInvalid('%s is not valid pattern.')
-                                ->end()
+                        ->arrayNode('parameter_whitelist')->useAttributeAsKey('pattern')->prototype('boolean')->end()
+                            ->beforeNormalization()->ifArray()->then(function (array $whitelist) {
+                                foreach ($whitelist as $pattern => $enabled) {
+                                    if (!is_bool($enabled)) {
+                                        unset($whitelist[$pattern]);
+
+                                        $whitelist[$enabled] = true;
+                                    }
+                                }
+
+                                return $whitelist;
+                            })->end()
+                            ->validate()
+                                ->ifTrue(function (array $whitelist) {
+                                    foreach (array_keys($whitelist) as $pattern) {
+                                        if (false === @preg_match(sprintf('/^%s$/', $pattern), '')) {
+                                            throw new \InvalidArgumentException(sprintf('"%s" is not valid pattern.', $pattern));
+                                        }
+                                    }
+
+                                    return false;
+                                })
+                                ->thenInvalid('')
                             ->end()
                         ->end()
                     ->end()

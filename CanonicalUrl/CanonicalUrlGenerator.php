@@ -46,8 +46,10 @@ class CanonicalUrlGenerator
 
         $this->queryParamWhitelist = [];
 
-        foreach ($queryParamWhitelist as $name) {
-            $this->addQueryParamToWhitelist($name);
+        foreach ($queryParamWhitelist as $pattern => $enabled) {
+            if ($enabled) {
+                $this->addQueryParamToWhitelist($pattern);
+            }
         }
     }
 
