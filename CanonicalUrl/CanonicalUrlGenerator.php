@@ -37,7 +37,7 @@ class CanonicalUrlGenerator implements CanonicalUrlGeneratorInterface
     /**
      * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack        Request stack
      * @param \Symfony\Component\Routing\RouterInterface     $router              Router
-     * @param string[]                                       $queryParamWhitelist Request query parameter name whitelist
+     * @param array                                          $queryParamWhitelist Request query parameter name whitelist
      */
     public function __construct(RequestStack $requestStack, RouterInterface $router, array $queryParamWhitelist)
     {
