@@ -33,7 +33,7 @@ class Configuration implements ConfigurationInterface
                         ->arrayNode('parameter_whitelist')->useAttributeAsKey('pattern')->prototype('boolean')->end()
                             ->beforeNormalization()->ifArray()->then(function (array $whitelist) {
                                 foreach ($whitelist as $pattern => $enabled) {
-                                    if (!is_bool($enabled)) {
+                                    if (null !== $enabled && !is_bool($enabled)) {
                                         unset($whitelist[$pattern]);
 
                                         $whitelist[$enabled] = true;
