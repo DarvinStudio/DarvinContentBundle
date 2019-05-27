@@ -46,20 +46,22 @@ class CanonicalUrlGenerator
 
         $this->queryParamWhitelist = [];
 
-        foreach ($queryParamWhitelist as $pattern => $enabled) {
-            if ($enabled) {
-                $this->addQueryParamToWhitelist($pattern);
-            }
+        foreach ($queryParamWhitelist as $name => $enabled) {
+            $this->addQueryParamToWhitelist($name, $enabled);
         }
     }
 
     /**
-     * @param string $name Request query parameter name
+     * @param string $name    Request query parameter name
+     * @param bool   $enabled Is enabled
      */
-    public function addQueryParamToWhitelist($name)
+    public function addQueryParamToWhitelist($name, $enabled = true)
     {
         $pattern = $this->createPattern($name);
-        $this->queryParamWhitelist[$pattern] = $pattern;
+
+        if (!isset($this->queryParamWhitelist[$pattern])) {
+            $this->queryParamWhitelist[$pattern] = $enabled;
+        }
     }
 
     /**
@@ -82,8 +84,8 @@ class CanonicalUrlGenerator
         $canonical = true;
 
         foreach ($params as $name => $value) {
-            foreach ($this->queryParamWhitelist as $pattern) {
-                if (preg_match($pattern, $name)) {
+            foreach ($this->queryParamWhitelist as $pattern => $enabled) {
+                if ($enabled && preg_match($pattern, $name)) {
                     continue 2;
                 }
             }
