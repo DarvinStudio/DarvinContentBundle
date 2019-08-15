@@ -45,6 +45,20 @@ class Position
     private $tag;
 
     /**
+     * @var string
+     *
+     * @ORM\Column
+     */
+    private $objectClass;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column
+     */
+    private $objectId;
+
+    /**
      * @var int
      *
      * @ORM\Column(type="integer")
@@ -52,15 +66,19 @@ class Position
     private $value;
 
     /**
-     * @param \Darvin\ContentBundle\Entity\SlugMapItem $slug  Slug
-     * @param int                                      $value Value
-     * @param string|null                              $tag   Tag
+     * @param \Darvin\ContentBundle\Entity\SlugMapItem $slug        Slug
+     * @param string                                   $objectClass Object class
+     * @param string                                   $objectId    Object ID
+     * @param int                                      $value       Value
+     * @param string|null                              $tag         Tag
      */
-    public function __construct(SlugMapItem $slug, int $value, ?string $tag = null)
+    public function __construct(SlugMapItem $slug, string $objectClass, string $objectId, int $value, ?string $tag = null)
     {
         $this->slug = $slug;
-        $this->value = $value;
         $this->tag = $tag;
+        $this->objectClass = $objectClass;
+        $this->objectId = $objectId;
+        $this->value = $value;
     }
 
     /**
@@ -85,6 +103,22 @@ class Position
     public function getTag(): ?string
     {
         return $this->tag;
+    }
+
+    /**
+     * @return string
+     */
+    public function getObjectClass(): string
+    {
+        return $this->objectClass;
+    }
+
+    /**
+     * @return string
+     */
+    public function getObjectId(): string
+    {
+        return $this->objectId;
     }
 
     /**
