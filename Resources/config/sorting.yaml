@@ -1,13 +1,17 @@
 parameters:
     darvin_content.sorting.sort_entity_joiner.class: Darvin\ContentBundle\Sorting\SortEntityJoiner
 
-services:
-    _defaults:
-        public: true
+    darvin_content.sorting.twig_extension.class: Darvin\ContentBundle\Twig\Extension\SortingExtension
 
+services:
     darvin_content.sorting.sort_entity_joiner:
         class: '%darvin_content.sorting.sort_entity_joiner.class%'
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@darvin_content.translatable.manager'
             - '@darvin_content.translatable.translation_joiner'
+
+    darvin_content.sorting.twig_extension:
+        class: '%darvin_content.sorting.twig_extension.class%'
+        tags:
+            - { name: twig.extension }
