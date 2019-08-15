@@ -16,17 +16,34 @@ use Doctrine\ORM\Mapping as ORM;
  * Position
  *
  * @ORM\Entity
+ * @ORM\Table(name="content_position")
  */
 class Position
 {
     /**
      * @var string
      *
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", length=36)
      * @ORM\GeneratedValue(strategy="UUID")
      * @ORM\Id
      */
     private $id;
+
+    /**
+     * @var \Darvin\ContentBundle\Entity\SlugMapItem
+     *
+     * @ORM\ManyToOne(targetEntity="Darvin\ContentBundle\Entity\SlugMapItem")
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     */
+    private $slug;
+
+    /**
+     * @param \Darvin\ContentBundle\Entity\SlugMapItem $slug Slug
+     */
+    public function __construct(SlugMapItem $slug)
+    {
+        $this->slug = $slug;
+    }
 
     /**
      * @return string
@@ -34,5 +51,13 @@ class Position
     public function getId(): ?string
     {
         return $this->id;
+    }
+
+    /**
+     * @return \Darvin\ContentBundle\Entity\SlugMapItem
+     */
+    public function getSlug(): SlugMapItem
+    {
+        return $this->slug;
     }
 }
