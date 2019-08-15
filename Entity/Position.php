@@ -23,7 +23,7 @@ class Position
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=36)
+     * @ORM\Column(length=36)
      * @ORM\GeneratedValue(strategy="UUID")
      * @ORM\Id
      */
@@ -38,11 +38,29 @@ class Position
     private $slug;
 
     /**
-     * @param \Darvin\ContentBundle\Entity\SlugMapItem $slug Slug
+     * @var string|null
+     *
+     * @ORM\Column(nullable=true)
      */
-    public function __construct(SlugMapItem $slug)
+    private $tag;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(type="integer")
+     */
+    private $value;
+
+    /**
+     * @param \Darvin\ContentBundle\Entity\SlugMapItem $slug  Slug
+     * @param int                                      $value Value
+     * @param string|null                              $tag   Tag
+     */
+    public function __construct(SlugMapItem $slug, int $value, ?string $tag = null)
     {
         $this->slug = $slug;
+        $this->value = $value;
+        $this->tag = $tag;
     }
 
     /**
@@ -59,5 +77,21 @@ class Position
     public function getSlug(): SlugMapItem
     {
         return $this->slug;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getTag(): ?string
+    {
+        return $this->tag;
+    }
+
+    /**
+     * @return int
+     */
+    public function getValue(): int
+    {
+        return $this->value;
     }
 }
