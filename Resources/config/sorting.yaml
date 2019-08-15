@@ -1,6 +1,8 @@
 parameters:
     darvin_content.sorting.sort_entity_joiner.class: Darvin\ContentBundle\Sorting\SortEntityJoiner
 
+    darvin_content.sorting.sorter.class: Darvin\ContentBundle\Sorting\Sorter
+
     darvin_content.sorting.twig_extension.class: Darvin\ContentBundle\Twig\Extension\SortingExtension
 
 services:
@@ -10,6 +12,9 @@ services:
             - '@doctrine.orm.entity_manager'
             - '@darvin_content.translatable.manager'
             - '@darvin_content.translatable.translation_joiner'
+
+    darvin_content.sorting.sorter:
+        class: '%darvin_content.sorting.sorter.class%'
 
     darvin_content.sorting.twig_extension:
         class: '%darvin_content.sorting.twig_extension.class%'
