@@ -1,6 +1,8 @@
 parameters:
     darvin_content.sorting.controller.reposition.class: Darvin\ContentBundle\Controller\Sorting\RepositionController
 
+    darvin_content.sorting.repositioner.class: Darvin\ContentBundle\Sorting\Repositioner
+
     darvin_content.sorting.sort_entity_joiner.class: Darvin\ContentBundle\Sorting\SortEntityJoiner
 
     darvin_content.sorting.sorter.class: Darvin\ContentBundle\Sorting\Sorter
@@ -12,6 +14,9 @@ services:
         class: '%darvin_content.sorting.controller.reposition.class%'
         tags:
             - { name: controller.service_arguments }
+
+    darvin_content.sorting.repositioner:
+        class: '%darvin_content.sorting.repositioner.class%'
 
     darvin_content.sorting.sort_entity_joiner:
         class: '%darvin_content.sorting.sort_entity_joiner.class%'
