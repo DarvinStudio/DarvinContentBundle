@@ -10,6 +10,7 @@
 
 namespace Darvin\ContentBundle\Twig\Extension;
 
+use Darvin\ContentBundle\Sorting\SorterInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
@@ -19,28 +20,25 @@ use Twig\TwigFilter;
 class SortingExtension extends AbstractExtension
 {
     /**
+     * @var \Darvin\ContentBundle\Sorting\SorterInterface
+     */
+    private $sorter;
+
+    /**
+     * @param \Darvin\ContentBundle\Sorting\SorterInterface $sorter Sorter
+     */
+    public function __construct(SorterInterface $sorter)
+    {
+        $this->sorter = $sorter;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function getFilters(): array
     {
         return [
-            new TwigFilter('content_sort', [$this, 'sort']),
+            new TwigFilter('content_sort', [$this->sorter, 'sort']),
         ];
-    }
-
-    /**
-     * @param iterable $objects Objects
-     *
-     * @return array
-     */
-    public function sort(iterable $objects): array
-    {
-        $sorted = [];
-
-        foreach ($objects as $key => $object) {
-            $sorted[$key] = $object;
-        }
-
-        return $sorted;
     }
 }
