@@ -74,7 +74,7 @@ class AttributeRenderer implements AttributeRendererInterface
             'class'      => trim(sprintf('%s js-content-sortable', $attr['class'] ?? '')),
             'data-url'   => $this->router->generate('darvin_content_sorting_reposition'),
             'data-slug'  => $routeParams['slug'],
-            'data-class' => base64_encode(ClassUtils::getClass($first)).'"',
+            'data-class' => base64_encode(ClassUtils::getClass($first)),
         ]);
 
         return $this->renderAttr($attr);
