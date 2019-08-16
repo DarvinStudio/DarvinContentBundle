@@ -35,7 +35,9 @@
                     url:  options.repositionUrl,
                     type: 'post',
                     data: data
-                });
+                }).done((data) => {
+                    console.log(data);
+                }).fail(App.onAjaxFail);
             }
         });
     })();

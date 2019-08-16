@@ -10,6 +10,12 @@
 
 namespace Darvin\ContentBundle\Controller\Sorting;
 
+use Darvin\ContentBundle\Form\Type\Sorting\RepositionType;
+use Darvin\ContentBundle\Sorting\Reposition\Model\Reposition;
+use Darvin\Utils\HttpFoundation\AjaxResponse;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -18,10 +24,37 @@ use Symfony\Component\HttpFoundation\Response;
 class RepositionController
 {
     /**
+     * @var \Symfony\Component\Form\FormFactoryInterface
+     */
+    private $formFactory;
+
+    /**
+     * @param \Symfony\Component\Form\FormFactoryInterface $formFactory Form factory
+     */
+    public function __construct(FormFactoryInterface $formFactory)
+    {
+        $this->formFactory = $formFactory;
+    }
+
+    /**
+     * @param \Symfony\Component\HttpFoundation\Request $request Request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function __invoke(): Response
+    public function __invoke(Request $request): Response
     {
-        return new Response();
+        $reposition = new Reposition();
+
+        $form = $this->formFactory->create(RepositionType::class, $reposition)->handleRequest($request);
+
+        $success = $form->isValid();
+
+        $message = $success
+            ? 'content.reposition.success'
+            : implode(PHP_EOL, array_map(function (FormError $error) {
+                return $error->getMessage();
+            }, iterator_to_array($form->getErrors(true))));
+
+        return new AjaxResponse('', $success, $message);
     }
 }
