@@ -1,6 +1,6 @@
 darvin_content_import_sorting:
     resource: '@DarvinContentBundle/Resources/config/routing/sorting.yaml'
-    prefix:   /content/sort
+    prefix:   /content
 
 darvin_content_import_content:
     resource: '@DarvinContentBundle/Resources/config/routing/content.yaml'
