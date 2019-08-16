@@ -65,7 +65,7 @@ class AttributeRenderer implements AttributeRendererInterface
         $attr = array_merge($attr, [
             'class'      => trim(sprintf('%s js-content-sortable', $attr['class'] ?? '')),
             'data-slug'  => $routeParams['slug'],
-            'data-class' => base64_encode(ClassUtils::getClass($first)),
+            'data-class' => base64_encode(ClassUtils::getClass($first)).'"',
         ]);
 
         return $this->renderAttr($attr);
@@ -92,7 +92,7 @@ class AttributeRenderer implements AttributeRendererInterface
     {
         $parts = [];
 
-        foreach ($attr as $name => $value) {
+        foreach (array_map('htmlspecialchars', $attr) as $name => $value) {
             $parts[] = sprintf('%s="%s"', $name, $value);
         }
         if (empty($parts)) {
