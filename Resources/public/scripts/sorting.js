@@ -1,6 +1,6 @@
 (() => {
     const SELECTOR = {
-        container: '.js-content-sortable',
+        container: '.js-content-sortable[data-reposition-url][data-class]',
         item:      '[data-id]'
     };
 
@@ -9,14 +9,32 @@
         $(context || 'body').find(SELECTOR.container).sortable({
             items:  SELECTOR.item,
             update: (e, ui) => {
-                let $items = ui.item.closest(SELECTOR.container).find(SELECTOR.item),
-                    ids    = [];
+                const $container = ui.item.closest(SELECTOR.container);
 
-                if ($items.length > 0) {
-                    ids = $items.map((i, item) => {
-                        return $(item).data('id');
-                    }).get();
+                const $items = $container.find(SELECTOR.item);
+
+                if (!$items.length) {
+                    return;
                 }
+
+                const options = $container.data();
+
+                let data = {
+                    'class': options.class,
+                    ids:     $items.map((i, item) => {
+                        return $(item).data('id');
+                    }).get()
+                };
+
+                if (options.slug) {
+                    data.slug = options.slug;
+                }
+
+                $.ajax({
+                    url:  options.repositionUrl,
+                    type: 'post',
+                    data: data
+                });
             }
         });
     })();
