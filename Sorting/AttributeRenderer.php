@@ -10,8 +10,8 @@
 
 namespace Darvin\ContentBundle\Sorting;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Util\ClassUtils;
-use Doctrine\ORM\EntityManager;
 
 /**
  * Sorting attribute renderer
@@ -19,24 +19,31 @@ use Doctrine\ORM\EntityManager;
 class AttributeRenderer implements AttributeRendererInterface
 {
     /**
-     * @var \Doctrine\ORM\EntityManager
+     * @var \Doctrine\Common\Persistence\ObjectManager
      */
-    private $em;
+    private $om;
 
     /**
-     * @param \Doctrine\ORM\EntityManager $em Entity manager
+     * @param \Doctrine\Common\Persistence\ObjectManager $om Object manager
      */
-    public function __construct(EntityManager $em)
+    public function __construct(ObjectManager $om)
     {
-        $this->em = $em;
+        $this->om = $om;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function renderContainerAttr(array $attr = []): string
+    public function renderContainerAttr(array $objects, array $attr = []): string
     {
-        $attr['class'] = trim(sprintf('%s js-content-sortable', $attr['class'] ?? ''));
+        if (!empty($objects)) {
+            $first = reset($objects);
+
+            $attr = array_merge($attr, [
+                'class'      => trim(sprintf('%s js-content-sortable', $attr['class'] ?? '')),
+                'data-class' => base64_encode(ClassUtils::getClass($first)),
+            ]);
+        }
 
         return $this->renderAttr($attr);
     }
@@ -44,9 +51,9 @@ class AttributeRenderer implements AttributeRendererInterface
     /**
      * {@inheritDoc}
      */
-    public function renderItemAttr($entity, array $attr = []): string
+    public function renderItemAttr($object, array $attr = []): string
     {
-        $ids = $this->em->getClassMetadata(ClassUtils::getClass($entity))->getIdentifierValues($entity);
+        $ids = $this->om->getClassMetadata(ClassUtils::getClass($object))->getIdentifierValues($object);
 
         $attr['data-id'] = reset($ids);
 
