@@ -1,5 +1,8 @@
 content:
     empty: Under Construction
+    sorting:
+        reposition:
+            success: Positions Saved
 
 macro:
     page_number:

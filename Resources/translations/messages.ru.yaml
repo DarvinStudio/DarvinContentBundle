@@ -1,5 +1,8 @@
 content:
     empty: Страница в разработке
+    sorting:
+        reposition:
+            success: Позиции сохранены
 
 macro:
     page_number:
