@@ -36,7 +36,7 @@
                     type: 'post',
                     data: data
                 }).done((data) => {
-                    console.log(data);
+                    App.notify(data.message, data.success ? 'success' : 'error');
                 }).fail(App.onAjaxFail);
             }
         });

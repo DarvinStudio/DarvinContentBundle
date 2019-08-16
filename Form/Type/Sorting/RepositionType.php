@@ -12,6 +12,8 @@ namespace Darvin\ContentBundle\Form\Type\Sorting;
 
 use Darvin\ContentBundle\Sorting\Reposition\Model\Reposition;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -20,6 +22,19 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class RepositionType extends AbstractType
 {
     public const CSRF_TOKEN_ID = 'darvin_content_sorting_reposition';
+
+    /**
+     * {@inheritDoc}
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+        $builder
+            ->add('slug')
+            ->add('class')
+            ->add('ids', CollectionType::class, [
+                'allow_add' => true,
+            ]);
+    }
 
     /**
      * {@inheritDoc}
@@ -37,6 +52,6 @@ class RepositionType extends AbstractType
      */
     public function getBlockPrefix(): string
     {
-        return 'darvin_content_sorting_reposition';
+        return '';
     }
 }
