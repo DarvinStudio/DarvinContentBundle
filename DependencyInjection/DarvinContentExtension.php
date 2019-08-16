@@ -31,7 +31,7 @@ class DarvinContentExtension extends Extension implements PrependExtensionInterf
     {
         (new ConfigInjector($container))->inject($this->processConfiguration(new Configuration(), $configs), $this->getAlias());
 
-        (new ConfigLoader($container, __DIR__.'/../Resources/config'))->load([
+        (new ConfigLoader($container, __DIR__.'/../Resources/config/services'))->load([
             'canonical_url',
             'content',
             'controller',
