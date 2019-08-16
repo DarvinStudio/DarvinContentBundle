@@ -27,7 +27,7 @@ class PositionRepository extends EntityRepository
      *
      * @return \Darvin\ContentBundle\Entity\Position[]
      */
-    public function getForRepositioner(?SlugMapItem $slug, ?string $tag, string $objectClass, array $objectIds): array
+    public function getPositions(?SlugMapItem $slug, ?string $tag, string $objectClass, array $objectIds): array
     {
         if (empty($objectIds)) {
             return [];

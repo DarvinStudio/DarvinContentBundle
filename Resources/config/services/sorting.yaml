@@ -42,6 +42,9 @@ services:
 
     darvin_content.sorting.sorter:
         class: '%darvin_content.sorting.sorter.class%'
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@request_stack'
 
     darvin_content.sorting.twig_extension:
         class: '%darvin_content.sorting.twig_extension.class%'
