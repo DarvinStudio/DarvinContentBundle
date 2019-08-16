@@ -8,18 +8,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Darvin\ContentBundle\Sorting;
+namespace Darvin\ContentBundle\Sorting\Reposition\Model;
 
 /**
- * Repositioner
+ * Reposition
  */
-class Repositioner implements RepositionerInterface
+class Reposition
 {
-    /**
-     * {@inheritDoc}
-     */
-    public function reposition(): void
-    {
 
-    }
 }
