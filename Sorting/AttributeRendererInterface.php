@@ -23,9 +23,10 @@ interface AttributeRendererInterface
     public function renderContainerAttr(array $attr = []): string;
 
     /**
-     * @param array $attr Attributes
+     * @param object $entity Entity
+     * @param array  $attr   Attributes
      *
      * @return string
      */
-    public function renderItemAttr(array $attr = []): string;
+    public function renderItemAttr($entity, array $attr = []): string;
 }

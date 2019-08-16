@@ -14,6 +14,8 @@ parameters:
 services:
     darvin_content.sorting.attribute_renderer:
         class: '%darvin_content.sorting.attribute_renderer.class%'
+        arguments:
+            - '@doctrine.orm.entity_manager'
 
     darvin_content.sorting.controller.reposition:
         class: '%darvin_content.sorting.controller.reposition.class%'

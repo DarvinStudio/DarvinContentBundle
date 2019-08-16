@@ -10,11 +10,27 @@
 
 namespace Darvin\ContentBundle\Sorting;
 
+use Doctrine\Common\Util\ClassUtils;
+use Doctrine\ORM\EntityManager;
+
 /**
  * Sorting attribute renderer
  */
 class AttributeRenderer implements AttributeRendererInterface
 {
+    /**
+     * @var \Doctrine\ORM\EntityManager
+     */
+    private $em;
+
+    /**
+     * @param \Doctrine\ORM\EntityManager $em Entity manager
+     */
+    public function __construct(EntityManager $em)
+    {
+        $this->em = $em;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -28,8 +44,12 @@ class AttributeRenderer implements AttributeRendererInterface
     /**
      * {@inheritDoc}
      */
-    public function renderItemAttr(array $attr = []): string
+    public function renderItemAttr($entity, array $attr = []): string
     {
+        $ids = $this->em->getClassMetadata(ClassUtils::getClass($entity))->getIdentifierValues($entity);
+
+        $attr['data-id'] = reset($ids);
+
         return $this->renderAttr($attr);
     }
 
