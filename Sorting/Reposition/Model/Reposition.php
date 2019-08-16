@@ -25,6 +25,13 @@ class Reposition
     private $slug;
 
     /**
+     * @var string|null
+     *
+     * @Assert\Type("string")
+     */
+    private $tag;
+
+    /**
      * @var string
      *
      * @Assert\Type("string")
@@ -64,6 +71,26 @@ class Reposition
     public function setSlug(?string $slug): Reposition
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getTag(): ?string
+    {
+        return $this->tag;
+    }
+
+    /**
+     * @param string|null $tag tag
+     *
+     * @return Reposition
+     */
+    public function setTag(?string $tag): Reposition
+    {
+        $this->tag = $tag;
 
         return $this;
     }

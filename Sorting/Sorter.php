@@ -18,7 +18,7 @@ class Sorter implements SorterInterface
     /**
      * {@inheritDoc}
      */
-    public function sort(iterable $objects): array
+    public function sort(iterable $objects, ?string $tag = null, ?string $slug = null): array
     {
         $sorted = [];
 

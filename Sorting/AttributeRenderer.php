@@ -63,35 +63,36 @@ class AttributeRenderer implements AttributeRendererInterface
     /**
      * {@inheritDoc}
      */
-    public function renderContainerAttr(array $objects, array $attr = []): string
+    public function renderContainerAttr(array $objects, ?string $tag = null, ?string $slug = null, array $attr = []): string
     {
         if (empty($objects)) {
             return $this->renderAttr($attr);
         }
+        if (null === $slug) {
+            $request = $this->requestStack->getCurrentRequest();
 
-        $request = $this->requestStack->getCurrentRequest();
+            if (null !== $request) {
+                $routeParams = $request->attributes->get('_route_params', []);
 
-        if (null === $request) {
-            return $this->renderAttr($attr);
+                if (isset($routeParams['slug'])) {
+                    $slug = $routeParams['slug'];
+                }
+            }
         }
-
-        $routeParams = $request->attributes->get('_route_params', []);
-
-        if (!isset($routeParams['slug'])) {
+        if (null === $slug && null === $tag) {
             return $this->renderAttr($attr);
         }
 
         $first = reset($objects);
 
-        $attr = array_merge($attr, [
+        return $this->renderAttr(array_merge($attr, [
             'class'               => trim(sprintf('%s js-content-sortable', $attr['class'] ?? '')),
             'data-reposition-url' => $this->router->generate('darvin_content_sorting_reposition'),
-            'data-slug'           => $routeParams['slug'],
+            'data-slug'           => $slug,
+            'data-tag'            => $tag,
             'data-class'          => base64_encode(ClassUtils::getClass($first)),
             'data-csrf-token'     => $this->csrfTokenManager->getToken(RepositionType::CSRF_TOKEN_ID)->getValue(),
-        ]);
-
-        return $this->renderAttr($attr);
+        ]));
     }
 
     /**
@@ -101,9 +102,9 @@ class AttributeRenderer implements AttributeRendererInterface
     {
         $ids = $this->om->getClassMetadata(ClassUtils::getClass($object))->getIdentifierValues($object);
 
-        $attr['data-id'] = reset($ids);
-
-        return $this->renderAttr($attr);
+        return $this->renderAttr(array_merge($attr, [
+            'data-id' => reset($ids),
+        ]));
     }
 
     /**
@@ -115,8 +116,10 @@ class AttributeRenderer implements AttributeRendererInterface
     {
         $parts = [];
 
-        foreach (array_map('htmlspecialchars', $attr) as $name => $value) {
-            $parts[] = sprintf('%s="%s"', $name, $value);
+        foreach ($attr as $name => $value) {
+            if (null !== $value) {
+                $parts[] = sprintf('%s="%s"', $name, htmlspecialchars((string)$value));
+            }
         }
         if (empty($parts)) {
             return '';

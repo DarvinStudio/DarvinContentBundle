@@ -16,12 +16,14 @@ namespace Darvin\ContentBundle\Sorting;
 interface AttributeRendererInterface
 {
     /**
-     * @param object[] $objects Objects
-     * @param array    $attr    Attributes
+     * @param object[]    $objects Objects
+     * @param string|null $tag     Tag
+     * @param string|null $slug    Slug
+     * @param array       $attr    Attributes
      *
      * @return string
      */
-    public function renderContainerAttr(array $objects, array $attr = []): string;
+    public function renderContainerAttr(array $objects, ?string $tag = null, ?string $slug = null, array $attr = []): string;
 
     /**
      * @param object $object Object

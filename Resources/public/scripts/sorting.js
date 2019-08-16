@@ -30,6 +30,9 @@
                 if (options.slug) {
                     data.slug = options.slug;
                 }
+                if (options.tag) {
+                    data.tag = options.tag;
+                }
 
                 $.ajax({
                     url:  options.repositionUrl,

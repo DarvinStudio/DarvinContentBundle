@@ -16,9 +16,11 @@ namespace Darvin\ContentBundle\Sorting;
 interface SorterInterface
 {
     /**
-     * @param iterable $objects Objects
+     * @param iterable    $objects Objects
+     * @param string|null $tag     Tag
+     * @param string|null $slug    Slug
      *
      * @return array
      */
-    public function sort(iterable $objects): array;
+    public function sort(iterable $objects, ?string $tag = null, ?string $slug = null): array;
 }
