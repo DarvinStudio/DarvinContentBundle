@@ -11,7 +11,6 @@
 namespace Darvin\ContentBundle\Twig\Extension;
 
 use Darvin\ContentBundle\Sorting\SorterInterface;
-use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -50,25 +49,53 @@ class SortingExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('content_sort_attr', [$this, 'renderAttributes'], [
-                'needs_environment' => true,
-                'is_safe'           => ['html'],
+            new TwigFunction('content_sort_container_attr', [$this, 'renderContainerAttr'], [
+                'is_safe' => ['html'],
+            ]),
+            new TwigFunction('content_sort_item_attr', [$this, 'renderItemAttr'], [
+                'is_safe' => ['html'],
             ]),
         ];
     }
 
     /**
-     * @param \Twig\Environment $twig Twig
-     * @param array             $attr Attributes
+     * @param array $attr Attributes
      *
      * @return string
      */
-    public function renderAttributes(Environment $twig, array $attr = []): string
+    public function renderContainerAttr(array $attr = []): string
     {
         $attr['class'] = trim(sprintf('%s js-content-sortable', $attr['class'] ?? ''));
 
-        return $twig->render('@DarvinContent/sorting/attributes.html.twig', [
-            'attr' => $attr,
-        ]);
+        return $this->renderAttr($attr);
+    }
+
+    /**
+     * @param array $attr Attributes
+     *
+     * @return string
+     */
+    public function renderItemAttr(array $attr = []): string
+    {
+        return $this->renderAttr($attr);
+    }
+
+    /**
+     * @param array $attr Attributes
+     *
+     * @return string
+     */
+    private function renderAttr(array $attr): string
+    {
+        $parts = [];
+
+        foreach ($attr as $name => $value) {
+            $parts[] = sprintf('%s="%s"', $name, $value);
+        }
+        if (empty($parts)) {
+            return '';
+        }
+
+        return sprintf(' %s', implode(' ', $parts));
     }
 }
