@@ -128,4 +128,16 @@ class Position
     {
         return $this->value;
     }
+
+    /**
+     * @param int $value value
+     *
+     * @return Position
+     */
+    public function setValue(int $value): Position
+    {
+        $this->value = $value;
+
+        return $this;
+    }
 }

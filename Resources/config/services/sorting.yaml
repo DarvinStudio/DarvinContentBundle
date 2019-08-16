@@ -30,6 +30,8 @@ services:
 
     darvin_content.sorting.repositioner:
         class: '%darvin_content.sorting.repositioner.class%'
+        arguments:
+            - '@doctrine.orm.entity_manager'
 
     darvin_content.sorting.sort_entity_joiner:
         class: '%darvin_content.sorting.sort_entity_joiner.class%'

@@ -45,6 +45,7 @@ class Reposition
      * @var array
      *
      * @Assert\Type("array")
+     * @Assert\All({@Assert\Type("string")})
      * @Assert\Count(min=1)
      */
     private $ids;

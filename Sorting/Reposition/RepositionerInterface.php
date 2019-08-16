@@ -19,6 +19,8 @@ interface RepositionerInterface
 {
     /**
      * @param \Darvin\ContentBundle\Sorting\Reposition\Model\Reposition $reposition Reposition
+     *
+     * @throws \InvalidArgumentException
      */
     public function reposition(Reposition $reposition): void;
 }
