@@ -1,3 +1,7 @@
+darvin_content_import_sorting:
+    resource: '@DarvinContentBundle/Resources/config/routing/sorting.yaml'
+    prefix:   /content/sort
+
 darvin_content_import_content:
     resource: '@DarvinContentBundle/Resources/config/routing/content.yaml'
     prefix:   /

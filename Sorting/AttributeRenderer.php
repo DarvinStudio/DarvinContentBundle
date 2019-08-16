@@ -13,6 +13,7 @@ namespace Darvin\ContentBundle\Sorting;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Util\ClassUtils;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Sorting attribute renderer
@@ -30,13 +31,20 @@ class AttributeRenderer implements AttributeRendererInterface
     private $requestStack;
 
     /**
+     * @var \Symfony\Component\Routing\RouterInterface
+     */
+    private $router;
+
+    /**
      * @param \Doctrine\Common\Persistence\ObjectManager     $om           Object manager
      * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack Request stack
+     * @param \Symfony\Component\Routing\RouterInterface     $router       Router
      */
-    public function __construct(ObjectManager $om, RequestStack $requestStack)
+    public function __construct(ObjectManager $om, RequestStack $requestStack, RouterInterface $router)
     {
         $this->om = $om;
         $this->requestStack = $requestStack;
+        $this->router = $router;
     }
 
     /**
@@ -64,6 +72,7 @@ class AttributeRenderer implements AttributeRendererInterface
 
         $attr = array_merge($attr, [
             'class'      => trim(sprintf('%s js-content-sortable', $attr['class'] ?? '')),
+            'data-url'   => $this->router->generate('darvin_content_sorting_reposition'),
             'data-slug'  => $routeParams['slug'],
             'data-class' => base64_encode(ClassUtils::getClass($first)).'"',
         ]);

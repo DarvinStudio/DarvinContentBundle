@@ -17,6 +17,7 @@ services:
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@request_stack'
+            - '@router'
 
     darvin_content.sorting.controller.reposition:
         class: '%darvin_content.sorting.controller.reposition.class%'
