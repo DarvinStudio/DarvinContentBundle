@@ -11,8 +11,10 @@
 namespace Darvin\ContentBundle\Twig\Extension;
 
 use Darvin\ContentBundle\Sorting\SorterInterface;
+use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
+use Twig\TwigFunction;
 
 /**
  * Sorting Twig extension
@@ -40,5 +42,33 @@ class SortingExtension extends AbstractExtension
         return [
             new TwigFilter('content_sort', [$this->sorter, 'sort']),
         ];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getFunctions(): array
+    {
+        return [
+            new TwigFunction('content_sort_attr', [$this, 'renderAttributes'], [
+                'needs_environment' => true,
+                'is_safe'           => ['html'],
+            ]),
+        ];
+    }
+
+    /**
+     * @param \Twig\Environment $twig Twig
+     * @param array             $attr Attributes
+     *
+     * @return string
+     */
+    public function renderAttributes(Environment $twig, array $attr = []): string
+    {
+        $attr['class'] = trim(sprintf('%s js-content-sortable', $attr['class'] ?? ''));
+
+        return $twig->render('@DarvinContent/sorting/attributes.html.twig', [
+            'attr' => $attr,
+        ]);
     }
 }
