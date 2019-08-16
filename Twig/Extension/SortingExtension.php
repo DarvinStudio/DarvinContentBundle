@@ -10,6 +10,7 @@
 
 namespace Darvin\ContentBundle\Twig\Extension;
 
+use Darvin\ContentBundle\Sorting\AttributeRendererInterface;
 use Darvin\ContentBundle\Sorting\SorterInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
@@ -21,15 +22,22 @@ use Twig\TwigFunction;
 class SortingExtension extends AbstractExtension
 {
     /**
+     * @var \Darvin\ContentBundle\Sorting\AttributeRendererInterface
+     */
+    private $attributeRenderer;
+
+    /**
      * @var \Darvin\ContentBundle\Sorting\SorterInterface
      */
     private $sorter;
 
     /**
-     * @param \Darvin\ContentBundle\Sorting\SorterInterface $sorter Sorter
+     * @param \Darvin\ContentBundle\Sorting\AttributeRendererInterface $attributeRenderer Sorting attribute renderer
+     * @param \Darvin\ContentBundle\Sorting\SorterInterface            $sorter            Sorter
      */
-    public function __construct(SorterInterface $sorter)
+    public function __construct(AttributeRendererInterface $attributeRenderer, SorterInterface $sorter)
     {
+        $this->attributeRenderer = $attributeRenderer;
         $this->sorter = $sorter;
     }
 
@@ -49,53 +57,12 @@ class SortingExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('content_sort_container_attr', [$this, 'renderContainerAttr'], [
+            new TwigFunction('content_sort_container_attr', [$this->attributeRenderer, 'renderContainerAttr'], [
                 'is_safe' => ['html'],
             ]),
-            new TwigFunction('content_sort_item_attr', [$this, 'renderItemAttr'], [
+            new TwigFunction('content_sort_item_attr', [$this->attributeRenderer, 'renderItemAttr'], [
                 'is_safe' => ['html'],
             ]),
         ];
-    }
-
-    /**
-     * @param array $attr Attributes
-     *
-     * @return string
-     */
-    public function renderContainerAttr(array $attr = []): string
-    {
-        $attr['class'] = trim(sprintf('%s js-content-sortable', $attr['class'] ?? ''));
-
-        return $this->renderAttr($attr);
-    }
-
-    /**
-     * @param array $attr Attributes
-     *
-     * @return string
-     */
-    public function renderItemAttr(array $attr = []): string
-    {
-        return $this->renderAttr($attr);
-    }
-
-    /**
-     * @param array $attr Attributes
-     *
-     * @return string
-     */
-    private function renderAttr(array $attr): string
-    {
-        $parts = [];
-
-        foreach ($attr as $name => $value) {
-            $parts[] = sprintf('%s="%s"', $name, $value);
-        }
-        if (empty($parts)) {
-            return '';
-        }
-
-        return sprintf(' %s', implode(' ', $parts));
     }
 }

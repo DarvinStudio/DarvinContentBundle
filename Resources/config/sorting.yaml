@@ -1,4 +1,6 @@
 parameters:
+    darvin_content.sorting.attribute_renderer.class: Darvin\ContentBundle\Sorting\AttributeRenderer
+
     darvin_content.sorting.controller.reposition.class: Darvin\ContentBundle\Controller\Sorting\RepositionController
 
     darvin_content.sorting.repositioner.class: Darvin\ContentBundle\Sorting\Repositioner
@@ -10,6 +12,9 @@ parameters:
     darvin_content.sorting.twig_extension.class: Darvin\ContentBundle\Twig\Extension\SortingExtension
 
 services:
+    darvin_content.sorting.attribute_renderer:
+        class: '%darvin_content.sorting.attribute_renderer.class%'
+
     darvin_content.sorting.controller.reposition:
         class: '%darvin_content.sorting.controller.reposition.class%'
         tags:
@@ -31,6 +36,7 @@ services:
     darvin_content.sorting.twig_extension:
         class: '%darvin_content.sorting.twig_extension.class%'
         arguments:
+            - '@darvin_content.sorting.attribute_renderer'
             - '@darvin_content.sorting.sorter'
         tags:
             - { name: twig.extension }
