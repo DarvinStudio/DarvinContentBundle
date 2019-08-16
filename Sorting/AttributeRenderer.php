@@ -12,6 +12,7 @@ namespace Darvin\ContentBundle\Sorting;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Util\ClassUtils;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Sorting attribute renderer
@@ -24,11 +25,18 @@ class AttributeRenderer implements AttributeRendererInterface
     private $om;
 
     /**
-     * @param \Doctrine\Common\Persistence\ObjectManager $om Object manager
+     * @var \Symfony\Component\HttpFoundation\RequestStack
      */
-    public function __construct(ObjectManager $om)
+    private $requestStack;
+
+    /**
+     * @param \Doctrine\Common\Persistence\ObjectManager     $om           Object manager
+     * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack Request stack
+     */
+    public function __construct(ObjectManager $om, RequestStack $requestStack)
     {
         $this->om = $om;
+        $this->requestStack = $requestStack;
     }
 
     /**
@@ -36,14 +44,29 @@ class AttributeRenderer implements AttributeRendererInterface
      */
     public function renderContainerAttr(array $objects, array $attr = []): string
     {
-        if (!empty($objects)) {
-            $first = reset($objects);
-
-            $attr = array_merge($attr, [
-                'class'      => trim(sprintf('%s js-content-sortable', $attr['class'] ?? '')),
-                'data-class' => base64_encode(ClassUtils::getClass($first)),
-            ]);
+        if (empty($objects)) {
+            return $this->renderAttr($attr);
         }
+
+        $request = $this->requestStack->getCurrentRequest();
+
+        if (null === $request) {
+            return $this->renderAttr($attr);
+        }
+
+        $routeParams = $request->attributes->get('_route_params', []);
+
+        if (!isset($routeParams['slug'])) {
+            return $this->renderAttr($attr);
+        }
+
+        $first = reset($objects);
+
+        $attr = array_merge($attr, [
+            'class'      => trim(sprintf('%s js-content-sortable', $attr['class'] ?? '')),
+            'data-slug'  => $routeParams['slug'],
+            'data-class' => base64_encode(ClassUtils::getClass($first)),
+        ]);
 
         return $this->renderAttr($attr);
     }
