@@ -1,4 +1,5 @@
 darvin_content_sorting_reposition:
-    path:     /reposition
-    defaults: { _controller: darvin_content.sorting.controller.reposition }
-    methods:  [ post ]
+    path:      /reposition
+    defaults:  { _controller: darvin_content.sorting.controller.reposition }
+    methods:   [ post ]
+    condition: request.isXmlHttpRequest()
