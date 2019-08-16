@@ -24,6 +24,7 @@ services:
         class: '%darvin_content.sorting.controller.reposition.class%'
         arguments:
             - '@form.factory'
+            - '@darvin_content.sorting.repositioner'
         tags:
             - { name: controller.service_arguments }
 

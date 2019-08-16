@@ -10,10 +10,15 @@
 
 namespace Darvin\ContentBundle\Sorting\Reposition;
 
+use Darvin\ContentBundle\Sorting\Reposition\Model\Reposition;
+
 /**
  * Repositioner
  */
 interface RepositionerInterface
 {
-    public function reposition(): void;
+    /**
+     * @param \Darvin\ContentBundle\Sorting\Reposition\Model\Reposition $reposition Reposition
+     */
+    public function reposition(Reposition $reposition): void;
 }

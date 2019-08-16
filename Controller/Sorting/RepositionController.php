@@ -12,6 +12,7 @@ namespace Darvin\ContentBundle\Controller\Sorting;
 
 use Darvin\ContentBundle\Form\Type\Sorting\RepositionType;
 use Darvin\ContentBundle\Sorting\Reposition\Model\Reposition;
+use Darvin\ContentBundle\Sorting\Reposition\RepositionerInterface;
 use Darvin\Utils\HttpFoundation\AjaxResponse;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -29,11 +30,18 @@ class RepositionController
     private $formFactory;
 
     /**
-     * @param \Symfony\Component\Form\FormFactoryInterface $formFactory Form factory
+     * @var \Darvin\ContentBundle\Sorting\Reposition\RepositionerInterface
      */
-    public function __construct(FormFactoryInterface $formFactory)
+    private $repositioner;
+
+    /**
+     * @param \Symfony\Component\Form\FormFactoryInterface                   $formFactory  Form factory
+     * @param \Darvin\ContentBundle\Sorting\Reposition\RepositionerInterface $repositioner Repositioner
+     */
+    public function __construct(FormFactoryInterface $formFactory, RepositionerInterface $repositioner)
     {
         $this->formFactory = $formFactory;
+        $this->repositioner = $repositioner;
     }
 
     /**
@@ -48,6 +56,10 @@ class RepositionController
         $form = $this->formFactory->create(RepositionType::class, $reposition)->handleRequest($request);
 
         $success = $form->isValid();
+
+        if ($success) {
+            $this->repositioner->reposition($reposition);
+        }
 
         $message = $success
             ? 'content.sorting.reposition.success'

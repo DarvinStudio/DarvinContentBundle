@@ -10,6 +10,8 @@
 
 namespace Darvin\ContentBundle\Sorting\Reposition;
 
+use Darvin\ContentBundle\Sorting\Reposition\Model\Reposition;
+
 /**
  * Repositioner
  */
@@ -18,7 +20,7 @@ class Repositioner implements RepositionerInterface
     /**
      * {@inheritDoc}
      */
-    public function reposition(): void
+    public function reposition(Reposition $reposition): void
     {
 
     }
