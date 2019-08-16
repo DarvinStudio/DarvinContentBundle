@@ -89,7 +89,9 @@ class PositionRepository extends EntityRepository
      */
     private function addSlugFilter(QueryBuilder $qb, ?SlugMapItem $slug): PositionRepository
     {
-        $qb->andWhere('o.slug = :slug')->setParameter('slug', $slug);
+        null !== $slug
+            ? $qb->andWhere('o.slug = :slug')->setParameter('slug', $slug)
+            : $qb->andWhere('o.slug IS NULL');
 
         return $this;
     }
@@ -102,7 +104,9 @@ class PositionRepository extends EntityRepository
      */
     private function addTagFilter(QueryBuilder $qb, ?string $tag): PositionRepository
     {
-        $qb->andWhere('o.tag = :tag')->setParameter('tag', $tag);
+        null !== $tag
+             ? $qb->andWhere('o.tag = :tag')->setParameter('tag', $tag)
+             : $qb->andWhere('o.tag IS NULL');
 
         return $this;
     }
