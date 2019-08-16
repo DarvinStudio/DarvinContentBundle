@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Position
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Darvin\ContentBundle\Repository\PositionRepository")
  * @ORM\Table(name="content_position")
  */
 class Position
