@@ -1,6 +1,8 @@
 (() => {
     let init;
     (init = function (context) {
-        $(context || 'body').find('.js-content-sortable').sortable();
+        $(context || 'body').find('.js-content-sortable').sortable({
+            items: '[data-id]'
+        });
     })();
 })();
