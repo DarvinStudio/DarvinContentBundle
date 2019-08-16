@@ -21,6 +21,7 @@ class Reposition
      * @var string|null
      *
      * @Assert\Type("string")
+     * @Assert\Expression("null !== value or null !== this.getTag()")
      */
     private $slug;
 
@@ -28,6 +29,7 @@ class Reposition
      * @var string|null
      *
      * @Assert\Type("string")
+     * @Assert\Expression("null !== value or null !== this.getSlug()")
      */
     private $tag;
 
