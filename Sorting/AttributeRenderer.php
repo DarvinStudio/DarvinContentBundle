@@ -13,6 +13,7 @@ namespace Darvin\ContentBundle\Sorting;
 use Darvin\ContentBundle\Form\Type\Sorting\RepositionType;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Util\ClassUtils;
+use Knp\Component\Pager\Pagination\AbstractPagination;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
@@ -63,8 +64,20 @@ class AttributeRenderer implements AttributeRendererInterface
     /**
      * {@inheritDoc}
      */
-    public function renderContainerAttr(array $objects, ?string $tag = null, ?string $slug = null, array $attr = []): string
+    public function renderContainerAttr($objects, ?string $tag = null, ?string $slug = null, array $attr = []): string
     {
+        if (!is_array($objects) && !$objects instanceof AbstractPagination) {
+            throw new \InvalidArgumentException(sprintf('Objects must be array or instance of "%s", got "%s".', AbstractPagination::class, gettype($objects)));
+        }
+
+        $itemsPerPage = $page = null;
+
+        if ($objects instanceof AbstractPagination) {
+            $itemsPerPage = $objects->getItemNumberPerPage();
+            $page         = $objects->getCurrentPageNumber();
+
+            $objects = $objects->getItems();
+        }
         if (empty($objects)) {
             return $this->renderAttr($attr);
         }
@@ -86,12 +99,14 @@ class AttributeRenderer implements AttributeRendererInterface
         $first = reset($objects);
 
         return $this->renderAttr(array_merge($attr, [
-            'class'               => trim(sprintf('%s js-content-sortable', $attr['class'] ?? '')),
-            'data-reposition-url' => $this->router->generate('darvin_content_sorting_reposition'),
-            'data-slug'           => $slug,
-            'data-tag'            => $tag,
-            'data-class'          => base64_encode(ClassUtils::getClass($first)),
-            'data-csrf-token'     => $this->csrfTokenManager->getToken(RepositionType::CSRF_TOKEN_ID)->getValue(),
+            'class'                          => trim(sprintf('%s js-content-sortable', $attr['class'] ?? '')),
+            'data-reposition-url'            => $this->router->generate('darvin_content_sorting_reposition'),
+            'data-reposition-class'          => base64_encode(ClassUtils::getClass($first)),
+            'data-reposition-csrf'           => $this->csrfTokenManager->getToken(RepositionType::CSRF_TOKEN_ID)->getValue(),
+            'data-reposition-slug'           => $slug,
+            'data-reposition-tag'            => $tag,
+            'data-reposition-items-per-page' => $itemsPerPage,
+            'data-reposition-page'           => $page,
         ]));
     }
 

@@ -1,6 +1,6 @@
 (() => {
     const SELECTOR = {
-        container: '.js-content-sortable[data-reposition-url][data-class][data-csrf-token]',
+        container: '.js-content-sortable[data-reposition-url][data-reposition-class][data-reposition-csrf]',
         item:      '[data-id]'
     };
 
@@ -20,18 +20,24 @@
                 const options = $container.data();
 
                 let data = {
-                    'class': options.class,
+                    'class': options.repositionClass,
                     ids:     $items.map((i, item) => {
                         return $(item).data('id');
                     }).get(),
-                    _token: options.csrfToken
+                    _token: options.repositionCsrf
                 };
 
-                if (options.slug) {
-                    data.slug = options.slug;
-                }
-                if (options.tag) {
-                    data.tag = options.tag;
+                for (let name of [
+                    'Slug',
+                    'Tag',
+                    'ItemsPerPage',
+                    'Page',
+                ]) {
+                    name = 'reposition' + name;
+
+                    if (options[name]) {
+                        data[name] = options[name];
+                    }
                 }
 
                 $.ajax({
