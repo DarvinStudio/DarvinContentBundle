@@ -72,10 +72,10 @@ class AttributeRenderer implements AttributeRendererInterface
             $request = $this->requestStack->getCurrentRequest();
 
             if (null !== $request) {
-                $routeParams = $request->attributes->get('_route_params', []);
+                $params = $request->attributes->get('_route_params', []);
 
-                if (isset($routeParams['slug'])) {
-                    $slug = $routeParams['slug'];
+                if (isset($params['slug'])) {
+                    $slug = $params['slug'];
                 }
             }
         }

@@ -65,13 +65,6 @@ class Sorter implements SorterInterface
             }
         }
 
-        /** @var \Darvin\ContentBundle\Entity\SlugMapItem|null $slugObject */
-        $slugObject = $this->om->getRepository(SlugMapItem::class)->findOneBy(['slug' => $slug]);
-
-        if (null === $slugObject) {
-            return $objects;
-        }
-
         $first = reset($objects);
 
         $class = ClassUtils::getClass($first);
@@ -83,9 +76,10 @@ class Sorter implements SorterInterface
             $ids[] = $this->getObjectId($object, $meta);
         }
 
-        $sorted = [];
+        $positions = $this->getPositionRepository()->getPositions($this->om->getRepository(SlugMapItem::class)->findOneBy(['slug' => $slug]), $tag, $class, $ids);
+        $sorted    = [];
 
-        foreach ($this->getPositionRepository()->getPositions($slugObject, $tag, $class, $ids) as $id => $position) {
+        foreach ($positions as $id => $position) {
             foreach ($objects as $key => $object) {
                 if ((string)$this->getObjectId($object, $meta) === (string)$id) {
                     $sorted[$key] = $object;
