@@ -16,6 +16,7 @@ use Darvin\ContentBundle\Repository\PositionRepository;
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Util\ClassUtils;
+use Knp\Component\Pager\Pagination\AbstractPagination;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -48,6 +49,12 @@ class Sorter implements SorterInterface
      */
     public function sort(iterable $objects, ?string $tag = null, ?string $slug = null): array
     {
+        $offset = null;
+
+        if ($objects instanceof AbstractPagination && $objects->getCurrentPageNumber() > 1) {
+            $offset = $objects->getItemNumberPerPage() * ($objects->getCurrentPageNumber() - 1);
+        }
+
         $objects = $this->objectsToArray($objects);
 
         if (empty($objects)) {
