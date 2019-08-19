@@ -83,11 +83,9 @@ class Sorter implements SorterInterface
             $ids[] = $this->getObjectId($object, $meta);
         }
 
-        $positions = $this->getPositionRepository()->getPositions($slugObject, $tag, $class, $ids);
-
         $sorted = [];
 
-        foreach ($positions as $id => $position) {
+        foreach ($this->getPositionRepository()->getPositions($slugObject, $tag, $class, $ids) as $id => $position) {
             foreach ($objects as $key => $object) {
                 if ((string)$this->getObjectId($object, $meta) === (string)$id) {
                     $sorted[$key] = $object;
