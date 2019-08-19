@@ -72,9 +72,7 @@ class Sorter implements SorterInterface
             }
         }
 
-        $first = reset($objects);
-
-        $class = ClassUtils::getClass($first);
+        $class = ClassUtils::getClass(reset($objects));
 
         $meta = $this->om->getClassMetadata($class);
         $ids  = [];
@@ -107,11 +105,11 @@ class Sorter implements SorterInterface
                 if ((string)$this->getObjectId($object, $meta) === $sortedIds[$position]) {
                     $sortedObjects[$key] = $object;
 
-                    unset($objects[$key], $sortedIds[$position]);
-
-                    break;
+                    unset($objects[$key]);
                 }
             }
+
+            unset($sortedIds[$position]);
         }
         foreach ($sortedIds as $sortedId) {
             foreach ($objects as $key => $object) {
