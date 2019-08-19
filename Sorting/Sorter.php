@@ -123,7 +123,7 @@ class Sorter implements SorterInterface
             }
         }
 
-        return array_merge($sortedObjects, $objects);
+        return $sortedObjects + $objects;
     }
 
     /**
