@@ -65,14 +65,21 @@ class PositionRepository extends EntityRepository
         }
 
         $qb = $this->createDefaultBuilder()
-            ->select('o.objectId');
+            ->select('o.objectId')
+            ->addSelect('o.value');
         $this
             ->addSlugFilter($qb, $slug)
             ->addTagFilter($qb, $tag)
             ->addObjectClassFilter($qb, $objectClass)
             ->addObjectIdsFilter($qb, $objectIds);
 
-        return array_column($qb->getQuery()->getScalarResult(), 'objectId');
+        $ids = [];
+
+        foreach ($qb->getQuery()->getScalarResult() as $row) {
+            $ids[$row['value']] = $row['objectId'];
+        }
+
+        return $ids;
     }
 
     /**
