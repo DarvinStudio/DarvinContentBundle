@@ -16,15 +16,14 @@ namespace Darvin\ContentBundle\Sorting;
 interface AttributeRendererInterface
 {
     /**
-     * @param object[]|\Knp\Component\Pager\Pagination\AbstractPagination $objects Objects
-     * @param string|null                                                 $tag     Tag
-     * @param string|null                                                 $slug    Slug
-     * @param array                                                       $attr    Attributes
+     * @param iterable    $objects Objects
+     * @param string|null $tag     Tag
+     * @param string|null $slug    Slug
+     * @param array       $attr    Attributes
      *
      * @return string
-     * @throws \InvalidArgumentException
      */
-    public function renderContainerAttr($objects, ?string $tag = null, ?string $slug = null, array $attr = []): string;
+    public function renderContainerAttr(iterable $objects, ?string $tag = null, ?string $slug = null, array $attr = []): string;
 
     /**
      * @param object $object Object

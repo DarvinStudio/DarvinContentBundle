@@ -64,21 +64,16 @@ class AttributeRenderer implements AttributeRendererInterface
     /**
      * {@inheritDoc}
      */
-    public function renderContainerAttr($objects, ?string $tag = null, ?string $slug = null, array $attr = []): string
+    public function renderContainerAttr(iterable $objects, ?string $tag = null, ?string $slug = null, array $attr = []): string
     {
-        if (!is_array($objects) && !$objects instanceof AbstractPagination) {
-            throw new \InvalidArgumentException(sprintf('Objects must be array or instance of "%s", got "%s".', AbstractPagination::class, gettype($objects)));
-        }
-
         $offset = null;
 
-        if ($objects instanceof AbstractPagination) {
-            if ($objects->getCurrentPageNumber() > 1) {
-                $offset = $objects->getItemNumberPerPage() * ($objects->getCurrentPageNumber() - 1);
-            }
-
-            $objects = $objects->getItems();
+        if ($objects instanceof AbstractPagination && $objects->getCurrentPageNumber() > 1) {
+            $offset = $objects->getItemNumberPerPage() * ($objects->getCurrentPageNumber() - 1);
         }
+
+        $objects = $this->objectsToArray($objects);
+
         if (empty($objects)) {
             return $this->renderAttr($attr);
         }
@@ -141,5 +136,21 @@ class AttributeRenderer implements AttributeRendererInterface
         }
 
         return sprintf(' %s', implode(' ', $parts));
+    }
+
+    /**
+     * @param iterable $objects Objects
+     *
+     * @return array
+     */
+    private function objectsToArray(iterable $objects): array
+    {
+        $array = [];
+
+        foreach ($objects as $key => $object) {
+            $array[$key] = $object;
+        }
+
+        return $array;
     }
 }
