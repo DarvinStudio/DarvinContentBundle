@@ -33,7 +33,8 @@ class RepositionType extends AbstractType
             ->add('class')
             ->add('ids', CollectionType::class, [
                 'allow_add' => true,
-            ]);
+            ])
+            ->add('offset');
     }
 
     /**

@@ -61,6 +61,8 @@ class Repositioner implements RepositionerInterface
         $positions = $this->getPositionRepository()->getForRepositioner($slug, $reposition->getTag(), $class, $reposition->getIds());
 
         foreach (array_values($reposition->getIds()) as $value => $id) {
+            $value += (int)$reposition->getOffset();
+
             $position = $positions[$id] ?? new Position($slug, $class, $id, $value, $reposition->getTag());
             $position->setValue($value);
 

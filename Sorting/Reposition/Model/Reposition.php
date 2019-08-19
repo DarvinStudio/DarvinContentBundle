@@ -51,6 +51,14 @@ class Reposition
     private $ids;
 
     /**
+     * @var int|null
+     *
+     * @Assert\Type("integer")
+     * @Assert\GreaterThan(0)
+     */
+    private $offset;
+
+    /**
      * Reposition constructor.
      */
     public function __construct()
@@ -134,6 +142,26 @@ class Reposition
     public function setIds(array $ids): Reposition
     {
         $this->ids = $ids;
+
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getOffset(): ?int
+    {
+        return $this->offset;
+    }
+
+    /**
+     * @param int|null $offset offset
+     *
+     * @return Reposition
+     */
+    public function setOffset(?int $offset): Reposition
+    {
+        $this->offset = $offset;
 
         return $this;
     }

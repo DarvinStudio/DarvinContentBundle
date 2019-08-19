@@ -70,11 +70,12 @@ class AttributeRenderer implements AttributeRendererInterface
             throw new \InvalidArgumentException(sprintf('Objects must be array or instance of "%s", got "%s".', AbstractPagination::class, gettype($objects)));
         }
 
-        $itemsPerPage = $page = null;
+        $offset = null;
 
         if ($objects instanceof AbstractPagination) {
-            $itemsPerPage = $objects->getItemNumberPerPage();
-            $page         = $objects->getCurrentPageNumber();
+            if ($objects->getCurrentPageNumber() > 1) {
+                $offset = $objects->getItemNumberPerPage() * ($objects->getCurrentPageNumber() - 1);
+            }
 
             $objects = $objects->getItems();
         }
@@ -99,14 +100,13 @@ class AttributeRenderer implements AttributeRendererInterface
         $first = reset($objects);
 
         return $this->renderAttr(array_merge($attr, [
-            'class'                          => trim(sprintf('%s js-content-sortable', $attr['class'] ?? '')),
-            'data-reposition-url'            => $this->router->generate('darvin_content_sorting_reposition'),
-            'data-reposition-class'          => base64_encode(ClassUtils::getClass($first)),
-            'data-reposition-csrf'           => $this->csrfTokenManager->getToken(RepositionType::CSRF_TOKEN_ID)->getValue(),
-            'data-reposition-slug'           => $slug,
-            'data-reposition-tag'            => $tag,
-            'data-reposition-items-per-page' => $itemsPerPage,
-            'data-reposition-page'           => $page,
+            'class'                  => trim(sprintf('%s js-content-sortable', $attr['class'] ?? '')),
+            'data-reposition-url'    => $this->router->generate('darvin_content_sorting_reposition'),
+            'data-reposition-class'  => base64_encode(ClassUtils::getClass($first)),
+            'data-reposition-csrf'   => $this->csrfTokenManager->getToken(RepositionType::CSRF_TOKEN_ID)->getValue(),
+            'data-reposition-slug'   => $slug,
+            'data-reposition-tag'    => $tag,
+            'data-reposition-offset' => $offset,
         ]));
     }
 

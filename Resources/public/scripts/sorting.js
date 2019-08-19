@@ -30,8 +30,7 @@
                 for (let name of [
                     'Slug',
                     'Tag',
-                    'ItemsPerPage',
-                    'Page',
+                    'Offset',
                 ]) {
                     name = 'reposition' + name;
 
