@@ -113,9 +113,9 @@ class Sorter implements SorterInterface
                 }
             }
         }
-        foreach ($sortedIds as $id) {
+        foreach ($sortedIds as $sortedId) {
             foreach ($objects as $key => $object) {
-                if ((string)$this->getObjectId($object, $meta) === $id) {
+                if ((string)$this->getObjectId($object, $meta) === $sortedId) {
                     $sortedObjects[$key] = $object;
 
                     unset($objects[$key]);
