@@ -28,14 +28,14 @@
                 };
 
                 for (let name of [
-                    'Slug',
-                    'Tag',
-                    'Offset',
+                    'slug',
+                    'tag',
+                    'offset',
                 ]) {
-                    name = 'reposition' + name;
+                    let optionName = 'reposition' + name.charAt(0).toUpperCase() + name.slice(1);
 
-                    if (options[name]) {
-                        data[name] = options[name];
+                    if (options[optionName]) {
+                        data[name] = options[optionName];
                     }
                 }
 
