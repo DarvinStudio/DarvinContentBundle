@@ -13,6 +13,7 @@ namespace Darvin\ContentBundle\Sorting;
 use Darvin\ContentBundle\Entity\Position;
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Repository\PositionRepository;
+use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Util\ClassUtils;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -47,13 +48,7 @@ class Sorter implements SorterInterface
      */
     public function sort(iterable $objects, ?string $tag = null, ?string $slug = null): array
     {
-        $objectArray = [];
-
-        foreach ($objects as $key => $object) {
-            $objectArray[$key] = $object;
-        }
-
-        $objects = $objectArray;
+        $objects = $this->objectsToArray($objects);
 
         if (empty($objects)) {
             return [];
@@ -62,10 +57,10 @@ class Sorter implements SorterInterface
             $request = $this->requestStack->getCurrentRequest();
 
             if (null !== $request) {
-                $routeParams = $request->attributes->get('_route_params', []);
+                $params = $request->attributes->get('_route_params', []);
 
-                if (isset($routeParams['slug'])) {
-                    $slug = $routeParams['slug'];
+                if (isset($params['slug'])) {
+                    $slug = $params['slug'];
                 }
             }
         }
@@ -85,9 +80,7 @@ class Sorter implements SorterInterface
         $ids  = [];
 
         foreach ($objects as $object) {
-            $identifierValues = $meta->getIdentifierValues($object);
-
-            $ids[] = reset($identifierValues);
+            $ids[] = $this->getObjectId($object, $meta);
         }
 
         $positions = $this->getPositionRepository()->getPositions($slugObject, $tag, $class, $ids);
@@ -96,9 +89,7 @@ class Sorter implements SorterInterface
 
         foreach ($positions as $id => $position) {
             foreach ($objects as $key => $object) {
-                $identifierValues = $meta->getIdentifierValues($object);
-
-                if ((string)reset($identifierValues) === (string)$id) {
+                if ((string)$this->getObjectId($object, $meta) === (string)$id) {
                     $sorted[$key] = $object;
 
                     unset($objects[$key]);
@@ -107,6 +98,35 @@ class Sorter implements SorterInterface
         }
 
         return array_merge($sorted, $objects);
+    }
+
+    /**
+     * @param object                                             $object Object
+     * @param \Doctrine\Common\Persistence\Mapping\ClassMetadata $meta   Metadata
+     *
+     * @return mixed
+     */
+    private function getObjectId($object, ClassMetadata $meta)
+    {
+        $ids = $meta->getIdentifierValues($object);
+
+        return reset($ids);
+    }
+
+    /**
+     * @param iterable $objects Objects
+     *
+     * @return array
+     */
+    private function objectsToArray(iterable $objects): array
+    {
+        $array = [];
+
+        foreach ($objects as $key => $object) {
+            $array[$key] = $object;
+        }
+
+        return $array;
     }
 
     /**
