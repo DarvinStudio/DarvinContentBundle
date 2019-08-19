@@ -76,12 +76,12 @@ class Sorter implements SorterInterface
             $ids[] = $this->getObjectId($object, $meta);
         }
 
-        $positions = $this->getPositionRepository()->getPositions($this->om->getRepository(SlugMapItem::class)->findOneBy(['slug' => $slug]), $tag, $class, $ids);
+        $positions = $this->getPositionRepository()->getObjectIdsForSorter($this->om->getRepository(SlugMapItem::class)->findOneBy(['slug' => $slug]), $tag, $class, $ids);
         $sorted    = [];
 
-        foreach ($positions as $id => $position) {
+        foreach ($positions as $id) {
             foreach ($objects as $key => $object) {
-                if ((string)$this->getObjectId($object, $meta) === (string)$id) {
+                if ((string)$this->getObjectId($object, $meta) === $id) {
                     $sorted[$key] = $object;
 
                     unset($objects[$key]);

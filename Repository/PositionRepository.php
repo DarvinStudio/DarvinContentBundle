@@ -27,7 +27,7 @@ class PositionRepository extends EntityRepository
      *
      * @return \Darvin\ContentBundle\Entity\Position[]
      */
-    public function getPositions(?SlugMapItem $slug, ?string $tag, string $objectClass, array $objectIds): array
+    public function getForRepositioner(?SlugMapItem $slug, ?string $tag, string $objectClass, array $objectIds): array
     {
         if (empty($objectIds)) {
             return [];
@@ -48,6 +48,31 @@ class PositionRepository extends EntityRepository
         }
 
         return $positions;
+    }
+
+    /**
+     * @param \Darvin\ContentBundle\Entity\SlugMapItem|null $slug        Slug
+     * @param string|null                                   $tag         Tag
+     * @param string                                        $objectClass Object class
+     * @param string[]                                      $objectIds   Object IDs
+     *
+     * @return array
+     */
+    public function getObjectIdsForSorter(?SlugMapItem $slug, ?string $tag, string $objectClass, array $objectIds): array
+    {
+        if (empty($objectIds)) {
+            return [];
+        }
+
+        $qb = $this->createDefaultBuilder()
+            ->select('o.objectId');
+        $this
+            ->addSlugFilter($qb, $slug)
+            ->addTagFilter($qb, $tag)
+            ->addObjectClassFilter($qb, $objectClass)
+            ->addObjectIdsFilter($qb, $objectIds);
+
+        return array_column($qb->getQuery()->getScalarResult(), 'objectId');
     }
 
     /**

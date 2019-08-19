@@ -58,7 +58,7 @@ class Repositioner implements RepositionerInterface
             throw new \InvalidArgumentException(sprintf('Slug "%s" does not exist.', $reposition->getSlug()));
         }
 
-        $positions = $this->getPositionRepository()->getPositions($slug, $reposition->getTag(), $class, $reposition->getIds());
+        $positions = $this->getPositionRepository()->getForRepositioner($slug, $reposition->getTag(), $class, $reposition->getIds());
 
         foreach (array_values($reposition->getIds()) as $value => $id) {
             $position = $positions[$id] ?? new Position($slug, $class, $id, $value, $reposition->getTag());
