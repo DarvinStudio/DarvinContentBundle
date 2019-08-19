@@ -17,10 +17,10 @@ interface SorterInterface
 {
     /**
      * @param iterable    $objects Objects
-     * @param string|null $tag     Tag
+     * @param array       $tags    Tags
      * @param string|null $slug    Slug
      *
      * @return array
      */
-    public function sort(iterable $objects, ?string $tag = null, ?string $slug = null): array;
+    public function sort(iterable $objects, array $tags = [], ?string $slug = null): array;
 }

@@ -47,7 +47,7 @@ class Sorter implements SorterInterface
     /**
      * {@inheritDoc}
      */
-    public function sort(iterable $objects, ?string $tag = null, ?string $slug = null): array
+    public function sort(iterable $objects, array $tags = [], ?string $slug = null): array
     {
         $offset = null;
 
@@ -81,7 +81,7 @@ class Sorter implements SorterInterface
             $ids[] = $this->getObjectId($object, $meta);
         }
 
-        $sortedIds = $this->getPositionRepository()->getObjectIdsForSorter($this->om->getRepository(SlugMapItem::class)->findOneBy(['slug' => $slug]), $tag, $class, $ids);
+        $sortedIds = $this->getPositionRepository()->getObjectIdsForSorter($this->om->getRepository(SlugMapItem::class)->findOneBy(['slug' => $slug]), $tags, $class, $ids);
 
         $count         = count($objects);
         $keys          = array_keys($objects);

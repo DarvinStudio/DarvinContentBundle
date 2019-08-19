@@ -64,7 +64,7 @@ class AttributeRenderer implements AttributeRendererInterface
     /**
      * {@inheritDoc}
      */
-    public function renderContainerAttr(iterable $objects, ?string $tag = null, ?string $slug = null, array $attr = []): string
+    public function renderContainerAttr(iterable $objects, array $tags = [], ?string $slug = null, array $attr = []): string
     {
         $offset = null;
 
@@ -88,7 +88,7 @@ class AttributeRenderer implements AttributeRendererInterface
                 }
             }
         }
-        if (null === $slug && null === $tag) {
+        if (null === $slug && empty($tags)) {
             return $this->renderAttr($attr);
         }
 
@@ -100,7 +100,7 @@ class AttributeRenderer implements AttributeRendererInterface
             'data-reposition-class'  => base64_encode(ClassUtils::getClass($first)),
             'data-reposition-csrf'   => $this->csrfTokenManager->getToken(RepositionType::CSRF_TOKEN_ID)->getValue(),
             'data-reposition-slug'   => $slug,
-            'data-reposition-tag'    => $tag,
+            'data-reposition-tags'   => $tags,
             'data-reposition-offset' => $offset,
         ]));
     }
@@ -127,6 +127,13 @@ class AttributeRenderer implements AttributeRendererInterface
         $parts = [];
 
         foreach ($attr as $name => $value) {
+            if (is_array($value)) {
+                if (empty($value)) {
+                    continue;
+                }
+
+                $value = json_encode($value);
+            }
             if (null !== $value) {
                 $parts[] = sprintf('%s="%s"', $name, htmlspecialchars((string)$value));
             }

@@ -17,13 +17,13 @@ interface AttributeRendererInterface
 {
     /**
      * @param iterable    $objects Objects
-     * @param string|null $tag     Tag
+     * @param array       $tags    Tags
      * @param string|null $slug    Slug
      * @param array       $attr    Attributes
      *
      * @return string
      */
-    public function renderContainerAttr(iterable $objects, ?string $tag = null, ?string $slug = null, array $attr = []): string;
+    public function renderContainerAttr(iterable $objects, array $tags = [], ?string $slug = null, array $attr = []): string;
 
     /**
      * @param object $object Object

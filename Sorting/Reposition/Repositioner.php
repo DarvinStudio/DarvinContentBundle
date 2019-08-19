@@ -42,8 +42,8 @@ class Repositioner implements RepositionerInterface
         if (0 === count($reposition->getIds())) {
             return;
         }
-        if (null === $reposition->getSlug() && null === $reposition->getTag()) {
-            throw new \InvalidArgumentException('Reposition slug or tag must be provided.');
+        if (null === $reposition->getSlug() && !$reposition->hasTags()) {
+            throw new \InvalidArgumentException('Reposition slug or tags must be provided.');
         }
 
         $class = base64_decode(urldecode((string)$reposition->getClass()));
@@ -58,12 +58,12 @@ class Repositioner implements RepositionerInterface
             throw new \InvalidArgumentException(sprintf('Slug "%s" does not exist.', $reposition->getSlug()));
         }
 
-        $positions = $this->getPositionRepository()->getForRepositioner($slug, $reposition->getTag(), $class, $reposition->getIds());
+        $positions = $this->getPositionRepository()->getForRepositioner($slug, $reposition->getTags(), $class, $reposition->getIds());
 
         foreach (array_values($reposition->getIds()) as $value => $id) {
             $value += (int)$reposition->getOffset();
 
-            $position = $positions[$id] ?? new Position($slug, $class, $id, $value, $reposition->getTag());
+            $position = $positions[$id] ?? new Position($slug, $class, $id, $value, $reposition->getTags());
             $position->setValue($value);
 
             $this->em->persist($position);

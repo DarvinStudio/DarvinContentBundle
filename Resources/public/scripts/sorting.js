@@ -29,7 +29,7 @@
 
                 for (let name of [
                     'slug',
-                    'tag',
+                    'tags',
                     'offset',
                 ]) {
                     let optionName = 'reposition' + name.charAt(0).toUpperCase() + name.slice(1);

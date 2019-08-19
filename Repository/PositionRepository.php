@@ -21,13 +21,13 @@ class PositionRepository extends EntityRepository
 {
     /**
      * @param \Darvin\ContentBundle\Entity\SlugMapItem|null $slug        Slug
-     * @param string|null                                   $tag         Tag
+     * @param array                                         $tags        Tags
      * @param string                                        $objectClass Object class
      * @param string[]                                      $objectIds   Object IDs
      *
      * @return \Darvin\ContentBundle\Entity\Position[]
      */
-    public function getForRepositioner(?SlugMapItem $slug, ?string $tag, string $objectClass, array $objectIds): array
+    public function getForRepositioner(?SlugMapItem $slug, array $tags, string $objectClass, array $objectIds): array
     {
         if (empty($objectIds)) {
             return [];
@@ -36,7 +36,7 @@ class PositionRepository extends EntityRepository
         $qb = $this->createDefaultBuilder();
         $this
             ->addSlugFilter($qb, $slug)
-            ->addTagFilter($qb, $tag)
+            ->addTagsFilter($qb, $tags)
             ->addObjectClassFilter($qb, $objectClass)
             ->addObjectIdsFilter($qb, $objectIds);
 
@@ -52,13 +52,13 @@ class PositionRepository extends EntityRepository
 
     /**
      * @param \Darvin\ContentBundle\Entity\SlugMapItem|null $slug        Slug
-     * @param string|null                                   $tag         Tag
+     * @param array                                         $tags        Tags
      * @param string                                        $objectClass Object class
      * @param string[]                                      $objectIds   Object IDs
      *
      * @return array
      */
-    public function getObjectIdsForSorter(?SlugMapItem $slug, ?string $tag, string $objectClass, array $objectIds): array
+    public function getObjectIdsForSorter(?SlugMapItem $slug, array $tags, string $objectClass, array $objectIds): array
     {
         if (empty($objectIds)) {
             return [];
@@ -69,7 +69,7 @@ class PositionRepository extends EntityRepository
             ->addSelect('o.value');
         $this
             ->addSlugFilter($qb, $slug)
-            ->addTagFilter($qb, $tag)
+            ->addTagsFilter($qb, $tags)
             ->addObjectClassFilter($qb, $objectClass)
             ->addObjectIdsFilter($qb, $objectIds);
 
@@ -129,16 +129,14 @@ class PositionRepository extends EntityRepository
     }
 
     /**
-     * @param \Doctrine\ORM\QueryBuilder $qb  Query builder
-     * @param string|null                $tag Tag
+     * @param \Doctrine\ORM\QueryBuilder $qb   Query builder
+     * @param array                      $tags Tags
      *
      * @return PositionRepository
      */
-    private function addTagFilter(QueryBuilder $qb, ?string $tag): PositionRepository
+    private function addTagsFilter(QueryBuilder $qb, array $tags): PositionRepository
     {
-        null !== $tag
-             ? $qb->andWhere('o.tag = :tag')->setParameter('tag', $tag)
-             : $qb->andWhere('o.tag IS NULL');
+        $qb->andWhere('o.tags = :tags')->setParameter('tags', serialize($tags));
 
         return $this;
     }

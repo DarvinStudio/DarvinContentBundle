@@ -38,11 +38,11 @@ class Position
     private $slug;
 
     /**
-     * @var string|null
+     * @var array
      *
-     * @ORM\Column(nullable=true)
+     * @ORM\Column(type="array")
      */
-    private $tag;
+    private $tags;
 
     /**
      * @var string
@@ -70,12 +70,12 @@ class Position
      * @param string                                   $objectClass Object class
      * @param string                                   $objectId    Object ID
      * @param int                                      $value       Value
-     * @param string|null                              $tag         Tag
+     * @param array                                    $tags        Tags
      */
-    public function __construct(SlugMapItem $slug, string $objectClass, string $objectId, int $value, ?string $tag = null)
+    public function __construct(SlugMapItem $slug, string $objectClass, string $objectId, int $value, array $tags = [])
     {
         $this->slug = $slug;
-        $this->tag = $tag;
+        $this->tags = $tags;
         $this->objectClass = $objectClass;
         $this->objectId = $objectId;
         $this->value = $value;
@@ -98,11 +98,11 @@ class Position
     }
 
     /**
-     * @return string|null
+     * @return array
      */
-    public function getTag(): ?string
+    public function getTags(): array
     {
-        return $this->tag;
+        return $this->tags;
     }
 
     /**

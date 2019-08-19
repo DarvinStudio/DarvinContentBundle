@@ -21,17 +21,17 @@ class Reposition
      * @var string|null
      *
      * @Assert\Type("string")
-     * @Assert\Expression("null !== value or null !== this.getTag()")
+     * @Assert\Expression("null !== value or this.hasTags()")
      */
     private $slug;
 
     /**
-     * @var string|null
+     * @var array
      *
-     * @Assert\Type("string")
-     * @Assert\Expression("null !== value or null !== this.getSlug()")
+     * @Assert\Type("array")
+     * @Assert\Expression("this.hasTags() or null !== this.getSlug()")
      */
-    private $tag;
+    private $tags;
 
     /**
      * @var string
@@ -63,7 +63,15 @@ class Reposition
      */
     public function __construct()
     {
-        $this->ids = [];
+        $this->tags = $this->ids = [];
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasTags(): bool
+    {
+        return !empty($this->tags);
     }
 
     /**
@@ -87,21 +95,21 @@ class Reposition
     }
 
     /**
-     * @return string|null
+     * @return array
      */
-    public function getTag(): ?string
+    public function getTags(): array
     {
-        return $this->tag;
+        return $this->tags;
     }
 
     /**
-     * @param string|null $tag tag
+     * @param array $tags tags
      *
      * @return Reposition
      */
-    public function setTag(?string $tag): Reposition
+    public function setTags(array $tags): Reposition
     {
-        $this->tag = $tag;
+        $this->tags = $tags;
 
         return $this;
     }

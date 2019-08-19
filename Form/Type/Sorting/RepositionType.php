@@ -30,6 +30,9 @@ class RepositionType extends AbstractType
     {
         $builder
             ->add('slug')
+            ->add('tags', CollectionType::class, [
+                'allow_add' => true,
+            ])
             ->add('class')
             ->add('ids', CollectionType::class, [
                 'allow_add' => true,
