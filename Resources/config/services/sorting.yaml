@@ -5,6 +5,8 @@ parameters:
 
     darvin_content.sorting.repositioner.class: Darvin\ContentBundle\Sorting\Reposition\Repositioner
 
+    darvin_content.sorting.security.voter.reposition.class: Darvin\ContentBundle\Security\Voter\Sorting\RepositionVoter
+
     darvin_content.sorting.sort_entity_joiner.class: Darvin\ContentBundle\Sorting\SortEntityJoiner
 
     darvin_content.sorting.sorter.class: Darvin\ContentBundle\Sorting\Sorter
@@ -32,6 +34,14 @@ services:
         class: '%darvin_content.sorting.repositioner.class%'
         arguments:
             - '@doctrine.orm.entity_manager'
+
+    darvin_content.sorting.security.voter.reposition:
+        class: '%darvin_content.sorting.security.voter.reposition.class%'
+        arguments:
+            - '@security.authorization_checker'
+            - '%darvin_content.sorting.reposition.required_permissions%'
+        tags:
+            - { name: security.voter }
 
     darvin_content.sorting.sort_entity_joiner:
         class: '%darvin_content.sorting.sort_entity_joiner.class%'
