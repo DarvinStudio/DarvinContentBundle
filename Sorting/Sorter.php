@@ -50,19 +50,17 @@ class Sorter implements SorterInterface
      */
     public function addOrderByClause(QueryBuilder $qb, array $tags = [], ?string $slug = null): QueryBuilder
     {
-        if (null === $slug) {
-            $slug = $this->getSlugFromRequest();
-        }
-
         $classes = $qb->getRootEntities();
 
-        $sortedIds = $this->getPositionRepository()->getObjectIdsForSorter($this->om->getRepository(SlugMapItem::class)->findOneBy(['slug' => $slug]), $tags, reset($classes));
+        $class = reset($classes);
 
-        if (!empty($sortedIds)) {
+        $ids = $this->getPositionRepository()->getObjectIdsForSorter($this->getSlugObject($slug), $tags, $class);
+
+        if (!empty($ids)) {
             $aliases     = $qb->getRootAliases();
-            $identifiers = $this->om->getClassMetadata(reset($classes))->getIdentifier();
+            $identifiers = $qb->getEntityManager()->getClassMetadata($class)->getIdentifier();
 
-            $qb->orderBy(sprintf('FIELD(%s.%s, %s)', reset($aliases), reset($identifiers), implode(', ', $sortedIds)));
+            $qb->orderBy(sprintf('FIELD(%s.%s, %s)', reset($aliases), reset($identifiers), implode(', ', $ids)));
         }
 
         return $qb;
@@ -84,26 +82,23 @@ class Sorter implements SorterInterface
         if (empty($objects)) {
             return [];
         }
-        if (null === $slug) {
-            $slug = $this->getSlugFromRequest();
-        }
 
         $class = ClassUtils::getClass(reset($objects));
 
-        $count         = count($objects);
-        $keys          = array_keys($objects);
-        $meta          = $this->om->getClassMetadata($class);
-        $sortedIds     = $this->getPositionRepository()->getObjectIdsForSorter($this->om->getRepository(SlugMapItem::class)->findOneBy(['slug' => $slug]), $tags, $class);
-        $sortedObjects = [];
+        $count  = count($objects);
+        $ids    = $this->getPositionRepository()->getObjectIdsForSorter($this->getSlugObject($slug), $tags, $class);
+        $keys   = array_keys($objects);
+        $meta   = $this->om->getClassMetadata($class);
+        $sorted = [];
 
         for ($i = 0; $i < $count; $i++) {
             $position = $i + (int)$offset;
 
-            if (!isset($sortedIds[$position])) {
+            if (!isset($ids[$position])) {
                 $key = $keys[$i];
 
                 if (isset($objects[$key])) {
-                    $sortedObjects[$key] = $objects[$key];
+                    $sorted[$key] = $objects[$key];
 
                     unset($objects[$key]);
                 }
@@ -111,26 +106,26 @@ class Sorter implements SorterInterface
                 continue;
             }
             foreach ($objects as $key => $object) {
-                if ((string)$this->getObjectId($object, $meta) === $sortedIds[$position]) {
-                    $sortedObjects[$key] = $object;
+                if ((string)$this->getObjectId($object, $meta) === $ids[$position]) {
+                    $sorted[$key] = $object;
 
                     unset($objects[$key]);
                 }
             }
 
-            unset($sortedIds[$position]);
+            unset($ids[$position]);
         }
-        foreach ($sortedIds as $sortedId) {
+        foreach ($ids as $id) {
             foreach ($objects as $key => $object) {
-                if ((string)$this->getObjectId($object, $meta) === $sortedId) {
-                    $sortedObjects[$key] = $object;
+                if ((string)$this->getObjectId($object, $meta) === $id) {
+                    $sorted[$key] = $object;
 
                     unset($objects[$key]);
                 }
             }
         }
 
-        return $sortedObjects + $objects;
+        return $sorted + $objects;
     }
 
     /**
@@ -147,19 +142,28 @@ class Sorter implements SorterInterface
     }
 
     /**
-     * @return string|null
+     * @param string|null $slug Slug string
+     *
+     * @return \Darvin\ContentBundle\Entity\SlugMapItem|null
      */
-    private function getSlugFromRequest(): ?string
+    private function getSlugObject(?string $slug): ?SlugMapItem
     {
-        $request = $this->requestStack->getCurrentRequest();
+        if (null === $slug) {
+            $request = $this->requestStack->getCurrentRequest();
 
-        if (null === $request) {
-            return null;
+            if (null !== $request) {
+                $params = $request->attributes->get('_route_params', []);
+
+                if (isset($params['slug'])) {
+                    $slug = $params['slug'];
+                }
+            }
+        }
+        if (null !== $slug) {
+            return $this->om->getRepository(SlugMapItem::class)->findOneBy(['slug' => $slug]);
         }
 
-        $params = $request->attributes->get('_route_params', []);
-
-        return $params['slug'] ?? null;
+        return null;
     }
 
     /**
