@@ -54,24 +54,18 @@ class PositionRepository extends EntityRepository
      * @param \Darvin\ContentBundle\Entity\SlugMapItem|null $slug        Slug
      * @param array                                         $tags        Tags
      * @param string                                        $objectClass Object class
-     * @param string[]                                      $objectIds   Object IDs
      *
      * @return array
      */
-    public function getObjectIdsForSorter(?SlugMapItem $slug, array $tags, string $objectClass, array $objectIds): array
+    public function getObjectIdsForSorter(?SlugMapItem $slug, array $tags, string $objectClass): array
     {
-        if (empty($objectIds)) {
-            return [];
-        }
-
         $qb = $this->createDefaultBuilder()
-            ->select('o.objectId')
-            ->addSelect('o.value');
+            ->select('o.value')
+            ->addSelect('o.objectId');
         $this
             ->addSlugFilter($qb, $slug)
             ->addTagsFilter($qb, $tags)
-            ->addObjectClassFilter($qb, $objectClass)
-            ->addObjectIdsFilter($qb, $objectIds);
+            ->addObjectClassFilter($qb, $objectClass);
 
         $ids = [];
 
