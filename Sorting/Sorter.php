@@ -68,10 +68,13 @@ class Sorter implements SorterInterface
     /**
      * {@inheritDoc}
      */
-    public function sort(iterable $objects, array $tags = [], ?string $slug = null): array
+    public function sort(iterable $target, array $tags = [], ?string $slug = null): array
     {
-        $objects = $this->objectsToArray($objects);
+        $objects = [];
 
+        foreach ($target as $key => $object) {
+            $objects[$key] = $object;
+        }
         if (empty($objects)) {
             return [];
         }
@@ -130,22 +133,6 @@ class Sorter implements SorterInterface
         }
 
         return null;
-    }
-
-    /**
-     * @param iterable $objects Objects
-     *
-     * @return array
-     */
-    private function objectsToArray(iterable $objects): array
-    {
-        $array = [];
-
-        foreach ($objects as $key => $object) {
-            $array[$key] = $object;
-        }
-
-        return $array;
     }
 
     /**

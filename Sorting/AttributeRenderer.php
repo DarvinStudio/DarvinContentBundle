@@ -13,6 +13,8 @@ namespace Darvin\ContentBundle\Sorting;
 use Darvin\ContentBundle\Form\Type\Sorting\RepositionType;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Util\ClassUtils;
+use Knp\Component\Pager\Pagination\AbstractPagination;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
@@ -63,10 +65,24 @@ class AttributeRenderer implements AttributeRendererInterface
     /**
      * {@inheritDoc}
      */
-    public function renderContainerAttr(iterable $objects, array $tags = [], ?string $slug = null, array $attr = []): string
+    public function renderContainerAttr(iterable $target, array $tags = [], ?string $slug = null, array $attr = []): string
     {
-        $objects = $this->objectsToArray($objects);
+        if ($target instanceof AbstractPagination) {
+            $request = $this->requestStack->getCurrentRequest();
 
+            if (null === $request
+                || 0 !== $request->query->getInt($target->getPaginatorOption(PaginatorInterface::PAGE_PARAMETER_NAME), -1)
+                || $request->query->has($target->getPaginatorOption(PaginatorInterface::SORT_FIELD_PARAMETER_NAME))
+            ) {
+                return $this->renderAttr($attr);
+            }
+        }
+
+        $objects = [];
+
+        foreach ($target as $key => $object) {
+            $objects[$key] = $object;
+        }
         if (empty($objects)) {
             return $this->renderAttr($attr);
         }
@@ -135,21 +151,5 @@ class AttributeRenderer implements AttributeRendererInterface
         }
 
         return sprintf(' %s', implode(' ', $parts));
-    }
-
-    /**
-     * @param iterable $objects Objects
-     *
-     * @return array
-     */
-    private function objectsToArray(iterable $objects): array
-    {
-        $array = [];
-
-        foreach ($objects as $key => $object) {
-            $array[$key] = $object;
-        }
-
-        return $array;
     }
 }

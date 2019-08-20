@@ -27,11 +27,11 @@ interface SorterInterface
     public function addOrderByClause(QueryBuilder $qb, array $tags = [], ?string $slug = null): QueryBuilder;
 
     /**
-     * @param iterable    $objects Objects
-     * @param array       $tags    Tags
-     * @param string|null $slug    Slug
+     * @param iterable    $target Target
+     * @param array       $tags   Tags
+     * @param string|null $slug   Slug
      *
      * @return array
      */
-    public function sort(iterable $objects, array $tags = [], ?string $slug = null): array;
+    public function sort(iterable $target, array $tags = [], ?string $slug = null): array;
 }
