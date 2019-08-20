@@ -11,12 +11,14 @@
 namespace Darvin\ContentBundle\Sorting;
 
 use Darvin\ContentBundle\Form\Type\Sorting\RepositionType;
+use Darvin\ContentBundle\Security\Voter\Sorting\RepositionVoter;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Util\ClassUtils;
 use Knp\Component\Pager\Pagination\AbstractPagination;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
@@ -24,6 +26,11 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
  */
 class AttributeRenderer implements AttributeRendererInterface
 {
+    /**
+     * @var \Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface
+     */
+    private $authorizationChecker;
+
     /**
      * @var \Symfony\Component\Security\Csrf\CsrfTokenManagerInterface
      */
@@ -45,17 +52,20 @@ class AttributeRenderer implements AttributeRendererInterface
     private $router;
 
     /**
-     * @param \Symfony\Component\Security\Csrf\CsrfTokenManagerInterface $csrfTokenManager CSRF token manager
-     * @param \Doctrine\Common\Persistence\ObjectManager                 $om               Object manager
-     * @param \Symfony\Component\HttpFoundation\RequestStack             $requestStack     Request stack
-     * @param \Symfony\Component\Routing\RouterInterface                 $router           Router
+     * @param \Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface $authorizationChecker Authorization checker
+     * @param \Symfony\Component\Security\Csrf\CsrfTokenManagerInterface                   $csrfTokenManager     CSRF token manager
+     * @param \Doctrine\Common\Persistence\ObjectManager                                   $om                   Object manager
+     * @param \Symfony\Component\HttpFoundation\RequestStack                               $requestStack         Request stack
+     * @param \Symfony\Component\Routing\RouterInterface                                   $router               Router
      */
     public function __construct(
+        AuthorizationCheckerInterface $authorizationChecker,
         CsrfTokenManagerInterface $csrfTokenManager,
         ObjectManager $om,
         RequestStack $requestStack,
         RouterInterface $router
     ) {
+        $this->authorizationChecker = $authorizationChecker;
         $this->csrfTokenManager = $csrfTokenManager;
         $this->om = $om;
         $this->requestStack = $requestStack;
@@ -67,6 +77,22 @@ class AttributeRenderer implements AttributeRendererInterface
      */
     public function renderContainerAttr(iterable $target, array $tags = [], ?string $slug = null, array $attr = []): string
     {
+        $objects = [];
+
+        foreach ($target as $key => $object) {
+            $objects[$key] = $object;
+        }
+        if (empty($objects)) {
+            return $this->renderAttr($attr);
+        }
+
+        $first = reset($objects);
+
+        $class = ClassUtils::getClass($first);
+
+        if (!$this->authorizationChecker->isGranted(RepositionVoter::REPOSITION, $class)) {
+            return $this->renderAttr($attr);
+        }
         if ($target instanceof AbstractPagination) {
             $request = $this->requestStack->getCurrentRequest();
 
@@ -76,15 +102,6 @@ class AttributeRenderer implements AttributeRendererInterface
             ) {
                 return $this->renderAttr($attr);
             }
-        }
-
-        $objects = [];
-
-        foreach ($target as $key => $object) {
-            $objects[$key] = $object;
-        }
-        if (empty($objects)) {
-            return $this->renderAttr($attr);
         }
         if (null === $slug) {
             $request = $this->requestStack->getCurrentRequest();
@@ -101,12 +118,10 @@ class AttributeRenderer implements AttributeRendererInterface
             return $this->renderAttr($attr);
         }
 
-        $first = reset($objects);
-
         return $this->renderAttr(array_merge($attr, [
             'class'                 => trim(sprintf('%s js-content-sortable', $attr['class'] ?? '')),
             'data-reposition-url'   => $this->router->generate('darvin_content_sorting_reposition'),
-            'data-reposition-class' => base64_encode(ClassUtils::getClass($first)),
+            'data-reposition-class' => base64_encode($class),
             'data-reposition-csrf'  => $this->csrfTokenManager->getToken(RepositionType::CSRF_TOKEN_ID)->getValue(),
             'data-reposition-slug'  => $slug,
             'data-reposition-tags'  => $tags,
@@ -118,11 +133,15 @@ class AttributeRenderer implements AttributeRendererInterface
      */
     public function renderItemAttr($object, array $attr = []): string
     {
-        $ids = $this->om->getClassMetadata(ClassUtils::getClass($object))->getIdentifierValues($object);
+        $class = ClassUtils::getClass($object);
 
-        return $this->renderAttr(array_merge($attr, [
-            'data-id' => reset($ids),
-        ]));
+        $ids = $this->om->getClassMetadata($class)->getIdentifierValues($object);
+
+        if ($this->authorizationChecker->isGranted(RepositionVoter::REPOSITION, $class)) {
+            $attr['data-id'] = reset($ids);
+        }
+
+        return $this->renderAttr($attr);
     }
 
     /**

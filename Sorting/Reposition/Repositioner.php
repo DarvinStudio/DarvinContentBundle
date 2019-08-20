@@ -13,8 +13,11 @@ namespace Darvin\ContentBundle\Sorting\Reposition;
 use Darvin\ContentBundle\Entity\Position;
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Repository\PositionRepository;
+use Darvin\ContentBundle\Security\Voter\Sorting\RepositionVoter;
 use Darvin\ContentBundle\Sorting\Reposition\Model\Reposition;
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Repositioner
@@ -22,15 +25,22 @@ use Doctrine\ORM\EntityManager;
 class Repositioner implements RepositionerInterface
 {
     /**
+     * @var \Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface
+     */
+    private $authorizationChecker;
+
+    /**
      * @var \Doctrine\ORM\EntityManager
      */
     private $em;
 
     /**
-     * @param \Doctrine\ORM\EntityManager $em Entity manager
+     * @param \Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface $authorizationChecker Authorization checker
+     * @param \Doctrine\ORM\EntityManager                                                  $em                   Entity manager
      */
-    public function __construct(EntityManager $em)
+    public function __construct(AuthorizationCheckerInterface $authorizationChecker, EntityManager $em)
     {
+        $this->authorizationChecker = $authorizationChecker;
         $this->em = $em;
     }
 
@@ -39,6 +49,9 @@ class Repositioner implements RepositionerInterface
      */
     public function reposition(Reposition $reposition): void
     {
+        if (!$this->authorizationChecker->isGranted(RepositionVoter::REPOSITION, $reposition->getClass())) {
+            throw new AccessDeniedException();
+        }
         if (0 === count($reposition->getIds())) {
             return;
         }

@@ -17,6 +17,7 @@ services:
     darvin_content.sorting.attribute_renderer:
         class: '%darvin_content.sorting.attribute_renderer.class%'
         arguments:
+            - '@security.authorization_checker'
             - '@security.csrf.token_manager'
             - '@doctrine.orm.entity_manager'
             - '@request_stack'
@@ -33,6 +34,7 @@ services:
     darvin_content.sorting.repositioner:
         class: '%darvin_content.sorting.repositioner.class%'
         arguments:
+            - '@security.authorization_checker'
             - '@doctrine.orm.entity_manager'
 
     darvin_content.sorting.security.voter.reposition:
