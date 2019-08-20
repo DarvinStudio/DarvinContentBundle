@@ -16,6 +16,7 @@ use Darvin\ContentBundle\Repository\PositionRepository;
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Util\ClassUtils;
+use Doctrine\ORM\QueryBuilder;
 use Knp\Component\Pager\Pagination\AbstractPagination;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -47,6 +48,29 @@ class Sorter implements SorterInterface
     /**
      * {@inheritDoc}
      */
+    public function addSortingExpr(QueryBuilder $qb, array $tags = [], ?string $slug = null): QueryBuilder
+    {
+        if (null === $slug) {
+            $slug = $this->getSlugFromRequest();
+        }
+
+        $classes = $qb->getRootEntities();
+
+        $sortedIds = $this->getPositionRepository()->getObjectIdsForSorter($this->om->getRepository(SlugMapItem::class)->findOneBy(['slug' => $slug]), $tags, reset($classes));
+
+        if (!empty($sortedIds)) {
+            $aliases     = $qb->getRootAliases();
+            $identifiers = $this->om->getClassMetadata(reset($classes))->getIdentifier();
+
+            $qb->orderBy(sprintf('FIELD(%s.%s, %s)', reset($aliases), reset($identifiers), implode(', ', $sortedIds)));
+        }
+
+        return $qb;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function sort(iterable $objects, array $tags = [], ?string $slug = null): array
     {
         $offset = null;
@@ -61,15 +85,7 @@ class Sorter implements SorterInterface
             return [];
         }
         if (null === $slug) {
-            $request = $this->requestStack->getCurrentRequest();
-
-            if (null !== $request) {
-                $params = $request->attributes->get('_route_params', []);
-
-                if (isset($params['slug'])) {
-                    $slug = $params['slug'];
-                }
-            }
+            $slug = $this->getSlugFromRequest();
         }
 
         $class = ClassUtils::getClass(reset($objects));
@@ -128,6 +144,22 @@ class Sorter implements SorterInterface
         $ids = $meta->getIdentifierValues($object);
 
         return reset($ids);
+    }
+
+    /**
+     * @return string|null
+     */
+    private function getSlugFromRequest(): ?string
+    {
+        $request = $this->requestStack->getCurrentRequest();
+
+        if (null === $request) {
+            return null;
+        }
+
+        $params = $request->attributes->get('_route_params', []);
+
+        return $params['slug'] ?? null;
     }
 
     /**

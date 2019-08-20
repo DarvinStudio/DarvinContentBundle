@@ -10,11 +10,22 @@
 
 namespace Darvin\ContentBundle\Sorting;
 
+use Doctrine\ORM\QueryBuilder;
+
 /**
  * Sorter
  */
 interface SorterInterface
 {
+    /**
+     * @param \Doctrine\ORM\QueryBuilder $qb   Query builder
+     * @param array                      $tags Tags
+     * @param string|null                $slug Slug
+     *
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function addSortingExpr(QueryBuilder $qb, array $tags = [], ?string $slug = null): QueryBuilder;
+
     /**
      * @param iterable    $objects Objects
      * @param array       $tags    Tags

@@ -41,7 +41,8 @@ services:
             - '@darvin_content.translatable.translation_joiner'
 
     darvin_content.sorting.sorter:
-        class: '%darvin_content.sorting.sorter.class%'
+        class:  '%darvin_content.sorting.sorter.class%'
+        public: true
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@request_stack'
