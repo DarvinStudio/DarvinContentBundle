@@ -24,7 +24,7 @@ interface SorterInterface
      *
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function addSortingExpr(QueryBuilder $qb, array $tags = [], ?string $slug = null): QueryBuilder;
+    public function addOrderByClause(QueryBuilder $qb, array $tags = [], ?string $slug = null): QueryBuilder;
 
     /**
      * @param iterable    $objects Objects

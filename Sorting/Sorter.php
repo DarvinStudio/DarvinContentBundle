@@ -48,7 +48,7 @@ class Sorter implements SorterInterface
     /**
      * {@inheritDoc}
      */
-    public function addSortingExpr(QueryBuilder $qb, array $tags = [], ?string $slug = null): QueryBuilder
+    public function addOrderByClause(QueryBuilder $qb, array $tags = [], ?string $slug = null): QueryBuilder
     {
         if (null === $slug) {
             $slug = $this->getSlugFromRequest();
