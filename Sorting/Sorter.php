@@ -17,7 +17,6 @@ use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\QueryBuilder;
-use Knp\Component\Pager\Pagination\AbstractPagination;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -71,12 +70,6 @@ class Sorter implements SorterInterface
      */
     public function sort(iterable $objects, array $tags = [], ?string $slug = null): array
     {
-        $offset = null;
-
-        if ($objects instanceof AbstractPagination && $objects->getCurrentPageNumber() > 1) {
-            $offset = $objects->getItemNumberPerPage() * ($objects->getCurrentPageNumber() - 1);
-        }
-
         $objects = $this->objectsToArray($objects);
 
         if (empty($objects)) {
@@ -85,37 +78,10 @@ class Sorter implements SorterInterface
 
         $class = ClassUtils::getClass(reset($objects));
 
-        $count  = count($objects);
-        $ids    = $this->getPositionRepository()->getObjectIdsForSorter($this->getSlugObject($slug), $tags, $class);
-        $keys   = array_keys($objects);
         $meta   = $this->om->getClassMetadata($class);
         $sorted = [];
 
-        for ($i = 0; $i < $count; $i++) {
-            $position = $i + (int)$offset;
-
-            if (!isset($ids[$position])) {
-                $key = $keys[$i];
-
-                if (isset($objects[$key])) {
-                    $sorted[$key] = $objects[$key];
-
-                    unset($objects[$key]);
-                }
-
-                continue;
-            }
-            foreach ($objects as $key => $object) {
-                if ((string)$this->getObjectId($object, $meta) === $ids[$position]) {
-                    $sorted[$key] = $object;
-
-                    unset($objects[$key]);
-                }
-            }
-
-            unset($ids[$position]);
-        }
-        foreach ($ids as $id) {
+        foreach ($this->getPositionRepository()->getObjectIdsForSorter($this->getSlugObject($slug), $tags, $class) as $id) {
             foreach ($objects as $key => $object) {
                 if ((string)$this->getObjectId($object, $meta) === $id) {
                     $sorted[$key] = $object;
@@ -125,7 +91,7 @@ class Sorter implements SorterInterface
             }
         }
 
-        return $sorted + $objects;
+        return $objects + $sorted;
     }
 
     /**

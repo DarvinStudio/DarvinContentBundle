@@ -60,20 +60,13 @@ class PositionRepository extends EntityRepository
     public function getObjectIdsForSorter(?SlugMapItem $slug, array $tags, string $objectClass): array
     {
         $qb = $this->createDefaultBuilder()
-            ->select('o.value')
-            ->addSelect('o.objectId');
+            ->select('o.objectId');
         $this
             ->addSlugFilter($qb, $slug)
             ->addTagsFilter($qb, $tags)
             ->addObjectClassFilter($qb, $objectClass);
 
-        $ids = [];
-
-        foreach ($qb->getQuery()->getScalarResult() as $row) {
-            $ids[$row['value']] = $row['objectId'];
-        }
-
-        return $ids;
+        return array_column($qb->getQuery()->getScalarResult(), 'objectId');
     }
 
     /**
