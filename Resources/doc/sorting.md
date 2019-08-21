@@ -51,7 +51,7 @@ Sorting
 4. Render HTML attributes required by sorting scripts:
 
     ```twig
-    <ul{{ content_sort_container_attr(pagination) }}>
+    <ul{{ content_sort_attr(pagination) }}>
         {% for product in products %}
             <li{{ content_sort_item_attr(product) }}>
 
@@ -69,7 +69,7 @@ Sorting
 1. Render HTML attributes required by sorting scripts and apply "content_sort" Twig filter to your iterable:
 
     ```twig
-    <ul{{ content_sort_container_attr(products) }}>
+    <ul{{ content_sort_attr(products) }}>
         {% for product in products|content_sort %}
             <li{{ content_sort_item_attr(product) }}>
 

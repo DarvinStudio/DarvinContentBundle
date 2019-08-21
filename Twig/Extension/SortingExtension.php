@@ -57,7 +57,7 @@ class SortingExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('content_sort_container_attr', [$this->attributeRenderer, 'renderContainerAttr'], [
+            new TwigFunction('content_sort_attr', [$this->attributeRenderer, 'renderContainerAttr'], [
                 'is_safe' => ['html'],
             ]),
             new TwigFunction('content_sort_item_attr', [$this->attributeRenderer, 'renderItemAttr'], [
