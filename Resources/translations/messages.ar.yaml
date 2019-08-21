@@ -1,5 +1,8 @@
 content:
     empty: 'تحت الإنشاء'
+    sorting:
+        reposition:
+            success: 'مواقف حفظها'
 macro:
     page_number:
         all: ' — القائمة الكاملة'

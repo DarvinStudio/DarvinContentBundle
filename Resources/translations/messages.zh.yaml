@@ -1,5 +1,8 @@
 content:
     empty: 在建设中
+    sorting:
+        reposition:
+            success: 位置保存的
 macro:
     page_number:
         all: ' —完整的列表'

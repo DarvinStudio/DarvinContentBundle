@@ -1,5 +1,8 @@
 content:
     empty: 'En Cours De Construction'
+    sorting:
+        reposition:
+            success: 'Les Positions Enregistrées'
 macro:
     page_number:
         all: ' — la liste complète'
