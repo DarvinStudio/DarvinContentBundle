@@ -20,14 +20,14 @@ use Doctrine\ORM\QueryBuilder;
 class PositionRepository extends EntityRepository
 {
     /**
-     * @param \Darvin\ContentBundle\Entity\SlugMapItem|null $slug        Slug
-     * @param array                                         $tags        Tags
-     * @param string                                        $objectClass Object class
-     * @param string[]                                      $objectIds   Object IDs
+     * @param \Darvin\ContentBundle\Entity\SlugMapItem|null $slug          Slug
+     * @param array                                         $tags          Tags
+     * @param string[]                                      $objectClasses Object classes
+     * @param string[]                                      $objectIds     Object IDs
      *
      * @return \Darvin\ContentBundle\Entity\Position[]
      */
-    public function getForRepositioner(?SlugMapItem $slug, array $tags, string $objectClass, array $objectIds): array
+    public function getForRepositioner(?SlugMapItem $slug, array $tags, array $objectClasses, array $objectIds): array
     {
         if (empty($objectIds)) {
             return [];
@@ -37,7 +37,7 @@ class PositionRepository extends EntityRepository
         $this
             ->addSlugFilter($qb, $slug)
             ->addTagsFilter($qb, $tags)
-            ->addObjectClassFilter($qb, $objectClass)
+            ->addObjectClassesFilter($qb, $objectClasses)
             ->addObjectIdsFilter($qb, $objectIds);
 
         $positions = [];
@@ -51,20 +51,20 @@ class PositionRepository extends EntityRepository
     }
 
     /**
-     * @param \Darvin\ContentBundle\Entity\SlugMapItem|null $slug        Slug
-     * @param array                                         $tags        Tags
-     * @param string                                        $objectClass Object class
+     * @param \Darvin\ContentBundle\Entity\SlugMapItem|null $slug          Slug
+     * @param array                                         $tags          Tags
+     * @param string[]                                      $objectClasses Object classes
      *
      * @return array
      */
-    public function getObjectIdsForSorter(?SlugMapItem $slug, array $tags, string $objectClass): array
+    public function getObjectIdsForSorter(?SlugMapItem $slug, array $tags, array $objectClasses): array
     {
         $qb = $this->createDefaultBuilder()
             ->select('o.objectId');
         $this
             ->addSlugFilter($qb, $slug)
             ->addTagsFilter($qb, $tags)
-            ->addObjectClassFilter($qb, $objectClass);
+            ->addObjectClassesFilter($qb, $objectClasses);
 
         return array_column($qb->getQuery()->getScalarResult(), 'objectId');
     }
@@ -78,6 +78,30 @@ class PositionRepository extends EntityRepository
     private function addObjectClassFilter(QueryBuilder $qb, string $objectClass): PositionRepository
     {
         $qb->andWhere('o.objectClass = :object_class')->setParameter('object_class', $objectClass);
+
+        return $this;
+    }
+
+    /**
+     * @param \Doctrine\ORM\QueryBuilder $qb            Query builder
+     * @param string[]                   $objectClasses Object classes
+     *
+     * @return PositionRepository
+     * @throws \InvalidArgumentException
+     */
+    private function addObjectClassesFilter(QueryBuilder $qb, array $objectClasses): PositionRepository
+    {
+        if (empty($objectClasses)) {
+            throw new \InvalidArgumentException('Array of object classes is empty.');
+        }
+
+        $objectClasses = array_unique($objectClasses);
+
+        if (1 === count($objectClasses)) {
+            return $this->addObjectClassFilter($qb, reset($objectClasses));
+        }
+
+        $qb->andWhere($qb->expr()->in('o.objectClass', ':object_classes'))->setParameter('object_classes', $objectClasses);
 
         return $this;
     }

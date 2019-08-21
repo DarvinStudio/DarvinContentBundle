@@ -13,6 +13,7 @@ namespace Darvin\ContentBundle\Sorting;
 use Darvin\ContentBundle\Entity\Position;
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Repository\PositionRepository;
+use Darvin\Utils\ORM\EntityResolverInterface;
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Util\ClassUtils;
@@ -25,6 +26,11 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class Sorter implements SorterInterface
 {
     /**
+     * @var \Darvin\Utils\ORM\EntityResolverInterface
+     */
+    private $entityResolver;
+
+    /**
      * @var \Doctrine\Common\Persistence\ObjectManager
      */
     private $om;
@@ -35,11 +41,13 @@ class Sorter implements SorterInterface
     private $requestStack;
 
     /**
-     * @param \Doctrine\Common\Persistence\ObjectManager     $om           Object manager
-     * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack Request stack
+     * @param \Darvin\Utils\ORM\EntityResolverInterface      $entityResolver Entity resolver
+     * @param \Doctrine\Common\Persistence\ObjectManager     $om             Object manager
+     * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack   Request stack
      */
-    public function __construct(ObjectManager $om, RequestStack $requestStack)
+    public function __construct(EntityResolverInterface $entityResolver, ObjectManager $om, RequestStack $requestStack)
     {
+        $this->entityResolver = $entityResolver;
         $this->om = $om;
         $this->requestStack = $requestStack;
     }
@@ -53,7 +61,11 @@ class Sorter implements SorterInterface
 
         $class = reset($classes);
 
-        $ids = $this->getPositionRepository()->getObjectIdsForSorter($this->getSlugObject($slug), $tags, $class);
+        $ids = $this->getPositionRepository()->getObjectIdsForSorter(
+            $this->getSlugObject($slug),
+            $tags,
+            [$class, $this->entityResolver->reverseResolve($class)]
+        );
 
         if (!empty($ids)) {
             $aliases     = $qb->getRootAliases();
@@ -83,8 +95,13 @@ class Sorter implements SorterInterface
 
         $meta   = $this->om->getClassMetadata($class);
         $sorted = [];
+        $ids    = $this->getPositionRepository()->getObjectIdsForSorter(
+            $this->getSlugObject($slug),
+            $tags,
+            [$class, $this->entityResolver->reverseResolve($class)]
+        );
 
-        foreach ($this->getPositionRepository()->getObjectIdsForSorter($this->getSlugObject($slug), $tags, $class) as $id) {
+        foreach ($ids as $id) {
             foreach ($objects as $key => $object) {
                 if ($this->getObjectId($object, $meta) === $id) {
                     $sorted[$key] = $object;

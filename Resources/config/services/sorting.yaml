@@ -33,6 +33,7 @@ services:
         class: '%darvin_content.sorting.repositioner.class%'
         arguments:
             - '@security.authorization_checker'
+            - '@darvin_utils.orm.entity_resolver'
             - '@doctrine.orm.entity_manager'
 
     darvin_content.sorting.security.voter.reposition:
@@ -47,6 +48,7 @@ services:
         class:  '%darvin_content.sorting.sorter.class%'
         public: true
         arguments:
+            - '@darvin_utils.orm.entity_resolver'
             - '@doctrine.orm.entity_manager'
             - '@request_stack'
 

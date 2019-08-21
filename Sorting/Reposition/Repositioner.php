@@ -15,6 +15,7 @@ use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Repository\PositionRepository;
 use Darvin\ContentBundle\Security\Voter\Sorting\RepositionVoter;
 use Darvin\ContentBundle\Sorting\Reposition\Model\Reposition;
+use Darvin\Utils\ORM\EntityResolverInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -30,17 +31,27 @@ class Repositioner implements RepositionerInterface
     private $authorizationChecker;
 
     /**
+     * @var \Darvin\Utils\ORM\EntityResolverInterface
+     */
+    private $entityResolver;
+
+    /**
      * @var \Doctrine\Common\Persistence\ObjectManager
      */
     private $om;
 
     /**
      * @param \Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface $authorizationChecker Authorization checker
+     * @param \Darvin\Utils\ORM\EntityResolverInterface                                    $entityResolver       Entity resolver
      * @param \Doctrine\Common\Persistence\ObjectManager                                   $om                   Object manager
      */
-    public function __construct(AuthorizationCheckerInterface $authorizationChecker, ObjectManager $om)
-    {
+    public function __construct(
+        AuthorizationCheckerInterface $authorizationChecker,
+        EntityResolverInterface $entityResolver,
+        ObjectManager $om
+    ) {
         $this->authorizationChecker = $authorizationChecker;
+        $this->entityResolver = $entityResolver;
         $this->om = $om;
     }
 
@@ -71,7 +82,12 @@ class Repositioner implements RepositionerInterface
             throw new \InvalidArgumentException(sprintf('Slug "%s" does not exist.', $reposition->getSlug()));
         }
 
-        $positions = $this->getPositionRepository()->getForRepositioner($slug, $reposition->getTags(), $class, $reposition->getIds());
+        $positions = $this->getPositionRepository()->getForRepositioner(
+            $slug,
+            $reposition->getTags(),
+            [$class, $this->entityResolver->reverseResolve($class)],
+            $reposition->getIds()
+        );
 
         foreach (array_values($reposition->getIds()) as $value => $id) {
             $position = $positions[$id] ?? new Position($slug, $class, $id, $value, $reposition->getTags());

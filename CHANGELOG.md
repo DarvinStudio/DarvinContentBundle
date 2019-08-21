@@ -48,3 +48,5 @@ darvin_content:
 - Add "allowPageNumberExceed" paginator option.
 
 8.1.0: Add [sorting](Resources/doc/sorting.md) functionality.
+
+8.1.1: Support entity inheritance in sorting functionality.
