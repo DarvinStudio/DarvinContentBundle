@@ -29,7 +29,9 @@ class DarvinContentExtension extends Extension implements PrependExtensionInterf
      */
     public function load(array $configs, ContainerBuilder $container): void
     {
-        (new ConfigInjector($container))->inject($this->processConfiguration(new Configuration(), $configs), $this->getAlias());
+        $config = $this->processConfiguration(new Configuration(), $configs);
+
+        (new ConfigInjector($container))->inject($config, $this->getAlias());
 
         (new ConfigLoader($container, __DIR__.'/../Resources/config/services'))->load([
             'canonical_url',
@@ -42,7 +44,6 @@ class DarvinContentExtension extends Extension implements PrependExtensionInterf
             'router',
             'slug',
             'slug_map',
-            'sorting',
             'translatable',
             'widget',
             'widget_factory',
@@ -50,6 +51,10 @@ class DarvinContentExtension extends Extension implements PrependExtensionInterf
             'dev/slug'         => ['env' => 'dev'],
             'dev/translatable' => ['env' => 'dev'],
             'dev/widget'       => ['env' => 'dev'],
+
+            'sorting' => ['callback' => function () use ($config) {
+                return $config['sorting']['enabled'];
+            }],
         ]);
     }
 

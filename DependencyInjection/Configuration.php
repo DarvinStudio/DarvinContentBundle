@@ -51,7 +51,7 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
-                ->arrayNode('sorting')->addDefaultsIfNotSet()
+                ->arrayNode('sorting')->canBeEnabled()
                     ->children()
                         ->arrayNode('reposition')->addDefaultsIfNotSet()
                             ->children()
