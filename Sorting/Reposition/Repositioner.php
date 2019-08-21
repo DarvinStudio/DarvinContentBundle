@@ -15,7 +15,7 @@ use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Repository\PositionRepository;
 use Darvin\ContentBundle\Security\Voter\Sorting\RepositionVoter;
 use Darvin\ContentBundle\Sorting\Reposition\Model\Reposition;
-use Doctrine\ORM\EntityManager;
+use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -30,18 +30,18 @@ class Repositioner implements RepositionerInterface
     private $authorizationChecker;
 
     /**
-     * @var \Doctrine\ORM\EntityManager
+     * @var \Doctrine\Common\Persistence\ObjectManager
      */
-    private $em;
+    private $om;
 
     /**
      * @param \Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface $authorizationChecker Authorization checker
-     * @param \Doctrine\ORM\EntityManager                                                  $em                   Entity manager
+     * @param \Doctrine\Common\Persistence\ObjectManager                                   $om                   Object manager
      */
-    public function __construct(AuthorizationCheckerInterface $authorizationChecker, EntityManager $em)
+    public function __construct(AuthorizationCheckerInterface $authorizationChecker, ObjectManager $om)
     {
         $this->authorizationChecker = $authorizationChecker;
-        $this->em = $em;
+        $this->om = $om;
     }
 
     /**
@@ -65,7 +65,7 @@ class Repositioner implements RepositionerInterface
             throw new \InvalidArgumentException(sprintf('Object class "%s" does not exist.', $class));
         }
 
-        $slug = $this->em->getRepository(SlugMapItem::class)->findOneBy(['slug' => $reposition->getSlug()]);
+        $slug = $this->om->getRepository(SlugMapItem::class)->findOneBy(['slug' => $reposition->getSlug()]);
 
         if (null === $slug) {
             throw new \InvalidArgumentException(sprintf('Slug "%s" does not exist.', $reposition->getSlug()));
@@ -77,10 +77,10 @@ class Repositioner implements RepositionerInterface
             $position = $positions[$id] ?? new Position($slug, $class, $id, $value, $reposition->getTags());
             $position->setValue($value);
 
-            $this->em->persist($position);
+            $this->om->persist($position);
         }
 
-        $this->em->flush();
+        $this->om->flush();
     }
 
     /**
@@ -88,6 +88,6 @@ class Repositioner implements RepositionerInterface
      */
     private function getPositionRepository(): PositionRepository
     {
-        return $this->em->getRepository(Position::class);
+        return $this->om->getRepository(Position::class);
     }
 }

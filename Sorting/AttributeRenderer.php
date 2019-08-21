@@ -77,55 +77,7 @@ class AttributeRenderer implements AttributeRendererInterface
      */
     public function renderContainerAttr(iterable $target, array $tags = [], ?string $slug = null, array $attr = []): string
     {
-        $objects = [];
-
-        foreach ($target as $key => $object) {
-            $objects[$key] = $object;
-        }
-        if (empty($objects)) {
-            return $this->renderAttr($attr);
-        }
-
-        $first = reset($objects);
-
-        $class = ClassUtils::getClass($first);
-
-        if (!$this->authorizationChecker->isGranted(RepositionVoter::REPOSITION, $class)) {
-            return $this->renderAttr($attr);
-        }
-        if ($target instanceof AbstractPagination) {
-            $request = $this->requestStack->getCurrentRequest();
-
-            if (null === $request
-                || 0 !== $request->query->getInt($target->getPaginatorOption(PaginatorInterface::PAGE_PARAMETER_NAME), -1)
-                || $request->query->has($target->getPaginatorOption(PaginatorInterface::SORT_FIELD_PARAMETER_NAME))
-            ) {
-                return $this->renderAttr($attr);
-            }
-        }
-        if (null === $slug) {
-            $request = $this->requestStack->getCurrentRequest();
-
-            if (null !== $request) {
-                $params = $request->attributes->get('_route_params', []);
-
-                if (isset($params['slug'])) {
-                    $slug = $params['slug'];
-                }
-            }
-        }
-        if (null === $slug && empty($tags)) {
-            return $this->renderAttr($attr);
-        }
-
-        return $this->renderAttr(array_merge($attr, [
-            'class'                 => trim(sprintf('%s js-content-sortable', $attr['class'] ?? '')),
-            'data-reposition-url'   => $this->router->generate('darvin_content_sorting_reposition'),
-            'data-reposition-class' => base64_encode($class),
-            'data-reposition-csrf'  => $this->csrfTokenManager->getToken(RepositionType::CSRF_TOKEN_ID)->getValue(),
-            'data-reposition-slug'  => $slug,
-            'data-reposition-tags'  => $tags,
-        ]));
+        return $this->renderAttr($this->collectContainerAttr($target, $tags, $slug, $attr));
     }
 
     /**
@@ -142,6 +94,70 @@ class AttributeRenderer implements AttributeRendererInterface
         }
 
         return $this->renderAttr($attr);
+    }
+
+    /**
+     * @param iterable    $target Target
+     * @param array       $tags   Tags
+     * @param string|null $slug   Slug
+     * @param array       $attr   Attributes
+     *
+     * @return array
+     */
+    private function collectContainerAttr(iterable $target, array $tags, ?string $slug, array $attr): array
+    {
+        $objects = [];
+
+        foreach ($target as $key => $object) {
+            $objects[$key] = $object;
+        }
+        if (empty($objects)) {
+            return $attr;
+        }
+
+        $first = reset($objects);
+
+        $class = ClassUtils::getClass($first);
+
+        if (!$this->authorizationChecker->isGranted(RepositionVoter::REPOSITION, $class)) {
+            return $attr;
+        }
+        if ($target instanceof AbstractPagination) {
+            $request = $this->requestStack->getCurrentRequest();
+
+            if (null === $request) {
+                return $attr;
+            }
+            if (0 !== $request->query->getInt($target->getPaginatorOption(PaginatorInterface::PAGE_PARAMETER_NAME), -1)) {
+                return $attr;
+            }
+            if ($request->query->has($target->getPaginatorOption(PaginatorInterface::SORT_FIELD_PARAMETER_NAME))) {
+                return $attr;
+            }
+        }
+        if (null === $slug) {
+            $request = $this->requestStack->getCurrentRequest();
+
+            if (null !== $request) {
+                $params = $request->attributes->get('_route_params', []);
+
+                if (isset($params['slug'])) {
+                    $slug = $params['slug'];
+                }
+            }
+        }
+        if (null === $slug && empty($tags)) {
+            return $attr;
+        }
+
+        return array_merge($attr, [
+            'class'                 => trim(sprintf('%s js-content-sortable', $attr['class'] ?? '')),
+            'data-reposition-class' => base64_encode($class),
+            'data-reposition-csrf'  => $this->csrfTokenManager->getToken(RepositionType::CSRF_TOKEN_ID)->getValue(),
+            'data-reposition-slug'  => $slug,
+            'data-reposition-tags'  => $tags,
+            'data-reposition-url'   => $this->router->generate('darvin_content_sorting_reposition'),
+        ]);
     }
 
     /**

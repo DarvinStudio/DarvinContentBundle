@@ -86,7 +86,7 @@ class Sorter implements SorterInterface
 
         foreach ($this->getPositionRepository()->getObjectIdsForSorter($this->getSlugObject($slug), $tags, $class) as $id) {
             foreach ($objects as $key => $object) {
-                if ((string)$this->getObjectId($object, $meta) === $id) {
+                if ($this->getObjectId($object, $meta) === $id) {
                     $sorted[$key] = $object;
 
                     unset($objects[$key]);
@@ -101,13 +101,13 @@ class Sorter implements SorterInterface
      * @param object                                             $object Object
      * @param \Doctrine\Common\Persistence\Mapping\ClassMetadata $meta   Metadata
      *
-     * @return mixed
+     * @return string
      */
-    private function getObjectId($object, ClassMetadata $meta)
+    private function getObjectId($object, ClassMetadata $meta): string
     {
         $ids = $meta->getIdentifierValues($object);
 
-        return reset($ids);
+        return (string)reset($ids);
     }
 
     /**
