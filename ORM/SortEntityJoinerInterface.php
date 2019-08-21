@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Darvin\ContentBundle\Sorting;
+namespace Darvin\ContentBundle\ORM;
 
 use Doctrine\ORM\QueryBuilder;
 
