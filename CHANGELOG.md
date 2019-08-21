@@ -46,3 +46,5 @@ darvin_content:
 - Remove "darvin_content_content_show" route.
 
 - Add "allowPageNumberExceed" paginator option.
+
+8.1.0: Add [sorting](Resources/doc/sorting.md) functionality.
