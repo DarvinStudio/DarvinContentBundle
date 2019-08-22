@@ -50,3 +50,5 @@ darvin_content:
 8.1.0: Add [sorting](Resources/doc/sorting.md) functionality.
 
 8.1.1: Support entity inheritance in sorting functionality.
+
+8.2.0: Replace paginator with custom one with "Show All" functionality.
