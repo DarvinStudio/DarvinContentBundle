@@ -2,6 +2,10 @@ darvin_content_import_sorting:
     resource: '@DarvinContentBundle/Resources/config/routing/sorting.yaml'
     prefix:   /content
 
+darvin_content_import_locale:
+    resource: '@DarvinContentBundle/Resources/config/routing/locale.yaml'
+    prefix:   /locale
+
 darvin_content_import_content:
     resource: '@DarvinContentBundle/Resources/config/routing/content.yaml'
     prefix:   /
