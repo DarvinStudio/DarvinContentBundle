@@ -48,7 +48,7 @@ class SwitchController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function switchAction(Request $request, string $locale): Response
+    public function __invoke(Request $request, string $locale): Response
     {
         $baseUrl = $request->getSchemeAndHttpHost().$request->getBaseUrl();
         $referer = $request->headers->get('referer');
