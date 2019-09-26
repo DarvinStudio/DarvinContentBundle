@@ -1,7 +1,7 @@
 parameters:
-    darvin_content.locale.switch.controller.class: Darvin\ContentBundle\Controller\SwitchLocaleController
+    darvin_content.locale.switch.controller.class: Darvin\ContentBundle\Controller\Locale\SwitchController
 
-    darvin_content.locale.switch.event_subscriber.class: Darvin\ContentBundle\EventListener\SwitchLocaleSubscriber
+    darvin_content.locale.switch.event_subscriber.class: Darvin\ContentBundle\EventListener\Locale\SwitchSubscriber
 
 services:
     darvin_content.locale.switch.controller:

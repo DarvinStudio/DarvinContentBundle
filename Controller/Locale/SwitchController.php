@@ -8,9 +8,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Darvin\ContentBundle\Controller;
+namespace Darvin\ContentBundle\Controller\Locale;
 
-use Darvin\ContentBundle\EventListener\SwitchLocaleSubscriber;
+use Darvin\ContentBundle\EventListener\Locale\SwitchSubscriber;
 use Darvin\Utils\Homepage\HomepageRouterInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,7 +20,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 /**
  * Switch locale controller
  */
-class SwitchLocaleController
+class SwitchController
 {
     /**
      * @var \Darvin\Utils\Homepage\HomepageRouterInterface
@@ -70,7 +70,7 @@ class SwitchLocaleController
             return new RedirectResponse($url);
         }
 
-        $request->getSession()->set(SwitchLocaleSubscriber::SESSION_KEY, true);
+        $request->getSession()->set(SwitchSubscriber::SESSION_KEY, true);
 
         $replacement = $baseUrl.'/';
 

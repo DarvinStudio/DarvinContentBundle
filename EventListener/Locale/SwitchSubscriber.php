@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Darvin\ContentBundle\EventListener;
+namespace Darvin\ContentBundle\EventListener\Locale;
 
 use Darvin\Utils\Homepage\HomepageRouterInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -21,7 +21,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 /**
  * Switch locale event subscriber
  */
-class SwitchLocaleSubscriber implements EventSubscriberInterface
+class SwitchSubscriber implements EventSubscriberInterface
 {
     public const SESSION_KEY = 'darvin.content.locale.switch';
 
