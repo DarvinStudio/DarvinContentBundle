@@ -3,6 +3,8 @@ parameters:
 
     darvin_content.locale.switch.event_subscriber.class: Darvin\ContentBundle\EventListener\Locale\SwitchSubscriber
 
+    darvin_content.locale.switch.twig_extension.class: Darvin\ContentBundle\Twig\Extension\Locale\SwitchExtension
+
 services:
     darvin_content.locale.switch.controller:
         class: '%darvin_content.locale.switch.controller.class%'
@@ -18,3 +20,8 @@ services:
             - '@darvin_utils.homepage.router'
         tags:
             - { name: kernel.event_subscriber }
+
+    darvin_content.locale.switch.twig_extension:
+        class: '%darvin_content.locale.switch.twig_extension.class%'
+        tags:
+            - { name: twig.extension }
