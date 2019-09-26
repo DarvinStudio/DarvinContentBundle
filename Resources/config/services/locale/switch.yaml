@@ -1,0 +1,10 @@
+parameters:
+    darvin_content.locale.switch.event_subscriber.class: Darvin\ContentBundle\EventListener\SwitchLocaleSubscriber
+
+services:
+    darvin_content.locale.switch.event_subscriber:
+        class: '%darvin_content.locale.switch.event_subscriber.class%'
+        arguments:
+            - '@darvin_utils.homepage.router'
+        tags:
+            - { name: kernel.event_subscriber }
