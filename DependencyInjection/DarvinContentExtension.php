@@ -29,7 +29,8 @@ class DarvinContentExtension extends Extension implements PrependExtensionInterf
      */
     public function load(array $configs, ContainerBuilder $container): void
     {
-        $config = $this->processConfiguration(new Configuration(), $configs);
+        $config  = $this->processConfiguration(new Configuration(), $configs);
+        $locales = $container->getParameter('locales');
 
         (new ConfigInjector($container))->inject($config, $this->getAlias());
 
@@ -51,6 +52,10 @@ class DarvinContentExtension extends Extension implements PrependExtensionInterf
             'dev/slug'         => ['env' => 'dev'],
             'dev/translatable' => ['env' => 'dev'],
             'dev/widget'       => ['env' => 'dev'],
+
+            'locale/switch' => ['callback' => function () use ($locales) {
+                return count($locales) > 1;
+            }],
 
             'sorting' => ['callback' => function () use ($config) {
                 return $config['sorting']['enabled'];
