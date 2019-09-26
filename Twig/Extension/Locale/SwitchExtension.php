@@ -20,6 +20,19 @@ use Twig\TwigFunction;
 class SwitchExtension extends AbstractExtension
 {
     /**
+     * @var string[]
+     */
+    private $locales;
+
+    /**
+     * @param string[] $locales Locales
+     */
+    public function __construct(array $locales)
+    {
+        $this->locales = $locales;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function getFunctions(): array
@@ -41,6 +54,8 @@ class SwitchExtension extends AbstractExtension
      */
     public function renderSwitcher(Environment $twig, string $template = '@DarvinContent/locale_switcher.html.twig', array $options = []): string
     {
-        return $twig->render($template, array_merge([], $options));
+        return $twig->render($template, array_merge([
+            'locales' => $this->locales,
+        ], $options));
     }
 }

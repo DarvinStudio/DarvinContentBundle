@@ -1,1 +1,14 @@
-<h1>Hello, I'm locale switcher! I will switch your fucking locales!</h1>
+<ul>
+    {% for locale in locales %}
+
+        {% set title = ('locale.' ~ locale)|trans({}, 'messages', locale) %}
+
+        <li>
+            {% if locale == app.request.locale %}
+                <span>{{ title }}</span>
+            {% else %}
+                <a href="{{ path('darvin_content_locale_switch', {'locale': locale}) }}">{{ title }}</a>
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>

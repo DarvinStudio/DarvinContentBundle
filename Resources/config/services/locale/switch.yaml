@@ -23,5 +23,7 @@ services:
 
     darvin_content.locale.switch.twig_extension:
         class: '%darvin_content.locale.switch.twig_extension.class%'
+        arguments:
+            - '%locales%'
         tags:
             - { name: twig.extension }
