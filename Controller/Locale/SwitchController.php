@@ -61,20 +61,20 @@ class SwitchController
         if ($locale !== $this->defaultLocale) {
             $targetPrefix .= sprintf('%s/', $locale);
         }
-        if (0 !== mb_strpos($referer, $currentPrefix)) {
-            $url = $this->homepageRouter->generate(UrlGeneratorInterface::ABSOLUTE_PATH, [
-                '_locale' => $locale,
-            ]);
+        if (0 === mb_strpos($referer, $currentPrefix)) {
+            $request->getSession()->set(SwitchSubscriber::SESSION_KEY, true);
 
-            if (null === $url) {
-                $url = $targetPrefix;
-            }
-
-            return new RedirectResponse($url);
+            return new RedirectResponse($targetPrefix.mb_substr($referer, mb_strlen($currentPrefix)));
         }
 
-        $request->getSession()->set(SwitchSubscriber::SESSION_KEY, true);
+        $url = $this->homepageRouter->generate(UrlGeneratorInterface::ABSOLUTE_PATH, [
+            '_locale' => $locale,
+        ]);
 
-        return new RedirectResponse(str_replace($currentPrefix, $targetPrefix, $referer));
+        if (null === $url) {
+            $url = $targetPrefix;
+        }
+
+        return new RedirectResponse($url);
     }
 }
