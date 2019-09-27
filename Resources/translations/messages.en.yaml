@@ -4,6 +4,13 @@ content:
         reposition:
             success: Positions Saved
 
+locale:
+    ar: Arabic
+    en: English
+    fr: French
+    ru: Russian
+    zh: Chinese
+
 macro:
     page_number:
         all:    ' &mdash; full list'

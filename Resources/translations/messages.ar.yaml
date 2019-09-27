@@ -3,6 +3,12 @@ content:
     sorting:
         reposition:
             success: 'مواقف حفظها'
+locale:
+    ar: العربية
+    en: 'اللغة الإنجليزية'
+    fr: الفرنسية
+    ru: الروسية
+    zh: الصينية
 macro:
     page_number:
         all: ' — القائمة الكاملة'

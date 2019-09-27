@@ -4,6 +4,13 @@ content:
         reposition:
             success: Позиции сохранены
 
+locale:
+    ar: Арабский
+    en: Английский
+    fr: Французский
+    ru: Русский
+    zh: Китайский
+
 macro:
     page_number:
         all:    ' &mdash; полный список'

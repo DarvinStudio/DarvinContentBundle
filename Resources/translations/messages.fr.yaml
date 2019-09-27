@@ -3,6 +3,12 @@ content:
     sorting:
         reposition:
             success: 'Les Positions Enregistrées'
+locale:
+    ar: Arabe
+    en: Anglais
+    fr: Français
+    ru: Russe
+    zh: Chinois
 macro:
     page_number:
         all: ' — la liste complète'
