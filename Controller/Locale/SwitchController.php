@@ -51,20 +51,23 @@ class SwitchController
     public function __invoke(Request $request, string $locale): Response
     {
         $baseUrl = $request->getSchemeAndHttpHost().$request->getBaseUrl();
-        $referer = $request->headers->get('referer');
+        $referer = $request->headers->get('referer', '');
 
-        $prefix = $baseUrl.'/';
+        $currentPrefix = $targetPrefix = sprintf('%s/', $baseUrl);
 
         if ($request->getLocale() !== $this->defaultLocale) {
-            $prefix .= $request->getLocale().'/';
+            $currentPrefix .= sprintf('%s/', $request->getLocale());
         }
-        if (0 !== mb_strpos($referer, $prefix)) {
+        if ($locale !== $this->defaultLocale) {
+            $targetPrefix .= sprintf('%s/', $locale);
+        }
+        if (0 !== mb_strpos($referer, $currentPrefix)) {
             $url = $this->homepageRouter->generate(UrlGeneratorInterface::ABSOLUTE_PATH, [
                 '_locale' => $locale,
             ]);
 
             if (null === $url) {
-                $url = '/';
+                $url = $targetPrefix;
             }
 
             return new RedirectResponse($url);
@@ -72,12 +75,6 @@ class SwitchController
 
         $request->getSession()->set(SwitchSubscriber::SESSION_KEY, true);
 
-        $replacement = $baseUrl.'/';
-
-        if ($locale !== $this->defaultLocale) {
-            $replacement .= $locale.'/';
-        }
-
-        return new RedirectResponse(str_replace($prefix, $replacement, $referer));
+        return new RedirectResponse(str_replace($currentPrefix, $targetPrefix, $referer));
     }
 }
