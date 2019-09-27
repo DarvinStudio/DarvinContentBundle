@@ -1,14 +1,7 @@
-<ul>
+<form action="{{ path('darvin_content_locale_switch') }}" method="post">
     {% for locale in locales %}
-
-        {% set title = ('locale.' ~ locale)|trans({}, 'messages', locale) %}
-
-        <li>
-            {% if locale == app.request.locale %}
-                <span>{{ title }}</span>
-            {% else %}
-                <a href="{{ path('darvin_content_locale_switch', {'locale': locale}) }}" rel="nofollow">{{ title }}</a>
-            {% endif %}
-        </li>
+        <button name="locale" value="{{ locale }}"{% if locale == app.request.locale %} disabled{% endif %}>
+            {{ ('locale.' ~ locale)|trans({}, 'messages', locale) }}
+        </button>
     {% endfor %}
-</ul>
+</form>

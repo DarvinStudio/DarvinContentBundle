@@ -11,6 +11,7 @@ services:
         arguments:
             - '@darvin_utils.homepage.router'
             - '%locale%'
+            - '%locales%'
         tags:
             - { name: controller.service_arguments }
 

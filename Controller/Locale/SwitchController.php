@@ -33,23 +33,35 @@ class SwitchController
     private $defaultLocale;
 
     /**
+     * @var string[]
+     */
+    private $locales;
+
+    /**
      * @param \Darvin\Utils\Homepage\HomepageRouterInterface $homepageRouter Homepage router
      * @param string                                         $defaultLocale  Default locale
+     * @param string[]                                       $locales        Locales
      */
-    public function __construct(HomepageRouterInterface $homepageRouter, string $defaultLocale)
+    public function __construct(HomepageRouterInterface $homepageRouter, string $defaultLocale, array $locales)
     {
         $this->homepageRouter = $homepageRouter;
         $this->defaultLocale = $defaultLocale;
+        $this->locales = $locales;
     }
 
     /**
      * @param \Symfony\Component\HttpFoundation\Request $request Request
-     * @param string                                    $locale  Locale
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function __invoke(Request $request, string $locale): Response
+    public function __invoke(Request $request): Response
     {
+        $targetLocale = $request->request->get('locale');
+
+        if (!in_array($targetLocale, $this->locales)) {
+            $targetLocale = $request->getLocale();
+        }
+
         $baseUrl = $request->getSchemeAndHttpHost().$request->getBaseUrl();
         $referer = $request->headers->get('referer', '');
 
@@ -58,8 +70,8 @@ class SwitchController
         if ($request->getLocale() !== $this->defaultLocale) {
             $currentPrefix .= sprintf('%s/', $request->getLocale());
         }
-        if ($locale !== $this->defaultLocale) {
-            $targetPrefix .= sprintf('%s/', $locale);
+        if ($targetLocale !== $this->defaultLocale) {
+            $targetPrefix .= sprintf('%s/', $targetLocale);
         }
         if (0 === mb_strpos($referer, $currentPrefix)) {
             $request->getSession()->set(SwitchSubscriber::SESSION_KEY, true);
@@ -68,7 +80,7 @@ class SwitchController
         }
 
         $url = $this->homepageRouter->generate(UrlGeneratorInterface::ABSOLUTE_PATH, [
-            '_locale' => $locale,
+            '_locale' => $targetLocale,
         ]);
 
         if (null === $url) {

@@ -1,5 +1,4 @@
 darvin_content_locale_switch:
-    path:         /switch/{locale}
-    defaults:     { _controller: darvin_content.locale.switch.controller }
-    requirements: { locale: '%locale_pattern%|%locale%' }
-    methods:      [ get ]
+    path:     /switch
+    defaults: { _controller: darvin_content.locale.switch.controller }
+    methods:  [ post ]
