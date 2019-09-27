@@ -7,7 +7,7 @@
             {% if locale == app.request.locale %}
                 <span>{{ title }}</span>
             {% else %}
-                <a href="{{ path('darvin_content_locale_switch', {'locale': locale}) }}">{{ title }}</a>
+                <a href="{{ path('darvin_content_locale_switch', {'locale': locale}) }}" rel="nofollow">{{ title }}</a>
             {% endif %}
         </li>
     {% endfor %}
