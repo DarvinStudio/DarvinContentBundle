@@ -52,3 +52,5 @@ darvin_content:
 8.1.1: Support entity inheritance in sorting functionality.
 
 8.2.0: Replace paginator with custom one with "Show All" functionality.
+
+8.2.1: Add "content_locale_switcher()" Twig function.
