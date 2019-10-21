@@ -80,8 +80,14 @@ class TranslationJoiner implements TranslationJoinerInterface
                 $locale = $this->localeProvider->getCurrentLocale();
             }
 
+            $where = $qb->expr()->orX($joinAlias.sprintf('.%s = :%1$s', $translationLocaleProperty));
+
+            if (!$inner) {
+                $where->add($joinAlias.sprintf('.%s IS NULL', $translationLocaleProperty));
+            }
+
             $qb
-                ->andWhere($joinAlias.sprintf('.%s = :%1$s', $translationLocaleProperty))
+                ->andWhere($where)
                 ->setParameter($translationLocaleProperty, $locale);
 
             return;

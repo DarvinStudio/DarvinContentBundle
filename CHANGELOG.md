@@ -54,3 +54,5 @@ darvin_content:
 8.2.0: Replace paginator with custom one with "Show All" functionality.
 
 8.2.1: Add "content_locale_switcher()" Twig function.
+
+8.2.5: Allow translation locale property to be null on left join in translation joiner.
