@@ -142,7 +142,7 @@ class Filterer implements FiltererInterface
 
             $event = new BuildConstraintEvent($qb, $field, $value, $entityClass, $rootAlias, $strictComparison);
 
-            $this->eventDispatcher->dispatch(FiltererEvents::BUILD_CONSTRAINT, $event);
+            $this->eventDispatcher->dispatch($event, FiltererEvents::BUILD_CONSTRAINT);
 
             $where[] = null !== $event->getConstraint()
                 ? $event->getConstraint()
