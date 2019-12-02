@@ -2,9 +2,6 @@ parameters:
     darvin_content.slug.handler.unique.class: Darvin\ContentBundle\Slug\UniqueSlugHandler
 
 services:
-    _defaults:
-        public: true
-
     darvin_content.slug.handler.unique:
         class: '%darvin_content.slug.handler.unique.class%'
         tags:

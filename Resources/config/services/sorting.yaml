@@ -45,8 +45,7 @@ services:
             - { name: security.voter }
 
     darvin_content.sorting.sorter:
-        class:  '%darvin_content.sorting.sorter.class%'
-        public: true
+        class: '%darvin_content.sorting.sorter.class%'
         arguments:
             - '@darvin_utils.orm.entity_resolver'
             - '@doctrine.orm.entity_manager'

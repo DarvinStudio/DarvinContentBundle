@@ -4,12 +4,8 @@ parameters:
     darvin_content.slug_map.subscriber.class: Darvin\ContentBundle\EventListener\SlugMapSubscriber
 
 services:
-    _defaults:
-        public: true
-
     darvin_content.slug_map.item_factory:
-        class:  '%darvin_content.slug_map.item_factory.class%'
-        public: false
+        class: '%darvin_content.slug_map.item_factory.class%'
         arguments:
             - '@property_accessor'
 

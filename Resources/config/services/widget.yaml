@@ -12,9 +12,6 @@ parameters:
     darvin_content.widget.validator.name_unique.class: Darvin\ContentBundle\Validator\WidgetNameUniqueValidator
 
 services:
-    _defaults:
-        public: true
-
     darvin_content.widget.embedder:
         class: '%darvin_content.widget.embedder.class%'
         arguments:
@@ -41,8 +38,7 @@ services:
             - { name: darvin_utils.providable }
 
     darvin_content.widget.twig_extension:
-        class:  '%darvin_content.widget.twig_extension.class%'
-        public: false
+        class: '%darvin_content.widget.twig_extension.class%'
         arguments:
             - '@darvin_content.widget.embedder.provider'
             - '@darvin_content.widget.pool.provider'

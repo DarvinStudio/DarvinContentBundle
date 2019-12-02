@@ -59,4 +59,8 @@ darvin_content:
 
 8.2.7: Make front controller a service.
 
-8.3.0: Reorganize abstract content controller.
+8.3.0:
+ 
+- Reorganize abstract content controller.
+
+- Make all services private.
