@@ -25,7 +25,7 @@ interface ContentControllerInterface
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function showAction(Request $request, $content): Response;
+    public function __invoke(Request $request, $content): Response;
 
     /**
      * @param \Doctrine\ORM\QueryBuilder $qb     Query builder

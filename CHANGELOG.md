@@ -58,3 +58,5 @@ darvin_content:
 8.2.5: Allow translation locale property to be null on left join in translation joiner.
 
 8.2.7: Make front controller a service.
+
+8.3.0: Reorganize abstract content controller.

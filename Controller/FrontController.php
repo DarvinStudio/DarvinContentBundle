@@ -85,7 +85,7 @@ class FrontController
             throw new NotFoundHttpException($message);
         }
 
-        return $contentController->showAction($request, $content);
+        return $contentController->__invoke($request, $content);
     }
 
     /**

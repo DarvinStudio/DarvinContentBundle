@@ -10,7 +10,7 @@
 
 namespace Darvin\ContentBundle\DependencyInjection\Compiler;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Darvin\ContentBundle\Controller\AbstractContentController;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -25,14 +25,13 @@ class AddContentControllersPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container): void
     {
-        $containerRef = new Reference('service_container');
-        $pool         = $container->getDefinition('darvin_content.controller_pool');
+        $pool = $container->getDefinition('darvin_content.controller_pool');
 
         foreach (array_keys($container->findTaggedServiceIds('darvin_content.controller')) as $id) {
             $controller = $container->getDefinition($id);
 
-            if (in_array(AbstractController::class, class_parents($controller->getClass()))) {
-                $controller->addMethodCall('setContainer', [$containerRef]);
+            if (in_array(AbstractContentController::class, class_parents($controller->getClass()))) {
+                $controller->addMethodCall('setTwig', [new Reference('twig')]);
             }
 
             $pool->addMethodCall('addController', [new Reference($id)]);
