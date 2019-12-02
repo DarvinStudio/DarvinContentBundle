@@ -3,7 +3,6 @@ parameters:
 
 services:
     darvin_content.content.twig_extension:
-        class:  '%darvin_content.content.twig_extension.class%'
-        public: false
+        class: '%darvin_content.content.twig_extension.class%'
         tags:
             - { name: twig.extension }
