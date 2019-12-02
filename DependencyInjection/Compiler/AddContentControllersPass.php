@@ -26,7 +26,7 @@ class AddContentControllersPass implements CompilerPassInterface
     public function process(ContainerBuilder $container): void
     {
         $containerRef = new Reference('service_container');
-        $pool         = $container->getDefinition('darvin_content.controller.pool');
+        $pool         = $container->getDefinition('darvin_content.controller_pool');
 
         foreach (array_keys($container->findTaggedServiceIds('darvin_content.controller')) as $id) {
             $controller = $container->getDefinition($id);

@@ -13,16 +13,44 @@ namespace Darvin\ContentBundle\Controller;
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Repository\SlugMapItemRepository;
 use Darvin\ContentBundle\Translatable\TranslationJoinerInterface;
+use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Content front controller
  */
-class ContentFrontController extends AbstractController
+class FrontController
 {
+    /**
+     * @var \Darvin\ContentBundle\Controller\ContentControllerPoolInterface
+     */
+    private $controllerPool;
+
+    /**
+     * @var \Doctrine\Common\Persistence\ObjectManager
+     */
+    private $om;
+
+    /**
+     * @var \Darvin\ContentBundle\Translatable\TranslationJoinerInterface
+     */
+    private $translationJoiner;
+
+    /**
+     * @param \Darvin\ContentBundle\Controller\ContentControllerPoolInterface $controllerPool    Content controller pool
+     * @param \Doctrine\Common\Persistence\ObjectManager                      $om                Object manager
+     * @param \Darvin\ContentBundle\Translatable\TranslationJoinerInterface   $translationJoiner Translation joiner
+     */
+    public function __construct(ContentControllerPoolInterface $controllerPool, ObjectManager $om, TranslationJoinerInterface $translationJoiner)
+    {
+        $this->controllerPool = $controllerPool;
+        $this->om = $om;
+        $this->translationJoiner = $translationJoiner;
+    }
+
     /**
      * @param \Symfony\Component\HttpFoundation\Request $request Request
      * @param string                                    $slug    Content slug
@@ -30,14 +58,14 @@ class ContentFrontController extends AbstractController
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public function showAction(Request $request, string $slug): Response
+    public function __invoke(Request $request, string $slug): Response
     {
         $slugMapItem = $this->getSlugMapItem($slug);
 
         try {
-            $contentController = $this->getContentControllerPool()->getController($slugMapItem->getObjectClass());
+            $contentController = $this->controllerPool->getController($slugMapItem->getObjectClass());
         } catch (ControllerNotExistsException $ex) {
-            throw $this->createNotFoundException($ex->getMessage(), $ex);
+            throw new NotFoundHttpException($ex->getMessage(), $ex);
         }
 
         $content = $this->getContent(
@@ -54,7 +82,7 @@ class ContentFrontController extends AbstractController
                 $slugMapItem->getObjectId()
             );
 
-            throw $this->createNotFoundException($message);
+            throw new NotFoundHttpException($message);
         }
 
         return $contentController->showAction($request, $content);
@@ -70,7 +98,7 @@ class ContentFrontController extends AbstractController
      */
     private function getContent(string $objectClass, string $objectId, string $locale, ContentControllerInterface $contentController)
     {
-        $repository = $this->getDoctrine()->getRepository($objectClass);
+        $repository = $this->om->getRepository($objectClass);
 
         if (!$repository instanceof EntityRepository) {
             return $repository->find($objectId);
@@ -80,10 +108,8 @@ class ContentFrontController extends AbstractController
             ->andWhere('o.id = :id')
             ->setParameter('id', $objectId);
 
-        $translationJoiner = $this->getTranslationJoiner();
-
-        if ($translationJoiner->isTranslatable($objectClass)) {
-            $translationJoiner->joinTranslation($qb, true, $locale, null, true);
+        if ($this->translationJoiner->isTranslatable($objectClass)) {
+            $this->translationJoiner->joinTranslation($qb, true, $locale, null, true);
         }
 
         $contentController->handleQueryBuilder($qb, $locale);
@@ -104,18 +130,10 @@ class ContentFrontController extends AbstractController
         ]);
 
         if (empty($slugMapItem)) {
-            throw $this->createNotFoundException(sprintf('Unable to find slug map item by slug "%s".', $slug));
+            throw new NotFoundHttpException(sprintf('Unable to find slug map item by slug "%s".', $slug));
         }
 
         return $slugMapItem;
-    }
-
-    /**
-     * @return \Darvin\ContentBundle\Controller\ContentControllerPoolInterface
-     */
-    private function getContentControllerPool(): ContentControllerPoolInterface
-    {
-        return $this->get('darvin_content.controller.pool');
     }
 
     /**
@@ -123,14 +141,6 @@ class ContentFrontController extends AbstractController
      */
     private function getSlugMapItemRepository(): SlugMapItemRepository
     {
-        return $this->getDoctrine()->getRepository(SlugMapItem::class);
-    }
-
-    /**
-     * @return \Darvin\ContentBundle\Translatable\TranslationJoinerInterface
-     */
-    private function getTranslationJoiner(): TranslationJoinerInterface
-    {
-        return $this->get('darvin_content.translatable.translation_joiner');
+        return $this->om->getRepository(SlugMapItem::class);
     }
 }

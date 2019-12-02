@@ -1,9 +1,17 @@
 parameters:
-    darvin_content.controller.pool.class: Darvin\ContentBundle\Controller\ContentControllerPool
+    darvin_content.controller.front.class: Darvin\ContentBundle\Controller\FrontController
+
+    darvin_content.controller_pool.class: Darvin\ContentBundle\Controller\ContentControllerPool
 
 services:
-    _defaults:
-        public: true
+    darvin_content.controller.front:
+        class: '%darvin_content.controller.front.class%'
+        arguments:
+            - '@darvin_content.controller_pool'
+            - '@doctrine.orm.entity_manager'
+            - '@darvin_content.translatable.translation_joiner'
+        tags:
+            - { name: controller.service_arguments }
 
-    darvin_content.controller.pool:
-        class: '%darvin_content.controller.pool.class%'
+    darvin_content.controller_pool:
+        class: '%darvin_content.controller_pool.class%'
