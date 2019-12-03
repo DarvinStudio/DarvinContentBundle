@@ -28,7 +28,7 @@ trait TranslatableRepositoryTrait
     {
         $qb->innerJoin('o.translations', 'translations');
 
-        if (!empty($locale)) {
+        if (null !== $locale) {
             $qb->andWhere('translations.locale = :locale')->setParameter('locale', $locale);
         }
         if ($addSelect) {
@@ -49,7 +49,7 @@ trait TranslatableRepositoryTrait
     {
         $qb->leftJoin('o.translations', 'translations');
 
-        if (!empty($locale)) {
+        if (null !== $locale) {
             $qb
                 ->andWhere($qb->expr()->orX(
                     'translations.locale IS NULL',

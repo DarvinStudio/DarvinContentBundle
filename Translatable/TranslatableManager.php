@@ -155,7 +155,7 @@ class TranslatableManager implements TranslatableManagerInterface
         if (!isset($this->checkedIfTranslatable[$entityClass])) {
             $meta = $this->getDoctrineMetadata($entityClass);
 
-            $this->checkedIfTranslatable[$entityClass] = !empty($meta)
+            $this->checkedIfTranslatable[$entityClass] = null !== $meta
                 ? $this->classAnalyzer->hasTrait($meta->getReflectionClass(), $this->translatableTrait)
                 : false;
         }
@@ -171,7 +171,7 @@ class TranslatableManager implements TranslatableManagerInterface
         if (!isset($this->checkedIfTranslation[$entityClass])) {
             $meta = $this->getDoctrineMetadata($entityClass);
 
-            $this->checkedIfTranslation[$entityClass] = !empty($meta)
+            $this->checkedIfTranslation[$entityClass] = null !== $meta
                 ? $this->classAnalyzer->hasTrait($meta->getReflectionClass(), $this->translationTrait)
                 : false;
         }

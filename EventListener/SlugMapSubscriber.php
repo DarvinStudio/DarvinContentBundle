@@ -138,7 +138,7 @@ class SlugMapSubscriber implements EventSubscriber
         $em        = $event->getEntityManager();
 
         foreach ($changeSet as $oldSlug => $newSlug) {
-            if (empty($oldSlug)) {
+            if (null === $oldSlug) {
                 unset($changeSet[$oldSlug]);
             }
         }

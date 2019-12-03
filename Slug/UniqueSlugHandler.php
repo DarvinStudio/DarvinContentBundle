@@ -83,7 +83,7 @@ class UniqueSlugHandler implements SlugHandlerInterface
             if ($slug !== $similar['slug']) {
                 continue;
             }
-            if (empty($entityId)) {
+            if (null === $entityId) {
                 return false;
             }
             if (!($entityId == $similar['objectId']

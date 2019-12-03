@@ -75,7 +75,7 @@ class FrontController
             $contentController
         );
 
-        if (empty($content)) {
+        if (null === $content) {
             $message = sprintf(
                 'Unable to find content object "%s" by ID "%s".',
                 $slugMapItem->getObjectClass(),
@@ -129,7 +129,7 @@ class FrontController
             'slug' => $slug,
         ]);
 
-        if (empty($slugMapItem)) {
+        if (null === $slugMapItem) {
             throw new NotFoundHttpException(sprintf('Unable to find slug map item by slug "%s".', $slug));
         }
 

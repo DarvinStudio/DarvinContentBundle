@@ -62,7 +62,7 @@ class TranslationJoiner implements TranslationJoinerInterface
         $translationLocaleProperty = $this->translatableManager->getTranslationLocaleProperty();
         $translationsProperty = $this->translatableManager->getTranslationsProperty();
 
-        if (empty($joinAlias)) {
+        if (null === $joinAlias) {
             $joinAlias = $translationsProperty;
         }
 
@@ -70,13 +70,13 @@ class TranslationJoiner implements TranslationJoinerInterface
 
         $sameAliasJoin = QueryBuilderUtil::findJoinByAlias($qb, $rootAlias, $joinAlias);
 
-        if (empty($sameAliasJoin)) {
+        if (null === $sameAliasJoin) {
             $inner ? $qb->innerJoin($join, $joinAlias) : $qb->leftJoin($join, $joinAlias);
 
             if ($addSelect) {
                 $qb->addSelect($joinAlias);
             }
-            if (empty($locale)) {
+            if (null === $locale) {
                 $locale = $this->localeProvider->getCurrentLocale();
             }
 

@@ -54,7 +54,7 @@ class EntityRouter implements EntityRouterInterface
      */
     public function generateUrl($entity, int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH, array $params = []): ?string
     {
-        if (empty($entity)) {
+        if (null === $entity) {
             return null;
         }
 

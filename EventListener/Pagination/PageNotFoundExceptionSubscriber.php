@@ -38,7 +38,7 @@ class PageNotFoundExceptionSubscriber implements EventSubscriberInterface
     {
         $pageNotFoundException = $this->getPageNotFoundException($event);
 
-        if (!empty($pageNotFoundException)) {
+        if (null !== $pageNotFoundException) {
             $event->setException(new NotFoundHttpException($pageNotFoundException->getMessage()));
         }
     }

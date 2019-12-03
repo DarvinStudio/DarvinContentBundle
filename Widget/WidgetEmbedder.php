@@ -52,8 +52,10 @@ class WidgetEmbedder implements WidgetEmbedderInterface
      */
     public function embed(?string $content, bool $onlyWidgetsOnNonFirstPage = false): ?string
     {
-        if (empty($content)) {
-            return $content;
+        $content = (string)$content;
+
+        if ('' === $content) {
+            return null;
         }
 
         $replacements = [];
@@ -71,7 +73,7 @@ class WidgetEmbedder implements WidgetEmbedderInterface
 
         $request = $this->requestStack->getCurrentRequest();
 
-        if (!empty($request)) {
+        if (null !== $request) {
             foreach ($request->attributes->get(PagerSubscriber::REQUEST_ATTR_PAGE_PARAMS, []) as $param) {
                 if (1 !== (int)$request->query->get($param)) {
                     return implode($replacements);

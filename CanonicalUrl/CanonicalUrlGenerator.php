@@ -71,7 +71,7 @@ class CanonicalUrlGenerator implements CanonicalUrlGeneratorInterface
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if (empty($request)) {
+        if (null === $request) {
             return null;
         }
 

@@ -52,7 +52,7 @@ class SlugMapRouter implements SlugMapRouterInterface
      */
     public function generateUrl(?SlugMapItem $item, int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH, array $params = []): ?string
     {
-        if (empty($item)) {
+        if (null === $item) {
             return null;
         }
         if ($this->homepageRouter->isHomepage($item->getObject())) {

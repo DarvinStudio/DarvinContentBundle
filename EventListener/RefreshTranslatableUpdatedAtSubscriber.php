@@ -81,7 +81,7 @@ class RefreshTranslatableUpdatedAtSubscriber implements EventSubscriber
             /** @var \Knp\DoctrineBehaviors\Model\Translatable\Translation $entity */
             $translatable = $entity->getTranslatable();
 
-            if (empty($translatable)) {
+            if (null === $translatable) {
                 continue;
             }
 

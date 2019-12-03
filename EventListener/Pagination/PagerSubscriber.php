@@ -58,7 +58,7 @@ class PagerSubscriber implements EventSubscriberInterface
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if (empty($request)) {
+        if (null === $request) {
             return;
         }
 
@@ -104,7 +104,7 @@ class PagerSubscriber implements EventSubscriberInterface
 
         $request = $this->requestStack->getCurrentRequest();
 
-        if (!empty($request)) {
+        if (null !== $request) {
             if ($page > 1) {
                 $request->attributes->set(self::REQUEST_ATTR_PAGE_PREV, $page - 1);
             }

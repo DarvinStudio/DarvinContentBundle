@@ -56,7 +56,7 @@ class CanonicalUrlExtension extends AbstractExtension
     {
         $url = $this->canonicalUrlGenerator->generateCanonicalUrl();
 
-        if (empty($url)) {
+        if (null === $url) {
             return null;
         }
 

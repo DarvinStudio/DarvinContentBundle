@@ -58,7 +58,7 @@ class SortEntityJoiner implements SortEntityJoinerInterface
      */
     public function joinEntity(QueryBuilder $qb, ?string $sortPropertyPath, string $locale): void
     {
-        if (empty($sortedByPropertyPath)) {
+        if (null === $sortPropertyPath) {
             return;
         }
 
@@ -76,7 +76,7 @@ class SortEntityJoiner implements SortEntityJoinerInterface
             throw new \InvalidArgumentException(sprintf('Unable to get Doctrine metadata for class "%s".', $entityClass));
         }
 
-        $parts = explode('.', $sortedByPropertyPath);
+        $parts = explode('.', $sortPropertyPath);
         $partsCount = count($parts);
 
         if (!in_array($partsCount, [2, 3])) {
@@ -125,7 +125,7 @@ class SortEntityJoiner implements SortEntityJoinerInterface
 
         $sameAliasJoin = QueryBuilderUtil::findJoinByAlias($qb, $qbRootAlias, $firstPart);
 
-        if (empty($sameAliasJoin)) {
+        if (null === $sameAliasJoin) {
             $qb->leftJoin($join, $firstPart);
 
             return;
