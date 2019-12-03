@@ -58,7 +58,9 @@ class SortEntityJoiner implements SortEntityJoinerInterface
      */
     public function joinEntity(QueryBuilder $qb, ?string $sortPropertyPath, string $locale): void
     {
-        if (null === $sortPropertyPath) {
+        $sortPropertyPath = (string)$sortPropertyPath;
+
+        if ('' === $sortPropertyPath) {
             return;
         }
 
