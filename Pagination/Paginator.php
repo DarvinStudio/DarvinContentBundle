@@ -22,14 +22,12 @@ class Paginator extends BasePaginator
     /**
      * {@inheritDoc}
      */
-    public function paginate($target, $page = 1, $limit = 10, array $options = []): PaginationInterface
+    public function paginate($target, int $page = 1, int $limit = 10, array $options = []): PaginationInterface
     {
-        $page = (int) $page;
-        $limit = intval(abs($limit));
-        if (!$limit) {
-            throw new \LogicException("Invalid item per page number, must be a positive number");
+        if ($limit <= 0 or $page < 0) {
+            throw new \LogicException("Invalid item per page number. Limit: $limit and Page: $page, must be positive integers");
         }
-        $offset = 0 === $page ? 0 : (abs($page - 1) * $limit);
+        $offset = $page === 0 ? 0 : (($page - 1) * $limit);
         $options = array_merge($this->defaultOptions, $options);
 
         // normalize default sort field
@@ -38,22 +36,22 @@ class Paginator extends BasePaginator
         }
 
         // default sort field and direction are set based on options (if available)
-        if (!isset($_GET[$options[self::SORT_FIELD_PARAMETER_NAME]]) && isset($options[self::DEFAULT_SORT_FIELD_NAME])) {
-            $_GET[$options[self::SORT_FIELD_PARAMETER_NAME]] = $options[self::DEFAULT_SORT_FIELD_NAME];
+        if (isset($options[self::DEFAULT_SORT_FIELD_NAME]) && !$this->request->query->has($options[self::SORT_FIELD_PARAMETER_NAME])) {
+            $this->request->query->set($options[self::SORT_FIELD_PARAMETER_NAME], $options[self::DEFAULT_SORT_FIELD_NAME]);
 
-            if (!isset($_GET[$options[self::SORT_DIRECTION_PARAMETER_NAME]])) {
-                $_GET[$options[self::SORT_DIRECTION_PARAMETER_NAME]] = isset($options[self::DEFAULT_SORT_DIRECTION]) ? $options[self::DEFAULT_SORT_DIRECTION] : 'asc';
+            if (!$this->request->query->has($options[self::SORT_DIRECTION_PARAMETER_NAME])) {
+                $this->request->query->set($options[self::SORT_DIRECTION_PARAMETER_NAME], $options[self::DEFAULT_SORT_DIRECTION] ?? 'asc');
             }
         }
 
         // before pagination start
-        $beforeEvent = new Event\BeforeEvent($this->eventDispatcher);
-        $this->eventDispatcher->dispatch($beforeEvent, 'knp_pager.before');
+        $beforeEvent = new Event\BeforeEvent($this->eventDispatcher, $this->request);
+        $this->dispatch('knp_pager.before', $beforeEvent);
         // items
-        $itemsEvent = new Event\ItemsEvent($offset, 0 === $page ? PHP_INT_MAX : $limit);
+        $itemsEvent = new Event\ItemsEvent($offset, $page === 0 ? PHP_INT_MAX : $limit);
         $itemsEvent->options = &$options;
         $itemsEvent->target = &$target;
-        $this->eventDispatcher->dispatch($itemsEvent, 'knp_pager.items');
+        $this->dispatch('knp_pager.items', $itemsEvent);
         if (!$itemsEvent->isPropagationStopped()) {
             throw new \RuntimeException('One of listeners must count and slice given target');
         }
@@ -61,7 +59,7 @@ class Paginator extends BasePaginator
         $paginationEvent = new Event\PaginationEvent;
         $paginationEvent->target = &$target;
         $paginationEvent->options = &$options;
-        $this->eventDispatcher->dispatch($paginationEvent, 'knp_pager.pagination');
+        $this->dispatch('knp_pager.pagination', $paginationEvent);
         if (!$paginationEvent->isPropagationStopped()) {
             throw new \RuntimeException('One of listeners must create pagination view');
         }
@@ -76,7 +74,7 @@ class Paginator extends BasePaginator
 
         // after
         $afterEvent = new Event\AfterEvent($paginationView);
-        $this->eventDispatcher->dispatch($afterEvent, 'knp_pager.after');
+        $this->dispatch('knp_pager.after', $afterEvent);
         return $paginationView;
     }
 }
