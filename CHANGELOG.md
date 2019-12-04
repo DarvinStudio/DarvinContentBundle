@@ -64,3 +64,5 @@ darvin_content:
 - Reorganize abstract content controller.
 
 - Make all services private.
+
+8.3.3: Change method of checking translation entity's emptiness.
