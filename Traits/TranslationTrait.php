@@ -28,7 +28,10 @@ trait TranslationTrait
             if (in_array($property, ['translatable', 'locale'])) {
                 continue;
             }
-            if (!empty($value)) {
+
+            $empty = null === $value || '' === $value || (is_array($value) && empty($value));
+
+            if (!$empty) {
                 return false;
             }
         }
