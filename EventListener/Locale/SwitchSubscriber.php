@@ -79,7 +79,7 @@ class SwitchSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $exception = $event->getException();
+        $exception = $event->getThrowable();
 
         if (!$exception instanceof HttpExceptionInterface) {
             return;

@@ -13,8 +13,9 @@ namespace Darvin\ContentBundle\EventListener\Widget\Embedder;
 use Darvin\ContentBundle\Widget\Embedder\Exception\RedirectException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Twig\Error\Error;
 
 /**
  * Widget embedder redirect event subscriber
@@ -32,13 +33,13 @@ class RedirectSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event Event
+     * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent $event Event
      */
-    public function redirect(GetResponseForExceptionEvent $event): void
+    public function redirect(ExceptionEvent $event): void
     {
-        $exception = $event->getException();
+        $exception = $event->getThrowable();
 
-        if (!$exception instanceof \Twig_Error) {
+        if (!$exception instanceof Error) {
             return;
         }
 

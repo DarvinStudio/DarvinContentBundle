@@ -12,7 +12,7 @@ namespace Darvin\ContentBundle\EventListener\Pagination;
 
 use Darvin\ContentBundle\Pagination\PageNotFoundException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -32,25 +32,25 @@ class PageNotFoundExceptionSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event Event
+     * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent $event Event
      */
-    public function setHttpException(GetResponseForExceptionEvent $event): void
+    public function setHttpException(ExceptionEvent $event): void
     {
         $pageNotFoundException = $this->getPageNotFoundException($event);
 
         if (null !== $pageNotFoundException) {
-            $event->setException(new NotFoundHttpException($pageNotFoundException->getMessage()));
+            $event->setThrowable(new NotFoundHttpException($pageNotFoundException->getMessage()));
         }
     }
 
     /**
-     * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event Event
+     * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent $event Event
      *
      * @return \Darvin\ContentBundle\Pagination\PageNotFoundException|null
      */
-    private function getPageNotFoundException(GetResponseForExceptionEvent $event): ?PageNotFoundException
+    private function getPageNotFoundException(ExceptionEvent $event): ?PageNotFoundException
     {
-        $exception = $event->getException();
+        $exception = $event->getThrowable();
 
         if ($exception instanceof PageNotFoundException) {
             return $exception;
