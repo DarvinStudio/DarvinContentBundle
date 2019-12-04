@@ -11,7 +11,7 @@
 namespace Darvin\ContentBundle\Event\Filterer;
 
 use Doctrine\ORM\QueryBuilder;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Filterer build constraint event
