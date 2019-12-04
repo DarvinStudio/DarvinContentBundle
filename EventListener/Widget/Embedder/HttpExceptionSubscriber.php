@@ -12,8 +12,9 @@ namespace Darvin\ContentBundle\EventListener\Widget\Embedder;
 
 use Darvin\ContentBundle\Widget\Embedder\Exception\HttpException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Twig\Error\Error;
 
 /**
  * Widget embedder HTTP exception event subscriber
@@ -31,20 +32,20 @@ class HttpExceptionSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event Event
+     * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent $event Event
      */
-    public function raiseKernelHttpException(GetResponseForExceptionEvent $event): void
+    public function raiseKernelHttpException(ExceptionEvent $event): void
     {
-        $exception = $event->getException();
+        $exception = $event->getThrowable();
 
-        if (!$exception instanceof \Twig_Error) {
+        if (!$exception instanceof Error) {
             return;
         }
 
         $previous = $exception->getPrevious();
 
         if ($previous instanceof HttpException) {
-            $event->setException($previous->getKernelHttpException());
+            $event->setThrowable($previous->getKernelHttpException());
         }
     }
 }
