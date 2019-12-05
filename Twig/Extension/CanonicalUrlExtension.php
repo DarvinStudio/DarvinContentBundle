@@ -34,7 +34,7 @@ class CanonicalUrlExtension extends AbstractExtension
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getFunctions(): array
     {

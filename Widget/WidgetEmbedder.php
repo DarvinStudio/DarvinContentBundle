@@ -48,7 +48,7 @@ class WidgetEmbedder implements WidgetEmbedderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function embed(?string $content, bool $onlyWidgetsOnNonFirstPage = false): ?string
     {

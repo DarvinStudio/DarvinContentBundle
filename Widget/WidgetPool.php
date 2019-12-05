@@ -96,7 +96,7 @@ class WidgetPool implements WidgetPoolInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getWidget(string $name): WidgetInterface
     {
@@ -110,7 +110,7 @@ class WidgetPool implements WidgetPoolInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function widgetExists(string $name): bool
     {
@@ -120,7 +120,7 @@ class WidgetPool implements WidgetPoolInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getAllWidgets(): iterable
     {
@@ -130,7 +130,7 @@ class WidgetPool implements WidgetPoolInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function isWidgetUnique(string $name): bool
     {

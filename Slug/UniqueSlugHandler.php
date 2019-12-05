@@ -36,7 +36,7 @@ class UniqueSlugHandler implements SlugHandlerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function handle(string &$slug, string &$suffix, $entity, EntityManager $em): void
     {

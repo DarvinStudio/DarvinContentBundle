@@ -54,7 +54,7 @@ class RefreshTranslatableUpdatedAtSubscriber implements EventSubscriber
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getSubscribedEvents(): array
     {

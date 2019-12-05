@@ -22,7 +22,7 @@ use Twig\Error\Error;
 class HttpExceptionSubscriber implements EventSubscriberInterface
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public static function getSubscribedEvents(): array
     {

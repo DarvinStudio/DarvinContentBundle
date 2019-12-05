@@ -25,7 +25,7 @@ class WidgetNameUnique extends Constraint
     public $message = 'widget.name_unique';
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function validatedBy(): string
     {

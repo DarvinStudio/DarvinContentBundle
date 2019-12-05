@@ -50,7 +50,7 @@ class EntityRouter implements EntityRouterInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function generateUrl($entity, int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH, array $params = []): ?string
     {

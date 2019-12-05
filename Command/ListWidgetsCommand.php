@@ -47,7 +47,7 @@ class ListWidgetsCommand extends Command
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function configure(): void
     {
@@ -55,7 +55,7 @@ class ListWidgetsCommand extends Command
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

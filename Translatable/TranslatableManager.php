@@ -112,7 +112,7 @@ class TranslatableManager implements TranslatableManagerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getTranslatableClass(string $entityClass): string
     {
@@ -130,7 +130,7 @@ class TranslatableManager implements TranslatableManagerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getTranslationClass(string $entityClass): string
     {
@@ -148,7 +148,7 @@ class TranslatableManager implements TranslatableManagerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function isTranslatable(string $entityClass): bool
     {
@@ -164,7 +164,7 @@ class TranslatableManager implements TranslatableManagerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function isTranslation(string $entityClass): bool
     {
@@ -180,7 +180,7 @@ class TranslatableManager implements TranslatableManagerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getTranslationLocaleProperty(): string
     {
@@ -188,7 +188,7 @@ class TranslatableManager implements TranslatableManagerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getTranslationsProperty(): string
     {

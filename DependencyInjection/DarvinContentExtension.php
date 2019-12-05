@@ -25,7 +25,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 class DarvinContentExtension extends Extension implements PrependExtensionInterface
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function load(array $configs, ContainerBuilder $container): void
     {
@@ -64,7 +64,7 @@ class DarvinContentExtension extends Extension implements PrependExtensionInterf
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function prepend(ContainerBuilder $container): void
     {

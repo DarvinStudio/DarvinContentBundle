@@ -68,7 +68,7 @@ class SlugMapSubscriber implements EventSubscriber
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getSubscribedEvents(): array
     {
@@ -80,7 +80,7 @@ class SlugMapSubscriber implements EventSubscriber
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function onFlush(OnFlushEventArgs $args): void
     {

@@ -45,7 +45,7 @@ class ContentControllerPool implements ContentControllerPoolInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getController(string $contentClass): ContentControllerInterface
     {

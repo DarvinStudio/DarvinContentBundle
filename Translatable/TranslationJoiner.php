@@ -40,7 +40,7 @@ class TranslationJoiner implements TranslationJoinerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function joinTranslation(QueryBuilder $qb, bool $addSelect = false, ?string $locale = null, ?string $joinAlias = null, bool $inner = false): void
     {
@@ -105,7 +105,7 @@ class TranslationJoiner implements TranslationJoinerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function isTranslatable(string $entityClass): bool
     {

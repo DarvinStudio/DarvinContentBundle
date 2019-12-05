@@ -42,7 +42,7 @@ class TranslatableTypeGuesser implements FormTypeGuesserInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function guessType($class, $property): ?TypeGuess
     {
@@ -50,7 +50,7 @@ class TranslatableTypeGuesser implements FormTypeGuesserInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function guessRequired($class, $property): ?ValueGuess
     {
@@ -58,7 +58,7 @@ class TranslatableTypeGuesser implements FormTypeGuesserInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function guessMaxLength($class, $property): ?ValueGuess
     {
@@ -66,7 +66,7 @@ class TranslatableTypeGuesser implements FormTypeGuesserInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function guessPattern($class, $property): ?ValueGuess
     {

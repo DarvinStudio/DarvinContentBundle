@@ -16,7 +16,7 @@ namespace Darvin\ContentBundle\Pagination;
 class PageNotFoundException extends \Exception
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function __construct()
     {

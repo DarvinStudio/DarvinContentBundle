@@ -55,7 +55,7 @@ class ForwardToControllerWidgetFactory implements WidgetFactoryInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function createWidgets(): iterable
     {

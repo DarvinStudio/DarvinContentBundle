@@ -54,7 +54,7 @@ class SortEntityJoiner implements SortEntityJoinerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function joinEntity(QueryBuilder $qb, ?string $sortPropertyPath, string $locale): void
     {

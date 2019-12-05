@@ -22,7 +22,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class PageNotFoundExceptionSubscriber implements EventSubscriberInterface
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public static function getSubscribedEvents(): array
     {

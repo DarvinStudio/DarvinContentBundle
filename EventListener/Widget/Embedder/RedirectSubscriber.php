@@ -23,7 +23,7 @@ use Twig\Error\Error;
 class RedirectSubscriber implements EventSubscriberInterface
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public static function getSubscribedEvents(): array
     {

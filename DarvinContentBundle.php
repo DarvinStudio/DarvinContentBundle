@@ -26,7 +26,7 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 class DarvinContentBundle extends Bundle
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function build(ContainerBuilder $container): void
     {

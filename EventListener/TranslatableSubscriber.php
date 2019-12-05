@@ -54,7 +54,7 @@ class TranslatableSubscriber extends BaseTranslatableSubscriber
     private $entityResolver;
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function __construct(
         ClassAnalyzer $classAnalyzer,
@@ -87,7 +87,7 @@ class TranslatableSubscriber extends BaseTranslatableSubscriber
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function loadClassMetadata(LoadClassMetadataEventArgs $args): void
     {

@@ -25,7 +25,7 @@ use Symfony\Component\DependencyInjection\Reference;
 class ReplaceTranslatableServicesPass implements CompilerPassInterface
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function process(ContainerBuilder $container): void
     {

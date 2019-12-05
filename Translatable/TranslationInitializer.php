@@ -51,7 +51,7 @@ class TranslationInitializer implements TranslationInitializerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function initializeTranslations($entity, array $locales): void
     {

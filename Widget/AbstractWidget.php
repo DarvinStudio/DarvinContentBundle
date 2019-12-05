@@ -23,7 +23,7 @@ abstract class AbstractWidget implements WidgetInterface
     private $name = null;
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getSluggableEntityClasses(): iterable
     {
@@ -31,7 +31,7 @@ abstract class AbstractWidget implements WidgetInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function isSluggable($entity): bool
     {
@@ -45,7 +45,7 @@ abstract class AbstractWidget implements WidgetInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getName(): string
     {

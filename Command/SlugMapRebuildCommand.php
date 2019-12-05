@@ -55,7 +55,7 @@ class SlugMapRebuildCommand extends Command
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function configure(): void
     {
@@ -63,7 +63,7 @@ class SlugMapRebuildCommand extends Command
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

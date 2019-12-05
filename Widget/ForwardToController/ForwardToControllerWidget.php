@@ -62,7 +62,7 @@ class ForwardToControllerWidget extends AbstractCKEditorWidget
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getContent(): ?string
     {
@@ -74,7 +74,7 @@ class ForwardToControllerWidget extends AbstractCKEditorWidget
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getSluggableEntityClasses(): iterable
     {
@@ -82,7 +82,7 @@ class ForwardToControllerWidget extends AbstractCKEditorWidget
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getOptions(): array
     {
@@ -90,7 +90,7 @@ class ForwardToControllerWidget extends AbstractCKEditorWidget
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getName(): string
     {

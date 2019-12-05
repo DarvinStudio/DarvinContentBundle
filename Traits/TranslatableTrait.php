@@ -66,7 +66,7 @@ trait TranslatableTrait
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function proxyCurrentLocaleTranslation(string $method, array $arguments = [])
     {

@@ -65,7 +65,7 @@ class CanonicalUrlGenerator implements CanonicalUrlGeneratorInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function generateCanonicalUrl(): ?string
     {

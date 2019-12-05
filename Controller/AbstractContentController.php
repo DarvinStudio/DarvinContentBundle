@@ -33,7 +33,7 @@ abstract class AbstractContentController implements ContentControllerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function handleQueryBuilder(QueryBuilder $qb, string $locale): void
     {
