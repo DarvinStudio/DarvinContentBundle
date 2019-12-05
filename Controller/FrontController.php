@@ -94,9 +94,9 @@ class FrontController
      * @param string                                                      $locale            Locale
      * @param \Darvin\ContentBundle\Controller\ContentControllerInterface $contentController Content controller
      *
-     * @return object
+     * @return object|null
      */
-    private function getContent(string $objectClass, string $objectId, string $locale, ContentControllerInterface $contentController)
+    private function getContent(string $objectClass, string $objectId, string $locale, ContentControllerInterface $contentController): ?object
     {
         $repository = $this->om->getRepository($objectClass);
 

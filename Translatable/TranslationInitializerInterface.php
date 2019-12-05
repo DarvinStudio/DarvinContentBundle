@@ -21,5 +21,5 @@ interface TranslationInitializerInterface
      *
      * @throws \Darvin\ContentBundle\Translatable\TranslatableException
      */
-    public function initializeTranslations($entity, array $locales): void;
+    public function initializeTranslations(object $entity, array $locales): void;
 }

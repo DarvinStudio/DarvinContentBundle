@@ -31,5 +31,5 @@ interface AttributeRendererInterface
      *
      * @return string
      */
-    public function renderItemAttr($object, array $attr = []): string;
+    public function renderItemAttr(object $object, array $attr = []): string;
 }

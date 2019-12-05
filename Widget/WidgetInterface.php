@@ -30,7 +30,7 @@ interface WidgetInterface
      *
      * @return bool
      */
-    public function isSluggable($entity): bool;
+    public function isSluggable(object $entity): bool;
 
     /**
      * @return string

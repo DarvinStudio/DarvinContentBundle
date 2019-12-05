@@ -213,7 +213,7 @@ class SlugMapSubscriber implements EventSubscriber
      * @param \Doctrine\ORM\EntityManager $em     Entity manager
      * @param object                      $entity Entity
      */
-    private function deleteSlugMapItems(EntityManager $em, $entity): void
+    private function deleteSlugMapItems(EntityManager $em, object $entity): void
     {
         $entityClass = ClassUtils::getClass($entity);
 
@@ -237,7 +237,7 @@ class SlugMapSubscriber implements EventSubscriber
      * @param \Doctrine\ORM\EntityManager $em     Entity manager
      * @param object                      $entity Entity
      */
-    private function updateSlugMapItems(EntityManager $em, $entity): void
+    private function updateSlugMapItems(EntityManager $em, object $entity): void
     {
         $entityClass = ClassUtils::getClass($entity);
 
@@ -281,7 +281,7 @@ class SlugMapSubscriber implements EventSubscriber
      *
      * @return mixed
      */
-    private function getEntityId(EntityManager $em, $entity, string $entityClass)
+    private function getEntityId(EntityManager $em, object $entity, string $entityClass)
     {
         $ids = $em->getClassMetadata($entityClass)->getIdentifierValues($entity);
 

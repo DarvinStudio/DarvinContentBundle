@@ -170,7 +170,7 @@ class SlugMapItem
     /**
      * @return object
      */
-    public function getObject()
+    public function getObject(): ?object
     {
         return $this->object;
     }
@@ -180,7 +180,7 @@ class SlugMapItem
      *
      * @return SlugMapItem
      */
-    public function setObject($object): SlugMapItem
+    public function setObject(?object $object): SlugMapItem
     {
         $this->object = $object;
 

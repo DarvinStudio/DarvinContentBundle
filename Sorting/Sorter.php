@@ -120,7 +120,7 @@ class Sorter implements SorterInterface
      *
      * @return string
      */
-    private function getObjectId($object, ClassMetadata $meta): string
+    private function getObjectId(object $object, ClassMetadata $meta): string
     {
         $ids = $meta->getIdentifierValues($object);
 

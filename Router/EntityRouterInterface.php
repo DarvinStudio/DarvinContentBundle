@@ -24,5 +24,5 @@ interface EntityRouterInterface
      *
      * @return string|null
      */
-    public function generateUrl($entity, int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH, array $params = []): ?string;
+    public function generateUrl(?object $entity, int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH, array $params = []): ?string;
 }

@@ -25,5 +25,5 @@ interface SlugMapItemFactoryInterface
      * @return \Darvin\ContentBundle\Entity\SlugMapItem[]
      * @throws \LogicException
      */
-    public function createItems($object, array $slugsMeta, ClassMetadata $doctrineMeta): array;
+    public function createItems(object $object, array $slugsMeta, ClassMetadata $doctrineMeta): array;
 }

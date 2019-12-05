@@ -66,3 +66,5 @@ darvin_content:
 - Make all services private.
 
 8.3.3: Change method of checking translation entity's emptiness.
+
+8.3.6: Use "object" type hint.
