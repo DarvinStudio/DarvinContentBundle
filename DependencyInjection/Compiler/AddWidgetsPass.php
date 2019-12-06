@@ -10,6 +10,7 @@
 
 namespace Darvin\ContentBundle\DependencyInjection\Compiler;
 
+use Darvin\ContentBundle\DependencyInjection\DarvinContentExtension;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -27,7 +28,7 @@ class AddWidgetsPass implements CompilerPassInterface
         $blacklist = $container->getParameter('darvin_content.widget.blacklist');
         $pool      = $container->getDefinition('darvin_content.widget.pool');
 
-        foreach (array_keys($container->findTaggedServiceIds('darvin_content.widget')) as $id) {
+        foreach (array_keys($container->findTaggedServiceIds(DarvinContentExtension::TAG_WIDGET)) as $id) {
             if (!in_array($id, $blacklist)) {
                 $pool->addMethodCall('addWidget', [new Reference($id)]);
             }
