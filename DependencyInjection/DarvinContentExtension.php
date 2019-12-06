@@ -10,6 +10,9 @@
 
 namespace Darvin\ContentBundle\DependencyInjection;
 
+use Darvin\ContentBundle\Controller\ContentControllerInterface;
+use Darvin\ContentBundle\Widget\WidgetFactoryInterface;
+use Darvin\ContentBundle\Widget\WidgetInterface;
 use Darvin\Utils\DependencyInjection\ConfigInjector;
 use Darvin\Utils\DependencyInjection\ConfigLoader;
 use Darvin\Utils\DependencyInjection\ExtensionConfigurator;
@@ -29,6 +32,10 @@ class DarvinContentExtension extends Extension implements PrependExtensionInterf
      */
     public function load(array $configs, ContainerBuilder $container): void
     {
+        $container->registerForAutoconfiguration(ContentControllerInterface::class)->addTag('darvin_content.controller');
+        $container->registerForAutoconfiguration(WidgetInterface::class)->addTag('darvin_content.widget');
+        $container->registerForAutoconfiguration(WidgetFactoryInterface::class)->addTag('darvin_content.widget_factory');
+
         $config  = $this->processConfiguration(new Configuration(), $configs);
         $locales = $container->getParameter('locales');
 
