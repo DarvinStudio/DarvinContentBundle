@@ -19,7 +19,7 @@ interface PropertyEmbedderInterface
      * @param string|null $content Content
      * @param object|null $object  Object
      *
-     * @return string|null
+     * @return string
      */
-    public function embedProperties(?string $content, ?object $object = null): ?string;
+    public function embedProperties(?string $content, ?object $object = null): string;
 }

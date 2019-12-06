@@ -4,3 +4,5 @@ parameters:
 services:
     darvin_content.property.embedder:
         class: '%darvin_content.property.embedder.class%'
+        arguments:
+            - '@property_accessor'

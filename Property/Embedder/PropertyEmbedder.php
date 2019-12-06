@@ -10,16 +10,56 @@
 
 namespace Darvin\ContentBundle\Property\Embedder;
 
+use Darvin\Utils\Strings\StringsUtil;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
+
 /**
  * Property embedder
  */
 class PropertyEmbedder implements PropertyEmbedderInterface
 {
     /**
+     * @var \Symfony\Component\PropertyAccess\PropertyAccessorInterface
+     */
+    private $propertyAccessor;
+
+    /**
+     * @param \Symfony\Component\PropertyAccess\PropertyAccessorInterface $propertyAccessor Property accessor
+     */
+    public function __construct(PropertyAccessorInterface $propertyAccessor)
+    {
+        $this->propertyAccessor = $propertyAccessor;
+    }
+
+    /**
      * {@inheritDoc}
      */
-    public function embedProperties(?string $content, ?object $object = null): ?string
+    public function embedProperties(?string $content, ?object $object = null): string
     {
+        if (null === $content || '' === $content) {
+            return '';
+        }
+
+        preg_match_all('/%(\w+(\.\w+)*)%/', $content, $matches);
+
+        $properties = $matches[1];
+
+        if (empty($properties)) {
+            return $content;
+        }
+
+        $properties   = array_unique($properties);
+        $replacements = [];
+
+        if (null !== $object) {
+            foreach ($properties as $property) {
+                $replacements[sprintf('%%%s%%', $property)] = $this->propertyAccessor->getValue($object, StringsUtil::toCamelCase($property));
+            }
+        }
+        if (!empty($replacements)) {
+            $content = strtr($content, $replacements);
+        }
+
         return $content;
     }
 }
