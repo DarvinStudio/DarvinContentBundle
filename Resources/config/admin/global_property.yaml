@@ -1,0 +1,16 @@
+index_view_new_form: true
+
+form:
+    edit:
+        fields:
+            name: ~
+            translations:
+                type: A2lix\TranslationFormBundle\Form\Type\TranslationsType
+    filter:
+        fields:
+            name:
+                compare_strict: false
+            title:
+                compare_strict: false
+            value:
+                compare_strict: false
