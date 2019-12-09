@@ -80,6 +80,9 @@ class DarvinContentExtension extends Extension implements PrependExtensionInterf
      */
     public function prepend(ContainerBuilder $container): void
     {
-        (new ExtensionConfigurator($container, __DIR__.'/../Resources/config/app'))->configure('knp_paginator');
+        (new ExtensionConfigurator($container, __DIR__.'/../Resources/config/app'))->configure([
+            'doctrine',
+            'knp_paginator',
+        ]);
     }
 }

@@ -1,0 +1,4 @@
+doctrine:
+    orm:
+        resolve_target_entities:
+            Darvin\ContentBundle\Entity\GlobalPropertyInterface: Darvin\ContentBundle\Entity\GlobalProperty
