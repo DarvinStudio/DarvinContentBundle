@@ -10,6 +10,7 @@
 
 namespace Darvin\ContentBundle\Entity;
 
+use Darvin\ContentBundle\Traits\TranslatableTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -21,6 +22,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class GlobalProperty implements GlobalPropertyInterface
 {
+    use TranslatableTrait;
+
     /**
      * @var int
      *
