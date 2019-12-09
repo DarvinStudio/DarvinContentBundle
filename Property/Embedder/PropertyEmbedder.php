@@ -10,6 +10,7 @@
 
 namespace Darvin\ContentBundle\Property\Embedder;
 
+use Darvin\Utils\Strings\Stringifier\StringifierInterface;
 use Darvin\Utils\Strings\StringsUtil;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
@@ -24,11 +25,18 @@ class PropertyEmbedder implements PropertyEmbedderInterface
     private $propertyAccessor;
 
     /**
-     * @param \Symfony\Component\PropertyAccess\PropertyAccessorInterface $propertyAccessor Property accessor
+     * @var \Darvin\Utils\Strings\Stringifier\StringifierInterface
      */
-    public function __construct(PropertyAccessorInterface $propertyAccessor)
+    private $stringifier;
+
+    /**
+     * @param \Symfony\Component\PropertyAccess\PropertyAccessorInterface $propertyAccessor Property accessor
+     * @param \Darvin\Utils\Strings\Stringifier\StringifierInterface      $stringifier      Stringifier
+     */
+    public function __construct(PropertyAccessorInterface $propertyAccessor, StringifierInterface $stringifier)
     {
         $this->propertyAccessor = $propertyAccessor;
+        $this->stringifier = $stringifier;
     }
 
     /**
@@ -53,7 +61,11 @@ class PropertyEmbedder implements PropertyEmbedderInterface
 
         if (null !== $object) {
             foreach ($properties as $property) {
-                $replacements[sprintf('%%%s%%', $property)] = $this->propertyAccessor->getValue($object, StringsUtil::toCamelCase($property));
+                $propertyCamelized = StringsUtil::toCamelCase($property);
+
+                $value = $this->propertyAccessor->getValue($object, $propertyCamelized);
+
+                $replacements[sprintf('%%%s%%', $property)] = $this->stringifier->stringify($value);
             }
         }
         if (!empty($replacements)) {

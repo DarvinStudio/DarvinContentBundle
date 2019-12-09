@@ -6,3 +6,4 @@ services:
         class: '%darvin_content.property.embedder.class%'
         arguments:
             - '@property_accessor'
+            - '@darvin_utils.stringifier'
