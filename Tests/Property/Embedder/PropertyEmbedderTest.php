@@ -58,6 +58,14 @@ class PropertyEmbedderTest extends TestCase
      */
     public function embedPropertiesProvider(): iterable
     {
+        $stub = $this->getMockBuilder('Stub')->getMock();
+
         yield ['', null];
+        yield ['test', 'test'];
+        yield ['Hello, %world%!', 'Hello, %world%!'];
+        yield ['Hello, *VALUE*!', 'Hello, %world%!', $stub];
+        yield ['*VALUE*', '%test%', $stub];
+        yield ['%test', '%test', $stub];
+        yield ['*VALUE**VALUE*', '%test%%test%', $stub];
     }
 }
