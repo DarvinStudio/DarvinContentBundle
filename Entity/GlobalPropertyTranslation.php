@@ -12,6 +12,7 @@ namespace Darvin\ContentBundle\Entity;
 
 use Darvin\ContentBundle\Traits\TranslationTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Global property translation
@@ -23,4 +24,62 @@ use Doctrine\ORM\Mapping as ORM;
 class GlobalPropertyTranslation
 {
     use TranslationTrait;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column
+     *
+     * @Assert\NotBlank
+     */
+    protected $title;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="text")
+     *
+     * @Assert\NotBlank
+     */
+    protected $value;
+
+    /**
+     * @return string
+     */
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param string $title title
+     *
+     * @return GlobalPropertyTranslation
+     */
+    public function setTitle(?string $title): GlobalPropertyTranslation
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getValue(): ?string
+    {
+        return $this->value;
+    }
+
+    /**
+     * @param string $value value
+     *
+     * @return GlobalPropertyTranslation
+     */
+    public function setValue(?string $value): GlobalPropertyTranslation
+    {
+        $this->value = $value;
+
+        return $this;
+    }
 }

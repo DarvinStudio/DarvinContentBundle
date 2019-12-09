@@ -12,6 +12,8 @@ namespace Darvin\ContentBundle\Entity;
 
 use Darvin\ContentBundle\Traits\TranslatableTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Global property
@@ -19,6 +21,11 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="Darvin\ContentBundle\Repository\GlobalPropertyRepository")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\Table(name="content_global_property")
+ *
+ * @DoctrineAssert\UniqueEntity(fields={"name"})
+ *
+ * @method string getTitle()
+ * @method string getValue()
  */
 class GlobalProperty implements GlobalPropertyInterface
 {
@@ -34,10 +41,48 @@ class GlobalProperty implements GlobalPropertyInterface
     protected $id;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(unique=true)
+     *
+     * @Assert\NotBlank
+     * @Assert\Regex("/\[a-z_]+/")
+     */
+    protected $name;
+
+    /**
      * @return int
      */
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return (string)$this->getTitle();
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name name
+     *
+     * @return GlobalProperty
+     */
+    public function setName(?string $name): GlobalProperty
+    {
+        $this->name = $name;
+
+        return $this;
     }
 }
