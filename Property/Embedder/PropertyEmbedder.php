@@ -10,8 +10,10 @@
 
 namespace Darvin\ContentBundle\Property\Embedder;
 
+use Darvin\ContentBundle\Translatable\TranslatableException;
 use Darvin\Utils\Strings\Stringifier\StringifierInterface;
 use Darvin\Utils\Strings\StringsUtil;
+use Symfony\Component\PropertyAccess\Exception\ExceptionInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 /**
@@ -63,7 +65,13 @@ class PropertyEmbedder implements PropertyEmbedderInterface
             foreach ($properties as $property) {
                 $propertyCamelized = StringsUtil::toCamelCase($property);
 
-                $value = $this->propertyAccessor->getValue($object, $propertyCamelized);
+                try {
+                    $value = $this->propertyAccessor->getValue($object, $propertyCamelized);
+                } catch (ExceptionInterface $ex) {
+                    continue;
+                } catch (TranslatableException $ex) {
+                    continue;
+                }
 
                 $replacements[sprintf('%%%s%%', $property)] = $this->stringifier->stringify($value);
             }
