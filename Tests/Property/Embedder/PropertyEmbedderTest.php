@@ -33,7 +33,9 @@ class PropertyEmbedderTest extends TestCase
     public function setUp(): void
     {
         $propertyAccessor = $this->getMockBuilder(PropertyAccessorInterface::class)->getMock();
-        $propertyAccessor->method('getValue')->willReturn('*VALUE*');
+        $propertyAccessor->method('getValue')->willReturnCallback(function (object $object, string $property): string {
+            return $property;
+        });
 
         $stringifier = $this->getMockBuilder(StringifierInterface::class)->getMock();
         $stringifier->method('stringify')->willReturnArgument(0);
@@ -63,9 +65,9 @@ class PropertyEmbedderTest extends TestCase
         yield ['', null];
         yield ['test', 'test'];
         yield ['Hello, %world%!', 'Hello, %world%!'];
-        yield ['Hello, *VALUE*!', 'Hello, %world%!', $stub];
-        yield ['*VALUE*', '%test%', $stub];
+        yield ['Hello, World!', 'Hello, %world%!', $stub];
+        yield ['Test', '%test%', $stub];
         yield ['%test', '%test', $stub];
-        yield ['*VALUE**VALUE*', '%test%%test%', $stub];
+        yield ['TestTest', '%test%%test%', $stub];
     }
 }
