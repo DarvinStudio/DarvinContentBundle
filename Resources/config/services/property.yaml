@@ -5,6 +5,7 @@ services:
     darvin_content.property.embedder:
         class: '%darvin_content.property.embedder.class%'
         arguments:
+            - '@service_container'
             - '@doctrine.orm.entity_manager'
             - '@darvin_utils.locale.provider'
             - '@property_accessor'

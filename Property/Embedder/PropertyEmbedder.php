@@ -17,6 +17,7 @@ use Darvin\Utils\Locale\LocaleProviderInterface;
 use Darvin\Utils\Strings\Stringifier\StringifierInterface;
 use Darvin\Utils\Strings\StringsUtil;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\PropertyAccess\Exception\ExceptionInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
@@ -25,6 +26,11 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
  */
 class PropertyEmbedder implements PropertyEmbedderInterface
 {
+    /**
+     * @var \Psr\Container\ContainerInterface
+     */
+    private $container;
+
     /**
      * @var \Doctrine\ORM\EntityManagerInterface
      */
@@ -56,6 +62,7 @@ class PropertyEmbedder implements PropertyEmbedderInterface
     private $globals;
 
     /**
+     * @param \Psr\Container\ContainerInterface                           $container        Service container
      * @param \Doctrine\ORM\EntityManagerInterface                        $em               Entity manager
      * @param \Darvin\Utils\Locale\LocaleProviderInterface                $localeProvider   Locale provider
      * @param \Symfony\Component\PropertyAccess\PropertyAccessorInterface $propertyAccessor Property accessor
@@ -63,12 +70,14 @@ class PropertyEmbedder implements PropertyEmbedderInterface
      * @param array                                                       $callbacks        Callbacks
      */
     public function __construct(
+        ContainerInterface $container,
         EntityManagerInterface $em,
         LocaleProviderInterface $localeProvider,
         PropertyAccessorInterface $propertyAccessor,
         StringifierInterface $stringifier,
         array $callbacks = []
     ) {
+        $this->container = $container;
         $this->em = $em;
         $this->localeProvider = $localeProvider;
         $this->propertyAccessor = $propertyAccessor;

@@ -16,6 +16,7 @@ use Darvin\Utils\Locale\LocaleProviderInterface;
 use Darvin\Utils\Strings\Stringifier\StringifierInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 /**
@@ -35,6 +36,8 @@ class PropertyEmbedderTest extends TestCase
      */
     public function setUp(): void
     {
+        $container = $this->getMockBuilder(ContainerInterface::class)->getMock();
+
         $globalPropertyRepository = $this->getMockBuilder(GlobalPropertyRepository::class)->disableOriginalConstructor()->getMock();
         $globalPropertyRepository->method('getValuesForPropertyEmbedder')->willReturn([
             'global_1' => 'foo',
@@ -54,7 +57,7 @@ class PropertyEmbedderTest extends TestCase
         $stringifier = $this->getMockBuilder(StringifierInterface::class)->getMock();
         $stringifier->method('stringify')->willReturnArgument(0);
 
-        $this->embedder = new PropertyEmbedder($em, $localeProvider, $propertyAccessor, $stringifier);
+        $this->embedder = new PropertyEmbedder($container, $em, $localeProvider, $propertyAccessor, $stringifier);
     }
 
     /**
