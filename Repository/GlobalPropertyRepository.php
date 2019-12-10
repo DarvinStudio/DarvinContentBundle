@@ -10,12 +10,44 @@
 
 namespace Darvin\ContentBundle\Repository;
 
+use Darvin\ContentBundle\Traits\TranslatableRepositoryTrait;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * Global property entity repository
  */
 class GlobalPropertyRepository extends EntityRepository
 {
+    use TranslatableRepositoryTrait;
 
+    /**
+     * @param string|null $locale Locale
+     *
+     * @return array
+     */
+    public function getValuesForPropertyEmbedder(?string $locale = null): array
+    {
+         $qb = $this->createDefaultBuilder();
+         $qb
+             ->select('o.name')
+             ->addSelect('translations.value');
+         $this->joinTranslations($qb, $locale, false);
+
+         $values = [];
+
+         foreach ($qb->getQuery()->getScalarResult() as $row) {
+             $values[$row['name']] = $row['value'];
+         }
+
+         return $values;
+    }
+
+    /**
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    protected function createDefaultBuilder(): QueryBuilder
+    {
+        return $this->createQueryBuilder('o');
+    }
 }
