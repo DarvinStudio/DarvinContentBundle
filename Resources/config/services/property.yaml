@@ -9,3 +9,4 @@ services:
             - '@darvin_utils.locale.provider'
             - '@property_accessor'
             - '@darvin_utils.stringifier'
+            - '%darvin_content.property.embedder.callbacks%'

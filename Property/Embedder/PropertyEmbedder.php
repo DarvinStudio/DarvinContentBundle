@@ -46,6 +46,11 @@ class PropertyEmbedder implements PropertyEmbedderInterface
     private $stringifier;
 
     /**
+     * @var array
+     */
+    private $callbacks;
+
+    /**
      * @var array|null
      */
     private $globals;
@@ -55,17 +60,20 @@ class PropertyEmbedder implements PropertyEmbedderInterface
      * @param \Darvin\Utils\Locale\LocaleProviderInterface                $localeProvider   Locale provider
      * @param \Symfony\Component\PropertyAccess\PropertyAccessorInterface $propertyAccessor Property accessor
      * @param \Darvin\Utils\Strings\Stringifier\StringifierInterface      $stringifier      Stringifier
+     * @param array                                                       $callbacks        Callbacks
      */
     public function __construct(
         EntityManagerInterface $em,
         LocaleProviderInterface $localeProvider,
         PropertyAccessorInterface $propertyAccessor,
-        StringifierInterface $stringifier
+        StringifierInterface $stringifier,
+        array $callbacks = []
     ) {
         $this->em = $em;
         $this->localeProvider = $localeProvider;
         $this->propertyAccessor = $propertyAccessor;
         $this->stringifier = $stringifier;
+        $this->callbacks = $callbacks;
 
         $this->globals = null;
     }
