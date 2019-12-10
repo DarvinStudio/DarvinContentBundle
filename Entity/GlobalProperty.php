@@ -46,7 +46,7 @@ class GlobalProperty implements GlobalPropertyInterface
      * @ORM\Column(unique=true)
      *
      * @Assert\NotBlank
-     * @Assert\Regex("/^\w+$/")
+     * @Assert\Regex("/^[0-9a-z_]+$/")
      */
     protected $name;
 
