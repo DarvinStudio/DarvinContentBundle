@@ -121,13 +121,14 @@ class PropertyEmbedder implements PropertyEmbedderInterface
                     continue;
                 }
 
-                $values[$property] = $this->stringifier->stringify($value);
+                $values[$property] = $value;
             }
         }
         if (empty($values)) {
             return $content;
         }
 
+        $values       = array_map([$this->stringifier, 'stringify'], $values);
         $replacements = [];
 
         foreach ($properties as $property => $lowerProperty) {
