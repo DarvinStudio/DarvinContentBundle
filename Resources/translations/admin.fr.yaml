@@ -1,0 +1,26 @@
+global_property:
+    action:
+        copy:
+            submit: 'Copie Mondiale De La Propriété'
+            success: 'Mondiale de la propriété copié avec succès'
+        delete:
+            confirm: 'Confirmer mondiale de la propriété suppression'
+            submit: 'Supprimer Mondiale De La Propriété'
+            success: 'Mondiale de la propriété supprimé avec succès'
+        edit:
+            link: 'Edit Mondiale De La Propriété'
+            success: 'Mondiale de la propriété mise à jour avec succès'
+            title: 'Edit Mondiale De La Propriété %entity%'
+        index:
+            link: 'Propriétés Globales'
+            title: 'Propriétés Globales'
+        new:
+            link: 'Créer Mondiale De La Propriété'
+            success: 'Mondiale de la propriété créé avec succès'
+            title: 'Nouvelle Propriété Globale'
+        show:
+            title: 'Mondiale De La Propriété %entity%'
+    entity:
+        name: Nom
+        title: Titre
+        value: Valeur

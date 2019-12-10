@@ -1,0 +1,26 @@
+global_property:
+    action:
+        copy:
+            submit:  Copy Global Property
+            success: Global property successfully copied
+        delete:
+            confirm: Confirm global property removal
+            submit:  Remove Global Property
+            success: Global property successfully removed
+        edit:
+            link:    Edit Global Property
+            success: Global property successfully updated
+            title:   Edit Global Property %entity%
+        index:
+            link:  Global Properties
+            title: Global Properties
+        new:
+            link:    Create Global Property
+            success: Global property successfully created
+            title:   New Global Property
+        show:
+            title: Global Property %entity%
+    entity:
+        name:  Name
+        title: Title
+        value: Value
