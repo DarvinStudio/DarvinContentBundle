@@ -119,7 +119,15 @@ class PropertyEmbedder implements PropertyEmbedderInterface
             }
         }
         if (null !== $object) {
+            $callbacks = $this->getObjectCallbacks($object);
+
             foreach ($lowerProperties as $property) {
+                if (isset($callbacks[$property])) {
+                    $values[$property] = $this->call($callbacks[$property], $object);
+
+                    continue;
+                }
+
                 $propertyCamelized = StringsUtil::toCamelCase($property);
 
                 try {
@@ -147,6 +155,61 @@ class PropertyEmbedder implements PropertyEmbedderInterface
         }
 
         return strtr($content, $replacements);
+    }
+
+    /**
+     * @param array  $callback Callback
+     * @param object $object   Object
+     *
+     * @return mixed
+     * @throws \InvalidArgumentException
+     */
+    private function call(array $callback, object $object)
+    {
+        $id     = $callback['service'];
+        $method = $callback['method'];
+
+        if ($this->container->has($id)) {
+            $service = $this->container->get($id);
+
+            if (!method_exists($service, $method)) {
+                throw new \InvalidArgumentException(sprintf('Method "%s::%s()" does not exist.', get_class($service), $method));
+            }
+
+            return $service->$method($object);
+        }
+        if (!class_exists($id)) {
+            throw new \InvalidArgumentException(sprintf('Service or class "%s" does not exist.', $id));
+        }
+        if (!method_exists($id, $method)) {
+            throw new \InvalidArgumentException(sprintf('Method "%s::%s()" does not exist.', $id, $method));
+        }
+
+        $callable = [$id, $method];
+
+        if (!is_callable($callable)) {
+            throw new \InvalidArgumentException(sprintf('Method "%s::%s()" is not statically callable.', $id, $method));
+        }
+
+        return $callable($object);
+    }
+
+    /**
+     * @param object $object Object
+     *
+     * @return array
+     */
+    private function getObjectCallbacks(object $object): array
+    {
+        $objectCallbacks = [];
+
+        foreach ($this->callbacks as $class => $callbacks) {
+            if ($object instanceof $class) {
+                $objectCallbacks = array_merge($objectCallbacks, $callbacks);
+            }
+        }
+
+        return $objectCallbacks;
     }
 
     /**

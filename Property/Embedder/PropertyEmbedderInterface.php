@@ -20,6 +20,7 @@ interface PropertyEmbedderInterface
      * @param object|null $object  Object
      *
      * @return string
+     * @throws \InvalidArgumentException
      */
     public function embedProperties(?string $content, ?object $object = null): string;
 }
