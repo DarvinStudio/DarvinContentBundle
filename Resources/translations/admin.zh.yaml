@@ -1,25 +1,25 @@
 global_property:
     action:
         copy:
-            submit: 复制的全球性
-            success: 全球性成功复制的
+            submit: 复制变量
+            success: 可变的成功复制的
         delete:
-            confirm: 确认全球性的除
-            submit: 除全球性
-            success: 全球性成功地除去
+            confirm: 确认变量清除
+            submit: 删除变
+            success: 变成功地除去
         edit:
-            link: 编辑的全球性
-            success: 全球性成功地更新
-            title: '编辑的全球性 %entity%'
+            link: 编辑变
+            success: 可变的成功更新
+            title: '编辑变 %entity%'
         index:
-            link: 全球性
-            title: 全球性
+            link: 变量
+            title: 变量
         new:
-            link: 创建全球性
-            success: 全球性成功地创造了
-            title: 新的全球性
+            link: 创建可变
+            success: 变成功地创造了
+            title: 新的变量
         show:
-            title: '全球性 %entity%'
+            title: '变量 %entity%'
     entity:
         name: 名称
         title: 标题

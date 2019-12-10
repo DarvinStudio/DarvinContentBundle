@@ -1,25 +1,25 @@
 global_property:
     action:
         copy:
-            submit:  Copy Global Property
-            success: Global property successfully copied
+            submit:  Copy Variable
+            success: Variable successfully copied
         delete:
-            confirm: Confirm global property removal
-            submit:  Remove Global Property
-            success: Global property successfully removed
+            confirm: Confirm variable removal
+            submit:  Remove Variable
+            success: Variable successfully removed
         edit:
-            link:    Edit Global Property
-            success: Global property successfully updated
-            title:   Edit Global Property %entity%
+            link:    Edit Variable
+            success: Variable successfully updated
+            title:   Edit Variable %entity%
         index:
-            link:  Global Properties
-            title: Global Properties
+            link:  Variables
+            title: Variables
         new:
-            link:    Create Global Property
-            success: Global property successfully created
-            title:   New Global Property
+            link:    Create Variable
+            success: Variable successfully created
+            title:   New Variable
         show:
-            title: Global Property %entity%
+            title: Variable %entity%
     entity:
         name:  Name
         title: Title
