@@ -1,5 +1,28 @@
 index_view_new_form: true
 
+menu:
+    group: seo
+
+order_by:
+    name: asc
+
+searchable_fields:
+    - name
+    - title
+    - value
+
+sortable_fields:
+    name:  ~
+    title: translations.title
+    value: translations.value
+
+view:
+    index:
+        fields:
+            name:  ~
+            title: ~
+            value: ~
+
 form:
     edit:
         fields:

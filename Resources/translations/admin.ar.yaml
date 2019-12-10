@@ -1,3 +1,8 @@
+entity_name:
+    multiple:
+        global_property: المتغيرات
+    single:
+        global_property: متغير
 global_property:
     action:
         copy:

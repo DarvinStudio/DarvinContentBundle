@@ -1,3 +1,9 @@
+entity_name:
+    multiple:
+        global_property: Переменные
+    single:
+        global_property: Переменная
+
 global_property:
     action:
         copy:
