@@ -52,6 +52,22 @@ class Configuration implements ConfigurationInterface
                                             ->scalarNode('method')->isRequired()->cannotBeEmpty()->end()
                                         ->end()
                                     ->end()
+                                    ->validate()
+                                        ->ifTrue(function (array $callbacks): bool {
+                                            $regex = '/^[0-9a-z_]+$/';
+
+                                            foreach (array_keys($callbacks) as $property) {
+                                                if (!preg_match($regex, $property)) {
+                                                    throw new \InvalidArgumentException(
+                                                        sprintf('Property "%s" does not match regex "%s".', $property, $regex)
+                                                    );
+                                                }
+                                            }
+
+                                            return false;
+                                        })
+                                        ->thenInvalid('')
+                                    ->end()
                                 ->end()
                             ->end()
                         ->end()
