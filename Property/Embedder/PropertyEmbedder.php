@@ -89,23 +89,28 @@ class PropertyEmbedder implements PropertyEmbedderInterface
 
         preg_match_all('/%(\w+(\.\w+)*)%/', $content, $matches);
 
-        $properties = $matches[1];
-
-        if (empty($properties)) {
+        if (empty($matches[1])) {
             return $content;
         }
 
-        $globals      = $this->getGlobals();
-        $properties   = array_unique($properties);
-        $replacements = [];
+        $properties = $lowerProperties = [];
 
-        foreach ($properties as $property) {
+        foreach ($matches[1] as $property) {
+            $lowerProperty = strtolower($property);
+
+            $properties[$property] = $lowerProperties[$lowerProperty] = $lowerProperty;
+        }
+
+        $globals = $this->getGlobals();
+        $values  = [];
+
+        foreach ($lowerProperties as $property) {
             if (isset($globals[$property])) {
-                $replacements[$this->getPlaceholder($property)] = $globals[$property];
+                $values[$property] = $globals[$property];
             }
         }
         if (null !== $object) {
-            foreach ($properties as $property) {
+            foreach ($lowerProperties as $property) {
                 $propertyCamelized = StringsUtil::toCamelCase($property);
 
                 try {
@@ -116,24 +121,22 @@ class PropertyEmbedder implements PropertyEmbedderInterface
                     continue;
                 }
 
-                $replacements[$this->getPlaceholder($property)] = $this->stringifier->stringify($value);
+                $values[$property] = $this->stringifier->stringify($value);
             }
         }
-        if (!empty($replacements)) {
-            $content = strtr($content, $replacements);
+        if (empty($values)) {
+            return $content;
         }
 
-        return $content;
-    }
+        $replacements = [];
 
-    /**
-     * @param string $property Property
-     *
-     * @return string
-     */
-    private function getPlaceholder(string $property): string
-    {
-        return sprintf('%%%s%%', $property);
+        foreach ($properties as $property => $lowerProperty) {
+            if (isset($values[$lowerProperty])) {
+                $replacements[sprintf('%%%s%%', $property)] = $values[$lowerProperty];
+            }
+        }
+
+        return strtr($content, $replacements);
     }
 
     /**

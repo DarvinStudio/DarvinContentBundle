@@ -84,6 +84,8 @@ class PropertyEmbedderTest extends TestCase
         yield ['%test', '%test', $stub];
         yield ['TestTest', '%test%%test%', $stub];
         yield ['foo bar', '%global_1% %global_2%'];
+        yield ['foo bar', '%gLoBaL_1% %GlObAl_2%'];
+        yield ['bar bar', '%gLoBaL_2% %GlObAl_2%'];
         yield ['Global1 Global2', '%global_1% %global_2%', $stub];
     }
 }

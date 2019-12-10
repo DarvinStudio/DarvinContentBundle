@@ -37,7 +37,7 @@ class GlobalPropertyRepository extends EntityRepository
          $values = [];
 
          foreach ($qb->getQuery()->getScalarResult() as $row) {
-             $values[$row['name']] = $row['value'];
+             $values[strtolower($row['name'])] = $row['value'];
          }
 
          return $values;
