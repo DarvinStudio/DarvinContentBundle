@@ -11,7 +11,10 @@
 namespace Darvin\ContentBundle\Tests\Property\Embedder;
 
 use Darvin\ContentBundle\Property\Embedder\PropertyEmbedder;
+use Darvin\ContentBundle\Repository\GlobalPropertyRepository;
+use Darvin\Utils\Locale\LocaleProviderInterface;
 use Darvin\Utils\Strings\Stringifier\StringifierInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
@@ -32,6 +35,17 @@ class PropertyEmbedderTest extends TestCase
      */
     public function setUp(): void
     {
+        $globalPropertyRepository = $this->getMockBuilder(GlobalPropertyRepository::class)->disableOriginalConstructor()->getMock();
+        $globalPropertyRepository->method('getValuesForPropertyEmbedder')->willReturn([
+            'global_1' => 'foo',
+            'global_2' => 'bar',
+        ]);
+
+        $em = $this->getMockBuilder(EntityManagerInterface::class)->getMock();
+        $em->method('getRepository')->willReturn($globalPropertyRepository);
+
+        $localeProvider = $this->getMockBuilder(LocaleProviderInterface::class)->getMock();
+
         $propertyAccessor = $this->getMockBuilder(PropertyAccessorInterface::class)->getMock();
         $propertyAccessor->method('getValue')->willReturnCallback(function (object $object, string $property): string {
             return $property;
@@ -40,7 +54,7 @@ class PropertyEmbedderTest extends TestCase
         $stringifier = $this->getMockBuilder(StringifierInterface::class)->getMock();
         $stringifier->method('stringify')->willReturnArgument(0);
 
-        $this->embedder = new PropertyEmbedder($propertyAccessor, $stringifier);
+        $this->embedder = new PropertyEmbedder($em, $localeProvider, $propertyAccessor, $stringifier);
     }
 
     /**
@@ -69,5 +83,7 @@ class PropertyEmbedderTest extends TestCase
         yield ['Test', '%test%', $stub];
         yield ['%test', '%test', $stub];
         yield ['TestTest', '%test%%test%', $stub];
+        yield ['foo bar', '%global_1% %global_2%'];
+        yield ['Global1 Global2', '%global_1% %global_2%', $stub];
     }
 }
