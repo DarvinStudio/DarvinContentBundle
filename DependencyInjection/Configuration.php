@@ -38,7 +38,16 @@ class Configuration implements ConfigurationInterface
                                 ->arrayNode('callbacks')->useAttributeAsKey('property')
                                     ->prototype('array')
                                         ->children()
-                                            ->scalarNode('object_class')->isRequired()->cannotBeEmpty()->end()
+                                            ->scalarNode('object')->isRequired()->cannotBeEmpty()
+                                                ->validate()
+                                                    ->ifTrue(function ($object): bool {
+                                                        $object = (string)$object;
+
+                                                        return !class_exists($object) && !interface_exists($object);
+                                                    })
+                                                    ->thenInvalid('Object %s does not exist.')
+                                                ->end()
+                                            ->end()
                                             ->scalarNode('service')->isRequired()->cannotBeEmpty()->end()
                                             ->scalarNode('method')->isRequired()->cannotBeEmpty()->end()
                                         ->end()
