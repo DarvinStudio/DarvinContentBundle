@@ -35,33 +35,39 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->arrayNode('embedder')->addDefaultsIfNotSet()
                             ->children()
-                                ->arrayNode('callbacks')->useAttributeAsKey('property')
-                                    ->prototype('array')
-                                        ->children()
-                                            ->scalarNode('object')->isRequired()->cannotBeEmpty()
-                                                ->validate()
-                                                    ->ifTrue(function ($object): bool {
-                                                        $object = (string)$object;
-
-                                                        return !class_exists($object) && !interface_exists($object);
-                                                    })
-                                                    ->thenInvalid('Object %s does not exist.')
-                                                ->end()
+                                ->arrayNode('callbacks')->useAttributeAsKey('object')
+                                    ->prototype('array')->useAttributeAsKey('property')
+                                        ->prototype('array')
+                                            ->children()
+                                                ->scalarNode('service')->isRequired()->cannotBeEmpty()->end()
+                                                ->scalarNode('method')->isRequired()->cannotBeEmpty()->end()
                                             ->end()
-                                            ->scalarNode('service')->isRequired()->cannotBeEmpty()->end()
-                                            ->scalarNode('method')->isRequired()->cannotBeEmpty()->end()
+                                        ->end()
+                                        ->validate()
+                                            ->ifTrue(function (array $properties): bool {
+                                                $regex = '/^[0-9a-z_]+$/';
+
+                                                foreach (array_keys($properties) as $property) {
+                                                    if (!preg_match($regex, $property)) {
+                                                        throw new \InvalidArgumentException(
+                                                            sprintf('Property "%s" does not match regex "%s".', $property, $regex)
+                                                        );
+                                                    }
+                                                }
+
+                                                return false;
+                                            })
+                                            ->thenInvalid('')
                                         ->end()
                                     ->end()
                                     ->validate()
-                                        ->ifTrue(function (array $callbacks): bool {
-                                            $regex = '/^[0-9a-z_]+$/';
+                                        ->ifTrue(function (array $objects): bool {
 
-                                            foreach (array_keys($callbacks) as $property) {
-                                                if (!preg_match($regex, $property)) {
-                                                    throw new \InvalidArgumentException(
-                                                        sprintf('Property "%s" does not match regex "%s".', $property, $regex)
-                                                    );
+                                            foreach (array_keys($objects) as $object) {
+                                                if (!class_exists($object) && !interface_exists($object)) {
+                                                    throw new \InvalidArgumentException(sprintf('Object "%s" does not exist.', $object));
                                                 }
+
                                             }
 
                                             return false;
