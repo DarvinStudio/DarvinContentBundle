@@ -72,3 +72,5 @@ darvin_content:
 8.3.7: Register interfaces for autoconfiguration.
 
 8.4.0: Add property embedder.
+
+8.4.1: Make meta tags nullable.

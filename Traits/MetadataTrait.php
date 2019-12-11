@@ -10,7 +10,6 @@
 
 namespace Darvin\ContentBundle\Traits;
 
-use Darvin\Utils\Mapping\Annotation as Darvin;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -50,33 +49,27 @@ trait MetadataTrait
     protected $title;
 
     /**
-     * @var string
+     * @var string|null
      *
-     * @ORM\Column
-     *
-     * @Darvin\DefaultValue(sourcePropertyPath="title")
+     * @ORM\Column(nullable=true)
      *
      * @Gedmo\Versioned
      */
     protected $heading;
 
     /**
-     * @var string
+     * @var string|null
      *
-     * @ORM\Column(length=1024)
-     *
-     * @Darvin\DefaultValue(sourcePropertyPath="title")
+     * @ORM\Column(length=1024, nullable=true)
      *
      * @Gedmo\Versioned
      */
     protected $metaTitle;
 
     /**
-     * @var string
+     * @var string|null
      *
-     * @ORM\Column(type="text")
-     *
-     * @Darvin\DefaultValue(sourcePropertyPath="title")
+     * @ORM\Column(type="text", nullable=true)
      *
      * @Gedmo\Versioned
      */
@@ -152,7 +145,7 @@ trait MetadataTrait
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getHeading(): ?string
     {
@@ -160,7 +153,7 @@ trait MetadataTrait
     }
 
     /**
-     * @param string $heading heading
+     * @param string|null $heading heading
      *
      * @return self
      */
@@ -172,7 +165,7 @@ trait MetadataTrait
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getMetaTitle(): ?string
     {
@@ -180,7 +173,7 @@ trait MetadataTrait
     }
 
     /**
-     * @param string $metaTitle metaTitle
+     * @param string|null $metaTitle metaTitle
      *
      * @return self
      */
@@ -192,7 +185,7 @@ trait MetadataTrait
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getMetaDescription(): ?string
     {
@@ -200,7 +193,7 @@ trait MetadataTrait
     }
 
     /**
-     * @param string $metaDescription metaDescription
+     * @param string|null $metaDescription metaDescription
      *
      * @return self
      */
