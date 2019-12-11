@@ -70,3 +70,5 @@ darvin_content:
 8.3.6: Use "object" type hint.
 
 8.3.7: Register interfaces for autoconfiguration.
+
+8.4.0: Add property embedder.
