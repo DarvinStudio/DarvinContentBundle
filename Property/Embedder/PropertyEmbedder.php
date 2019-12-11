@@ -182,7 +182,9 @@ class PropertyEmbedder implements PropertyEmbedderInterface
             return $service->$method($object);
         }
         if (!class_exists($id)) {
-            throw new \InvalidArgumentException(sprintf('Service or class "%s" does not exist.', $id));
+            throw new \InvalidArgumentException(
+                sprintf('Service or class "%s" does not exist. If it is a service, make sure it is public.', $id)
+            );
         }
         if (!method_exists($id, $method)) {
             throw new \InvalidArgumentException(sprintf('Method "%s::%s()" does not exist.', $id, $method));
