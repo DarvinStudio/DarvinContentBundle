@@ -175,6 +175,13 @@ class PropertyEmbedder implements PropertyEmbedderInterface
         if ($this->container->has($id)) {
             $service = $this->container->get($id);
 
+            if (null === $method) {
+                if (!is_callable($service)) {
+                    throw new \InvalidArgumentException(sprintf('Class "%s" is not callable. Make sure it has "__invoke()" method.', get_class($service)));
+                }
+
+                return $service($object);
+            }
             if (!method_exists($service, $method)) {
                 throw new \InvalidArgumentException(sprintf('Method "%s::%s()" does not exist.', get_class($service), $method));
             }
@@ -185,6 +192,9 @@ class PropertyEmbedder implements PropertyEmbedderInterface
             throw new \InvalidArgumentException(
                 sprintf('Service or class "%s" does not exist. If it is a service, make sure it is public.', $id)
             );
+        }
+        if (null === $method) {
+            throw new \InvalidArgumentException('Method not specified.');
         }
         if (!method_exists($id, $method)) {
             throw new \InvalidArgumentException(sprintf('Method "%s::%s()" does not exist.', $id, $method));

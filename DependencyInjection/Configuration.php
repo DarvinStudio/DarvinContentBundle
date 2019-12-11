@@ -40,7 +40,22 @@ class Configuration implements ConfigurationInterface
                                         ->prototype('array')
                                             ->children()
                                                 ->scalarNode('service')->isRequired()->cannotBeEmpty()->end()
-                                                ->scalarNode('method')->isRequired()->cannotBeEmpty()->end()
+                                                ->scalarNode('method')->defaultNull()->end()
+                                            ->end()
+                                            ->beforeNormalization()->ifArray()->then(function (array $callback): array {
+                                                if (1 === count($callback)) {
+                                                    $key = key($callback);
+
+                                                    if (!in_array($key, ['service', 'method'])) {
+                                                        return [
+                                                            'service' => $key,
+                                                            'method'  => $callback[$key],
+                                                        ];
+                                                    }
+                                                }
+
+                                                return $callback;
+                                            })
                                             ->end()
                                         ->end()
                                         ->validate()
