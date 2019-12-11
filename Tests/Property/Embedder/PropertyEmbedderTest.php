@@ -84,7 +84,7 @@ class PropertyEmbedderTest extends TestCase
      */
     public static function embedPropertiesCallback()
     {
-        return 'Callback Result';
+        return 'Callback result';
     }
 
     /**
@@ -105,6 +105,6 @@ class PropertyEmbedderTest extends TestCase
         yield ['foo bar', '%gLoBaL_1% %GlObAl_2%'];
         yield ['bar bar', '%gLoBaL_2% %GlObAl_2%'];
         yield ['Global1 Global2', '%global_1% %global_2%', $stub];
-        yield ['Callback Result', '%callback_property%', $stub];
+        yield ['Callback result', '%callback_property%', $stub];
     }
 }
