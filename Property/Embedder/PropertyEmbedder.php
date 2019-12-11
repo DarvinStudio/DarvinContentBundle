@@ -153,6 +153,9 @@ class PropertyEmbedder implements PropertyEmbedderInterface
                 $replacements[sprintf('%%%s%%', $property)] = $values[$lowerProperty];
             }
         }
+        if (empty($replacements)) {
+            return $content;
+        }
 
         return strtr($content, $replacements);
     }
