@@ -141,23 +141,19 @@ class PropertyEmbedder implements PropertyEmbedderInterface
                 $values[$property] = $value;
             }
         }
-        if (empty($values)) {
-            return $content;
-        }
 
         $values       = array_map([$this->stringifier, 'stringify'], $values);
         $replacements = [];
 
         foreach ($properties as $property => $lowerProperty) {
-            if (isset($values[$lowerProperty])) {
-                $replacements[sprintf('%%%s%%', $property)] = $values[$lowerProperty];
-            }
-        }
-        if (empty($replacements)) {
-            return $content;
+            $replacements[sprintf('%%%s%%', $property)] = $values[$lowerProperty] ?? '';
         }
 
-        return strtr($content, $replacements);
+        $content = strtr($content, $replacements);
+        $content = preg_replace('/\s+/', ' ', $content);
+        $content = trim($content);
+
+        return $content;
     }
 
     /**

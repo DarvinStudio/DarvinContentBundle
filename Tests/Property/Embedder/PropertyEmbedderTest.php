@@ -96,7 +96,7 @@ class PropertyEmbedderTest extends TestCase
 
         yield ['', null];
         yield ['test', 'test'];
-        yield ['Hello, %world%!', 'Hello, %world%!'];
+        yield ['Hello, !', 'Hello,             %world%!'];
         yield ['Hello, World!', 'Hello, %world%!', $stub];
         yield ['Test', '%test%', $stub];
         yield ['%test', '%test', $stub];
