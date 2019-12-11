@@ -57,7 +57,14 @@ class PropertyEmbedderTest extends TestCase
         $stringifier = $this->getMockBuilder(StringifierInterface::class)->getMock();
         $stringifier->method('stringify')->willReturnArgument(0);
 
-        $this->embedder = new PropertyEmbedder($container, $em, $localeProvider, $propertyAccessor, $stringifier);
+        $this->embedder = new PropertyEmbedder($container, $em, $localeProvider, $propertyAccessor, $stringifier, [
+            'Stub' => [
+                'callback_property' => [
+                    'service' => __CLASS__,
+                    'method'  => 'embedPropertiesCallback',
+                ],
+            ],
+        ]);
     }
 
     /**
@@ -70,6 +77,14 @@ class PropertyEmbedderTest extends TestCase
     public function testEmbedProperties($expected, $content, $object = null): void
     {
         self::assertEquals($expected, $this->embedder->embedProperties($content, $object));
+    }
+
+    /**
+     * @return string
+     */
+    public static function embedPropertiesCallback()
+    {
+        return 'Callback Result';
     }
 
     /**
@@ -90,5 +105,6 @@ class PropertyEmbedderTest extends TestCase
         yield ['foo bar', '%gLoBaL_1% %GlObAl_2%'];
         yield ['bar bar', '%gLoBaL_2% %GlObAl_2%'];
         yield ['Global1 Global2', '%global_1% %global_2%', $stub];
+        yield ['Callback Result', '%callback_property%', $stub];
     }
 }
