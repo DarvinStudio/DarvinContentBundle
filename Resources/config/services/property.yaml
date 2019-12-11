@@ -2,6 +2,8 @@ parameters:
     darvin_content.property.embedder.class: Darvin\ContentBundle\Property\Embedder\PropertyEmbedder
 
 services:
+    Darvin\ContentBundle\Property\Embedder\PropertyEmbedderInterface: '@darvin_content.property.embedder'
+
     darvin_content.property.embedder:
         class: '%darvin_content.property.embedder.class%'
         arguments:
