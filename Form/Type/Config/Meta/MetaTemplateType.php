@@ -11,8 +11,11 @@
 namespace Darvin\ContentBundle\Form\Type\Config\Meta;
 
 use Darvin\ContentBundle\Config\Model\Meta\MetaTemplate;
+use Darvin\Utils\Strings\StringsUtil;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -29,6 +32,18 @@ class MetaTemplateType extends AbstractType
             ->add('heading')
             ->add('title')
             ->add('description');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function finishView(FormView $view, FormInterface $form, array $options): void
+    {
+        foreach ($view->children as $name => $field) {
+            if (null === $field->vars['label']) {
+                $field->vars['label'] = sprintf('configuration.model.content_meta_template.%s', StringsUtil::toUnderscore($name));
+            }
+        }
     }
 
     /**

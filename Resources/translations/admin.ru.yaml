@@ -1,3 +1,10 @@
+configuration:
+    model:
+        content_meta_template:
+            description: Meta description
+            heading:     Заголовок H1
+            title:       Meta title
+
 entity_name:
     multiple:
         global_property: Переменные

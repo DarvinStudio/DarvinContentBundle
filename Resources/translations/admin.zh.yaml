@@ -1,3 +1,9 @@
+configuration:
+    model:
+        content_meta_template:
+            description: 元的描述
+            heading: 标题H1
+            title: 元的标题
 entity_name:
     multiple:
         global_property: 变量

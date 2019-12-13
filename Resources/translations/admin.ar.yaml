@@ -1,3 +1,9 @@
+configuration:
+    model:
+        content_meta_template:
+            description: 'وصف ميتا'
+            heading: 'العنوان H1'
+            title: 'عنوان التعريف'
 entity_name:
     multiple:
         global_property: المتغيرات
