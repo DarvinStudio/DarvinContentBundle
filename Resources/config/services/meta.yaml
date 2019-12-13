@@ -1,0 +1,8 @@
+parameters:
+    darvin_content.meta.tag.provider.class: Darvin\ContentBundle\Meta\Tag\Provider\MetaTagProvider
+
+services:
+    Darvin\ContentBundle\Meta\Tag\Provider\MetaTagProviderInterface: '@darvin_content.meta.tag.provider'
+
+    darvin_content.meta.tag.provider:
+        class: '%darvin_content.meta.tag.provider.class%'

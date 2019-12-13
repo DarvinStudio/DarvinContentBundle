@@ -51,6 +51,7 @@ class DarvinContentExtension extends Extension implements PrependExtensionInterf
             'controller',
             'filterer',
             'form',
+            'meta',
             'orm',
             'pagination',
             'property',
