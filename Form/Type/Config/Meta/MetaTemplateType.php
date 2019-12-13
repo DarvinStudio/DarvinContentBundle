@@ -10,7 +10,7 @@
 
 namespace Darvin\ContentBundle\Form\Type\Config\Meta;
 
-use Darvin\ContentBundle\Config\Model\Meta\MetaTemplate;
+use Darvin\ContentBundle\Config\Meta\Model\MetaTemplate;
 use Darvin\Utils\Strings\StringsUtil;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

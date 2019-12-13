@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Darvin\ContentBundle\Config\Model\Meta;
+namespace Darvin\ContentBundle\Config\Meta\Model;
 
 /**
  * Configuration meta template model
