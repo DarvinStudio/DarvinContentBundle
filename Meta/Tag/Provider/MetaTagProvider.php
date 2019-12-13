@@ -35,12 +35,17 @@ class MetaTagProvider implements MetaTagProviderInterface
      */
     public function getMetaTag(object $object, ?string $originalTag, ?string $fallback = null, ?callable $templateCallback = null): string
     {
-        $template = null !== $originalTag && '' !== $originalTag ? $originalTag : (string)$templateCallback($object);
-
-        $tag = $this->propertyEmbedder->embedProperties($template, $object);
+        $tag = $this->propertyEmbedder->embedProperties($originalTag, $object);
 
         if ('' !== $tag) {
             return $tag;
+        }
+        if (null !== $templateCallback) {
+            $tag = $this->propertyEmbedder->embedProperties((string)$templateCallback($object), $object);
+
+            if ('' !== $tag) {
+                return $tag;
+            }
         }
         if (null !== $fallback) {
             return $fallback;
