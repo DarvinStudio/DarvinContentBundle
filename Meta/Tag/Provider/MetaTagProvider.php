@@ -10,32 +10,42 @@
 
 namespace Darvin\ContentBundle\Meta\Tag\Provider;
 
+use Darvin\ContentBundle\Property\Embedder\PropertyEmbedderInterface;
+
 /**
  * Meta tag provider
  */
 class MetaTagProvider implements MetaTagProviderInterface
 {
     /**
-     * {@inheritDoc}
+     * @var \Darvin\ContentBundle\Property\Embedder\PropertyEmbedderInterface
      */
-    public function getHeading(object $object, ?string $heading, ?string $fallback = null, ?callable $templateCallback = null): string
+    private $propertyEmbedder;
+
+    /**
+     * @param \Darvin\ContentBundle\Property\Embedder\PropertyEmbedderInterface $propertyEmbedder Property embedder
+     */
+    public function __construct(PropertyEmbedderInterface $propertyEmbedder)
     {
-        return '';
+        $this->propertyEmbedder = $propertyEmbedder;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getMetaTitle(object $object, ?string $metaTitle, ?string $fallback = null, ?callable $templateCallback = null): string
+    public function getMetaTag(object $object, ?string $originalTag, ?string $fallback = null, ?callable $templateCallback = null): string
     {
-        return '';
-    }
+        $template = null !== $originalTag && '' !== $originalTag ? $originalTag : (string)$templateCallback($object);
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getMetaDescription(object $object, ?string $metaDescription, ?string $fallback = null, ?callable $templateCallback = null): string
-    {
+        $tag = $this->propertyEmbedder->embedProperties($template, $object);
+
+        if ('' !== $tag) {
+            return $tag;
+        }
+        if (null !== $fallback) {
+            return $fallback;
+        }
+
         return '';
     }
 }

@@ -6,3 +6,5 @@ services:
 
     darvin_content.meta.tag.provider:
         class: '%darvin_content.meta.tag.provider.class%'
+        arguments:
+            - '@darvin_content.property.embedder'
