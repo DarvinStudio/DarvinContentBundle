@@ -11,7 +11,7 @@
 namespace Darvin\ContentBundle\Config\Model\Meta;
 
 /**
- * Meta template
+ * Configuration meta template model
  */
 class MetaTemplate
 {
