@@ -76,3 +76,5 @@ darvin_content:
 8.4.1: Make meta tags nullable.
 
 8.4.2: Add meta tag provider.
+
+8.4.3: Add meta template models.
