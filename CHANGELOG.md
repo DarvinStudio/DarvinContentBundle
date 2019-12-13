@@ -74,3 +74,5 @@ darvin_content:
 8.4.0: Add property embedder.
 
 8.4.1: Make meta tags nullable.
+
+8.4.2: Add meta tag provider.
