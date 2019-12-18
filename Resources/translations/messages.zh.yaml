@@ -1,5 +1,7 @@
 content:
-    empty: 在建设中
+    empty: 网页正在建设中
+    to_back: 到后面
+    to_homepage: 主页
     sorting:
         reposition:
             success: 位置保存的

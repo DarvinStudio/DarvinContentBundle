@@ -1,5 +1,7 @@
 content:
-    empty: Under Construction
+    empty: We are sorry, page is under construction.
+    to_back: To Back
+    to_homepage: To Homepage
     sorting:
         reposition:
             success: Positions Saved

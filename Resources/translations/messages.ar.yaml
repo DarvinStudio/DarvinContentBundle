@@ -1,5 +1,7 @@
 content:
-    empty: 'تحت الإنشاء'
+    empty: 'نحن آسفون ، (بيج)قيد الإنشاء'
+    to_back: 'إلى الخلف'
+    to_homepage: 'إلى الصفحة الرئيسية'
     sorting:
         reposition:
             success: 'مواقف حفظها'

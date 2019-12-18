@@ -1,5 +1,7 @@
 content:
-    empty: 'En Cours De Construction'
+    empty: Nous sommes désolés, page est en construction.
+    to_back: À L'Arrière
+    to_homepage: À La Page D'Accueil
     sorting:
         reposition:
             success: 'Les Positions Enregistrées'
