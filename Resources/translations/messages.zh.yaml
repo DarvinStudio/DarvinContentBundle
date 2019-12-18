@@ -1,5 +1,5 @@
 content:
-    empty: 网页正在建设中
+    empty: <p>网页正在建设中</p>
     to_back: 到后面
     to_homepage: 主页
     sorting:

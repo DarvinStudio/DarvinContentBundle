@@ -1,5 +1,5 @@
 content:
-    empty: Nous sommes désolés, page est en construction.
+    empty: <p>Nous sommes désolés, page est en construction.</p>
     to_back: À L'Arrière
     to_homepage: À La Page D'Accueil
     sorting:
