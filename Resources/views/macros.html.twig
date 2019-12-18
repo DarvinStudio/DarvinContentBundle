@@ -68,27 +68,20 @@
     {% endif %}
 {% endmacro %}
 
-{% macro empty_message() %}
+{% macro empty_message(tranlate) %}
+    {% if not tranlate %}
+        {% set tranlate = 'content.empty' %}
+    {% endif %}
     {% if app.request.headers.has('referer') %}
         {%- set referer = app.request.headers.get('referer') -%}
     {% endif %}
 
-    {%- if referer is defined and referer starts with(app.request.schemeAndHttpHost) and referer != url('darvin_page_homepage') and referer != app.request.uri -%}
-        <p class="h3">{% trans with {'%home_url%': path('darvin_page_homepage'), '%referer_url%': referer } %}content.empty_message.with_referer{% endtrans %}</p>
-    {%- else -%}
-        <p class="h3">{% trans with {'%home_url%': path('darvin_page_homepage') } %}content.empty_message.without_referer{% endtrans %}</p>
-    {% endif %}
-{% endmacro %}
+    {{- tranlate|trans|raw -}}
 
-{% macro message_with_referer(tranlate) %}
-    {% if app.request.headers.has('referer') %}
-        {%- set referer = app.request.headers.get('referer') -%}
-    {% endif %}
-    <p class="h3">
+    <div class="page-error__btns">
         {%- if referer is defined and referer starts with(app.request.schemeAndHttpHost) and referer != url('darvin_page_homepage') and referer != app.request.uri -%}
-            {{- (tranlate ~ '.with_referer')|trans({'%home_url%': path('darvin_page_homepage'), '%referer_url%': referer })|raw -}}
-        {%- else -%}
-            {{- (tranlate ~ '.without_referer')|trans({'%home_url%': path('darvin_page_homepage')})|raw -}}
+            <a class="page-error__btn--back" href="{{ referer }}">{% trans %}content.to_back{% endtrans %}</a>
         {% endif %}
-    </p>
+        <a class="page-error__btn--to-home" href="{{ path('darvin_page_homepage') }}">{% trans %}content.to_homepage{% endtrans %}</a>
+    </div>
 {% endmacro %}
