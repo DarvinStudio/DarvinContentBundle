@@ -78,7 +78,7 @@ EOF
     /**
      * {@inheritDoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->io = new SymfonyStyle($input, $output);
 
@@ -87,11 +87,13 @@ EOF
         $classes = $this->getTranslationClasses();
 
         if (empty($classes)) {
-            return;
+            return 0;
         }
 
         $this->checkIfTargetLocaleTranslationsExist($classes, $targetLocale);
         $this->cloneDefaultLocaleTranslations($classes, $targetLocale);
+
+        return 0;
     }
 
     /**
