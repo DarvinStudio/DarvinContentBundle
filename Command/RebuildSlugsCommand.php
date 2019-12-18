@@ -77,7 +77,7 @@ class RebuildSlugsCommand extends Command
     /**
      * {@inheritDoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
@@ -110,5 +110,7 @@ class RebuildSlugsCommand extends Command
         }
 
         $this->em->flush();
+
+        return 0;
     }
 }

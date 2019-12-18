@@ -65,7 +65,7 @@ class SlugMapRebuildCommand extends Command
     /**
      * {@inheritDoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
@@ -102,6 +102,8 @@ class SlugMapRebuildCommand extends Command
         }
 
         $this->em->flush();
+
+        return 0;
     }
 
     private function truncateSlugMap(): void

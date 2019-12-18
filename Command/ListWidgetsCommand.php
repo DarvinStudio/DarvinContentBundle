@@ -57,7 +57,7 @@ class ListWidgetsCommand extends Command
     /**
      * {@inheritDoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->requestStack->push(new Request());
 
@@ -70,5 +70,7 @@ class ListWidgetsCommand extends Command
         sort($names);
 
         (new SymfonyStyle($input, $output))->listing($names);
+
+        return 0;
     }
 }
