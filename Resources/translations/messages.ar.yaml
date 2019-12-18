@@ -1,7 +1,4 @@
 content:
-    empty: 'نحن آسفون ، (بيج)قيد الإنشاء'
-    to_back: 'إلى الخلف'
-    to_homepage: 'إلى الصفحة الرئيسية'
     sorting:
         reposition:
             success: 'مواقف حفظها'
@@ -12,6 +9,10 @@ locale:
     ru: الروسية
     zh: الصينية
 macro:
+    empty_message:
+        go_back: العودة
+        message: '<p>نحن آسفون ، الصفحة تحت الإنشاء.</p>'
+        to_homepage: 'إلى الصفحة الرئيسية'
     page_number:
         all: ' — القائمة الكاملة'
         number: ' صفحة %number%'

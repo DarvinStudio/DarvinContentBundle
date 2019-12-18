@@ -1,10 +1,7 @@
 content:
-    empty: <p>Nous sommes désolés, page est en construction.</p>
-    to_back: À L'Arrière
-    to_homepage: À La Page D'Accueil
     sorting:
         reposition:
-            success: 'Les Positions Enregistrées'
+            success: 'Les Positions enregistrées'
 locale:
     ar: Arabe
     en: Anglais
@@ -12,11 +9,15 @@ locale:
     ru: Russe
     zh: Chinois
 macro:
+    empty_message:
+        go_back: 'Revenir En Arrière'
+        message: '<p>Nous sommes désolés, la page est en cours de construction.</p>'
+        to_homepage: 'À La Page D''Accueil'
     page_number:
-        all: ' — la liste complète'
-        number: ' — page %number%'
+        all: ' — La Liste Complète'
+        number: ' — Page %number%'
 pagination:
-    all: 'Afficher tous les'
+    all: 'Afficher Tous Les'
     first: '&lt;&lt;'
     last: '&gt;&gt;'
     next: '&gt;'

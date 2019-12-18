@@ -1,7 +1,4 @@
 content:
-    empty: <p>Страница в процессе наполнения.</p>
-    to_back: Назад
-    to_homepage: На главную
     sorting:
         reposition:
             success: Позиции сохранены
@@ -14,6 +11,10 @@ locale:
     zh: Китайский
 
 macro:
+    empty_message:
+        go_back:     Назад
+        message:     <p>Страница в процессе наполнения.</p>
+        to_homepage: На главную
     page_number:
         all:    ' &mdash; полный список'
         number: ' &mdash; страница %number%'

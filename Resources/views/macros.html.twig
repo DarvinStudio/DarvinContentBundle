@@ -12,6 +12,26 @@
     {%- endif -%}
 {% endmacro %}
 
+{% macro empty_message(message = 'macro.empty_message.message') %}
+
+    {% set homepage_url = url('darvin_page_homepage') %}
+    {% set referer      = app.request.headers.get('referer') %}
+
+    {{ message|trans|raw }}
+
+    <div class="page-error__btns">
+
+        {% if referer starts with(app.request.schemeAndHttpHost) and referer != homepage_url and referer != app.request.uri %}
+            <a class="page-error__btn--back" href="{{ referer }}">{% trans %}macro.empty_message.go_back{% endtrans %}</a>
+        {% endif %}
+
+        {% if app.request.uri != homepage_url %}
+            <a class="page-error__btn--to-home" href="{{ path('darvin_page_homepage') }}">{% trans %}macro.empty_message.to_homepage{% endtrans %}</a>
+        {% endif %}
+
+    </div>
+{% endmacro %}
+
 {% macro heading(heading) %}
 
     {%- import '@DarvinContent/macros.html.twig' as darvin_content -%}
@@ -66,22 +86,4 @@
     {% elseif number == 0 %}
         {%- trans with {'%number%': number} %}macro.page_number.all{% endtrans -%}
     {% endif %}
-{% endmacro %}
-
-{% macro empty_message(tranlate) %}
-    {% if not tranlate %}
-        {% set tranlate = 'content.empty' %}
-    {% endif %}
-    {% if app.request.headers.has('referer') %}
-        {%- set referer = app.request.headers.get('referer') -%}
-    {% endif %}
-
-    {{- tranlate|trans|raw -}}
-
-    <div class="page-error__btns">
-        {%- if referer is defined and referer starts with(app.request.schemeAndHttpHost) and referer != url('darvin_page_homepage') and referer != app.request.uri -%}
-            <a class="page-error__btn--back" href="{{ referer }}">{% trans %}content.to_back{% endtrans %}</a>
-        {% endif %}
-        <a class="page-error__btn--to-home" href="{{ path('darvin_page_homepage') }}">{% trans %}content.to_homepage{% endtrans %}</a>
-    </div>
 {% endmacro %}

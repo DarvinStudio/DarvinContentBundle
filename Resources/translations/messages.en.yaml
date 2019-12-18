@@ -1,10 +1,7 @@
 content:
-    empty: <p>We are sorry, page is under construction.</p>
-    to_back: To Back
-    to_homepage: To Homepage
     sorting:
         reposition:
-            success: Positions Saved
+            success: Positions saved
 
 locale:
     ar: Arabic
@@ -14,12 +11,16 @@ locale:
     zh: Chinese
 
 macro:
+    empty_message:
+        go_back:     Go Back
+        message:     <p>We are sorry, page is under construction.</p>
+        to_homepage: To Homepage
     page_number:
-        all:    ' &mdash; full list'
-        number: ' &mdash; page %number%'
+        all:    ' &mdash; Full List'
+        number: ' &mdash; Page %number%'
 
 pagination:
-    all:      Show all
+    all:      Show All
     first:    '&lt;&lt;'
     last:     '&gt;&gt;'
     next:     '&gt;'
