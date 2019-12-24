@@ -40,6 +40,21 @@ class Configuration implements ConfigurationInterface
                                     ->scalarNode('method')->defaultNull()->end()
                                     ->arrayNode('extra_args')->prototype('scalar')->end()->end()
                                 ->end()
+                                ->beforeNormalization()->ifArray()->then(function (array $provider): array {
+                                    if (isset($provider['entity'], $provider['repository_method'])) {
+                                        $provider = array_merge($provider, [
+                                            'service'    => 'darvin_content.autocomplete.provider.repository',
+                                            'extra_args' => [
+                                                $provider['entity'],
+                                                $provider['repository_method'],
+                                            ],
+                                        ]);
+
+                                        unset($provider['entity'], $provider['repository_method']);
+                                    }
+
+                                    return $provider;
+                                })->end()
                             ->end()
                         ->end()
                     ->end()

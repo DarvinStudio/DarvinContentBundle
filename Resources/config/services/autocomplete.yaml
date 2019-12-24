@@ -33,6 +33,7 @@ services:
             - { name: form.type }
 
     darvin_content.autocomplete.provider.repository:
-        class: '%darvin_content.autocomplete.provider.repository.class%'
+        class:  '%darvin_content.autocomplete.provider.repository.class%'
+        public: true
         arguments:
             - '@doctrine.orm.entity_manager'
