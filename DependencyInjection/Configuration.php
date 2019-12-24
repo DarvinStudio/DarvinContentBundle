@@ -31,6 +31,18 @@ class Configuration implements ConfigurationInterface
         $root = $builder->getRootNode();
         $root
             ->children()
+                ->arrayNode('autocomplete')->canBeEnabled()
+                    ->children()
+                        ->arrayNode('providers')->useAttributeAsKey('name')
+                            ->prototype('array')
+                                ->children()
+                                    ->scalarNode('service')->isRequired()->cannotBeEmpty()->end()
+                                    ->scalarNode('method')->defaultNull()->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
                 ->arrayNode('property')->addDefaultsIfNotSet()
                     ->children()
                         ->arrayNode('embedder')->addDefaultsIfNotSet()

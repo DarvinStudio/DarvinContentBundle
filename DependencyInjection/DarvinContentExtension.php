@@ -46,7 +46,6 @@ class DarvinContentExtension extends Extension implements PrependExtensionInterf
         (new ConfigInjector($container))->inject($config, $this->getAlias());
 
         (new ConfigLoader($container, __DIR__.'/../Resources/config/services'))->load([
-            'autocomplete',
             'canonical_url',
             'content',
             'controller',
@@ -67,11 +66,15 @@ class DarvinContentExtension extends Extension implements PrependExtensionInterf
             'dev/translatable' => ['env' => 'dev'],
             'dev/widget'       => ['env' => 'dev'],
 
-            'locale/switch' => ['callback' => function () use ($locales) {
+            'autocomplete' => ['callback' => function () use ($config): bool {
+                return $config['autocomplete']['enabled'];
+            }],
+
+            'locale/switch' => ['callback' => function () use ($locales): bool {
                 return count($locales) > 1;
             }],
 
-            'sorting' => ['callback' => function () use ($config) {
+            'sorting' => ['callback' => function () use ($config): bool {
                 return $config['sorting']['enabled'];
             }],
         ]);
