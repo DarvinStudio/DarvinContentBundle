@@ -5,6 +5,8 @@ parameters:
 
     darvin_content.autocomplete.form_type.class: Darvin\ContentBundle\Form\Type\Autocomplete\AutocompleteType
 
+    darvin_content.autocomplete.provider.repository.class: Darvin\ContentBundle\Autocomplete\Provider\RepositoryAutocompleteProvider
+
 services:
     Darvin\ContentBundle\Autocomplete\AutocompleterInterface: '@darvin_content.autocomplete.autocompleter'
 
@@ -29,3 +31,8 @@ services:
             - '@router'
         tags:
             - { name: form.type }
+
+    darvin_content.autocomplete.provider.repository:
+        class: '%darvin_content.autocomplete.provider.repository.class%'
+        arguments:
+            - '@doctrine.orm.entity_manager'

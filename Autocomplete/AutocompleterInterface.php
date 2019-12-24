@@ -17,7 +17,7 @@ interface AutocompleterInterface
 {
     /**
      * @param string $provider Autocomplete provider name
-     * @param string $term     Term
+     * @param string $term     Search term
      *
      * @return array
      * @throws \InvalidArgumentException
