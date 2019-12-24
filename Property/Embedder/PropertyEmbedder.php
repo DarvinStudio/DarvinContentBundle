@@ -13,11 +13,11 @@ namespace Darvin\ContentBundle\Property\Embedder;
 use Darvin\ContentBundle\Entity\GlobalPropertyInterface;
 use Darvin\ContentBundle\Repository\GlobalPropertyRepository;
 use Darvin\ContentBundle\Translatable\TranslatableException;
+use Darvin\Utils\Callback\CallbackRunnerInterface;
 use Darvin\Utils\Locale\LocaleProviderInterface;
 use Darvin\Utils\Strings\Stringifier\StringifierInterface;
 use Darvin\Utils\Strings\StringsUtil;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Container\ContainerInterface;
 use Symfony\Component\PropertyAccess\Exception\ExceptionInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
@@ -27,9 +27,9 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 class PropertyEmbedder implements PropertyEmbedderInterface
 {
     /**
-     * @var \Psr\Container\ContainerInterface
+     * @var \Darvin\Utils\Callback\CallbackRunnerInterface
      */
-    private $container;
+    private $callbackRunner;
 
     /**
      * @var \Doctrine\ORM\EntityManagerInterface
@@ -62,7 +62,7 @@ class PropertyEmbedder implements PropertyEmbedderInterface
     private $globals;
 
     /**
-     * @param \Psr\Container\ContainerInterface                           $container        Service container
+     * @param \Darvin\Utils\Callback\CallbackRunnerInterface              $callbackRunner   Callback runner
      * @param \Doctrine\ORM\EntityManagerInterface                        $em               Entity manager
      * @param \Darvin\Utils\Locale\LocaleProviderInterface                $localeProvider   Locale provider
      * @param \Symfony\Component\PropertyAccess\PropertyAccessorInterface $propertyAccessor Property accessor
@@ -70,14 +70,14 @@ class PropertyEmbedder implements PropertyEmbedderInterface
      * @param array                                                       $callbacks        Callbacks
      */
     public function __construct(
-        ContainerInterface $container,
+        CallbackRunnerInterface $callbackRunner,
         EntityManagerInterface $em,
         LocaleProviderInterface $localeProvider,
         PropertyAccessorInterface $propertyAccessor,
         StringifierInterface $stringifier,
         array $callbacks = []
     ) {
-        $this->container = $container;
+        $this->callbackRunner = $callbackRunner;
         $this->em = $em;
         $this->localeProvider = $localeProvider;
         $this->propertyAccessor = $propertyAccessor;
@@ -123,7 +123,11 @@ class PropertyEmbedder implements PropertyEmbedderInterface
 
             foreach ($lowerProperties as $property) {
                 if (isset($callbacks[$property])) {
-                    $values[$property] = $this->call($callbacks[$property], $object);
+                    $values[$property] = $this->callbackRunner->runCallback(
+                        $callbacks[$property]['service'],
+                        $callbacks[$property]['method'],
+                        $object
+                    );
 
                     continue;
                 }
@@ -154,55 +158,6 @@ class PropertyEmbedder implements PropertyEmbedderInterface
         $content = trim($content);
 
         return $content;
-    }
-
-    /**
-     * @param array  $callback Callback
-     * @param object $object   Object
-     *
-     * @return mixed
-     * @throws \InvalidArgumentException
-     */
-    private function call(array $callback, object $object)
-    {
-        $id     = $callback['service'];
-        $method = $callback['method'];
-
-        if ($this->container->has($id)) {
-            $service = $this->container->get($id);
-
-            if (null === $method) {
-                if (!is_callable($service)) {
-                    throw new \InvalidArgumentException(sprintf('Class "%s" is not callable. Make sure it has "__invoke()" method.', get_class($service)));
-                }
-
-                return $service($object);
-            }
-            if (!method_exists($service, $method)) {
-                throw new \InvalidArgumentException(sprintf('Method "%s::%s()" does not exist.', get_class($service), $method));
-            }
-
-            return $service->$method($object);
-        }
-        if (!class_exists($id)) {
-            throw new \InvalidArgumentException(
-                sprintf('Service or class "%s" does not exist. If it is a service, make sure it is public.', $id)
-            );
-        }
-        if (null === $method) {
-            throw new \InvalidArgumentException('Method not specified.');
-        }
-        if (!method_exists($id, $method)) {
-            throw new \InvalidArgumentException(sprintf('Method "%s::%s()" does not exist.', $id, $method));
-        }
-
-        $callable = [$id, $method];
-
-        if (!is_callable($callable)) {
-            throw new \InvalidArgumentException(sprintf('Method "%s::%s()" is not statically callable.', $id, $method));
-        }
-
-        return $callable($object);
     }
 
     /**
