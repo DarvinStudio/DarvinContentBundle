@@ -40,6 +40,11 @@ class Configuration implements ConfigurationInterface
                                     ->scalarNode('method')->defaultNull()->end()
                                     ->arrayNode('extra_args')->prototype('scalar')->end()->end()
                                 ->end()
+                                ->beforeNormalization()->ifString()->then(function (string $service): array {
+                                    return [
+                                        'service' => $service,
+                                    ];
+                                })->end()
                                 ->beforeNormalization()->ifArray()->then(function (array $provider): array {
                                     if (isset($provider['entity'], $provider['repository_method'])) {
                                         $provider = array_merge($provider, [
