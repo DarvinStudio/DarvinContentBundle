@@ -1,7 +1,7 @@
 parameters:
     darvin_content.autocomplete.controller.class: Darvin\ContentBundle\Controller\AutocompleteController
 
-    darvin_content.autocomplete.form_type.class: Darvin\ContentBundle\Form\Type\AutocompleteType
+    darvin_content.autocomplete.form_type.class: Darvin\ContentBundle\Form\Type\Autocomplete\AutocompleteType
 
 services:
     darvin_content.autocomplete.controller:
