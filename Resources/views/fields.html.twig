@@ -2,5 +2,6 @@
     {{ form_widget(form, {'attr': attr|merge({
         'class':         (attr.class|default ~ ' js-autocomplete')|trim,
         'data-multiple': multiple,
+        'data-url':      autocomplete_url,
     })}) }}
 {% endblock %}
