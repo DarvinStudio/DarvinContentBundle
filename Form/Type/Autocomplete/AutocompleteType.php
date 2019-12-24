@@ -48,7 +48,9 @@ class AutocompleteType extends AbstractType
      */
     public function finishView(FormView $view, FormInterface $form, array $options): void
     {
-        $view->vars['autocomplete_url'] = $this->router->generate('darvin_content_autocomplete');
+        $view->vars['autocomplete_url'] = $this->router->generate('darvin_content_autocomplete', [
+            'provider' => $options['provider'],
+        ]);
     }
 
     /**

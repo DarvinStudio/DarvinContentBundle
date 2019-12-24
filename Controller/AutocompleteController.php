@@ -10,8 +10,11 @@
 
 namespace Darvin\ContentBundle\Controller;
 
+use Darvin\ContentBundle\Autocomplete\AutocompleterInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Autocomplete controller
@@ -19,10 +22,31 @@ use Symfony\Component\HttpFoundation\Response;
 class AutocompleteController
 {
     /**
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @var \Darvin\ContentBundle\Autocomplete\AutocompleterInterface
      */
-    public function __invoke(): Response
+    private $autocompleter;
+
+    /**
+     * @param \Darvin\ContentBundle\Autocomplete\AutocompleterInterface $autocompleter Autocompleter
+     */
+    public function __construct(AutocompleterInterface $autocompleter)
     {
-        return new JsonResponse();
+        $this->autocompleter = $autocompleter;
+    }
+
+    /**
+     * @param \Symfony\Component\HttpFoundation\Request $request  Request
+     * @param string                                    $provider Autocomplete provider name
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     */
+    public function __invoke(Request $request, string $provider): Response
+    {
+        if (!$this->autocompleter->hasProvider($provider)) {
+            throw new NotFoundHttpException(sprintf('Autocomplete provider "%s" does not exist.', $provider));
+        }
+
+        return new JsonResponse($this->autocompleter->autocomplete($provider, (string)$request->query->get('term', '')));
     }
 }

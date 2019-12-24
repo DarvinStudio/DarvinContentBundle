@@ -78,18 +78,16 @@ class Autocompleter implements AutocompleterInterface
     /**
      * {@inheritDoc}
      */
-    public function getProviderNames(): array
+    public function hasProvider(string $provider): bool
     {
-        return $this->providerNames;
+        return isset($this->providerDefinitions[$provider]);
     }
 
     /**
-     * @param string $provider Autocomplete provider name
-     *
-     * @return bool
+     * {@inheritDoc}
      */
-    private function hasProvider(string $provider): bool
+    public function getProviderNames(): array
     {
-        return isset($this->providerDefinitions[$provider]);
+        return $this->providerNames;
     }
 }

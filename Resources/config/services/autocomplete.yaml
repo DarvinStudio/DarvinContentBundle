@@ -17,6 +17,8 @@ services:
 
     darvin_content.autocomplete.controller:
         class: '%darvin_content.autocomplete.controller.class%'
+        arguments:
+            - '@darvin_content.autocomplete.autocompleter'
         tags:
             - { name: controller.service_arguments }
 
