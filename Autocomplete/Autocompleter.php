@@ -64,6 +64,12 @@ class Autocompleter implements AutocompleterInterface
             throw new \InvalidArgumentException(sprintf('Autocomplete provider "%s" does not exist.', $provider));
         }
 
+        $term = trim($term);
+
+        if ('' === $term) {
+            throw new \InvalidArgumentException('Search term is empty.');
+        }
+
         $definition = $this->providerDefinitions[$provider];
 
         $data = $this->callbackRunner->runCallback(
