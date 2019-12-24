@@ -21,6 +21,7 @@ interface AutocompleterInterface
      *
      * @return array
      * @throws \InvalidArgumentException
+     * @throws \UnexpectedValueException
      */
     public function autocomplete(string $provider, string $term): array;
 

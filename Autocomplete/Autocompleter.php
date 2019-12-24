@@ -66,13 +66,32 @@ class Autocompleter implements AutocompleterInterface
 
         $definition = $this->providerDefinitions[$provider];
 
-        return $this->callbackRunner->runCallback(
+        $data = $this->callbackRunner->runCallback(
             $definition['service'],
             $definition['method'],
             $term,
             $this->localeProvider->getCurrentLocale(),
             ...$definition['extra_args']
         );
+
+        if (!is_iterable($data)) {
+            throw new \UnexpectedValueException(
+                sprintf('Autocomplete provider "%s" must return iterable, got "%s".', $provider, gettype($data))
+            );
+        }
+
+        $results = [];
+
+        foreach ($data as $id => $text) {
+            $results[] = [
+                'id'   => $id,
+                'text' => $text,
+            ];
+        }
+
+        return [
+            'results' => $results,
+        ];
     }
 
     /**
