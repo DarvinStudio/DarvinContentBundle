@@ -16,7 +16,18 @@ namespace Darvin\ContentBundle\Autocomplete;
 interface AutocompleterInterface
 {
     /**
+     * @param string $provider Autocomplete provider name
+     * @param string $term     Term
+     *
      * @return array
+     * @throws \InvalidArgumentException
      */
-    public function autocomplete(): array;
+    public function autocomplete(string $provider, string $term): array;
+
+    /**
+     * @param string $provider Autocomplete provider name
+     *
+     * @return bool
+     */
+    public function hasProvider(string $provider): bool;
 }
