@@ -1,0 +1,6 @@
+{% block darvin_content_autocomplete_widget %}
+    {{ form_widget(form, {'attr': attr|merge({
+        'class':         (attr.class|default ~ ' js-autocomplete')|trim,
+        'data-multiple': multiple,
+    })}) }}
+{% endblock %}

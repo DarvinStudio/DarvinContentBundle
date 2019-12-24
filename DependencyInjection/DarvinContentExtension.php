@@ -85,6 +85,7 @@ class DarvinContentExtension extends Extension implements PrependExtensionInterf
             'darvin_admin',
             'doctrine',
             'knp_paginator',
+            'twig',
         ]);
     }
 }

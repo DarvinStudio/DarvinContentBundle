@@ -1,0 +1,3 @@
+twig:
+    form_themes:
+        - '@DarvinContent/fields.html.twig'
