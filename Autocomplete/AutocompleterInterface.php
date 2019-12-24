@@ -25,9 +25,7 @@ interface AutocompleterInterface
     public function autocomplete(string $provider, string $term): array;
 
     /**
-     * @param string $provider Autocomplete provider name
-     *
-     * @return bool
+     * @return string[]
      */
-    public function hasProvider(string $provider): bool;
+    public function getProviderNames(): array;
 }

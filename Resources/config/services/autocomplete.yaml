@@ -23,6 +23,7 @@ services:
     darvin_content.autocomplete.form_type:
         class: '%darvin_content.autocomplete.form_type.class%'
         arguments:
+            - '@darvin_content.autocomplete.autocompleter'
             - '@router'
         tags:
             - { name: form.type }

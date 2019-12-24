@@ -10,10 +10,12 @@
 
 namespace Darvin\ContentBundle\Form\Type\Autocomplete;
 
+use Darvin\ContentBundle\Autocomplete\AutocompleterInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -22,15 +24,22 @@ use Symfony\Component\Routing\RouterInterface;
 class AutocompleteType extends AbstractType
 {
     /**
+     * @var \Darvin\ContentBundle\Autocomplete\AutocompleterInterface
+     */
+    private $autocompleter;
+
+    /**
      * @var \Symfony\Component\Routing\RouterInterface
      */
     private $router;
 
     /**
-     * @param \Symfony\Component\Routing\RouterInterface $router Router
+     * @param \Darvin\ContentBundle\Autocomplete\AutocompleterInterface $autocompleter Autocompleter
+     * @param \Symfony\Component\Routing\RouterInterface                $router        Router
      */
-    public function __construct(RouterInterface $router)
+    public function __construct(AutocompleterInterface $autocompleter, RouterInterface $router)
     {
+        $this->autocompleter = $autocompleter;
         $this->router = $router;
     }
 
@@ -40,6 +49,16 @@ class AutocompleteType extends AbstractType
     public function finishView(FormView $view, FormInterface $form, array $options): void
     {
         $view->vars['autocomplete_url'] = $this->router->generate('darvin_content_autocomplete');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver
+            ->setRequired('provider')
+            ->setAllowedValues('provider', $this->autocompleter->getProviderNames());
     }
 
     /**

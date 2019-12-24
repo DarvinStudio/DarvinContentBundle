@@ -34,6 +34,11 @@ class Autocompleter implements AutocompleterInterface
     private $providerDefinitions;
 
     /**
+     * @var string[]
+     */
+    private $providerNames;
+
+    /**
      * @param \Darvin\Utils\Callback\CallbackRunnerInterface $callbackRunner      Callback runner
      * @param \Darvin\Utils\Locale\LocaleProviderInterface   $localeProvider      Locale provider
      * @param array                                          $providerDefinitions Provider definitions
@@ -46,6 +51,8 @@ class Autocompleter implements AutocompleterInterface
         $this->callbackRunner = $callbackRunner;
         $this->localeProvider = $localeProvider;
         $this->providerDefinitions = $providerDefinitions;
+
+        $this->providerNames = array_keys($providerDefinitions);
     }
 
     /**
@@ -71,7 +78,17 @@ class Autocompleter implements AutocompleterInterface
     /**
      * {@inheritDoc}
      */
-    public function hasProvider(string $provider): bool
+    public function getProviderNames(): array
+    {
+        return $this->providerNames;
+    }
+
+    /**
+     * @param string $provider Autocomplete provider name
+     *
+     * @return bool
+     */
+    private function hasProvider(string $provider): bool
     {
         return isset($this->providerDefinitions[$provider]);
     }
