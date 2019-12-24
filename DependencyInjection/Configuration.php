@@ -38,6 +38,7 @@ class Configuration implements ConfigurationInterface
                                 ->children()
                                     ->scalarNode('service')->isRequired()->cannotBeEmpty()->end()
                                     ->scalarNode('method')->defaultNull()->end()
+                                    ->arrayNode('extra_args')->prototype('scalar')->end()->end()
                                 ->end()
                             ->end()
                         ->end()
