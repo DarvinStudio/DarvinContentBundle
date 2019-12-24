@@ -56,6 +56,18 @@ class Configuration implements ConfigurationInterface
                                         ]);
 
                                         unset($provider['entity'], $provider['repository_method']);
+
+                                        return $provider;
+                                    }
+                                    if (1 === count($provider)) {
+                                        $key = key($provider);
+
+                                        if (!in_array($key, ['service', 'method'])) {
+                                            return [
+                                                'service' => $key,
+                                                'method'  => $provider[$key],
+                                            ];
+                                        }
                                     }
 
                                     return $provider;
