@@ -1,0 +1,8 @@
+parameters:
+    darvin_content.autocomplete.controller.class: Darvin\ContentBundle\Controller\AutocompleteController
+
+services:
+    darvin_content.autocomplete.controller:
+        class: '%darvin_content.autocomplete.controller.class%'
+        tags:
+            - { name: controller.service_arguments }

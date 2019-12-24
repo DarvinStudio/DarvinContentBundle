@@ -1,0 +1,4 @@
+darvin_content_autocomplete:
+    path:     /
+    defaults: { _controller: darvin_content.autocomplete.controller }
+    methods:  [ get ]
