@@ -1,8 +1,17 @@
 parameters:
     darvin_content.autocomplete.controller.class: Darvin\ContentBundle\Controller\AutocompleteController
 
+    darvin_content.autocomplete.form_type.class: Darvin\ContentBundle\Form\Type\AutocompleteType
+
 services:
     darvin_content.autocomplete.controller:
         class: '%darvin_content.autocomplete.controller.class%'
         tags:
             - { name: controller.service_arguments }
+
+    darvin_content.autocomplete.form_type:
+        class: '%darvin_content.autocomplete.form_type.class%'
+        arguments:
+            - '@router'
+        tags:
+            - { name: form.type }

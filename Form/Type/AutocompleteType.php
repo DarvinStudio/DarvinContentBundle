@@ -12,12 +12,37 @@ namespace Darvin\ContentBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Autocomplete form type
  */
 class AutocompleteType extends AbstractType
 {
+    /**
+     * @var \Symfony\Component\Routing\RouterInterface
+     */
+    private $router;
+
+    /**
+     * @param \Symfony\Component\Routing\RouterInterface $router Router
+     */
+    public function __construct(RouterInterface $router)
+    {
+        $this->router = $router;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefault('attr', [
+            'data-url' => $this->router->generate('darvin_content_autocomplete'),
+        ]);
+    }
+
     /**
      * {@inheritDoc}
      */
