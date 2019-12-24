@@ -14,6 +14,7 @@ use Darvin\ContentBundle\Autocomplete\AutocompleterInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -27,11 +28,18 @@ class AutocompleteController
     private $autocompleter;
 
     /**
-     * @param \Darvin\ContentBundle\Autocomplete\AutocompleterInterface $autocompleter Autocompleter
+     * @var bool
      */
-    public function __construct(AutocompleterInterface $autocompleter)
+    private $debug;
+
+    /**
+     * @param \Darvin\ContentBundle\Autocomplete\AutocompleterInterface $autocompleter Autocompleter
+     * @param bool                                                      $debug         Is debug mode enabled
+     */
+    public function __construct(AutocompleterInterface $autocompleter, bool $debug)
     {
         $this->autocompleter = $autocompleter;
+        $this->debug = $debug;
     }
 
     /**
@@ -39,10 +47,14 @@ class AutocompleteController
      * @param string                                    $provider Autocomplete provider name
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     public function __invoke(Request $request, string $provider): Response
     {
+        if (!$this->debug && !$request->isXmlHttpRequest()) {
+            throw new BadRequestHttpException('Request is not XMLHttpRequest.');
+        }
         if (!$this->autocompleter->hasProvider($provider)) {
             throw new NotFoundHttpException(sprintf('Autocomplete provider "%s" does not exist.', $provider));
         }
