@@ -89,10 +89,16 @@ class Autocompleter implements AutocompleterInterface
         $results = [];
 
         foreach ($data as $id => $text) {
-            $results[] = [
-                'id'   => $id,
-                'text' => $text,
-            ];
+            $result = $text;
+
+            if (!is_array($result)) {
+                $result = [
+                    'id'   => $id,
+                    'text' => $text,
+                ];
+            }
+
+            $results[] = $result;
         }
 
         return [
