@@ -31,14 +31,15 @@ class RepositoryAutocompleteProvider
     }
 
     /**
-     * @param string $term             Search term
-     * @param string $locale           Locale
-     * @param string $objectClass      Object class
-     * @param string $repositoryMethod Object repository method
+     * @param string|null $term             Search term
+     * @param array|null  $choices          Choices
+     * @param string      $locale           Locale
+     * @param string      $objectClass      Object class
+     * @param string      $repositoryMethod Object repository method
      *
-     * @return iterable
+     * @return array
      */
-    public function __invoke(string $term, string $locale, string $objectClass, string $repositoryMethod): iterable
+    public function __invoke(?string $term, ?array $choices, string $locale, string $objectClass, string $repositoryMethod): array
     {
         $repository = $this->om->getRepository($objectClass);
 
@@ -48,6 +49,6 @@ class RepositoryAutocompleteProvider
             );
         }
 
-        return $repository->$repositoryMethod($term, $locale);
+        return $repository->$repositoryMethod($term, $choices, $locale);
     }
 }

@@ -30,6 +30,7 @@ interface AutocompleterInterface
      * @param array  $choices  Choices
      *
      * @return array
+     * @throws \InvalidArgumentException
      */
     public function getChoiceLabels(string $provider, array $choices): array;
 

@@ -60,9 +60,7 @@ class Autocompleter implements AutocompleterInterface
      */
     public function autocomplete(string $provider, string $term): array
     {
-        if (!$this->hasProvider($provider)) {
-            throw new \InvalidArgumentException(sprintf('Autocomplete provider "%s" does not exist.', $provider));
-        }
+        $definition = $this->getProviderDefinition($provider);
 
         $term = trim($term);
 
@@ -70,19 +68,18 @@ class Autocompleter implements AutocompleterInterface
             throw new \InvalidArgumentException('Search term is empty.');
         }
 
-        $definition = $this->providerDefinitions[$provider];
-
         $data = $this->callbackRunner->runCallback(
             $definition['service'],
             $definition['method'],
             $term,
+            null,
             $this->localeProvider->getCurrentLocale(),
             ...$definition['extra_args']
         );
 
-        if (!is_iterable($data)) {
+        if (!is_array($data)) {
             throw new \UnexpectedValueException(
-                sprintf('Autocomplete provider "%s" must return iterable, got "%s".', $provider, gettype($data))
+                sprintf('Autocomplete provider "%s" must return array, got "%s".', $provider, gettype($data))
             );
         }
 
@@ -109,7 +106,20 @@ class Autocompleter implements AutocompleterInterface
      */
     public function getChoiceLabels(string $provider, array $choices): array
     {
-        return [];
+        $definition = $this->getProviderDefinition($provider);
+
+        if (empty($choices)) {
+            return [];
+        }
+
+        return $this->callbackRunner->runCallback(
+            $definition['service'],
+            $definition['method'],
+            null,
+            $choices,
+            $this->localeProvider->getCurrentLocale(),
+            ...$definition['extra_args']
+        );
     }
 
     /**
@@ -126,5 +136,20 @@ class Autocompleter implements AutocompleterInterface
     public function getProviderNames(): array
     {
         return $this->providerNames;
+    }
+
+    /**
+     * @param string $provider Autocomplete provider name
+     *
+     * @return array
+     * @throws \InvalidArgumentException
+     */
+    private function getProviderDefinition(string $provider): array
+    {
+        if (!$this->hasProvider($provider)) {
+            throw new \InvalidArgumentException(sprintf('Autocomplete provider "%s" does not exist.', $provider));
+        }
+
+        return $this->providerDefinitions[$provider];
     }
 }
