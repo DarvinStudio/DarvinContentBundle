@@ -31,7 +31,7 @@ interface AutocompleterInterface
      *
      * @return array
      */
-    public function getChoiceTitles(string $provider, array $choices): array;
+    public function getChoiceLabels(string $provider, array $choices): array;
 
     /**
      * @param string $provider Autocomplete provider name

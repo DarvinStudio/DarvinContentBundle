@@ -107,7 +107,7 @@ class Autocompleter implements AutocompleterInterface
     /**
      * {@inheritDoc}
      */
-    public function getChoiceTitles(string $provider, array $choices): array
+    public function getChoiceLabels(string $provider, array $choices): array
     {
         return [];
     }

@@ -53,33 +53,41 @@ class AutocompleteType extends AbstractType
     {
         $builder->resetViewTransformers();
 
-        if ($options['rebuild_choices']) {
-            $formType = get_class($this);
-
-            $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($builder, $formType, $options): void {
-                $parentForm = $event->getForm()->getParent();
-
-                if (null === $parentForm) {
-                    return;
-                }
-
-                $choices = [];
-                $data    = $event->getData();
-
-                if (null !== $data) {
-                    if (!is_array($data)) {
-                        $data = [$data];
-                    }
-
-                    $choices = array_combine($data, $data);
-                }
-
-                $parentForm->add($builder->getName(), $formType, array_merge($options, [
-                    'choices'         => $choices,
-                    'rebuild_choices' => false,
-                ]));
-            });
+        if (!$options['rebuild_choices']) {
+            return;
         }
+
+        $autocompleter = $this->autocompleter;
+        $formType      = get_class($this);
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($autocompleter, $builder, $formType, $options): void {
+            $parentForm = $event->getForm()->getParent();
+
+            if (null === $parentForm) {
+                return;
+            }
+
+            $choices = [];
+            $data    = $event->getData();
+
+            if (null !== $data) {
+                if (!is_array($data)) {
+                    $data = [$data];
+                }
+
+                $choices = array_combine($data, $data);
+            }
+
+            $labels = $autocompleter->getChoiceLabels($options['provider'], $choices);
+
+            $parentForm->add($builder->getName(), $formType, array_merge($options, [
+                'choices'         => $choices,
+                'rebuild_choices' => false,
+                'choice_label'    => function ($choice) use ($labels) {
+                    return $labels[$choice] ?? $choice;
+                },
+            ]));
+        });
     }
 
     /**
