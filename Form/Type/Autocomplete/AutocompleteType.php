@@ -14,6 +14,8 @@ use Darvin\ContentBundle\Autocomplete\AutocompleterInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -50,6 +52,34 @@ class AutocompleteType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->resetViewTransformers();
+
+        if ($options['rebuild_choices']) {
+            $formType = get_class($this);
+
+            $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($builder, $formType, $options): void {
+                $parentForm = $event->getForm()->getParent();
+
+                if (null === $parentForm) {
+                    return;
+                }
+
+                $choices = [];
+                $data    = $event->getData();
+
+                if (null !== $data) {
+                    if (!is_array($data)) {
+                        $data = [$data];
+                    }
+
+                    $choices = array_combine($data, $data);
+                }
+
+                $parentForm->add($builder->getName(), $formType, array_merge($options, [
+                    'choices'         => $choices,
+                    'rebuild_choices' => false,
+                ]));
+            });
+        }
     }
 
     /**
@@ -69,7 +99,9 @@ class AutocompleteType extends AbstractType
     {
         $resolver
             ->setRequired('provider')
-            ->setAllowedValues('provider', $this->autocompleter->getProviderNames());
+            ->setDefault('rebuild_choices', true)
+            ->setAllowedValues('provider', $this->autocompleter->getProviderNames())
+            ->setAllowedTypes('rebuild_choices', 'bool');
     }
 
     /**
