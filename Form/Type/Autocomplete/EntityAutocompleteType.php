@@ -11,7 +11,7 @@
 namespace Darvin\ContentBundle\Form\Type\Autocomplete;
 
 use Darvin\ContentBundle\Autocomplete\Provider\Config\ProviderConfigInterface;
-use Darvin\Utils\Form\DataTransformer\IdToEntityTransformer;
+use Darvin\Utils\Form\DataTransformer\EntityToIDTransformer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -48,7 +48,7 @@ class EntityAutocompleteType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->addModelTransformer(new IdToEntityTransformer($this->em, $options['entity'], $options['multiple']));
+        $builder->addModelTransformer(new EntityToIDTransformer($this->em, $options['entity'], $options['multiple']));
     }
 
     /**

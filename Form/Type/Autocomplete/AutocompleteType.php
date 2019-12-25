@@ -66,9 +66,8 @@ class AutocompleteType extends AbstractType
         }
 
         $autocompleter = $this->autocompleter;
-        $formType      = get_class($this);
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($autocompleter, $builder, $formType, $options): void {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($autocompleter, $builder, $options): void {
             $parentForm = $event->getForm()->getParent();
 
             if (null === $parentForm) {
@@ -88,7 +87,7 @@ class AutocompleteType extends AbstractType
 
             $labels = $autocompleter->getChoiceLabels($options['provider'], $choices);
 
-            $parentForm->add($builder->getName(), $formType, array_merge($options, [
+            $parentForm->add($builder->getName(), get_class($builder->getType()->getInnerType()), array_merge($options, [
                 'choices'         => $choices,
                 'rebuild_choices' => false,
                 'choice_label'    => function ($choice) use ($labels) {
