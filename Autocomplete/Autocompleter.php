@@ -74,7 +74,7 @@ class Autocompleter implements AutocompleterInterface
             $term,
             null,
             $this->localeProvider->getCurrentLocale(),
-            ...$definition['extra_args']
+            $definition['options']
         );
 
         if (!is_array($data)) {
@@ -118,7 +118,7 @@ class Autocompleter implements AutocompleterInterface
             null,
             $choices,
             $this->localeProvider->getCurrentLocale(),
-            ...$definition['extra_args']
+            $definition['options']
         );
     }
 

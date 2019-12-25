@@ -38,7 +38,7 @@ class Configuration implements ConfigurationInterface
                                 ->children()
                                     ->scalarNode('service')->isRequired()->cannotBeEmpty()->end()
                                     ->scalarNode('method')->defaultNull()->end()
-                                    ->arrayNode('extra_args')->prototype('scalar')->end()->end()
+                                    ->arrayNode('options')->useAttributeAsKey('name')->prototype('scalar')->end()->end()
                                 ->end()
                                 ->beforeNormalization()->ifString()->then(function (string $service): array {
                                     return [
@@ -48,10 +48,10 @@ class Configuration implements ConfigurationInterface
                                 ->beforeNormalization()->ifArray()->then(function (array $provider): array {
                                     if (isset($provider['entity'], $provider['repository_method'])) {
                                         $provider = array_merge($provider, [
-                                            'service'    => 'darvin_content.autocomplete.provider.repository',
-                                            'extra_args' => [
-                                                $provider['entity'],
-                                                $provider['repository_method'],
+                                            'service' => 'darvin_content.autocomplete.provider.repository',
+                                            'options' => [
+                                                'entity'            => $provider['entity'],
+                                                'repository_method' => $provider['repository_method'],
                                             ],
                                         ]);
 

@@ -10,45 +10,72 @@
 
 namespace Darvin\ContentBundle\Autocomplete\Provider;
 
-use Doctrine\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Object repository autocomplete provider
+ * Entity repository autocomplete provider
  */
 class RepositoryAutocompleteProvider
 {
     /**
-     * @var \Doctrine\Persistence\ObjectManager
+     * @var \Doctrine\ORM\EntityManagerInterface
      */
-    private $om;
+    private $em;
 
     /**
-     * @param \Doctrine\Persistence\ObjectManager $om Object manager
+     * @var \Symfony\Component\OptionsResolver\OptionsResolver
      */
-    public function __construct(ObjectManager $om)
+    private $optionsResolver;
+
+    /**
+     * @param \Doctrine\ORM\EntityManagerInterface $em Entity manager
+     */
+    public function __construct(EntityManagerInterface $em)
     {
-        $this->om = $om;
+        $this->em = $em;
+
+        $optionsResolver = new OptionsResolver();
+        $this->configureOptions($optionsResolver);
+        $this->optionsResolver = $optionsResolver;
     }
 
     /**
-     * @param string|null $term             Search term
-     * @param array|null  $choices          Choices
-     * @param string      $locale           Locale
-     * @param string      $objectClass      Object class
-     * @param string      $repositoryMethod Object repository method
+     * @param string|null $term    Search term
+     * @param array|null  $choices Choices
+     * @param string      $locale  Locale
+     * @param array       $options Options
      *
      * @return array
+     * @throws \InvalidArgumentException
      */
-    public function __invoke(?string $term, ?array $choices, string $locale, string $objectClass, string $repositoryMethod): array
+    public function __invoke(?string $term, ?array $choices, string $locale, array $options): array
     {
-        $repository = $this->om->getRepository($objectClass);
+        $options = $this->optionsResolver->resolve($options);
 
-        if (!method_exists($repository, $repositoryMethod)) {
-            throw new \InvalidArgumentException(
-                sprintf('Method "%s::%s()" does not exist.', get_class($repository), $repositoryMethod)
-            );
+        $entity = $options['entity'];
+        $method = $options['repository_method'];
+
+        $repository = $this->em->getRepository($entity);
+
+        if (!method_exists($repository, $method)) {
+            throw new \InvalidArgumentException(sprintf('Method "%s::%s()" does not exist.', get_class($repository), $method));
         }
 
-        return $repository->$repositoryMethod($term, $choices, $locale);
+        return $repository->$method($term, $choices, $locale);
+    }
+
+    /**
+     * @param \Symfony\Component\OptionsResolver\OptionsResolver $resolver Options resolver
+     */
+    private function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver
+            ->setRequired([
+                'entity',
+                'repository_method',
+            ])
+            ->setAllowedTypes('entity', 'string')
+            ->setAllowedTypes('repository_method', 'string');
     }
 }
