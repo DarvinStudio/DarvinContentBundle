@@ -10,11 +10,21 @@
 
 namespace Darvin\ContentBundle\Autocomplete\Provider\Config;
 
+use Darvin\ContentBundle\Autocomplete\Provider\Config\Model\ProviderDefinition;
+
 /**
  * Autocomplete provider configuration
  */
 interface ProviderConfigInterface
 {
+    /**
+     * @param string $name Autocomplete provider name
+     *
+     * @return \Darvin\ContentBundle\Autocomplete\Provider\Config\Model\ProviderDefinition
+     * @throws \InvalidArgumentException
+     */
+    public function getProvider(string $name): ProviderDefinition;
+
     /**
      * @param string $name Autocomplete provider name
      *

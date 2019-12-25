@@ -11,6 +11,7 @@
 namespace Darvin\ContentBundle\Form\Type\Autocomplete;
 
 use Darvin\ContentBundle\Autocomplete\AutocompleterInterface;
+use Darvin\ContentBundle\Autocomplete\Provider\Config\ProviderConfigInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -32,17 +33,24 @@ class AutocompleteType extends AbstractType
     private $autocompleter;
 
     /**
+     * @var \Darvin\ContentBundle\Autocomplete\Provider\Config\ProviderConfigInterface
+     */
+    private $providerConfig;
+
+    /**
      * @var \Symfony\Component\Routing\RouterInterface
      */
     private $router;
 
     /**
-     * @param \Darvin\ContentBundle\Autocomplete\AutocompleterInterface $autocompleter Autocompleter
-     * @param \Symfony\Component\Routing\RouterInterface                $router        Router
+     * @param \Darvin\ContentBundle\Autocomplete\AutocompleterInterface                  $autocompleter  Autocompleter
+     * @param \Darvin\ContentBundle\Autocomplete\Provider\Config\ProviderConfigInterface $providerConfig Autocomplete provider configuration
+     * @param \Symfony\Component\Routing\RouterInterface                                 $router         Router
      */
-    public function __construct(AutocompleterInterface $autocompleter, RouterInterface $router)
+    public function __construct(AutocompleterInterface $autocompleter, ProviderConfigInterface $providerConfig, RouterInterface $router)
     {
         $this->autocompleter = $autocompleter;
+        $this->providerConfig = $providerConfig;
         $this->router = $router;
     }
 
@@ -108,7 +116,7 @@ class AutocompleteType extends AbstractType
         $resolver
             ->setRequired('provider')
             ->setDefault('rebuild_choices', true)
-            ->setAllowedValues('provider', $this->autocompleter->getProviderNames())
+            ->setAllowedValues('provider', $this->providerConfig->getProviderNames())
             ->setAllowedTypes('rebuild_choices', 'bool');
     }
 

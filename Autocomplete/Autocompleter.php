@@ -10,6 +10,7 @@
 
 namespace Darvin\ContentBundle\Autocomplete;
 
+use Darvin\ContentBundle\Autocomplete\Provider\Config\ProviderConfigInterface;
 use Darvin\Utils\Callback\CallbackRunnerInterface;
 use Darvin\Utils\Locale\LocaleProviderInterface;
 
@@ -29,57 +30,50 @@ class Autocompleter implements AutocompleterInterface
     private $localeProvider;
 
     /**
-     * @var array
+     * @var \Darvin\ContentBundle\Autocomplete\Provider\Config\ProviderConfigInterface
      */
-    private $providerDefinitions;
+    private $providerConfig;
 
     /**
-     * @var string[]
-     */
-    private $providerNames;
-
-    /**
-     * @param \Darvin\Utils\Callback\CallbackRunnerInterface $callbackRunner      Callback runner
-     * @param \Darvin\Utils\Locale\LocaleProviderInterface   $localeProvider      Locale provider
-     * @param array                                          $providerDefinitions Provider definitions
+     * @param \Darvin\Utils\Callback\CallbackRunnerInterface                             $callbackRunner Callback runner
+     * @param \Darvin\Utils\Locale\LocaleProviderInterface                               $localeProvider Locale provider
+     * @param \Darvin\ContentBundle\Autocomplete\Provider\Config\ProviderConfigInterface $providerConfig Autocomplete provider configuration
      */
     public function __construct(
         CallbackRunnerInterface $callbackRunner,
         LocaleProviderInterface $localeProvider,
-        array $providerDefinitions
+        ProviderConfigInterface $providerConfig
     ) {
         $this->callbackRunner = $callbackRunner;
         $this->localeProvider = $localeProvider;
-        $this->providerDefinitions = $providerDefinitions;
-
-        $this->providerNames = array_keys($providerDefinitions);
+        $this->providerConfig = $providerConfig;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function autocomplete(string $provider, string $term): array
+    public function autocomplete(string $providerName, string $term): array
     {
-        $definition = $this->getProviderDefinition($provider);
-
         $term = trim($term);
 
         if ('' === $term) {
             throw new \InvalidArgumentException('Search term is empty.');
         }
 
+        $provider = $this->providerConfig->getProvider($providerName);
+
         $data = $this->callbackRunner->runCallback(
-            $definition['service'],
-            $definition['method'],
+            $provider->getService(),
+            $provider->getMethod(),
             $term,
             null,
             $this->localeProvider->getCurrentLocale(),
-            $definition['options']
+            $provider->getOptions()
         );
 
         if (!is_array($data)) {
             throw new \UnexpectedValueException(
-                sprintf('Autocomplete provider "%s" must return array, got "%s".', $provider, gettype($data))
+                sprintf('Autocomplete provider "%s" must return array, got "%s".', $provider->getName(), gettype($data))
             );
         }
 
@@ -104,52 +98,21 @@ class Autocompleter implements AutocompleterInterface
     /**
      * {@inheritDoc}
      */
-    public function getChoiceLabels(string $provider, array $choices): array
+    public function getChoiceLabels(string $providerName, array $choices): array
     {
-        $definition = $this->getProviderDefinition($provider);
-
         if (empty($choices)) {
             return [];
         }
 
+        $provider = $this->providerConfig->getProvider($providerName);
+
         return $this->callbackRunner->runCallback(
-            $definition['service'],
-            $definition['method'],
+            $provider->getService(),
+            $provider->getMethod(),
             null,
             $choices,
             $this->localeProvider->getCurrentLocale(),
-            $definition['options']
+            $provider->getOptions()
         );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function hasProvider(string $provider): bool
-    {
-        return isset($this->providerDefinitions[$provider]);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getProviderNames(): array
-    {
-        return $this->providerNames;
-    }
-
-    /**
-     * @param string $provider Autocomplete provider name
-     *
-     * @return array
-     * @throws \InvalidArgumentException
-     */
-    private function getProviderDefinition(string $provider): array
-    {
-        if (!$this->hasProvider($provider)) {
-            throw new \InvalidArgumentException(sprintf('Autocomplete provider "%s" does not exist.', $provider));
-        }
-
-        return $this->providerDefinitions[$provider];
     }
 }

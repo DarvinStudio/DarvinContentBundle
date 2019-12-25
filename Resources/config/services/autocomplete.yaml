@@ -17,12 +17,13 @@ services:
         arguments:
             - '@darvin_utils.callback.runner'
             - '@darvin_utils.locale.provider'
-            - '%darvin_content.autocomplete.providers%'
+            - '@darvin_content.autocomplete.provider_config'
 
     darvin_content.autocomplete.controller:
         class: '%darvin_content.autocomplete.controller.class%'
         arguments:
             - '@darvin_content.autocomplete.autocompleter'
+            - '@darvin_content.autocomplete.provider_config'
             - '%kernel.debug%'
         tags:
             - { name: controller.service_arguments }
@@ -31,6 +32,7 @@ services:
         class: '%darvin_content.autocomplete.form_type.class%'
         arguments:
             - '@darvin_content.autocomplete.autocompleter'
+            - '@darvin_content.autocomplete.provider_config'
             - '@router'
         tags:
             - { name: form.type }

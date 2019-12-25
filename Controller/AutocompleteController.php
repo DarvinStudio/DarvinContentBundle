@@ -11,6 +11,7 @@
 namespace Darvin\ContentBundle\Controller;
 
 use Darvin\ContentBundle\Autocomplete\AutocompleterInterface;
+use Darvin\ContentBundle\Autocomplete\Provider\Config\ProviderConfigInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,17 +29,24 @@ class AutocompleteController
     private $autocompleter;
 
     /**
+     * @var \Darvin\ContentBundle\Autocomplete\Provider\Config\ProviderConfigInterface
+     */
+    private $providerConfig;
+
+    /**
      * @var bool
      */
     private $debug;
 
     /**
-     * @param \Darvin\ContentBundle\Autocomplete\AutocompleterInterface $autocompleter Autocompleter
-     * @param bool                                                      $debug         Is debug mode enabled
+     * @param \Darvin\ContentBundle\Autocomplete\AutocompleterInterface                  $autocompleter  Autocompleter
+     * @param \Darvin\ContentBundle\Autocomplete\Provider\Config\ProviderConfigInterface $providerConfig Autocomplete provider configuration
+     * @param bool                                                                       $debug          Is debug mode enabled
      */
-    public function __construct(AutocompleterInterface $autocompleter, bool $debug)
+    public function __construct(AutocompleterInterface $autocompleter, ProviderConfigInterface $providerConfig, bool $debug)
     {
         $this->autocompleter = $autocompleter;
+        $this->providerConfig = $providerConfig;
         $this->debug = $debug;
     }
 
@@ -55,7 +63,7 @@ class AutocompleteController
         if (!$this->debug && !$request->isXmlHttpRequest()) {
             throw new BadRequestHttpException('Request is not XMLHttpRequest.');
         }
-        if (!$this->autocompleter->hasProvider($provider)) {
+        if (!$this->providerConfig->hasProvider($provider)) {
             throw new NotFoundHttpException(sprintf('Autocomplete provider "%s" does not exist.', $provider));
         }
 

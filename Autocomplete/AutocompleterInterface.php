@@ -16,33 +16,21 @@ namespace Darvin\ContentBundle\Autocomplete;
 interface AutocompleterInterface
 {
     /**
-     * @param string $provider Autocomplete provider name
-     * @param string $term     Search term
+     * @param string $providerName Autocomplete provider name
+     * @param string $term         Search term
      *
      * @return array
      * @throws \InvalidArgumentException
      * @throws \UnexpectedValueException
      */
-    public function autocomplete(string $provider, string $term): array;
+    public function autocomplete(string $providerName, string $term): array;
 
     /**
-     * @param string $provider Autocomplete provider name
-     * @param array  $choices  Choices
+     * @param string $providerName Autocomplete provider name
+     * @param array  $choices      Choices
      *
      * @return array
      * @throws \InvalidArgumentException
      */
-    public function getChoiceLabels(string $provider, array $choices): array;
-
-    /**
-     * @param string $provider Autocomplete provider name
-     *
-     * @return bool
-     */
-    public function hasProvider(string $provider): bool;
-
-    /**
-     * @return string[]
-     */
-    public function getProviderNames(): array;
+    public function getChoiceLabels(string $providerName, array $choices): array;
 }

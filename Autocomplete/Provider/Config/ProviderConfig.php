@@ -40,6 +40,18 @@ class ProviderConfig implements ProviderConfigInterface
     /**
      * {@inheritDoc}
      */
+    public function getProvider(string $name): ProviderDefinition
+    {
+        if (!$this->hasProvider($name)) {
+            throw new \InvalidArgumentException(sprintf('Autocomplete provider "%s" does not exist.', $name));
+        }
+
+        return $this->getProviders()[$name];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function hasProvider(string $name): bool
     {
         $providers = $this->getProviders();
