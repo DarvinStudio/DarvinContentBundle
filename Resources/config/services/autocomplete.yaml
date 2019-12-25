@@ -3,7 +3,9 @@ parameters:
 
     darvin_content.autocomplete.controller.class: Darvin\ContentBundle\Controller\AutocompleteController
 
-    darvin_content.autocomplete.form_type.class: Darvin\ContentBundle\Form\Type\Autocomplete\AutocompleteType
+    darvin_content.autocomplete.form_type.common.class: Darvin\ContentBundle\Form\Type\Autocomplete\AutocompleteType
+
+    darvin_content.autocomplete.form_type.entity.class: Darvin\ContentBundle\Form\Type\Autocomplete\EntityAutocompleteType
 
     darvin_content.autocomplete.provider.repository.class: Darvin\ContentBundle\Autocomplete\Provider\RepositoryAutocompleteProvider
 
@@ -28,12 +30,20 @@ services:
         tags:
             - { name: controller.service_arguments }
 
-    darvin_content.autocomplete.form_type:
-        class: '%darvin_content.autocomplete.form_type.class%'
+    darvin_content.autocomplete.form_type.common:
+        class: '%darvin_content.autocomplete.form_type.common.class%'
         arguments:
             - '@darvin_content.autocomplete.autocompleter'
             - '@darvin_content.autocomplete.provider_config'
             - '@router'
+        tags:
+            - { name: form.type }
+
+    darvin_content.autocomplete.form_type.entity:
+        class: '%darvin_content.autocomplete.form_type.entity.class%'
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@darvin_content.autocomplete.provider_config'
         tags:
             - { name: form.type }
 

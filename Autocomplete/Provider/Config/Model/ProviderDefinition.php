@@ -50,6 +50,21 @@ class ProviderDefinition
     }
 
     /**
+     * @param string $name     Option name
+     * @param mixed  $fallback Fallback value
+     *
+     * @return mixed
+     */
+    public function getOption(string $name, $fallback = null)
+    {
+        if (array_key_exists($name, $this->options)) {
+            return $this->options[$name];
+        }
+
+        return $fallback;
+    }
+
+    /**
      * @return string
      */
     public function getName(): string

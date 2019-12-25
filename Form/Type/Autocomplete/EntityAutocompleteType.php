@@ -10,13 +10,60 @@
 
 namespace Darvin\ContentBundle\Form\Type\Autocomplete;
 
+use Darvin\ContentBundle\Autocomplete\Provider\Config\ProviderConfigInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\Options;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Entity autocomplete form type
  */
 class EntityAutocompleteType extends AbstractType
 {
+    /**
+     * @var \Doctrine\ORM\EntityManagerInterface
+     */
+    private $em;
+
+    /**
+     * @var \Darvin\ContentBundle\Autocomplete\Provider\Config\ProviderConfigInterface
+     */
+    private $providerConfig;
+
+    /**
+     * @param \Doctrine\ORM\EntityManagerInterface                                       $em             Entity manager
+     * @param \Darvin\ContentBundle\Autocomplete\Provider\Config\ProviderConfigInterface $providerConfig Autocomplete provider configuration
+     */
+    public function __construct(EntityManagerInterface $em, ProviderConfigInterface $providerConfig)
+    {
+        $this->em = $em;
+        $this->providerConfig = $providerConfig;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $providerConfig = $this->providerConfig;
+
+        $resolver
+            ->setDefault('entity', function (Options $options) use ($providerConfig): ?string {
+                return $providerConfig->getProvider($options['provider'])->getOption('entity');
+            })
+            ->setAllowedTypes('entity', 'string');
+    }
+
     /**
      * {@inheritDoc}
      */
