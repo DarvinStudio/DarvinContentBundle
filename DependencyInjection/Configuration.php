@@ -149,7 +149,7 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->arrayNode('parameter_whitelist')->useAttributeAsKey('pattern')->prototype('boolean')->end()
                             ->validate()
-                                ->ifTrue(function (array $whitelist) {
+                                ->ifTrue(function (array $whitelist): bool {
                                     foreach (array_keys($whitelist) as $pattern) {
                                         $pattern = (string)$pattern;
 

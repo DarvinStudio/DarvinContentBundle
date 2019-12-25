@@ -63,7 +63,7 @@ class RepositionController
 
         $message = $success
             ? 'content.sorting.reposition.success'
-            : implode(PHP_EOL, array_map(function (FormError $error) {
+            : implode(PHP_EOL, array_map(function (FormError $error): ?string {
                 return $error->getMessage();
             }, iterator_to_array($form->getErrors(true))));
 
