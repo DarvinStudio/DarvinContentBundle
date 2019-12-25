@@ -27,6 +27,14 @@ interface AutocompleterInterface
 
     /**
      * @param string $provider Autocomplete provider name
+     * @param array  $choices  Choices
+     *
+     * @return array
+     */
+    public function getChoiceTitles(string $provider, array $choices): array;
+
+    /**
+     * @param string $provider Autocomplete provider name
      *
      * @return bool
      */

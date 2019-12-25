@@ -107,6 +107,14 @@ class Autocompleter implements AutocompleterInterface
     /**
      * {@inheritDoc}
      */
+    public function getChoiceTitles(string $provider, array $choices): array
+    {
+        return [];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function hasProvider(string $provider): bool
     {
         return isset($this->providerDefinitions[$provider]);
