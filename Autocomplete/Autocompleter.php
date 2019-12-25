@@ -101,9 +101,7 @@ class Autocompleter implements AutocompleterInterface
             $results[] = $result;
         }
 
-        return [
-            'results' => $results,
-        ];
+        return $results;
     }
 
     /**

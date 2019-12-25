@@ -59,6 +59,8 @@ class AutocompleteController
             throw new NotFoundHttpException(sprintf('Autocomplete provider "%s" does not exist.', $provider));
         }
 
-        return new JsonResponse($this->autocompleter->autocomplete($provider, (string)$request->query->get('term', '')));
+        return new JsonResponse([
+            'results' => $this->autocompleter->autocomplete($provider, (string)$request->query->get('term', ''))
+        ]);
     }
 }
