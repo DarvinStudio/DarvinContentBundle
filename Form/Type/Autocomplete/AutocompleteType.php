@@ -13,6 +13,7 @@ namespace Darvin\ContentBundle\Form\Type\Autocomplete;
 use Darvin\ContentBundle\Autocomplete\AutocompleterInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -41,6 +42,14 @@ class AutocompleteType extends AbstractType
     {
         $this->autocompleter = $autocompleter;
         $this->router = $router;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+        $builder->resetViewTransformers();
     }
 
     /**
