@@ -7,6 +7,8 @@ parameters:
 
     darvin_content.autocomplete.provider.repository.class: Darvin\ContentBundle\Autocomplete\Provider\RepositoryAutocompleteProvider
 
+    darvin_content.autocomplete.provider_config.class: Darvin\ContentBundle\Autocomplete\Provider\Config\ProviderConfig
+
 services:
     Darvin\ContentBundle\Autocomplete\AutocompleterInterface: '@darvin_content.autocomplete.autocompleter'
 
@@ -38,3 +40,8 @@ services:
         public: true
         arguments:
             - '@doctrine.orm.entity_manager'
+
+    darvin_content.autocomplete.provider_config:
+        class: '%darvin_content.autocomplete.provider_config.class%'
+        arguments:
+            - '%darvin_content.autocomplete.providers%'
