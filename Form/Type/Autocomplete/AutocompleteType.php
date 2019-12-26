@@ -13,6 +13,8 @@ namespace Darvin\ContentBundle\Form\Type\Autocomplete;
 use Darvin\ContentBundle\Autocomplete\AutocompleterInterface;
 use Darvin\ContentBundle\Autocomplete\Provider\Config\ProviderConfigInterface;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\DataTransformer\ChoicesToValuesTransformer;
+use Symfony\Component\Form\Extension\Core\DataTransformer\ChoiceToValueTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -59,8 +61,19 @@ class AutocompleteType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $viewTransformers = [];
+
+        foreach ($builder->getViewTransformers() as $transformer) {
+            if (!$transformer instanceof ChoiceToValueTransformer && !$transformer instanceof ChoicesToValuesTransformer) {
+                $viewTransformers[] = $transformer;
+            }
+        }
+
         $builder->resetViewTransformers();
 
+        foreach ($viewTransformers as $transformer) {
+            $builder->addViewTransformer($transformer);
+        }
         if (!$options['rebuild_choices']) {
             return;
         }
