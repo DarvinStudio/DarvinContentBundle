@@ -15,7 +15,7 @@ use Darvin\ContentBundle\Repository\SlugMapItemRepository;
 use Darvin\Utils\Sluggable\SlugHandlerInterface;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\AbstractQuery;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Unique slug handler
@@ -38,7 +38,7 @@ class UniqueSlugHandler implements SlugHandlerInterface
     /**
      * {@inheritDoc}
      */
-    public function handle(string &$slug, string &$suffix, $entity, EntityManager $em): void
+    public function handle(string &$slug, string &$suffix, $entity, EntityManagerInterface $em): void
     {
         $originalSlug = $slug;
 
@@ -97,12 +97,12 @@ class UniqueSlugHandler implements SlugHandlerInterface
     }
 
     /**
-     * @param \Doctrine\ORM\EntityManager $em   Entity manager
-     * @param string                      $slug Slug
+     * @param \Doctrine\ORM\EntityManagerInterface $em   Entity manager
+     * @param string                               $slug Slug
      *
      * @return array
      */
-    private function getSimilarSlugs(EntityManager $em, string $slug): array
+    private function getSimilarSlugs(EntityManagerInterface $em, string $slug): array
     {
         if (!isset($this->similarSlugs[$slug])) {
             $this->similarSlugs[$slug] = $this->getSlugMapItemRepository($em)->getSimilar($slug, AbstractQuery::HYDRATE_ARRAY);
@@ -112,11 +112,11 @@ class UniqueSlugHandler implements SlugHandlerInterface
     }
 
     /**
-     * @param \Doctrine\ORM\EntityManager $em Entity manager
+     * @param \Doctrine\ORM\EntityManagerInterface $em Entity manager
      *
      * @return \Darvin\ContentBundle\Repository\SlugMapItemRepository
      */
-    private function getSlugMapItemRepository(EntityManager $em): SlugMapItemRepository
+    private function getSlugMapItemRepository(EntityManagerInterface $em): SlugMapItemRepository
     {
         return $em->getRepository(SlugMapItem::class);
     }

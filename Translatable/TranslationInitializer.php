@@ -11,7 +11,7 @@
 namespace Darvin\ContentBundle\Translatable;
 
 use Doctrine\Common\Util\ClassUtils;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Knp\DoctrineBehaviors\ORM\Translatable\TranslatableSubscriber;
 
@@ -21,7 +21,7 @@ use Knp\DoctrineBehaviors\ORM\Translatable\TranslatableSubscriber;
 class TranslationInitializer implements TranslationInitializerInterface
 {
     /**
-     * @var \Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManagerInterface
      */
     private $em;
 
@@ -36,12 +36,12 @@ class TranslationInitializer implements TranslationInitializerInterface
     private $translatableSubscriber;
 
     /**
-     * @param \Doctrine\ORM\EntityManager                                     $em                     Entity manager
+     * @param \Doctrine\ORM\EntityManagerInterface                            $em                     Entity manager
      * @param \Darvin\ContentBundle\Translatable\TranslatableManagerInterface $translatableManager    Translatable manager
      * @param \Knp\DoctrineBehaviors\ORM\Translatable\TranslatableSubscriber  $translatableSubscriber Translatable subscriber
      */
     public function __construct(
-        EntityManager $em,
+        EntityManagerInterface $em,
         TranslatableManagerInterface $translatableManager,
         TranslatableSubscriber $translatableSubscriber
     ) {

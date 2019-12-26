@@ -10,7 +10,7 @@
 
 namespace Darvin\ContentBundle\Translatable;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\Persistence\Mapping\MappingException;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
@@ -26,7 +26,7 @@ class TranslatableManager implements TranslatableManagerInterface
     private $classAnalyzer;
 
     /**
-     * @var \Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManagerInterface
      */
     private $em;
 
@@ -82,7 +82,7 @@ class TranslatableManager implements TranslatableManagerInterface
 
     /**
      * @param \Knp\DoctrineBehaviors\Reflection\ClassAnalyzer $classAnalyzer                    Class analyzer
-     * @param \Doctrine\ORM\EntityManager                     $em                               Entity manager
+     * @param \Doctrine\ORM\EntityManagerInterface            $em                               Entity manager
      * @param string                                          $getTranslatableEntityClassMethod Get translatable entity class method name
      * @param string                                          $getTranslationEntityClassMethod  Get translation entity class method name
      * @param string                                          $translatableTrait                Translatable trait
@@ -92,7 +92,7 @@ class TranslatableManager implements TranslatableManagerInterface
      */
     public function __construct(
         ClassAnalyzer $classAnalyzer,
-        EntityManager $em,
+        EntityManagerInterface $em,
         string $getTranslatableEntityClassMethod,
         string $getTranslationEntityClassMethod,
         string $translatableTrait,

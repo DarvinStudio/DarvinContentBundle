@@ -13,7 +13,7 @@ namespace Darvin\ContentBundle\Command;
 use Darvin\ContentBundle\Translatable\TranslatableException;
 use Darvin\ContentBundle\Translatable\TranslatableManagerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -26,7 +26,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class TranslationsCreateCommand extends Command
 {
     /**
-     * @var \Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManagerInterface
      */
     private $em;
 
@@ -47,11 +47,11 @@ class TranslationsCreateCommand extends Command
 
     /**
      * @param string                                                          $name                Command name
-     * @param \Doctrine\ORM\EntityManager                                     $em                  Entity manager
+     * @param \Doctrine\ORM\EntityManagerInterface                            $em                  Entity manager
      * @param \Darvin\ContentBundle\Translatable\TranslatableManagerInterface $translatableManager Translatable manager
      * @param string                                                          $defaultLocale       Default locale
      */
-    public function __construct(string $name, EntityManager $em, TranslatableManagerInterface $translatableManager, string $defaultLocale)
+    public function __construct(string $name, EntityManagerInterface $em, TranslatableManagerInterface $translatableManager, string $defaultLocale)
     {
         parent::__construct($name);
 
@@ -153,7 +153,10 @@ EOF
         $localeProperty = $this->translatableManager->getTranslationLocaleProperty();
 
         foreach ($translationClasses as $translationClass) {
-            $translationsCount = $this->em->getRepository($translationClass)->createQueryBuilder('o')
+            /** @var \Doctrine\ORM\QueryBuilder $qb */
+            $qb = $this->em->getRepository($translationClass)->createQueryBuilder('o');
+
+            $translationsCount = $qb
                 ->select('COUNT(o)')
                 ->where(sprintf('o.%s = :%1$s', $localeProperty))
                 ->setParameter($localeProperty, $targetLocale)

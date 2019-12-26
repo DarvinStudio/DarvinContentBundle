@@ -14,7 +14,7 @@ use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Repository\SlugMapItemRepository;
 use Darvin\Utils\ORM\EntityResolverInterface;
 use Doctrine\Common\Util\ClassUtils;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -23,7 +23,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class EntityRouter implements EntityRouterInterface
 {
     /**
-     * @var \Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManagerInterface
      */
     private $em;
 
@@ -38,11 +38,11 @@ class EntityRouter implements EntityRouterInterface
     private $slugMapRouter;
 
     /**
-     * @param \Doctrine\ORM\EntityManager                         $em             Entity manager
+     * @param \Doctrine\ORM\EntityManagerInterface                $em             Entity manager
      * @param \Darvin\Utils\ORM\EntityResolverInterface           $entityResolver Entity resolver
      * @param \Darvin\ContentBundle\Router\SlugMapRouterInterface $slugMapRouter  Slug map router
      */
-    public function __construct(EntityManager $em, EntityResolverInterface $entityResolver, SlugMapRouterInterface $slugMapRouter)
+    public function __construct(EntityManagerInterface $em, EntityResolverInterface $entityResolver, SlugMapRouterInterface $slugMapRouter)
     {
         $this->em = $em;
         $this->entityResolver = $entityResolver;

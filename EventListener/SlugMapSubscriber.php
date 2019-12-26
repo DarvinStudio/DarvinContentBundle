@@ -19,7 +19,7 @@ use Darvin\Utils\ORM\EntityResolverInterface;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\AbstractQuery;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
@@ -210,10 +210,10 @@ class SlugMapSubscriber implements EventSubscriber
     }
 
     /**
-     * @param \Doctrine\ORM\EntityManager $em     Entity manager
-     * @param object                      $entity Entity
+     * @param \Doctrine\ORM\EntityManagerInterface $em     Entity manager
+     * @param object                               $entity Entity
      */
-    private function deleteSlugMapItems(EntityManager $em, object $entity): void
+    private function deleteSlugMapItems(EntityManagerInterface $em, object $entity): void
     {
         $entityClass = ClassUtils::getClass($entity);
 
@@ -234,10 +234,10 @@ class SlugMapSubscriber implements EventSubscriber
     }
 
     /**
-     * @param \Doctrine\ORM\EntityManager $em     Entity manager
-     * @param object                      $entity Entity
+     * @param \Doctrine\ORM\EntityManagerInterface $em     Entity manager
+     * @param object                               $entity Entity
      */
-    private function updateSlugMapItems(EntityManager $em, object $entity): void
+    private function updateSlugMapItems(EntityManagerInterface $em, object $entity): void
     {
         $entityClass = ClassUtils::getClass($entity);
 
@@ -275,13 +275,13 @@ class SlugMapSubscriber implements EventSubscriber
     }
 
     /**
-     * @param \Doctrine\ORM\EntityManager $em          Entity manager
-     * @param object                      $entity      Entity
-     * @param string                      $entityClass Entity class
+     * @param \Doctrine\ORM\EntityManagerInterface $em          Entity manager
+     * @param object                               $entity      Entity
+     * @param string                               $entityClass Entity class
      *
      * @return mixed
      */
-    private function getEntityId(EntityManager $em, object $entity, string $entityClass)
+    private function getEntityId(EntityManagerInterface $em, object $entity, string $entityClass)
     {
         $ids = $em->getClassMetadata($entityClass)->getIdentifierValues($entity);
 
@@ -289,11 +289,11 @@ class SlugMapSubscriber implements EventSubscriber
     }
 
     /**
-     * @param \Doctrine\ORM\EntityManager $em Entity manager
+     * @param \Doctrine\ORM\EntityManagerInterface $em Entity manager
      *
      * @return \Darvin\ContentBundle\Repository\SlugMapItemRepository
      */
-    private function getSlugMapItemRepository(EntityManager $em): SlugMapItemRepository
+    private function getSlugMapItemRepository(EntityManagerInterface $em): SlugMapItemRepository
     {
         return $em->getRepository(SlugMapItem::class);
     }

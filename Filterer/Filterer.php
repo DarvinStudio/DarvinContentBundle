@@ -15,7 +15,7 @@ use Darvin\ContentBundle\Event\Filterer\FiltererEvents;
 use Darvin\ContentBundle\Translatable\TranslatableManagerInterface;
 use Darvin\ContentBundle\Translatable\TranslationJoinerInterface;
 use Darvin\Utils\ORM\QueryBuilderUtil;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\Mapping\MappingException;
@@ -29,7 +29,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class Filterer implements FiltererInterface
 {
     /**
-     * @var \Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManagerInterface
      */
     private $em;
 
@@ -59,13 +59,13 @@ class Filterer implements FiltererInterface
     private $doctrineMetadata;
 
     /**
-     * @param \Doctrine\ORM\EntityManager                                     $em                  Entity manager
+     * @param \Doctrine\ORM\EntityManagerInterface                            $em                  Entity manager
      * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface     $eventDispatcher     Event dispatcher
      * @param \Darvin\ContentBundle\Translatable\TranslatableManagerInterface $translatableManager Translatable manager
      * @param \Darvin\ContentBundle\Translatable\TranslationJoinerInterface   $translationJoiner   Translation joiner
      */
     public function __construct(
-        EntityManager $em,
+        EntityManagerInterface $em,
         EventDispatcherInterface $eventDispatcher,
         TranslatableManagerInterface $translatableManager,
         TranslationJoinerInterface $translationJoiner

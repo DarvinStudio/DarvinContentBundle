@@ -13,7 +13,7 @@ namespace Darvin\ContentBundle\ORM;
 use Darvin\ContentBundle\Translatable\TranslatableManagerInterface;
 use Darvin\ContentBundle\Translatable\TranslationJoinerInterface;
 use Darvin\Utils\ORM\QueryBuilderUtil;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\Mapping\MappingException;
@@ -24,7 +24,7 @@ use Doctrine\Persistence\Mapping\MappingException;
 class SortEntityJoiner implements SortEntityJoinerInterface
 {
     /**
-     * @var \Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManagerInterface
      */
     private $em;
 
@@ -39,12 +39,12 @@ class SortEntityJoiner implements SortEntityJoinerInterface
     private $translationJoiner;
 
     /**
-     * @param \Doctrine\ORM\EntityManager                                     $em                  Entity manager
+     * @param \Doctrine\ORM\EntityManagerInterface                            $em                  Entity manager
      * @param \Darvin\ContentBundle\Translatable\TranslatableManagerInterface $translatableManager Translatable manager
      * @param \Darvin\ContentBundle\Translatable\TranslationJoinerInterface   $translationJoiner   Translation joiner
      */
     public function __construct(
-        EntityManager $em,
+        EntityManagerInterface $em,
         TranslatableManagerInterface $translatableManager,
         TranslationJoinerInterface $translationJoiner
     ) {
