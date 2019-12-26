@@ -79,8 +79,11 @@ class AutocompleteType extends AbstractType
                 if (!is_iterable($data)) {
                     $data = [$data];
                 }
+
+                $getChoice = $options['get_choice'];
+
                 foreach ($data as $value) {
-                    $choice = $options['get_choice']($value);
+                    $choice = null !== $getChoice ? $getChoice($value) : $value;
 
                     $choices[$choice] = $choice;
                 }
@@ -114,14 +117,12 @@ class AutocompleteType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
+            ->setDefault('get_choice', null)
+            ->setAllowedTypes('get_choice', ['callable', 'null'])
             ->setRequired('provider')
             ->setAllowedValues('provider', $this->providerConfig->getProviderNames())
             ->setDefault('rebuild_choices', true)
-            ->setAllowedTypes('rebuild_choices', 'bool')
-            ->setDefault('get_choice', function ($value) {
-                return $value;
-            })
-            ->setAllowedTypes('get_choice', 'callable');
+            ->setAllowedTypes('rebuild_choices', 'bool');
     }
 
     /**
