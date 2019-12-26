@@ -59,6 +59,8 @@ class AutocompleteType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $builder->resetViewTransformers();
+
         if (!$options['rebuild_choices']) {
             return;
         }
@@ -96,6 +98,11 @@ class AutocompleteType extends AbstractType
                 'rebuild_choices' => false,
                 'choice_label'    => function ($choice) use ($labels) {
                     return $labels[$choice] ?? $choice;
+                },
+                'choice_attr' => function (): array {
+                    return [
+                        'selected' => true,
+                    ];
                 },
             ]));
         });
