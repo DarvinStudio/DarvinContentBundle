@@ -80,3 +80,5 @@ darvin_content:
 8.4.3: Add meta template models.
 
 8.4.4: Macros for empty content: empty_message
+
+8.5.0: Add autocomplete functionality.
