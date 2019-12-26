@@ -113,7 +113,6 @@ class AutocompleteType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
-            ->setDefined('entity')
             ->setRequired('provider')
             ->setDefault('rebuild_choices', true)
             ->setAllowedValues('provider', $this->providerConfig->getProviderNames())
