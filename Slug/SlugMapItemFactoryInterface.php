@@ -10,7 +10,7 @@
 
 namespace Darvin\ContentBundle\Slug;
 
-use Doctrine\Common\Persistence\Mapping\ClassMetadata;
+use Doctrine\Persistence\Mapping\ClassMetadata;
 
 /**
  * Slug map item factory
@@ -18,9 +18,9 @@ use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 interface SlugMapItemFactoryInterface
 {
     /**
-     * @param object                                             $object       Object
-     * @param array                                              $slugsMeta    Slugs metadata
-     * @param \Doctrine\Common\Persistence\Mapping\ClassMetadata $doctrineMeta Doctrine metadata
+     * @param object                                      $object       Object
+     * @param array                                       $slugsMeta    Slugs metadata
+     * @param \Doctrine\Persistence\Mapping\ClassMetadata $doctrineMeta Doctrine metadata
      *
      * @return \Darvin\ContentBundle\Entity\SlugMapItem[]
      * @throws \LogicException

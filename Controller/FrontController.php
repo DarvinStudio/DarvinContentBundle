@@ -13,8 +13,8 @@ namespace Darvin\ContentBundle\Controller;
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Repository\SlugMapItemRepository;
 use Darvin\ContentBundle\Translatable\TranslationJoinerInterface;
-use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -30,7 +30,7 @@ class FrontController
     private $controllerPool;
 
     /**
-     * @var \Doctrine\Common\Persistence\ObjectManager
+     * @var \Doctrine\Persistence\ObjectManager
      */
     private $om;
 
@@ -41,7 +41,7 @@ class FrontController
 
     /**
      * @param \Darvin\ContentBundle\Controller\ContentControllerPoolInterface $controllerPool    Content controller pool
-     * @param \Doctrine\Common\Persistence\ObjectManager                      $om                Object manager
+     * @param \Doctrine\Persistence\ObjectManager                             $om                Object manager
      * @param \Darvin\ContentBundle\Translatable\TranslationJoinerInterface   $translationJoiner Translation joiner
      */
     public function __construct(ContentControllerPoolInterface $controllerPool, ObjectManager $om, TranslationJoinerInterface $translationJoiner)

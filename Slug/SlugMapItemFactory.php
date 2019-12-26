@@ -11,8 +11,8 @@
 namespace Darvin\ContentBundle\Slug;
 
 use Darvin\ContentBundle\Entity\SlugMapItem;
-use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\Common\Util\ClassUtils;
+use Doctrine\Persistence\Mapping\ClassMetadata;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 /**

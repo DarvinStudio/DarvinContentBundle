@@ -10,9 +10,9 @@
 
 namespace Darvin\ContentBundle\Translatable;
 
-use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
+use Doctrine\Persistence\Mapping\MappingException;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 /**

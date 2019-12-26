@@ -12,8 +12,8 @@ namespace Darvin\ContentBundle\Sorting;
 
 use Darvin\ContentBundle\Form\Type\Sorting\RepositionType;
 use Darvin\ContentBundle\Security\Voter\Sorting\RepositionVoter;
-use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Util\ClassUtils;
+use Doctrine\Persistence\ObjectManager;
 use Knp\Component\Pager\Pagination\AbstractPagination;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -37,7 +37,7 @@ class AttributeRenderer implements AttributeRendererInterface
     private $csrfTokenManager;
 
     /**
-     * @var \Doctrine\Common\Persistence\ObjectManager
+     * @var \Doctrine\Persistence\ObjectManager
      */
     private $om;
 
@@ -54,7 +54,7 @@ class AttributeRenderer implements AttributeRendererInterface
     /**
      * @param \Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface $authorizationChecker Authorization checker
      * @param \Symfony\Component\Security\Csrf\CsrfTokenManagerInterface                   $csrfTokenManager     CSRF token manager
-     * @param \Doctrine\Common\Persistence\ObjectManager                                   $om                   Object manager
+     * @param \Doctrine\Persistence\ObjectManager                                          $om                   Object manager
      * @param \Symfony\Component\HttpFoundation\RequestStack                               $requestStack         Request stack
      * @param \Symfony\Component\Routing\RouterInterface                                   $router               Router
      */

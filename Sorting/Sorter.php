@@ -14,10 +14,10 @@ use Darvin\ContentBundle\Entity\Position;
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Repository\PositionRepository;
 use Darvin\Utils\ORM\EntityResolverInterface;
-use Doctrine\Common\Persistence\Mapping\ClassMetadata;
-use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\Persistence\Mapping\ClassMetadata;
+use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -42,7 +42,7 @@ class Sorter implements SorterInterface
 
     /**
      * @param \Darvin\Utils\ORM\EntityResolverInterface      $entityResolver Entity resolver
-     * @param \Doctrine\Common\Persistence\ObjectManager     $om             Object manager
+     * @param \Doctrine\Persistence\ObjectManager            $om             Object manager
      * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack   Request stack
      */
     public function __construct(EntityResolverInterface $entityResolver, ObjectManager $om, RequestStack $requestStack)
@@ -115,8 +115,8 @@ class Sorter implements SorterInterface
     }
 
     /**
-     * @param object                                             $object Object
-     * @param \Doctrine\Common\Persistence\Mapping\ClassMetadata $meta   Metadata
+     * @param object                                      $object Object
+     * @param \Doctrine\Persistence\Mapping\ClassMetadata $meta   Metadata
      *
      * @return string
      */

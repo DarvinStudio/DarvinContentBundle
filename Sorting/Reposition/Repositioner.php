@@ -16,7 +16,7 @@ use Darvin\ContentBundle\Repository\PositionRepository;
 use Darvin\ContentBundle\Security\Voter\Sorting\RepositionVoter;
 use Darvin\ContentBundle\Sorting\Reposition\Model\Reposition;
 use Darvin\Utils\ORM\EntityResolverInterface;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -36,14 +36,14 @@ class Repositioner implements RepositionerInterface
     private $entityResolver;
 
     /**
-     * @var \Doctrine\Common\Persistence\ObjectManager
+     * @var \Doctrine\Persistence\ObjectManager
      */
     private $om;
 
     /**
      * @param \Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface $authorizationChecker Authorization checker
      * @param \Darvin\Utils\ORM\EntityResolverInterface                                    $entityResolver       Entity resolver
-     * @param \Doctrine\Common\Persistence\ObjectManager                                   $om                   Object manager
+     * @param \Doctrine\Persistence\ObjectManager                                          $om                   Object manager
      */
     public function __construct(
         AuthorizationCheckerInterface $authorizationChecker,
