@@ -15,7 +15,6 @@ use Darvin\Utils\Form\DataTransformer\EntityToIDTransformer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -50,12 +49,6 @@ class EntityAutocompleteType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->addModelTransformer(new EntityToIDTransformer($this->em, $options['entity'], $options['multiple']));
-
-        $eventDispatcher = $builder->getEventDispatcher();
-
-        foreach ($eventDispatcher->getListeners(FormEvents::PRE_SET_DATA) as $listener) {
-            $eventDispatcher->removeListener(FormEvents::PRE_SET_DATA, $listener);
-        }
     }
 
     /**
@@ -63,13 +56,23 @@ class EntityAutocompleteType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver): void
     {
+        $em             = $this->em;
         $providerConfig = $this->providerConfig;
 
         $resolver
             ->setDefault('entity', function (Options $options) use ($providerConfig): ?string {
                 return $providerConfig->getProvider($options['provider'])->getOption('entity');
             })
-            ->setAllowedTypes('entity', 'string');
+            ->setAllowedTypes('entity', 'string')
+            ->setDefault('get_choice', function (Options $options) use ($em): callable {
+                $meta = $em->getClassMetadata($options['entity']);
+
+                return function ($entity) use ($meta) {
+                    $ids = $meta->getIdentifierValues($entity);
+
+                    return reset($ids);
+                };
+            });
     }
 
     /**

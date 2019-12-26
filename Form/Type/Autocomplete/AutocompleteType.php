@@ -59,8 +59,6 @@ class AutocompleteType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->resetViewTransformers();
-
         if (!$options['rebuild_choices']) {
             return;
         }
@@ -78,11 +76,14 @@ class AutocompleteType extends AbstractType
             $data    = $event->getData();
 
             if (null !== $data) {
-                if (!is_array($data)) {
+                if (!is_iterable($data)) {
                     $data = [$data];
                 }
+                foreach ($data as $value) {
+                    $choice = $options['get_choice']($value);
 
-                $choices = array_combine($data, $data);
+                    $choices[$choice] = $choice;
+                }
             }
 
             $labels = $autocompleter->getChoiceLabels($options['provider'], $choices);
@@ -114,9 +115,13 @@ class AutocompleteType extends AbstractType
     {
         $resolver
             ->setRequired('provider')
-            ->setDefault('rebuild_choices', true)
             ->setAllowedValues('provider', $this->providerConfig->getProviderNames())
-            ->setAllowedTypes('rebuild_choices', 'bool');
+            ->setDefault('rebuild_choices', true)
+            ->setAllowedTypes('rebuild_choices', 'bool')
+            ->setDefault('get_choice', function ($value) {
+                return $value;
+            })
+            ->setAllowedTypes('get_choice', 'callable');
     }
 
     /**
