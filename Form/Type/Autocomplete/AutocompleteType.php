@@ -96,8 +96,8 @@ class AutocompleteType extends AbstractType
             $parentForm->add($builder->getName(), get_class($builder->getType()->getInnerType()), array_merge($options, [
                 'choices'         => $choices,
                 'rebuild_choices' => false,
-                'choice_label'    => function ($choice) use ($labels) {
-                    return $labels[$choice] ?? $choice;
+                'choice_label'    => function ($choice) use ($labels): string {
+                    return (string)($labels[$choice] ?? $choice);
                 },
                 'choice_attr' => function (): array {
                     return [
