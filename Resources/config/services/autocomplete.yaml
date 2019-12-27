@@ -17,6 +17,7 @@ services:
     darvin_content.autocomplete.autocompleter:
         class: '%darvin_content.autocomplete.autocompleter.class%'
         arguments:
+            - '@security.authorization_checker'
             - '@darvin_utils.callback.runner'
             - '@darvin_utils.locale.provider'
             - '@darvin_content.autocomplete.provider_config'

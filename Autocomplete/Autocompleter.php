@@ -10,15 +10,23 @@
 
 namespace Darvin\ContentBundle\Autocomplete;
 
+use Darvin\ContentBundle\Autocomplete\Provider\Config\Model\ProviderDefinition;
 use Darvin\ContentBundle\Autocomplete\Provider\Config\ProviderConfigInterface;
 use Darvin\Utils\Callback\CallbackRunnerInterface;
 use Darvin\Utils\Locale\LocaleProviderInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Autocompleter
  */
 class Autocompleter implements AutocompleterInterface
 {
+    /**
+     * @var \Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface
+     */
+    private $authorizationChecker;
+
     /**
      * @var \Darvin\Utils\Callback\CallbackRunnerInterface
      */
@@ -35,15 +43,18 @@ class Autocompleter implements AutocompleterInterface
     private $providerConfig;
 
     /**
-     * @param \Darvin\Utils\Callback\CallbackRunnerInterface                             $callbackRunner Callback runner
-     * @param \Darvin\Utils\Locale\LocaleProviderInterface                               $localeProvider Locale provider
-     * @param \Darvin\ContentBundle\Autocomplete\Provider\Config\ProviderConfigInterface $providerConfig Autocomplete provider configuration
+     * @param \Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface $authorizationChecker Authorization checker
+     * @param \Darvin\Utils\Callback\CallbackRunnerInterface                               $callbackRunner       Callback runner
+     * @param \Darvin\Utils\Locale\LocaleProviderInterface                                 $localeProvider       Locale provider
+     * @param \Darvin\ContentBundle\Autocomplete\Provider\Config\ProviderConfigInterface   $providerConfig       Autocomplete provider configuration
      */
     public function __construct(
+        AuthorizationCheckerInterface $authorizationChecker,
         CallbackRunnerInterface $callbackRunner,
         LocaleProviderInterface $localeProvider,
         ProviderConfigInterface $providerConfig
     ) {
+        $this->authorizationChecker = $authorizationChecker;
         $this->callbackRunner = $callbackRunner;
         $this->localeProvider = $localeProvider;
         $this->providerConfig = $providerConfig;
@@ -61,6 +72,8 @@ class Autocompleter implements AutocompleterInterface
         }
 
         $provider = $this->providerConfig->getProvider($providerName);
+
+        $this->checkPermissions($provider);
 
         $data = $this->callbackRunner->runCallback(
             $provider->getService(),
@@ -106,6 +119,8 @@ class Autocompleter implements AutocompleterInterface
 
         $provider = $this->providerConfig->getProvider($providerName);
 
+        $this->checkPermissions($provider);
+
         return $this->callbackRunner->runCallback(
             $provider->getService(),
             $provider->getMethod(),
@@ -114,5 +129,19 @@ class Autocompleter implements AutocompleterInterface
             $this->localeProvider->getCurrentLocale(),
             $provider->getOptions()
         );
+    }
+
+    /**
+     * @param \Darvin\ContentBundle\Autocomplete\Provider\Config\Model\ProviderDefinition $provider Provider definition
+     *
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     */
+    private function checkPermissions(ProviderDefinition $provider): void
+    {
+        foreach ($provider->getRequiredPermissions() as $permission) {
+            if (!$this->authorizationChecker->isGranted($permission->getAttribute(), $permission->getSubject())) {
+                throw new AccessDeniedException();
+            }
+        }
     }
 }

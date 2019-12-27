@@ -39,6 +39,14 @@ class Configuration implements ConfigurationInterface
                                     ->scalarNode('service')->isRequired()->cannotBeEmpty()->end()
                                     ->scalarNode('method')->defaultNull()->end()
                                     ->arrayNode('options')->useAttributeAsKey('name')->prototype('scalar')->end()->end()
+                                    ->arrayNode('required_permissions')
+                                        ->prototype('array')
+                                            ->children()
+                                                ->scalarNode('attribute')->isRequired()->cannotBeEmpty()->end()
+                                                ->scalarNode('subject')->defaultNull()->end()
+                                            ->end()
+                                        ->end()
+                                    ->end()
                                 ->end()
                                 ->beforeNormalization()->ifString()->then(function (string $service): array {
                                     return [

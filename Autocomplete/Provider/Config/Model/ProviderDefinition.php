@@ -36,17 +36,24 @@ class ProviderDefinition
     private $options;
 
     /**
-     * @param string      $name    Name
-     * @param string      $service Class or service ID
-     * @param string|null $method  Method to call
-     * @param array       $options Options
+     * @var \Darvin\ContentBundle\Autocomplete\Provider\Config\Model\Permission[]
      */
-    public function __construct(string $name, string $service, ?string $method = null, array $options = [])
+    private $requiredPermissions;
+
+    /**
+     * @param string                                                                $name                Name
+     * @param string                                                                $service             Class or service ID
+     * @param string|null                                                           $method              Method to call
+     * @param array                                                                 $options             Options
+     * @param \Darvin\ContentBundle\Autocomplete\Provider\Config\Model\Permission[] $requiredPermissions Required permissions
+     */
+    public function __construct(string $name, string $service, ?string $method = null, array $options = [], array $requiredPermissions = [])
     {
         $this->name = $name;
         $this->service = $service;
         $this->method = $method;
         $this->options = $options;
+        $this->requiredPermissions = $requiredPermissions;
     }
 
     /**
@@ -94,5 +101,13 @@ class ProviderDefinition
     public function getOptions(): array
     {
         return $this->options;
+    }
+
+    /**
+     * @return \Darvin\ContentBundle\Autocomplete\Provider\Config\Model\Permission[]
+     */
+    public function getRequiredPermissions(): array
+    {
+        return $this->requiredPermissions;
     }
 }

@@ -10,6 +10,7 @@
 
 namespace Darvin\ContentBundle\Autocomplete\Provider\Config;
 
+use Darvin\ContentBundle\Autocomplete\Provider\Config\Model\Permission;
 use Darvin\ContentBundle\Autocomplete\Provider\Config\Model\ProviderDefinition;
 
 /**
@@ -82,7 +83,10 @@ class ProviderConfig implements ProviderConfigInterface
                     $name,
                     (string)$attr['service'],
                     null !== $attr['method'] ? (string)$attr['method'] : null,
-                    $attr['options']
+                    $attr['options'],
+                    array_map(function (array $permission): Permission {
+                        return new Permission($permission['attribute'], $permission['subject']);
+                    }, $attr['required_permissions'])
                 );
             }
 

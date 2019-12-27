@@ -82,3 +82,5 @@ darvin_content:
 8.4.4: Macros for empty content: empty_message
 
 8.5.0: Add autocomplete functionality.
+
+8.5.1: Allow to secure autocomplete functionality.
