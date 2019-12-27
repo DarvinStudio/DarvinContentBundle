@@ -126,7 +126,7 @@ class AutocompleteType extends AbstractType
      */
     public function finishView(FormView $view, FormInterface $form, array $options): void
     {
-        $view->vars['autocomplete_url'] = $this->router->generate('darvin_content_autocomplete', [
+        $view->vars['autocomplete_url'] = $this->router->generate($options['route'], [
             'provider' => $options['provider'],
         ]);
     }
@@ -142,7 +142,9 @@ class AutocompleteType extends AbstractType
             ->setRequired('provider')
             ->setAllowedValues('provider', $this->providerConfig->getProviderNames())
             ->setDefault('rebuild_choices', true)
-            ->setAllowedTypes('rebuild_choices', 'bool');
+            ->setAllowedTypes('rebuild_choices', 'bool')
+            ->setDefault('route', 'darvin_content_autocomplete')
+            ->setAllowedTypes('route', 'string');
     }
 
     /**

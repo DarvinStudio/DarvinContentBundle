@@ -84,3 +84,5 @@ darvin_content:
 8.5.0: Add autocomplete functionality.
 
 8.5.1: Allow to secure autocomplete functionality.
+
+8.5.2: Make autocomplete route customizable.
