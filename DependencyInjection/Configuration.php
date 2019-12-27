@@ -75,7 +75,7 @@ class Configuration implements ConfigurationInterface
                                     if (1 === count($provider)) {
                                         $key = key($provider);
 
-                                        if (!in_array($key, ['service', 'method', 'options'])) {
+                                        if (!in_array($key, ['service', 'method', 'options', 'required_permissions'])) {
                                             return [
                                                 'service' => $key,
                                                 'method'  => $provider[$key],
