@@ -45,6 +45,11 @@ class Configuration implements ConfigurationInterface
                                                 ->scalarNode('attribute')->isRequired()->cannotBeEmpty()->end()
                                                 ->scalarNode('subject')->defaultNull()->end()
                                             ->end()
+                                            ->beforeNormalization()->ifString()->then(function (string $attribute): array {
+                                                return [
+                                                    'attribute' => $attribute,
+                                                ];
+                                            })->end()
                                         ->end()
                                     ->end()
                                 ->end()
