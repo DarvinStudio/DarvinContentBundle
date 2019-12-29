@@ -80,18 +80,8 @@ class CanonicalUrlGenerator
 
         $canonical = true;
 
-        $whitelist = $this->queryParamWhitelist;
-
-        foreach ($request->attributes->get(PagerSubscriber::REQUEST_ATTR_PAGE_PARAMS, []) as $name) {
-            if (isset($params[$name]) && 1 === (int) $params[$name]) {
-                continue;
-            }
-
-            $pattern = $this->createPattern($name);
-            $whitelist[$pattern] = $pattern;
-        }
         foreach ($params as $name => $value) {
-            foreach ($whitelist as $pattern) {
+            foreach ($this->queryParamWhitelist as $pattern) {
                 if (preg_match($pattern, $name)) {
                     continue 2;
                 }
