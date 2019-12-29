@@ -133,7 +133,7 @@ class AutocompleteType extends AbstractType
     public function finishView(FormView $view, FormInterface $form, array $options): void
     {
         $view->vars['autocomplete_url'] = $this->router->generate($options['route'], [
-            'provider' => $options['provider'],
+            'provider' => str_replace('_', '-', $options['provider']),
         ]);
     }
 

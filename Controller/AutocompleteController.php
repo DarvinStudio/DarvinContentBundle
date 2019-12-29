@@ -63,6 +63,9 @@ class AutocompleteController
         if (!$this->debug && !$request->isXmlHttpRequest()) {
             throw new BadRequestHttpException('Request is not XMLHttpRequest.');
         }
+
+        $provider = str_replace('-', '_', $provider);
+
         if (!$this->providerConfig->hasProvider($provider)) {
             throw new NotFoundHttpException(sprintf('Autocomplete provider "%s" does not exist.', $provider));
         }

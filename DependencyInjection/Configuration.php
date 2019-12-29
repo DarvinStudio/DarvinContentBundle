@@ -86,6 +86,22 @@ class Configuration implements ConfigurationInterface
                                     return $provider;
                                 })->end()
                             ->end()
+                            ->validate()
+                                ->ifTrue(function (array $providers): bool {
+                                    $regex = '/^[0-9a-z_]+$/';
+
+                                    foreach (array_keys($providers) as $name) {
+                                        if (!preg_match($regex, $name)) {
+                                            throw new \InvalidArgumentException(
+                                                sprintf('Autocomplete provider name "%s" does not match regex "%s".', $name, $regex)
+                                            );
+                                        }
+                                    }
+
+                                    return false;
+                                })
+                                ->thenInvalid('')
+                            ->end()
                         ->end()
                     ->end()
                 ->end()
