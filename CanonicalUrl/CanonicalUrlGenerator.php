@@ -10,7 +10,6 @@
 
 namespace Darvin\ContentBundle\CanonicalUrl;
 
-use Darvin\ContentBundle\EventListener\Pagination\PagerSubscriber;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
