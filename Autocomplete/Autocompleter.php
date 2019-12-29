@@ -83,12 +83,7 @@ class Autocompleter implements AutocompleterInterface
             $this->localeProvider->getCurrentLocale(),
             $provider->getOptions()
         );
-
-        if (!is_array($data)) {
-            throw new \UnexpectedValueException(
-                sprintf('Autocomplete provider "%s" must return array, got "%s".', $provider->getName(), gettype($data))
-            );
-        }
+        $data = $this->prepareData($data, $provider);
 
         $results = [];
 
@@ -121,7 +116,7 @@ class Autocompleter implements AutocompleterInterface
 
         $this->checkPermissions($provider);
 
-        return $this->callbackRunner->runCallback(
+        $data = $this->callbackRunner->runCallback(
             $provider->getService(),
             $provider->getMethod(),
             null,
@@ -129,6 +124,9 @@ class Autocompleter implements AutocompleterInterface
             $this->localeProvider->getCurrentLocale(),
             $provider->getOptions()
         );
+        $data = $this->prepareData($data, $provider);
+
+        return $data;
     }
 
     /**
@@ -143,5 +141,23 @@ class Autocompleter implements AutocompleterInterface
                 throw new AccessDeniedException();
             }
         }
+    }
+
+    /**
+     * @param mixed                                                                       $data     Autocomplete data
+     * @param \Darvin\ContentBundle\Autocomplete\Provider\Config\Model\ProviderDefinition $provider Autocomplete provider definition
+     *
+     * @return array
+     * @throws \UnexpectedValueException
+     */
+    private function prepareData($data, ProviderDefinition $provider): array
+    {
+        if (!is_array($data)) {
+            throw new \UnexpectedValueException(
+                sprintf('Autocomplete provider "%s" must return array, got "%s".', $provider->getName(), gettype($data))
+            );
+        }
+
+        return array_map('strval', $data);
     }
 }
