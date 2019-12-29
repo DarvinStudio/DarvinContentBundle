@@ -86,3 +86,5 @@ darvin_content:
 8.5.1: Allow to secure autocomplete functionality.
 
 8.5.2: Make autocomplete route customizable.
+
+8.5.3: Do not allow to select invalid choice in autocomplete form.
