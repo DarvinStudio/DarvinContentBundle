@@ -90,3 +90,5 @@ darvin_content:
 8.5.3: Do not allow to select invalid choice in autocomplete form.
 
 8.5.4: Use dashes instead of underscores in autocomplete URLs.
+
+8.5.5: Simplify slug regex.
