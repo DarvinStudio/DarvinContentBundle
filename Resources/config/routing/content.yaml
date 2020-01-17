@@ -1,5 +1,5 @@
 darvin_content_show:
     path:         /{slug}/
     defaults:     { _controller: darvin_content.controller.front }
-    requirements: { slug: '((([0-9a-z]+-{1})*[0-9a-z]+)+(/{1}(([0-9a-z]+-{1})*[0-9a-z]+)+)*)+' }
+    requirements: { slug: '(([0-9a-z]+-)*[0-9a-z]+/)*([0-9a-z]+-)*[0-9a-z]+' }
     methods:      [ get ]
