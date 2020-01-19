@@ -145,6 +145,7 @@ class SlugMapItemRepository extends EntityRepository
             ->andWhere('o.slug != :slug')
             ->setParameter('slug', $slug)
             ->getQuery()
+            ->enableResultCache()
             ->getResult();
     }
 
