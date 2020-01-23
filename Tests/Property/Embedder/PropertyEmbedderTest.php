@@ -12,11 +12,11 @@ namespace Darvin\ContentBundle\Tests\Property\Embedder;
 
 use Darvin\ContentBundle\Property\Embedder\PropertyEmbedder;
 use Darvin\ContentBundle\Repository\GlobalPropertyRepository;
+use Darvin\Utils\Callback\CallbackRunnerInterface;
 use Darvin\Utils\Locale\LocaleProviderInterface;
 use Darvin\Utils\Strings\Stringifier\StringifierInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
-use Psr\Container\ContainerInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 /**
@@ -36,7 +36,8 @@ class PropertyEmbedderTest extends TestCase
      */
     public function setUp(): void
     {
-        $container = $this->getMockBuilder(ContainerInterface::class)->getMock();
+        $callbackRunner = $this->getMockBuilder(CallbackRunnerInterface::class)->getMock();
+        $callbackRunner->method('runCallback')->willReturn('Callback result');
 
         $globalPropertyRepository = $this->getMockBuilder(GlobalPropertyRepository::class)->disableOriginalConstructor()->getMock();
         $globalPropertyRepository->method('getValuesForPropertyEmbedder')->willReturn([
@@ -57,11 +58,11 @@ class PropertyEmbedderTest extends TestCase
         $stringifier = $this->getMockBuilder(StringifierInterface::class)->getMock();
         $stringifier->method('stringify')->willReturnArgument(0);
 
-        $this->embedder = new PropertyEmbedder($container, $em, $localeProvider, $propertyAccessor, $stringifier, [
+        $this->embedder = new PropertyEmbedder($callbackRunner, $em, $localeProvider, $propertyAccessor, $stringifier, [
             'Stub' => [
                 'callback_property' => [
-                    'service' => __CLASS__,
-                    'method'  => 'embedPropertiesCallback',
+                    'service' => uniqid(),
+                    'method'  => uniqid(),
                 ],
             ],
         ]);
@@ -77,14 +78,6 @@ class PropertyEmbedderTest extends TestCase
     public function testEmbedProperties($expected, $content, $object = null): void
     {
         self::assertEquals($expected, $this->embedder->embedProperties($content, $object));
-    }
-
-    /**
-     * @return string
-     */
-    public static function embedPropertiesCallback()
-    {
-        return 'Callback result';
     }
 
     /**
