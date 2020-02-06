@@ -87,3 +87,16 @@
         {%- trans with {'%number%': number} %}macro.page_number.all{% endtrans -%}
     {% endif %}
 {% endmacro %}
+
+{% macro truncate_html(html, length = 100, suffix = '...') %}
+
+    {% set stripped = html|striptags %}
+
+    {% set stripped_length = stripped|length %}
+
+    {% if stripped_length > length %}
+        <p>{{ stripped|slice(0, length)|raw }}{{ suffix }}</p>
+    {% else %}
+        {{ html|raw }}
+    {% endif %}
+{% endmacro %}
