@@ -13,6 +13,7 @@ namespace Darvin\ContentBundle\Pagination;
 use Knp\Component\Pager\Event;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\Paginator as BasePaginator;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Paginator
@@ -27,7 +28,7 @@ class Paginator extends BasePaginator
         if ($limit <= 0 or $page < 0) {
             throw new \LogicException("Invalid item per page number. Limit: $limit and Page: $page, must be positive integers");
         }
-        $offset = $page === 0 ? 0 : (($page - 1) * $limit);
+        $offset = 0 === $page ? 0 : (($page - 1) * $limit);
         $options = array_merge($this->defaultOptions, $options);
 
         // normalize default sort field
@@ -35,20 +36,22 @@ class Paginator extends BasePaginator
             $options[self::DEFAULT_SORT_FIELD_NAME] = implode('+', $options[self::DEFAULT_SORT_FIELD_NAME]);
         }
 
-        // default sort field and direction are set based on options (if available)
-        if (isset($options[self::DEFAULT_SORT_FIELD_NAME]) && !$this->request->query->has($options[self::SORT_FIELD_PARAMETER_NAME])) {
-            $this->request->query->set($options[self::SORT_FIELD_PARAMETER_NAME], $options[self::DEFAULT_SORT_FIELD_NAME]);
+        $request = null === $this->requestStack ? Request::createFromGlobals() : $this->requestStack->getCurrentRequest();
 
-            if (!$this->request->query->has($options[self::SORT_DIRECTION_PARAMETER_NAME])) {
-                $this->request->query->set($options[self::SORT_DIRECTION_PARAMETER_NAME], $options[self::DEFAULT_SORT_DIRECTION] ?? 'asc');
+        // default sort field and direction are set based on options (if available)
+        if (isset($options[self::DEFAULT_SORT_FIELD_NAME]) && !$request->query->has($options[self::SORT_FIELD_PARAMETER_NAME])) {
+            $request->query->set($options[self::SORT_FIELD_PARAMETER_NAME], $options[self::DEFAULT_SORT_FIELD_NAME]);
+
+            if (!$request->query->has($options[self::SORT_DIRECTION_PARAMETER_NAME])) {
+                $request->query->set($options[self::SORT_DIRECTION_PARAMETER_NAME], $options[self::DEFAULT_SORT_DIRECTION] ?? 'asc');
             }
         }
 
         // before pagination start
-        $beforeEvent = new Event\BeforeEvent($this->eventDispatcher, $this->request);
+        $beforeEvent = new Event\BeforeEvent($this->eventDispatcher, $request);
         $this->dispatch('knp_pager.before', $beforeEvent);
         // items
-        $itemsEvent = new Event\ItemsEvent($offset, $page === 0 ? PHP_INT_MAX : $limit);
+        $itemsEvent = new Event\ItemsEvent($offset, 0 === $page ? PHP_INT_MAX : $limit);
         $itemsEvent->options = &$options;
         $itemsEvent->target = &$target;
         $this->dispatch('knp_pager.items', $itemsEvent);
