@@ -20,12 +20,13 @@ use Symfony\Component\HttpFoundation\Response;
 interface ContentControllerInterface
 {
     /**
-     * @param \Symfony\Component\HttpFoundation\Request $request Request
-     * @param object                                    $content Content
+     * @param \Symfony\Component\HttpFoundation\Request $request            Request
+     * @param object                                    $content            Content
+     * @param bool                                      $checkAccessibility Whether to check content accessibility
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function __invoke(Request $request, object $content): Response;
+    public function __invoke(Request $request, object $content, bool $checkAccessibility = true): Response;
 
     /**
      * @param \Doctrine\ORM\QueryBuilder $qb     Query builder

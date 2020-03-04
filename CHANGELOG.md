@@ -94,3 +94,5 @@ darvin_content:
 8.5.5: Simplify slug regex.
 
 8.5.8: Add "truncate_html()" macro.
+
+8.6.0: Allow to disable content accessibility checking in content controllers.
