@@ -42,7 +42,7 @@ class UniqueSlugHandler implements SlugHandlerInterface
 
         $entityClass = ClassUtils::getClass($entity);
         $entityIds   = $em->getClassMetadata($entityClass)->getIdentifierValues($entity);
-        $entityId    = reset($entityIds);
+        $entityId    = !empty($entityIds) ? reset($entityIds) : null;
 
         $similarSlugs = $this->getSimilarSlugs($em, $slug);
 
