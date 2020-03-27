@@ -242,7 +242,7 @@ class SlugMapSubscriber extends AbstractOnFlushListener implements EventSubscrib
     {
         $ids = $this->em->getClassMetadata($entityClass)->getIdentifierValues($entity);
 
-        return reset($ids);
+        return !empty($ids) ? reset($ids) : null;
     }
 
     /**
