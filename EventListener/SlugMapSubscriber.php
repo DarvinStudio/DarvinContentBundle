@@ -285,7 +285,7 @@ class SlugMapSubscriber implements EventSubscriber
     {
         $ids = $em->getClassMetadata($entityClass)->getIdentifierValues($entity);
 
-        return reset($ids);
+        return !empty($ids) ? reset($ids) : null;
     }
 
     /**
