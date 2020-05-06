@@ -98,3 +98,5 @@ darvin_content:
 8.6.0: Allow to disable content accessibility checking in content controllers.
 
 8.6.1: Allow HTML tags in headings.
+
+8.6.4: Do not rely on App JS in Sorting JS.

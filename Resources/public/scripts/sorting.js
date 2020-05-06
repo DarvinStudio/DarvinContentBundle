@@ -43,8 +43,16 @@
                     type: 'post',
                     data: data
                 }).done((data) => {
-                    App.notify(data.message, data.success ? 'success' : 'error');
-                }).fail(App.onAjaxFail);
+                    if (!data.success) {
+                        alert(data.message);
+                    } else {
+                        console.log(data.message);
+                    }
+                }).fail((jqXHR) => {
+                    if (jqXHR.status) {
+                        alert([jqXHR.status, jqXHR.statusText].join(' '));
+                    }
+                });
             }
         });
     })();
