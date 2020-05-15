@@ -77,14 +77,11 @@ class CanonicalUrlGenerator implements CanonicalUrlGeneratorInterface
         if (null === $route) {
             $route = $request->attributes->get('_route');
         }
-
-        $params = $request->query->all();
-
-        if (null === $route || empty($params)) {
+        if (null === $route) {
             return $request->getUri();
         }
 
-        $canonical = true;
+        $params = $request->query->all();
 
         foreach ($params as $name => $value) {
             foreach ($this->queryParamWhitelist as $pattern => $enabled) {
@@ -94,11 +91,6 @@ class CanonicalUrlGenerator implements CanonicalUrlGeneratorInterface
             }
 
             unset($params[$name]);
-
-            $canonical = false;
-        }
-        if ($canonical) {
-            return $request->getUri();
         }
 
         return $this->router->generate(
