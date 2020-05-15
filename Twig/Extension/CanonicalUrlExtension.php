@@ -20,6 +20,8 @@ use Twig\TwigFunction;
  */
 class CanonicalUrlExtension extends AbstractExtension
 {
+    private const DEFAULT_TEMPLATE = '@DarvinContent/canonical_url.html.twig';
+
     /**
      * @var \Darvin\ContentBundle\CanonicalUrl\CanonicalUrlGeneratorInterface
      */
@@ -47,17 +49,26 @@ class CanonicalUrlExtension extends AbstractExtension
     }
 
     /**
-     * @param \Twig\Environment $twig     Twig
-     * @param string            $template Template
+     * @param \Twig\Environment $twig        Twig
+     * @param string|null       $template    Template
+     * @param string|null       $route       Route
+     * @param array|null        $routeParams Route parameters
      *
      * @return string|null
      */
-    public function renderCanonicalUrlTag(Environment $twig, string $template = '@DarvinContent/canonical_url.html.twig'): ?string
-    {
-        $url = $this->canonicalUrlGenerator->generateCanonicalUrl();
+    public function renderCanonicalUrlTag(
+        Environment $twig,
+        ?string $template = null,
+        ?string $route = null,
+        ?array $routeParams = null
+    ): ?string {
+        $url = $this->canonicalUrlGenerator->generateCanonicalUrl($route, $routeParams);
 
         if (null === $url) {
             return null;
+        }
+        if (null === $template) {
+            $template = self::DEFAULT_TEMPLATE;
         }
 
         return $twig->render($template, [

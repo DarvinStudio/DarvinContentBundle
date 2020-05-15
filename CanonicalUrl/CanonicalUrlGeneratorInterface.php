@@ -16,7 +16,10 @@ namespace Darvin\ContentBundle\CanonicalUrl;
 interface CanonicalUrlGeneratorInterface
 {
     /**
+     * @param string|null $route       Route
+     * @param array|null  $routeParams Route parameters
+     *
      * @return string|null
      */
-    public function generateCanonicalUrl(): ?string;
+    public function generateCanonicalUrl(?string $route = null, ?array $routeParams = null): ?string;
 }

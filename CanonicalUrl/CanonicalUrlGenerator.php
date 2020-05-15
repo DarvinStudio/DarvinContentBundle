@@ -67,17 +67,20 @@ class CanonicalUrlGenerator implements CanonicalUrlGeneratorInterface
     /**
      * {@inheritDoc}
      */
-    public function generateCanonicalUrl(): ?string
+    public function generateCanonicalUrl(?string $route = null, ?array $routeParams = null): ?string
     {
         $request = $this->requestStack->getCurrentRequest();
 
         if (null === $request) {
             return null;
         }
+        if (null === $route) {
+            $route = $request->attributes->get('_route');
+        }
 
         $params = $request->query->all();
 
-        if (empty($params) || !$request->attributes->has('_route')) {
+        if (null === $route || empty($params)) {
             return $request->getUri();
         }
 
@@ -99,8 +102,8 @@ class CanonicalUrlGenerator implements CanonicalUrlGeneratorInterface
         }
 
         return $this->router->generate(
-            $request->attributes->get('_route'),
-            array_merge($request->attributes->get('_route_params', []), $params),
+            $route,
+            array_merge(null !== $routeParams ? $routeParams : $request->attributes->get('_route_params', []), $params),
             UrlGeneratorInterface::ABSOLUTE_URL
         );
     }

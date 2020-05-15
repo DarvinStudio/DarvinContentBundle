@@ -100,3 +100,5 @@ darvin_content:
 8.6.1: Allow HTML tags in headings.
 
 8.6.4: Do not rely on App JS in Sorting JS.
+
+8.6.6: Allow to customize canonical URL's route and route parameters.
