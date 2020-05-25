@@ -24,15 +24,19 @@ view:
 form:
     edit:
         fields:
-            name: ~
+            name:
+                options:
+                    help: global_property.help.name
             translations:
                 type: A2lix\TranslationFormBundle\Form\Type\TranslationsType
                 options:
                     fields:
                         title:
+                            help: global_property.help.title
                             attr:
                                 required: true
-                        value: ~
+                        value:
+                            help: global_property.help.value
     filter:
         fields:
             name:

@@ -35,3 +35,7 @@ global_property:
         name: Nom
         title: Titre
         value: Valeur
+    help:
+        name: 'Utilisé dans les templates (enveloppé avec "%" symboles). Peut contenir des caractères latins, des chiffres et des caractères de soulignement "_".'
+        title: 'Ce que la variable est nécessaire, ce qu''elle contient. Utilisé uniquement dans le panneau d''admin.'
+        value: 'Ce que la variable est remplacée par la balise meta est rendu dans le site web de la section publique.'
