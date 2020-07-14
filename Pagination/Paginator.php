@@ -11,6 +11,7 @@
 namespace Darvin\ContentBundle\Pagination;
 
 use Knp\Component\Pager\Event;
+use Knp\Component\Pager\Exception\PageNumberOutOfRangeException;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\Paginator as BasePaginator;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,11 +24,13 @@ class Paginator extends BasePaginator
     /**
      * {@inheritDoc}
      */
-    public function paginate($target, int $page = 1, int $limit = 10, array $options = []): PaginationInterface
+    public function paginate($target, int $page = 1, ?int $limit = null, array $options = []): PaginationInterface
     {
+        $limit = $limit ?? $this->defaultOptions[self::DEFAULT_LIMIT];
         if ($limit <= 0 or $page < 0) {
             throw new \LogicException("Invalid item per page number. Limit: $limit and Page: $page, must be positive integers");
         }
+
         $offset = 0 === $page ? 0 : (($page - 1) * $limit);
         $options = array_merge($this->defaultOptions, $options);
 
@@ -58,6 +61,17 @@ class Paginator extends BasePaginator
         if (!$itemsEvent->isPropagationStopped()) {
             throw new \RuntimeException('One of listeners must count and slice given target');
         }
+        if ($page > ceil($itemsEvent->count / $limit)) {
+            $pageOutOfRangeOption = $options[self::PAGE_OUT_OF_RANGE] ?? $this->defaultOptions[self::PAGE_OUT_OF_RANGE];
+            if ($pageOutOfRangeOption === self::PAGE_OUT_OF_RANGE_FIX) {
+                // replace page number out of range with max page
+                return $this->paginate($target, ceil($itemsEvent->count / $limit), $limit, $options);
+            }
+            if ($pageOutOfRangeOption === self::PAGE_OUT_OF_RANGE_THROW_EXCEPTION) {
+                throw new PageNumberOutOfRangeException("Page number: $page is out of range.");
+            }
+        }
+
         // pagination initialization event
         $paginationEvent = new Event\PaginationEvent;
         $paginationEvent->target = &$target;
