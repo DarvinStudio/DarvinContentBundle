@@ -15,6 +15,7 @@ use Knp\Component\Pager\Exception\PageNumberOutOfRangeException;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\Paginator as BasePaginator;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Paginator
@@ -57,7 +58,12 @@ class Paginator extends BasePaginator
         $itemsEvent = new Event\ItemsEvent($offset, 0 === $page ? PHP_INT_MAX : $limit);
         $itemsEvent->options = &$options;
         $itemsEvent->target = &$target;
-        $this->dispatch('knp_pager.items', $itemsEvent);
+
+        try {
+            $this->dispatch('knp_pager.items', $itemsEvent);
+        } catch (\UnexpectedValueException $ex) {
+            throw new NotFoundHttpException($ex->getMessage(), $ex);
+        }
         if (!$itemsEvent->isPropagationStopped()) {
             throw new \RuntimeException('One of listeners must count and slice given target');
         }

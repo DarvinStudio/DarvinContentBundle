@@ -106,3 +106,5 @@ darvin_content:
 8.6.7: Always regenerate URL in canonical URL generator (do not return current request URI).
 
 8.6.8: Add global property help to admin panel.
+
+8.6.11: Replace UnexpectedValueException in paginator with NotFoundHttpException.
