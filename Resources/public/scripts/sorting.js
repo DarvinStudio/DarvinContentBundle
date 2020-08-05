@@ -1,6 +1,6 @@
 (() => {
     const SELECTOR = {
-        container: '.js-content-sortable[data-reposition-url][data-reposition-class][data-reposition-csrf]',
+        container: '.js-content-sortable[data-reposition-url][data-reposition-class]',
         item:      '[data-id]'
     };
 
@@ -23,8 +23,7 @@
                     'class': options.repositionClass,
                     ids:     $items.map((i, item) => {
                         return $(item).data('id');
-                    }).get(),
-                    _token: options.repositionCsrf
+                    }).get()
                 };
 
                 for (let name of [

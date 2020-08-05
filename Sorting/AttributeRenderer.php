@@ -10,7 +10,6 @@
 
 namespace Darvin\ContentBundle\Sorting;
 
-use Darvin\ContentBundle\Form\Type\Sorting\RepositionType;
 use Darvin\ContentBundle\Security\Voter\Sorting\RepositionVoter;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\Persistence\ObjectManager;
@@ -19,7 +18,6 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
  * Sorting attribute renderer
@@ -30,11 +28,6 @@ class AttributeRenderer implements AttributeRendererInterface
      * @var \Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface
      */
     private $authorizationChecker;
-
-    /**
-     * @var \Symfony\Component\Security\Csrf\CsrfTokenManagerInterface
-     */
-    private $csrfTokenManager;
 
     /**
      * @var \Doctrine\Persistence\ObjectManager
@@ -53,20 +46,17 @@ class AttributeRenderer implements AttributeRendererInterface
 
     /**
      * @param \Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface $authorizationChecker Authorization checker
-     * @param \Symfony\Component\Security\Csrf\CsrfTokenManagerInterface                   $csrfTokenManager     CSRF token manager
      * @param \Doctrine\Persistence\ObjectManager                                          $om                   Object manager
      * @param \Symfony\Component\HttpFoundation\RequestStack                               $requestStack         Request stack
      * @param \Symfony\Component\Routing\RouterInterface                                   $router               Router
      */
     public function __construct(
         AuthorizationCheckerInterface $authorizationChecker,
-        CsrfTokenManagerInterface $csrfTokenManager,
         ObjectManager $om,
         RequestStack $requestStack,
         RouterInterface $router
     ) {
         $this->authorizationChecker = $authorizationChecker;
-        $this->csrfTokenManager = $csrfTokenManager;
         $this->om = $om;
         $this->requestStack = $requestStack;
         $this->router = $router;
@@ -153,7 +143,6 @@ class AttributeRenderer implements AttributeRendererInterface
         return array_merge($attr, [
             'class'                 => trim(sprintf('%s js-content-sortable', $attr['class'] ?? '')),
             'data-reposition-class' => base64_encode($class),
-            'data-reposition-csrf'  => $this->csrfTokenManager->getToken(RepositionType::CSRF_TOKEN_ID)->getValue(),
             'data-reposition-slug'  => $slug,
             'data-reposition-tags'  => $tags,
             'data-reposition-url'   => $this->router->generate('darvin_content_sorting_reposition'),

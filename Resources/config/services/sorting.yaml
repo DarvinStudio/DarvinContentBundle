@@ -16,7 +16,6 @@ services:
         class: '%darvin_content.sorting.attribute_renderer.class%'
         arguments:
             - '@security.authorization_checker'
-            - '@security.csrf.token_manager'
             - '@doctrine.orm.entity_manager'
             - '@request_stack'
             - '@router'

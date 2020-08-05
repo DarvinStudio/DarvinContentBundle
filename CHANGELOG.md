@@ -108,3 +108,5 @@ darvin_content:
 8.6.8: Add global property help to admin panel.
 
 8.6.11: Replace UnexpectedValueException in paginator with NotFoundHttpException.
+
+8.6.12: Disable CSRF protection.

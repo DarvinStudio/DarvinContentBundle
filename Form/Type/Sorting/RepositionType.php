@@ -21,8 +21,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class RepositionType extends AbstractType
 {
-    public const CSRF_TOKEN_ID = 'darvin_content_sorting_reposition';
-
     /**
      * {@inheritDoc}
      */
@@ -45,8 +43,8 @@ class RepositionType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class'    => Reposition::class,
-            'csrf_token_id' => self::CSRF_TOKEN_ID,
+            'data_class'      => Reposition::class,
+            'csrf_protection' => false,
         ]);
     }
 
