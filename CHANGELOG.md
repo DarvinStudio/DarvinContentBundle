@@ -110,3 +110,5 @@ darvin_content:
 8.6.11: Replace UnexpectedValueException in paginator with NotFoundHttpException.
 
 8.6.12: Disable CSRF protection.
+
+8.6.13: Whitelist ESI tags in ContentUtil::isEmpty().

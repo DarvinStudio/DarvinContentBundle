@@ -21,7 +21,7 @@ class ContentUtil
      *
      * @return bool
      */
-    public static function isEmpty(?string $content, string $allowedTags = '<img></img>'): bool
+    public static function isEmpty(?string $content, string $allowedTags = '<img></img><esi:include></esi:include>'): bool
     {
         if (null === $content) {
             return true;
