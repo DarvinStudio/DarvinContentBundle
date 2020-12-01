@@ -120,3 +120,5 @@ darvin_content:
 - Move "forward-to-controller" widget classes to "Admin" NS.
 
 - Move Slug map item to array admin form data transformer from Menu bundle.
+
+- Add slug map item choice form type.

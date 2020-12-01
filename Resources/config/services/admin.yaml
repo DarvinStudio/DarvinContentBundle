@@ -1,7 +1,24 @@
 parameters:
+    darvin_content.admin.form.type.slug_map_item.choice.class: Darvin\ContentBundle\Form\Type\Admin\SlugMapItemChoiceType
+
     darvin_content.admin.widget.factory.forward_to_controller.class: Darvin\ContentBundle\Widget\Admin\ForwardToController\ForwardToControllerWidgetFactory
 
 services:
+    darvin_content.admin.form.type.slug_map_item.choice:
+        class: '%darvin_content.admin.form.type.slug_map_item.choice.class%'
+        arguments:
+            - '@service_container'
+            - '@doctrine.orm.entity_manager'
+            - '@darvin_admin.entity_namer'
+            - '@darvin_utils.orm.entity_resolver'
+            - '@darvin_admin.metadata.manager'
+            - '@property_accessor'
+            - '@darvin_content.slug_map.object_loader'
+            - '@darvin_admin.metadata.sort_criteria_detector'
+            - '@stof_doctrine_extensions.listener.tree'
+        tags:
+            - { name: form.type }
+
     darvin_content.admin.widget.factory.forward_to_controller:
         class: '%darvin_content.admin.widget.factory.forward_to_controller.class%'
         arguments:
