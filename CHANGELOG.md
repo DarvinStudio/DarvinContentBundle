@@ -112,3 +112,5 @@ darvin_content:
 8.6.12: Disable CSRF protection.
 
 8.6.13: Whitelist ESI tags in ContentUtil::isEmpty().
+
+8.7.0: Move slug map object loader from Menu bundle.
