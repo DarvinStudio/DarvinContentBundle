@@ -19,7 +19,7 @@ use Darvin\ContentBundle\Repository\SlugMapItemRepository;
 use Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface;
 use Darvin\Utils\ORM\EntityResolverInterface;
 use Doctrine\Common\Util\ClassUtils;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Gedmo\Tree\TreeListener;
 use Psr\Container\ContainerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -42,7 +42,7 @@ class SlugMapItemChoiceType extends AbstractType
     private $container;
 
     /**
-     * @var \Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManagerInterface
      */
     private $em;
 
@@ -83,7 +83,7 @@ class SlugMapItemChoiceType extends AbstractType
 
     /**
      * @param \Psr\Container\ContainerInterface                           $container            DI container
-     * @param \Doctrine\ORM\EntityManager                                 $em                   Entity manager
+     * @param \Doctrine\ORM\EntityManagerInterface                        $em                   Entity manager
      * @param \Darvin\AdminBundle\EntityNamer\EntityNamerInterface        $entityNamer          Entity namer
      * @param \Darvin\Utils\ORM\EntityResolverInterface                   $entityResolver       Entity resolver
      * @param \Darvin\AdminBundle\Metadata\AdminMetadataManagerInterface  $metadataManager      Metadata manager
@@ -94,7 +94,7 @@ class SlugMapItemChoiceType extends AbstractType
      */
     public function __construct(
         ContainerInterface $container,
-        EntityManager $em,
+        EntityManagerInterface $em,
         EntityNamerInterface $entityNamer,
         EntityResolverInterface $entityResolver,
         AdminMetadataManagerInterface $metadataManager,
@@ -177,7 +177,7 @@ MESSAGE
         $slugMapItems = [];
 
         foreach ($view->children as $field) {
-            if ('entity' !== $field->vars['block_prefixes'][2]) {
+            if (!in_array('entity', $field->vars['block_prefixes'])) {
                 continue;
             }
             /** @var \Symfony\Component\Form\ChoiceList\View\ChoiceView $choice */
@@ -189,7 +189,7 @@ MESSAGE
         $this->slugMapObjectLoader->loadObjects($slugMapItems);
 
         foreach ($view->children as $field) {
-            if ('entity' !== $field->vars['block_prefixes'][2]) {
+            if (!in_array('entity', $field->vars['block_prefixes'])) {
                 continue;
             }
 
@@ -217,6 +217,7 @@ MESSAGE
             $entities = $this->sortEntities($entities, $class);
 
             $treeConfig = $this->treeListener->getConfiguration($this->em, $class);
+
             $levelProperty = !empty($treeConfig) ? $treeConfig['level'] : null;
 
             $field->vars['choices'] = [];
@@ -317,6 +318,7 @@ MESSAGE
 
         if (isset($config['sorter'])) {
             $sortCallback = [$this->container->get($config['sorter']['id']), $config['sorter']['method']];
+
             $entities = $sortCallback($entities);
         }
 
@@ -330,12 +332,21 @@ MESSAGE
      */
     private function buildClassPropertyChoices(array $propertiesByClasses): array
     {
-        $choices = [];
+        $choices     = [];
+        $buildChoice = function (string $entityName, string $property): string {
+            return implode('_', [$entityName, $property]);
+        };
 
         foreach ($propertiesByClasses as $class => $properties) {
+            $entityName = $this->entityNamer->name($class);
+
+            if (1 === count($properties)) {
+                $choices[sprintf('entity_name.single.%s', $entityName)] = $buildChoice($entityName, reset($properties));
+
+                continue;
+            }
             foreach ($properties as $property) {
-                $entityName = $this->entityNamer->name($class);
-                $choices[sprintf('slug_map_item.%s.%s', $entityName, $property)] = $entityName.'_'.$property;
+                $choices[sprintf('slug_map_item.%s.%s', $entityName, $property)] = $buildChoice($entityName, $property);
             }
         }
 
