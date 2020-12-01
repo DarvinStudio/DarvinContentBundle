@@ -1,12 +1,15 @@
 <?php declare(strict_types=1);
 /**
- * Created by PhpStorm.
- * User: levsemin
- * Date: 17.10.16
- * Time: 12:40
+ * @author    Lev Semin     <lev@darvin-studio.ru>
+ * @author    Igor Nikolaev <igor.sv.n@gmail.com>
+ * @copyright Copyright (c) 2016-2020, Darvin Studio
+ * @link      https://www.darvin-studio.ru
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
-namespace Darvin\ContentBundle\Widget\ForwardToController;
+namespace Darvin\ContentBundle\Widget\Admin\ForwardToController;
 
 use Darvin\ContentBundle\Widget\WidgetFactoryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -17,10 +20,14 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
  */
 class ForwardToControllerWidgetFactory implements WidgetFactoryInterface
 {
-    /** @var  HttpKernelInterface */
+    /**
+     * @var \Symfony\Component\HttpKernel\HttpKernelInterface
+     */
     private $httpKernel;
 
-    /** @var  RequestStack */
+    /**
+     * @var \Symfony\Component\HttpFoundation\RequestStack
+     */
     private $requestStack;
 
     /**
@@ -36,8 +43,6 @@ class ForwardToControllerWidgetFactory implements WidgetFactoryInterface
     private $requiredParams = ['controller'];
 
     /**
-     * ForwardToControllerWidgetFactory constructor.
-     *
      * @param \Symfony\Component\HttpKernel\HttpKernelInterface $httpKernel     HTTP kernel
      * @param \Symfony\Component\HttpFoundation\RequestStack    $requestStack   Request stack
      * @param array                                             $controllers    Controllers
@@ -48,10 +53,7 @@ class ForwardToControllerWidgetFactory implements WidgetFactoryInterface
         $this->httpKernel = $httpKernel;
         $this->requestStack = $requestStack;
         $this->controllers = $controllers;
-
-        if (count($requiredParams) > 0) {
-            $this->requiredParams = array_merge($requiredParams, $this->requiredParams);
-        }
+        $this->requiredParams = array_merge($requiredParams, $this->requiredParams);
     }
 
     /**
@@ -62,17 +64,13 @@ class ForwardToControllerWidgetFactory implements WidgetFactoryInterface
         foreach ($this->controllers as $name => $setting) {
             $this->validateWidgetSetting($setting);
 
-            $controller = $setting['controller'];
-            $sluggableEntityClasses = isset($setting['sluggable_entity_classes']) ? $setting['sluggable_entity_classes'] : [];
-            $options = isset($setting['options']) ? $setting['options'] : [];
-
             yield new ForwardToControllerWidget(
                 $this->httpKernel,
                 $this->requestStack,
                 $name,
-                $controller,
-                $sluggableEntityClasses,
-                $options
+                $setting['controller'],
+                $setting['sluggable_entity_classes'] ?? [],
+                $setting['options'] ?? []
             );
         }
     }
@@ -86,7 +84,7 @@ class ForwardToControllerWidgetFactory implements WidgetFactoryInterface
     {
         foreach ($this->requiredParams as $param) {
             if (!isset($setting[$param])) {
-                throw new \InvalidArgumentException(sprintf('"%s" param must be set for "ForwardToController" widget', $param));
+                throw new \InvalidArgumentException(sprintf('"%s" param must be set for "ForwardToController" widget.', $param));
             }
         }
     }

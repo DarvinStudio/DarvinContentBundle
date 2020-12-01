@@ -113,4 +113,8 @@ darvin_content:
 
 8.6.13: Whitelist ESI tags in ContentUtil::isEmpty().
 
-8.7.0: Move slug map object loader from Menu bundle.
+8.7.0: 
+
+- Move slug map object loader from Menu bundle.
+
+- Move "forward-to-controller" widget classes to "Admin" NS.

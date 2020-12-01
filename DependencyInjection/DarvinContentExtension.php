@@ -60,7 +60,8 @@ class DarvinContentExtension extends Extension implements PrependExtensionInterf
             'slug_map',
             'translatable',
             'widget',
-            'widget_factory',
+
+            'admin' => ['bundle' => 'DarvinAdminBundle'],
 
             'dev/slug'         => ['env' => 'dev'],
             'dev/translatable' => ['env' => 'dev'],

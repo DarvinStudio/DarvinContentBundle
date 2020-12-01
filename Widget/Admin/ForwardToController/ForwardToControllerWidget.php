@@ -1,12 +1,15 @@
 <?php declare(strict_types=1);
 /**
- * Created by PhpStorm.
- * User: levsemin
- * Date: 17.10.16
- * Time: 13:00
+ * @author    Lev Semin     <lev@darvin-studio.ru>
+ * @author    Igor Nikolaev <igor.sv.n@gmail.com>
+ * @copyright Copyright (c) 2016-2020, Darvin Studio
+ * @link      https://www.darvin-studio.ru
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
-namespace Darvin\ContentBundle\Widget\ForwardToController;
+namespace Darvin\ContentBundle\Widget\Admin\ForwardToController;
 
 use Darvin\AdminBundle\CKEditor\AbstractCKEditorWidget;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -17,27 +20,37 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
  */
 class ForwardToControllerWidget extends AbstractCKEditorWidget
 {
-    /** @var  HttpKernelInterface */
+    /**
+     * @var \Symfony\Component\HttpKernel\HttpKernelInterface
+     */
     private $httpKernel;
 
-    /** @var  RequestStack */
+    /**
+     * @var \Symfony\Component\HttpFoundation\RequestStack
+     */
     private $requestStack;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     private $name;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     private $controller;
 
-    /** @var string[] */
+    /**
+     * @var string[]
+     */
     private $sluggableEntityClasses;
 
-    /** @var  array */
+    /**
+     * @var array
+     */
     private $options;
 
     /**
-     * ForwardToControllerWidget constructor.
-     *
      * @param \Symfony\Component\HttpKernel\HttpKernelInterface $httpKernel             HTTP kernel
      * @param \Symfony\Component\HttpFoundation\RequestStack    $requestStack           Request stack
      * @param string                                            $name                   Widget name
