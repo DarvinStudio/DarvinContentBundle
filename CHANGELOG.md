@@ -122,3 +122,5 @@ darvin_content:
 - Move Slug map item to array admin form data transformer from Menu bundle.
 
 - Add slug map item choice form type.
+
+- Add "slug_map_item" admin view widget.
