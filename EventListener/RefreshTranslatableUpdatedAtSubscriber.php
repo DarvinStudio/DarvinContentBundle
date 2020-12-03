@@ -16,6 +16,7 @@ use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Events;
+use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 /**
@@ -74,7 +75,7 @@ class RefreshTranslatableUpdatedAtSubscriber implements EventSubscriber
         foreach ($uow->getScheduledEntityUpdates() as $entity) {
             $entityClass = ClassUtils::getClass($entity);
 
-            if (!$this->translatableManager->isTranslation($entityClass)) {
+            if (!is_a($entityClass, TranslationInterface::class, true)) {
                 continue;
             }
 

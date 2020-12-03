@@ -53,7 +53,7 @@ class TranslatableManager implements TranslatableManagerInterface
     public function getTranslatableClass(string $entityClass): string
     {
         if (!isset($this->translatableClasses[$entityClass])) {
-            if (!$this->isTranslation($entityClass)) {
+            if (!is_a($entityClass, TranslationInterface::class, true)) {
                 throw new TranslatableException(sprintf('Class "%s" is not translation.', $entityClass));
             }
 
