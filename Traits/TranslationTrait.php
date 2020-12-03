@@ -10,12 +10,23 @@
 
 namespace Darvin\ContentBundle\Traits;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
  * Translation
  */
 trait TranslationTrait
 {
     use \Knp\DoctrineBehaviors\Model\Translatable\TranslationTrait;
+
+    /**
+     * @var int|null
+     *
+     * @ORM\Column(type="integer", unique=true)
+     * @ORM\GeneratedValue
+     * @ORM\Id
+     */
+    protected $id;
 
     /**
      * {@inheritDoc}
@@ -35,5 +46,13 @@ trait TranslationTrait
         }
 
         return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getId(): ?int
+    {
+        return $this->id;
     }
 }

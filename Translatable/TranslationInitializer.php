@@ -10,10 +10,10 @@
 
 namespace Darvin\ContentBundle\Translatable;
 
+use Darvin\ContentBundle\EventListener\TranslatableSubscriber;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\LifecycleEventArgs;
-use Knp\DoctrineBehaviors\ORM\Translatable\TranslatableSubscriber;
 
 /**
  * Translation initializer
@@ -31,14 +31,14 @@ class TranslationInitializer implements TranslationInitializerInterface
     private $translatableManager;
 
     /**
-     * @var \Knp\DoctrineBehaviors\ORM\Translatable\TranslatableSubscriber
+     * @var \Darvin\ContentBundle\EventListener\TranslatableSubscriber
      */
     private $translatableSubscriber;
 
     /**
      * @param \Doctrine\ORM\EntityManagerInterface                            $em                     Entity manager
      * @param \Darvin\ContentBundle\Translatable\TranslatableManagerInterface $translatableManager    Translatable manager
-     * @param \Knp\DoctrineBehaviors\ORM\Translatable\TranslatableSubscriber  $translatableSubscriber Translatable subscriber
+     * @param \Darvin\ContentBundle\EventListener\TranslatableSubscriber      $translatableSubscriber Translatable event subscriber
      */
     public function __construct(
         EntityManagerInterface $em,
@@ -63,11 +63,11 @@ class TranslationInitializer implements TranslationInitializerInterface
 
         $this->translatableSubscriber->postLoad(new LifecycleEventArgs($entity, $this->em));
 
-        /** @var \Knp\DoctrineBehaviors\Model\Translatable\Translatable $entity */
+        /** @var \Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface $entity */
         $translationClass = $entity::getTranslationEntityClass();
 
         foreach ($locales as $locale) {
-            /** @var \Knp\DoctrineBehaviors\Model\Translatable\Translation $translation */
+            /** @var \Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface $translation */
             $translation = new $translationClass();
             $translation->setLocale($locale);
             $entity->addTranslation($translation);

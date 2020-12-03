@@ -1,9 +1,7 @@
 parameters:
-    darvin_content.translatable.manager.class:                                Darvin\ContentBundle\Translatable\TranslatableManager
-    darvin_content.translatable.manager.get_translatable_entity_class_method: getTranslatableEntityClass
-    darvin_content.translatable.manager.get_translation_entity_class_method:  getTranslationEntityClass
-    darvin_content.translatable.manager.translation_locale_property:          locale
-    darvin_content.translatable.manager.translations_property:                translations
+    darvin_content.translatable.event_subscriber.class: Darvin\ContentBundle\EventListener\TranslatableSubscriber
+
+    darvin_content.translatable.manager.class: Darvin\ContentBundle\Translatable\TranslatableManager
 
     darvin_content.translatable.refresh_updated_at_event_subscriber.class: Darvin\ContentBundle\EventListener\RefreshTranslatableUpdatedAtSubscriber
 
@@ -12,16 +10,18 @@ parameters:
     darvin_content.translatable.translation_joiner.class: Darvin\ContentBundle\Translatable\TranslationJoiner
 
 services:
+    darvin_content.translatable.event_subscriber:
+        class: '%darvin_content.translatable.event_subscriber.class%'
+        arguments:
+            - '@darvin_utils.orm.entity_resolver'
+            - '@Knp\DoctrineBehaviors\Provider\LocaleProvider'
+        tags:
+            - { name: doctrine.event_subscriber }
+
     darvin_content.translatable.manager:
         class: '%darvin_content.translatable.manager.class%'
         arguments:
             - '@doctrine.orm.entity_manager'
-            - '%darvin_content.translatable.manager.get_translatable_entity_class_method%'
-            - '%darvin_content.translatable.manager.get_translation_entity_class_method%'
-            - '%knp.doctrine_behaviors.translatable_subscriber.translatable_trait%'
-            - '%darvin_content.translatable.manager.translation_locale_property%'
-            - '%knp.doctrine_behaviors.translatable_subscriber.translation_trait%'
-            - '%darvin_content.translatable.manager.translations_property%'
         tags:
             - { name: darvin_utils.providable }
 
@@ -39,7 +39,7 @@ services:
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@darvin_content.translatable.manager'
-            - '@knp.doctrine_behaviors.translatable_subscriber'
+            - '@darvin_content.translatable.event_subscriber'
 
     darvin_content.translatable.translation_joiner:
         class: '%darvin_content.translatable.translation_joiner.class%'

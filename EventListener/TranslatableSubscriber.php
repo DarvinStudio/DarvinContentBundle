@@ -11,80 +11,76 @@
 namespace Darvin\ContentBundle\EventListener;
 
 use Darvin\Utils\ORM\EntityResolverInterface;
+use Doctrine\Common\EventSubscriber;
+use Doctrine\Common\Util\ClassUtils;
+use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
+use Doctrine\ORM\Events;
 use Doctrine\ORM\Id\IdentityGenerator;
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
-use Knp\DoctrineBehaviors\ORM\Translatable\TranslatableSubscriber as BaseTranslatableSubscriber;
+use Knp\DoctrineBehaviors\Contract\Provider\LocaleProviderInterface;
 
 /**
  * Translatable event subscriber
  */
-class TranslatableSubscriber extends BaseTranslatableSubscriber
+class TranslatableSubscriber implements EventSubscriber
 {
-    /**
-     * @var string
-     */
-    private $translatableTrait;
-
-    /**
-     * @var string
-     */
-    private $translationTrait;
-
-    /**
-     * @var int
-     */
-    private $translatableFetchMode;
-
-    /**
-     * @var int
-     */
-    private $translationFetchMode;
-
     /**
      * @var \Darvin\Utils\ORM\EntityResolverInterface
      */
     private $entityResolver;
 
     /**
-     * {@inheritDoc}
+     * @var \Knp\DoctrineBehaviors\Contract\Provider\LocaleProviderInterface
      */
-    public function __construct(
-        callable $currentLocaleCallable,
-        callable $defaultLocaleCallable,
-        string $translatableTrait,
-        string $translationTrait,
-        string $translatableFetchMode,
-        string $translationFetchMode,
-        EntityResolverInterface $entityResolver
-    ) {
-        parent::__construct(
-            $currentLocaleCallable,
-            $defaultLocaleCallable,
-            $translatableTrait,
-            $translationTrait,
-            $translatableFetchMode,
-            $translationFetchMode
-        );
+    private $localeProvider;
 
-        $this->translatableTrait = $translatableTrait;
-        $this->translationTrait = $translationTrait;
-
-        $this->translatableFetchMode = constant(ClassMetadataInfo::class.'::FETCH_'.$translatableFetchMode);
-        $this->translationFetchMode  = constant(ClassMetadataInfo::class.'::FETCH_'.$translationFetchMode);
-
+    /**
+     * @param \Darvin\Utils\ORM\EntityResolverInterface                        $entityResolver Entity resolver
+     * @param \Knp\DoctrineBehaviors\Contract\Provider\LocaleProviderInterface $localeProvider Locale provider
+     */
+    public function __construct(EntityResolverInterface $entityResolver, LocaleProviderInterface $localeProvider)
+    {
         $this->entityResolver = $entityResolver;
+        $this->localeProvider = $localeProvider;
     }
 
     /**
      * {@inheritDoc}
      */
+    public function getSubscribedEvents(): array
+    {
+        return [
+            Events::loadClassMetadata,
+            Events::postLoad,
+            Events::prePersist,
+        ];
+    }
+
+    /**
+     * @param \Doctrine\ORM\Event\LifecycleEventArgs $eventArgs Event arguments
+     */
+    public function postLoad(LifecycleEventArgs $eventArgs): void
+    {
+        $this->setLocales($eventArgs);
+    }
+
+    /**
+     * @param \Doctrine\ORM\Event\LifecycleEventArgs $eventArgs Event arguments
+     */
+    public function prePersist(LifecycleEventArgs $eventArgs): void
+    {
+        $this->setLocales($eventArgs);
+    }
+
+    /**
+     * @param \Doctrine\ORM\Event\LoadClassMetadataEventArgs $args Event arguments
+     */
     public function loadClassMetadata(LoadClassMetadataEventArgs $args): void
     {
-        /** @var \Doctrine\ORM\Mapping\ClassMetadataInfo $meta */
         $meta = $args->getClassMetadata();
 
         if ($this->isTranslatable($meta)) {
@@ -109,7 +105,7 @@ class TranslatableSubscriber extends BaseTranslatableSubscriber
                 'mappedBy'      => 'translatable',
                 'cascade'       => ['persist', 'merge', 'remove'],
                 'orphanRemoval' => true,
-                'fetch'         => $this->translatableFetchMode,
+                'fetch'         => ClassMetadataInfo::FETCH_LAZY,
                 'indexBy'       => 'locale',
             ]);
         }
@@ -133,7 +129,7 @@ class TranslatableSubscriber extends BaseTranslatableSubscriber
                 'targetEntity' => $this->entityResolver->resolve($class::{'getTranslatableEntityClass'}()),
                 'inversedBy'   => 'translations',
                 'cascade'      => ['persist', 'merge'],
-                'fetch'        => $this->translationFetchMode,
+                'fetch'        => ClassMetadataInfo::FETCH_LAZY,
                 'joinColumns'  => [
                     [
                         'name'                 => 'translatable_id',
@@ -160,13 +156,42 @@ class TranslatableSubscriber extends BaseTranslatableSubscriber
     }
 
     /**
+     * @param \Doctrine\ORM\Event\LifecycleEventArgs $eventArgs Event arguments
+     */
+    private function setLocales(LifecycleEventArgs $eventArgs): void
+    {
+        $em     = $eventArgs->getEntityManager();
+        $entity = $eventArgs->getEntity();
+        $meta   = $em->getClassMetadata(ClassUtils::getClass($entity));
+
+        if (!$this->isTranslatable($meta)) {
+            return;
+        }
+
+        $defaultLocale = $this->localeProvider->provideFallbackLocale();
+
+        if (null !== $defaultLocale) {
+            $entity->setDefaultLocale($defaultLocale);
+        }
+
+        $currentLocale = $this->localeProvider->provideCurrentLocale();
+
+        if (null === $currentLocale) {
+            $currentLocale = $defaultLocale;
+        }
+        if (null !== $currentLocale) {
+            $entity->setCurrentLocale($currentLocale);
+        }
+    }
+
+    /**
      * @param \Doctrine\ORM\Mapping\ClassMetadataInfo $meta Metadata
      *
      * @return bool
      */
     private function isTranslatable(ClassMetadataInfo $meta): bool
     {
-        return $meta->getReflectionClass()->implementsInterface(TranslatableInterface::class);
+        return is_a($meta->getName(), TranslatableInterface::class, true);
     }
 
     /**
@@ -176,6 +201,6 @@ class TranslatableSubscriber extends BaseTranslatableSubscriber
      */
     private function isTranslation(ClassMetadataInfo $meta): bool
     {
-        return $meta->getReflectionClass()->implementsInterface(TranslationInterface::class);
+        return is_a($meta->getName(), TranslationInterface::class, true);
     }
 }

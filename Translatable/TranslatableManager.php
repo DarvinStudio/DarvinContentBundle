@@ -21,40 +21,15 @@ use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
  */
 class TranslatableManager implements TranslatableManagerInterface
 {
+    private const GET_TRANSLATABLE_ENTITY_CLASS_METHOD = 'getTranslatableEntityClass';
+    private const GET_TRANSLATION_ENTITY_CLASS_METHOD  = 'getTranslationEntityClass';
+    private const TRANSLATION_LOCALE_PROPERTY          = 'locale';
+    private const TRANSLATIONS_PROPERTY                = 'translations';
+
     /**
      * @var \Doctrine\ORM\EntityManagerInterface
      */
     private $em;
-
-    /**
-     * @var string
-     */
-    private $getTranslatableEntityClassMethod;
-
-    /**
-     * @var string
-     */
-    private $getTranslationEntityClassMethod;
-
-    /**
-     * @var string
-     */
-    private $translatableTrait;
-
-    /**
-     * @var string
-     */
-    private $translationLocaleProperty;
-
-    /**
-     * @var string
-     */
-    private $translationTrait;
-
-    /**
-     * @var string
-     */
-    private $translationsProperty;
 
     /**
      * @var array
@@ -67,31 +42,11 @@ class TranslatableManager implements TranslatableManagerInterface
     private $translationClasses;
 
     /**
-     * @param \Doctrine\ORM\EntityManagerInterface $em                               Entity manager
-     * @param string                               $getTranslatableEntityClassMethod Get translatable entity class method name
-     * @param string                               $getTranslationEntityClassMethod  Get translation entity class method name
-     * @param string                               $translatableTrait                Translatable trait
-     * @param string                               $translationLocaleProperty        Translation locale property name
-     * @param string                               $translationTrait                 Translation trait
-     * @param string                               $translationsProperty             Translations property name
+     * @param \Doctrine\ORM\EntityManagerInterface $em Entity manager
      */
-    public function __construct(
-        EntityManagerInterface $em,
-        string $getTranslatableEntityClassMethod,
-        string $getTranslationEntityClassMethod,
-        string $translatableTrait,
-        string $translationLocaleProperty,
-        string $translationTrait,
-        string $translationsProperty
-    ) {
+    public function __construct(EntityManagerInterface $em)
+    {
         $this->em = $em;
-        $this->getTranslatableEntityClassMethod = $getTranslatableEntityClassMethod;
-        $this->getTranslationEntityClassMethod = $getTranslationEntityClassMethod;
-        $this->translatableTrait = $translatableTrait;
-        $this->translationLocaleProperty = $translationLocaleProperty;
-        $this->translationTrait = $translationTrait;
-        $this->translationsProperty = $translationsProperty;
-        $this->translatableClasses = $this->translationClasses = [];
     }
 
     /**
@@ -105,7 +60,7 @@ class TranslatableManager implements TranslatableManagerInterface
             }
 
             $this->translatableClasses[$entityClass] = call_user_func(
-                [$entityClass, $this->getTranslatableEntityClassMethod]
+                [$entityClass, self::GET_TRANSLATABLE_ENTITY_CLASS_METHOD]
             );
         }
 
@@ -123,7 +78,7 @@ class TranslatableManager implements TranslatableManagerInterface
             }
 
             $this->translationClasses[$entityClass] = call_user_func(
-                [$this->getDoctrineMetadata($entityClass)->getName(), $this->getTranslationEntityClassMethod]
+                [$this->getDoctrineMetadata($entityClass)->getName(), self::GET_TRANSLATION_ENTITY_CLASS_METHOD]
             );
         }
 
@@ -151,7 +106,7 @@ class TranslatableManager implements TranslatableManagerInterface
      */
     public function getTranslationLocaleProperty(): string
     {
-        return $this->translationLocaleProperty;
+        return self::TRANSLATION_LOCALE_PROPERTY;
     }
 
     /**
@@ -159,7 +114,7 @@ class TranslatableManager implements TranslatableManagerInterface
      */
     public function getTranslationsProperty(): string
     {
-        return $this->translationsProperty;
+        return self::TRANSLATIONS_PROPERTY;
     }
 
     /**
