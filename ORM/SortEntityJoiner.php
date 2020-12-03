@@ -113,7 +113,7 @@ class SortEntityJoiner implements SortEntityJoinerInterface
             return;
         }
         if ($this->translatableManager->isTranslatable($doctrineMeta->getName())
-            && $firstPart === $this->translatableManager->getTranslationsProperty()
+            && $firstPart === TranslatableManagerInterface::TRANSLATIONS_PROPERTY
         ) {
             $this->translationJoiner->joinTranslation($qb, false, $locale);
 
@@ -177,12 +177,9 @@ class SortEntityJoiner implements SortEntityJoinerInterface
 
             throw new \InvalidArgumentException($message);
         }
-
-        $translationsProperty = $this->translatableManager->getTranslationsProperty();
-
-        if ($secondPart !== $translationsProperty) {
+        if ($secondPart !== TranslatableManagerInterface::TRANSLATIONS_PROPERTY) {
             throw new \InvalidArgumentException(
-                sprintf('Translations property must have name "%s", "%s" provided.', $translationsProperty, $secondPart)
+                sprintf('Translations property must have name "%s", "%s" provided.', TranslatableManagerInterface::TRANSLATIONS_PROPERTY, $secondPart)
             );
         }
 

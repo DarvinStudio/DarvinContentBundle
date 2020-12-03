@@ -186,10 +186,9 @@ class Filterer implements FiltererInterface
                 );
             }
 
-            $joinAlias = $this->translatableManager->getTranslationsProperty();
-            $this->translationJoiner->joinTranslation($qb, false, null, $joinAlias, true);
+            $this->translationJoiner->joinTranslation($qb, false, null, TranslatableManagerInterface::TRANSLATIONS_PROPERTY, true);
 
-            $rootAlias = $joinAlias;
+            $rootAlias = TranslatableManagerInterface::TRANSLATIONS_PROPERTY;
         }
 
         return sprintf('%s.%s %s :%s', $rootAlias, $property, $this->getConstraintExpression($field, $strictComparison), $field);

@@ -104,11 +104,9 @@ EOF
     {
         $this->em->getConnection()->beginTransaction();
 
-        $localeProperty = $this->translatableManager->getTranslationLocaleProperty();
-
         foreach ($translationClasses as $translationClass) {
             $defaultLocaleTranslations = $this->em->getRepository($translationClass)->findBy([
-                $localeProperty => $this->defaultLocale,
+                TranslatableManagerInterface::TRANSLATION_LOCALE_PROPERTY => $this->defaultLocale,
             ]);
 
             foreach ($defaultLocaleTranslations as $translation) {
@@ -117,7 +115,7 @@ EOF
                 $translationClone = clone $translation;
                 $ids = $meta->getIdentifier();
                 $meta->setIdentifierValues($translationClone, array_fill_keys($ids, null));
-                $meta->setFieldValue($translationClone, $localeProperty, $targetLocale);
+                $meta->setFieldValue($translationClone, TranslatableManagerInterface::TRANSLATION_LOCALE_PROPERTY, $targetLocale);
 
                 foreach ($meta->getAssociationNames() as $property) {
                     if ('translatable' !== $property) {
@@ -150,16 +148,14 @@ EOF
      */
     private function checkIfTargetLocaleTranslationsExist(array $translationClasses, string $targetLocale): void
     {
-        $localeProperty = $this->translatableManager->getTranslationLocaleProperty();
-
         foreach ($translationClasses as $translationClass) {
             /** @var \Doctrine\ORM\QueryBuilder $qb */
             $qb = $this->em->getRepository($translationClass)->createQueryBuilder('o');
 
             $translationsCount = $qb
                 ->select('COUNT(o)')
-                ->where(sprintf('o.%s = :%1$s', $localeProperty))
-                ->setParameter($localeProperty, $targetLocale)
+                ->where(sprintf('o.%s = :%1$s', TranslatableManagerInterface::TRANSLATION_LOCALE_PROPERTY))
+                ->setParameter(TranslatableManagerInterface::TRANSLATION_LOCALE_PROPERTY, $targetLocale)
                 ->getQuery()
                 ->getSingleScalarResult();
 

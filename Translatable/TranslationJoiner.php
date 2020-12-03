@@ -59,14 +59,11 @@ class TranslationJoiner implements TranslationJoinerInterface
         $rootAliases = $qb->getRootAliases();
         $rootAlias = $rootAliases[0];
 
-        $translationLocaleProperty = $this->translatableManager->getTranslationLocaleProperty();
-        $translationsProperty = $this->translatableManager->getTranslationsProperty();
-
         if (null === $joinAlias) {
-            $joinAlias = $translationsProperty;
+            $joinAlias = TranslatableManagerInterface::TRANSLATIONS_PROPERTY;
         }
 
-        $join = $rootAlias.'.'.$translationsProperty;
+        $join = implode('.', [$rootAlias, TranslatableManagerInterface::TRANSLATIONS_PROPERTY]);
 
         $sameAliasJoin = QueryBuilderUtil::findJoinByAlias($qb, $rootAlias, $joinAlias);
 
@@ -80,15 +77,15 @@ class TranslationJoiner implements TranslationJoinerInterface
                 $locale = $this->localeProvider->getCurrentLocale();
             }
 
-            $where = $qb->expr()->orX($joinAlias.sprintf('.%s = :%1$s', $translationLocaleProperty));
+            $where = $qb->expr()->orX($joinAlias.sprintf('.%s = :%1$s', TranslatableManagerInterface::TRANSLATION_LOCALE_PROPERTY));
 
             if (!$inner) {
-                $where->add($joinAlias.sprintf('.%s IS NULL', $translationLocaleProperty));
+                $where->add($joinAlias.sprintf('.%s IS NULL', TranslatableManagerInterface::TRANSLATION_LOCALE_PROPERTY));
             }
 
             $qb
                 ->andWhere($where)
-                ->setParameter($translationLocaleProperty, $locale);
+                ->setParameter(TranslatableManagerInterface::TRANSLATION_LOCALE_PROPERTY, $locale);
 
             return;
         }

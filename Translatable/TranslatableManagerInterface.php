@@ -15,6 +15,9 @@ namespace Darvin\ContentBundle\Translatable;
  */
 interface TranslatableManagerInterface
 {
+    public const TRANSLATION_LOCALE_PROPERTY = 'locale';
+    public const TRANSLATIONS_PROPERTY       = 'translations';
+
     /**
      * @param string $entityClass Entity class
      *
@@ -46,11 +49,15 @@ interface TranslatableManagerInterface
     public function isTranslation(string $entityClass): bool;
 
     /**
+     * @deprecated Use TranslatableManagerInterface::TRANSLATION_LOCALE_PROPERTY constant instead
+     *
      * @return string
      */
     public function getTranslationLocaleProperty(): string;
 
     /**
+     * @deprecated Use TranslatableManagerInterface::TRANSLATIONS_PROPERTY constant instead
+     *
      * @return string
      */
     public function getTranslationsProperty(): string;
