@@ -124,3 +124,5 @@ darvin_content:
 - Add slug map item choice form type.
 
 - Add "slug_map_item" admin view widget.
+
+8.7.1: Upgrade "knplabs/doctrine-behaviors".
