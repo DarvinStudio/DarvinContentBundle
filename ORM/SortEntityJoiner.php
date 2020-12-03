@@ -17,6 +17,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\Mapping\MappingException;
+use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 
 /**
  * Sort entity joiner
@@ -112,7 +113,7 @@ class SortEntityJoiner implements SortEntityJoinerInterface
         if ('o' === $firstPart) {
             return;
         }
-        if ($this->translatableManager->isTranslatable($doctrineMeta->getName())
+        if (is_a($doctrineMeta->getName(), TranslatableInterface::class, true)
             && $firstPart === TranslatableManagerInterface::TRANSLATIONS_PROPERTY
         ) {
             $this->translationJoiner->joinTranslation($qb, false, $locale);
@@ -169,7 +170,7 @@ class SortEntityJoiner implements SortEntityJoinerInterface
         if (is_subclass_of($doctrineMeta->getName(), $associatedEntity)) {
             $associatedEntity = $doctrineMeta->getName();
         }
-        if (!$this->translatableManager->isTranslatable($associatedEntity)) {
+        if (!is_a($associatedEntity, TranslatableInterface::class, true)) {
             $message = sprintf(
                 'Entity class "%s" must be translatable in order to sort by 3 parts property path.',
                 $associatedEntity

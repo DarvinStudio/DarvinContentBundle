@@ -29,6 +29,8 @@ interface TranslationJoinerInterface
     public function joinTranslation(QueryBuilder $qb, bool $addSelect = false, ?string $locale = null, ?string $joinAlias = null, bool $inner = false): void;
 
     /**
+     * @deprecated Check TranslatableInterface instead
+     *
      * @param string $entityClass Entity class
      *
      * @return bool

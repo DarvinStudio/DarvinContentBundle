@@ -19,6 +19,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\Mapping\MappingException;
+use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\OptionsResolver\Exception\ExceptionInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -180,7 +181,7 @@ class Filterer implements FiltererInterface
         $property = preg_replace('/(From|To)$/', '', $field);
 
         if (!isset($meta->associationMappings[$property]) && !isset($meta->fieldMappings[$property])) {
-            if (!$this->translatableManager->isTranslatable($entityClass)) {
+            if (!is_a($entityClass, TranslatableInterface::class, true)) {
                 throw new \InvalidArgumentException(
                     sprintf('Property "%s::$%s" is not association or mapped field.', $entityClass, $property)
                 );

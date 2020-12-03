@@ -11,6 +11,7 @@
 namespace Darvin\ContentBundle\Form\TypeGuesser;
 
 use Darvin\ContentBundle\Translatable\TranslatableManagerInterface;
+use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Symfony\Component\Form\FormTypeGuesserInterface;
 use Symfony\Component\Form\Guess\Guess;
 use Symfony\Component\Form\Guess\TypeGuess;
@@ -82,7 +83,7 @@ class TranslatableTypeGuesser implements FormTypeGuesserInterface
      */
     private function guess(string $class, string $property, string $method): ?Guess
     {
-        if (!$this->translatableManager->isTranslatable($class)) {
+        if (!is_a($class, TranslatableInterface::class, true)) {
             return null;
         }
 

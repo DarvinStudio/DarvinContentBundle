@@ -13,6 +13,7 @@ namespace Darvin\ContentBundle\Translatable;
 use Darvin\Utils\Locale\LocaleProviderInterface;
 use Darvin\Utils\ORM\QueryBuilderUtil;
 use Doctrine\ORM\QueryBuilder;
+use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 
 /**
  * Translation joiner
@@ -52,7 +53,7 @@ class TranslationJoiner implements TranslationJoinerInterface
 
         $entityClass = $rootEntities[0];
 
-        if (!$this->isTranslatable($entityClass)) {
+        if (!is_a($entityClass, TranslatableInterface::class, true)) {
             throw new TranslatableException(sprintf('Class "%s" is not translatable.', $entityClass));
         }
 
@@ -106,6 +107,6 @@ class TranslationJoiner implements TranslationJoinerInterface
      */
     public function isTranslatable(string $entityClass): bool
     {
-        return $this->translatableManager->isTranslatable($entityClass);
+        return is_a($entityClass, TranslatableInterface::class, true);
     }
 }

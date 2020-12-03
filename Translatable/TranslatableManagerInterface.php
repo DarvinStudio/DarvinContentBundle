@@ -35,6 +35,8 @@ interface TranslatableManagerInterface
     public function getTranslationClass(string $entityClass): string;
 
     /**
+     * @deprecated Check TranslatableInterface instead
+     *
      * @param string $entityClass Entity class
      *
      * @return bool

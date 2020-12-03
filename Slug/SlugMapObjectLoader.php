@@ -15,6 +15,7 @@ use Darvin\ImageBundle\ORM\ImageJoinerInterface;
 use Darvin\Utils\CustomObject\CustomObjectLoaderInterface;
 use Darvin\Utils\Locale\LocaleProviderInterface;
 use Doctrine\ORM\QueryBuilder;
+use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 
 /**
  * Slug map object loader
@@ -81,7 +82,7 @@ class SlugMapObjectLoader implements SlugMapObjectLoaderInterface
             if (null !== $imageJoiner) {
                 $imageJoiner->joinImages($qb, $locale);
             }
-            if ($translationJoiner->isTranslatable($qb->getRootEntities()[0])) {
+            if (is_a($qb->getRootEntities()[0], TranslatableInterface::class, true)) {
                 $translationJoiner->joinTranslation($qb, true, $locale, null, true);
             }
         });

@@ -23,8 +23,6 @@ class TranslatableManager implements TranslatableManagerInterface
 {
     private const GET_TRANSLATABLE_ENTITY_CLASS_METHOD = 'getTranslatableEntityClass';
     private const GET_TRANSLATION_ENTITY_CLASS_METHOD  = 'getTranslationEntityClass';
-    private const TRANSLATION_LOCALE_PROPERTY          = 'locale';
-    private const TRANSLATIONS_PROPERTY                = 'translations';
 
     /**
      * @var \Doctrine\ORM\EntityManagerInterface
@@ -73,7 +71,7 @@ class TranslatableManager implements TranslatableManagerInterface
     public function getTranslationClass(string $entityClass): string
     {
         if (!isset($this->translationClasses[$entityClass])) {
-            if (!$this->isTranslatable($entityClass)) {
+            if (!is_a($entityClass, TranslatableInterface::class, true)) {
                 throw new TranslatableException(sprintf('Class "%s" is not translatable.', $entityClass));
             }
 

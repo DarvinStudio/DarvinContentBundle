@@ -15,6 +15,7 @@ use Darvin\ContentBundle\Repository\SlugMapItemRepository;
 use Darvin\ContentBundle\Translatable\TranslationJoinerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ObjectManager;
+use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -108,7 +109,7 @@ class FrontController
             ->andWhere('o.id = :id')
             ->setParameter('id', $objectId);
 
-        if ($this->translationJoiner->isTranslatable($objectClass)) {
+        if (is_a($objectClass, TranslatableInterface::class, true)) {
             $this->translationJoiner->joinTranslation($qb, true, $locale, null, true);
         }
 

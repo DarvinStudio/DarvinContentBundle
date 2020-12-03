@@ -11,6 +11,7 @@
 namespace Darvin\ContentBundle\Translatable;
 
 use Doctrine\Common\Util\ClassUtils;
+use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 
 /**
  * Translation initializer
@@ -42,15 +43,12 @@ class TranslationInitializer implements TranslationInitializerInterface
      */
     public function initializeTranslations($entity, array $locales): void
     {
-        $class = ClassUtils::getClass($entity);
-
-        if (!$this->translatableManager->isTranslatable($class)) {
-            throw new TranslatableException(sprintf('Class "%s" is not translatable.', $class));
+        if (!$entity instanceof TranslatableInterface) {
+            throw new TranslatableException(sprintf('Class "%s" is not translatable.', ClassUtils::getClass($entity)));
         }
 
         $this->localeSetter->setLocales($entity);
 
-        /** @var \Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface $entity */
         $translationClass = $entity::getTranslationEntityClass();
 
         foreach ($locales as $locale) {

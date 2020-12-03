@@ -14,6 +14,7 @@ use Darvin\ContentBundle\Translatable\TranslatableException;
 use Darvin\ContentBundle\Translatable\TranslatableManagerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -176,7 +177,7 @@ EOF
 
         /** @var \Doctrine\ORM\Mapping\ClassMetadataInfo $meta */
         foreach ($this->em->getMetadataFactory()->getAllMetadata() as $meta) {
-            if ($this->translatableManager->isTranslatable($meta->getName())) {
+            if (is_a($meta->getName(), TranslatableInterface::class, true)) {
                 $class = $this->translatableManager->getTranslationClass($meta->getName());
 
                 $classes[$class] = $class;
