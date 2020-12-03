@@ -62,13 +62,10 @@ class RefreshTranslatableUpdatedAtSubscriber implements EventSubscriber
         $uow = $em->getUnitOfWork();
 
         foreach ($uow->getScheduledEntityUpdates() as $entity) {
-            $entityClass = ClassUtils::getClass($entity);
-
-            if (!is_a($entityClass, TranslationInterface::class, true)) {
+            if (!$entity instanceof TranslationInterface) {
                 continue;
             }
 
-            /** @var \Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface $entity */
             $translatable = $entity->getTranslatable();
 
             if (null === $translatable) {
