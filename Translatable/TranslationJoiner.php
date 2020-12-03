@@ -26,18 +26,11 @@ class TranslationJoiner implements TranslationJoinerInterface
     private $localeProvider;
 
     /**
-     * @var \Darvin\ContentBundle\Translatable\TranslatableManagerInterface
+     * @param \Darvin\Utils\Locale\LocaleProviderInterface $localeProvider Locale provider
      */
-    private $translatableManager;
-
-    /**
-     * @param \Darvin\Utils\Locale\LocaleProviderInterface                    $localeProvider      Locale provider
-     * @param \Darvin\ContentBundle\Translatable\TranslatableManagerInterface $translatableManager Translatable manager
-     */
-    public function __construct(LocaleProviderInterface $localeProvider, TranslatableManagerInterface $translatableManager)
+    public function __construct(LocaleProviderInterface $localeProvider)
     {
         $this->localeProvider = $localeProvider;
-        $this->translatableManager = $translatableManager;
     }
 
     /**

@@ -40,11 +40,6 @@ class Filterer implements FiltererInterface
     private $eventDispatcher;
 
     /**
-     * @var \Darvin\ContentBundle\Translatable\TranslatableManagerInterface
-     */
-    private $translatableManager;
-
-    /**
      * @var \Darvin\ContentBundle\Translatable\TranslationJoinerInterface
      */
     private $translationJoiner;
@@ -60,20 +55,17 @@ class Filterer implements FiltererInterface
     private $doctrineMetadata;
 
     /**
-     * @param \Doctrine\ORM\EntityManagerInterface                            $em                  Entity manager
-     * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface     $eventDispatcher     Event dispatcher
-     * @param \Darvin\ContentBundle\Translatable\TranslatableManagerInterface $translatableManager Translatable manager
-     * @param \Darvin\ContentBundle\Translatable\TranslationJoinerInterface   $translationJoiner   Translation joiner
+     * @param \Doctrine\ORM\EntityManagerInterface                          $em                Entity manager
+     * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface   $eventDispatcher   Event dispatcher
+     * @param \Darvin\ContentBundle\Translatable\TranslationJoinerInterface $translationJoiner Translation joiner
      */
     public function __construct(
         EntityManagerInterface $em,
         EventDispatcherInterface $eventDispatcher,
-        TranslatableManagerInterface $translatableManager,
         TranslationJoinerInterface $translationJoiner
     ) {
         $this->em = $em;
         $this->eventDispatcher = $eventDispatcher;
-        $this->translatableManager = $translatableManager;
         $this->translationJoiner = $translationJoiner;
         $this->optionsResolver = new OptionsResolver();
         $this->doctrineMetadata = [];

@@ -10,7 +10,6 @@
 
 namespace Darvin\ContentBundle\EventListener;
 
-use Darvin\ContentBundle\Translatable\TranslatableManagerInterface;
 use Darvin\Utils\Mapping\MetadataFactoryInterface;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Util\ClassUtils;
@@ -35,23 +34,13 @@ class RefreshTranslatableUpdatedAtSubscriber implements EventSubscriber
     private $propertyAccessor;
 
     /**
-     * @var \Darvin\ContentBundle\Translatable\TranslatableManagerInterface
+     * @param \Darvin\Utils\Mapping\MetadataFactoryInterface              $extendedMetadataFactory Extended metadata factory
+     * @param \Symfony\Component\PropertyAccess\PropertyAccessorInterface $propertyAccessor        Property accessor
      */
-    private $translatableManager;
-
-    /**
-     * @param \Darvin\Utils\Mapping\MetadataFactoryInterface                  $extendedMetadataFactory Extended metadata factory
-     * @param \Symfony\Component\PropertyAccess\PropertyAccessorInterface     $propertyAccessor        Property accessor
-     * @param \Darvin\ContentBundle\Translatable\TranslatableManagerInterface $translatableManager     Translatable manager
-     */
-    public function __construct(
-        MetadataFactoryInterface $extendedMetadataFactory,
-        PropertyAccessorInterface $propertyAccessor,
-        TranslatableManagerInterface $translatableManager
-    ) {
+    public function __construct(MetadataFactoryInterface $extendedMetadataFactory, PropertyAccessorInterface $propertyAccessor)
+    {
         $this->extendedMetadataFactory = $extendedMetadataFactory;
         $this->propertyAccessor = $propertyAccessor;
-        $this->translatableManager = $translatableManager;
     }
 
     /**
@@ -79,7 +68,7 @@ class RefreshTranslatableUpdatedAtSubscriber implements EventSubscriber
                 continue;
             }
 
-            /** @var \Knp\DoctrineBehaviors\Model\Translatable\Translation $entity */
+            /** @var \Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface $entity */
             $translatable = $entity->getTranslatable();
 
             if (null === $translatable) {

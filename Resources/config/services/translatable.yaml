@@ -37,7 +37,6 @@ services:
         arguments:
             - '@darvin_utils.mapping.metadata_factory'
             - '@property_accessor'
-            - '@darvin_content.translatable.manager'
         tags:
             - { name: doctrine.event_subscriber }
 
@@ -45,10 +44,8 @@ services:
         class: '%darvin_content.translatable.translation_initializer.class%'
         arguments:
             - '@darvin_content.translatable.locale_setter'
-            - '@darvin_content.translatable.manager'
 
     darvin_content.translatable.translation_joiner:
         class: '%darvin_content.translatable.translation_joiner.class%'
         arguments:
             - '@darvin_utils.locale.provider'
-            - '@darvin_content.translatable.manager'

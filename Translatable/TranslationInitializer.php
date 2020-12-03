@@ -24,18 +24,11 @@ class TranslationInitializer implements TranslationInitializerInterface
     private $localeSetter;
 
     /**
-     * @var \Darvin\ContentBundle\Translatable\TranslatableManagerInterface
+     * @param \Darvin\ContentBundle\Translatable\TranslatableLocaleSetterInterface $localeSetter Translatable locale setter
      */
-    private $translatableManager;
-
-    /**
-     * @param \Darvin\ContentBundle\Translatable\TranslatableLocaleSetterInterface $localeSetter        Translatable locale setter
-     * @param \Darvin\ContentBundle\Translatable\TranslatableManagerInterface      $translatableManager Translatable manager
-     */
-    public function __construct(TranslatableLocaleSetterInterface $localeSetter, TranslatableManagerInterface $translatableManager)
+    public function __construct(TranslatableLocaleSetterInterface $localeSetter)
     {
         $this->localeSetter = $localeSetter;
-        $this->translatableManager = $translatableManager;
     }
 
     /**

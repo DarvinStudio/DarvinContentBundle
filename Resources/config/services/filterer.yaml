@@ -7,5 +7,4 @@ services:
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@event_dispatcher'
-            - '@darvin_content.translatable.manager'
             - '@darvin_content.translatable.translation_joiner'

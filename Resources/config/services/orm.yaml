@@ -6,5 +6,4 @@ services:
         class: '%darvin_content.orm.sort_entity_joiner.class%'
         arguments:
             - '@doctrine.orm.entity_manager'
-            - '@darvin_content.translatable.manager'
             - '@darvin_content.translatable.translation_joiner'

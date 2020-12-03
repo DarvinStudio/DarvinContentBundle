@@ -30,27 +30,17 @@ class SortEntityJoiner implements SortEntityJoinerInterface
     private $em;
 
     /**
-     * @var \Darvin\ContentBundle\Translatable\TranslatableManagerInterface
-     */
-    private $translatableManager;
-
-    /**
      * @var \Darvin\ContentBundle\Translatable\TranslationJoinerInterface
      */
     private $translationJoiner;
 
     /**
-     * @param \Doctrine\ORM\EntityManagerInterface                            $em                  Entity manager
-     * @param \Darvin\ContentBundle\Translatable\TranslatableManagerInterface $translatableManager Translatable manager
-     * @param \Darvin\ContentBundle\Translatable\TranslationJoinerInterface   $translationJoiner   Translation joiner
+     * @param \Doctrine\ORM\EntityManagerInterface                          $em                Entity manager
+     * @param \Darvin\ContentBundle\Translatable\TranslationJoinerInterface $translationJoiner Translation joiner
      */
-    public function __construct(
-        EntityManagerInterface $em,
-        TranslatableManagerInterface $translatableManager,
-        TranslationJoinerInterface $translationJoiner
-    ) {
+    public function __construct(EntityManagerInterface $em, TranslationJoinerInterface $translationJoiner)
+    {
         $this->em = $em;
-        $this->translatableManager = $translatableManager;
         $this->translationJoiner = $translationJoiner;
     }
 
