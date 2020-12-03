@@ -10,10 +10,8 @@
 
 namespace Darvin\ContentBundle\EventListener\Translatable;
 
-use Darvin\ContentBundle\Translatable\TranslatableLocaleSetterInterface;
 use Darvin\Utils\ORM\EntityResolverInterface;
 use Doctrine\Common\EventSubscriber;
-use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Id\IdentityGenerator;
@@ -23,9 +21,9 @@ use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
 
 /**
- * Translatable event subscriber
+ * Map translatable event subscriber
  */
-class TranslatableSubscriber implements EventSubscriber
+class MapSubscriber implements EventSubscriber
 {
     /**
      * @var \Darvin\Utils\ORM\EntityResolverInterface
@@ -33,18 +31,11 @@ class TranslatableSubscriber implements EventSubscriber
     private $entityResolver;
 
     /**
-     * @var \Darvin\ContentBundle\Translatable\TranslatableLocaleSetterInterface
+     * @param \Darvin\Utils\ORM\EntityResolverInterface $entityResolver Entity resolver
      */
-    private $localeSetter;
-
-    /**
-     * @param \Darvin\Utils\ORM\EntityResolverInterface                            $entityResolver Entity resolver
-     * @param \Darvin\ContentBundle\Translatable\TranslatableLocaleSetterInterface $localeSetter   Translatable locale setter
-     */
-    public function __construct(EntityResolverInterface $entityResolver, TranslatableLocaleSetterInterface $localeSetter)
+    public function __construct(EntityResolverInterface $entityResolver)
     {
         $this->entityResolver = $entityResolver;
-        $this->localeSetter = $localeSetter;
     }
 
     /**
@@ -54,33 +45,7 @@ class TranslatableSubscriber implements EventSubscriber
     {
         return [
             Events::loadClassMetadata,
-            Events::postLoad,
-            Events::prePersist,
         ];
-    }
-
-    /**
-     * @param \Doctrine\ORM\Event\LifecycleEventArgs $eventArgs Event arguments
-     */
-    public function postLoad(LifecycleEventArgs $eventArgs): void
-    {
-        $entity = $eventArgs->getEntity();
-
-        if ($entity instanceof TranslatableInterface) {
-            $this->localeSetter->setLocales($entity);
-        }
-    }
-
-    /**
-     * @param \Doctrine\ORM\Event\LifecycleEventArgs $eventArgs Event arguments
-     */
-    public function prePersist(LifecycleEventArgs $eventArgs): void
-    {
-        $entity = $eventArgs->getEntity();
-
-        if ($entity instanceof TranslatableInterface) {
-            $this->localeSetter->setLocales($entity);
-        }
     }
 
     /**
