@@ -13,7 +13,6 @@ namespace Darvin\ContentBundle\Traits;
 use Darvin\ContentBundle\Translatable\TranslatableException;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Util\ClassUtils;
-use Knp\DoctrineBehaviors\Model\Translatable\Translatable;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -21,7 +20,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 trait TranslatableTrait
 {
-    use Translatable;
+    use \Knp\DoctrineBehaviors\Model\Translatable\TranslatableTrait;
 
     /**
      * @param string $property Property name

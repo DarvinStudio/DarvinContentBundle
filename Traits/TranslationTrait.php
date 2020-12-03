@@ -10,14 +10,12 @@
 
 namespace Darvin\ContentBundle\Traits;
 
-use Knp\DoctrineBehaviors\Model\Translatable\Translation;
-
 /**
  * Translation
  */
 trait TranslationTrait
 {
-    use Translation;
+    use \Knp\DoctrineBehaviors\Model\Translatable\TranslationTrait;
 
     /**
      * {@inheritDoc}
