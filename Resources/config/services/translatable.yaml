@@ -52,6 +52,7 @@ services:
         class: '%darvin_content.translatable.translation_initializer.class%'
         arguments:
             - '@darvin_content.translatable.locale_setter'
+            - '%locales%'
 
     darvin_content.translatable.translation_joiner:
         class: '%darvin_content.translatable.translation_joiner.class%'

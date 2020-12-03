@@ -10,8 +10,8 @@
 
 namespace Darvin\ContentBundle\Translatable;
 
-use Doctrine\Common\Util\ClassUtils;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
+use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
 
 /**
  * Translation initializer
@@ -24,31 +24,49 @@ class TranslationInitializer implements TranslationInitializerInterface
     private $localeSetter;
 
     /**
-     * @param \Darvin\ContentBundle\Translatable\TranslatableLocaleSetterInterface $localeSetter Translatable locale setter
+     * @var string[]
      */
-    public function __construct(TranslatableLocaleSetterInterface $localeSetter)
+    private $defaultLocales;
+
+    /**
+     * @param \Darvin\ContentBundle\Translatable\TranslatableLocaleSetterInterface $localeSetter   Translatable locale setter
+     * @param string[]                                                             $defaultLocales Default locales
+     */
+    public function __construct(TranslatableLocaleSetterInterface $localeSetter, array $defaultLocales)
     {
         $this->localeSetter = $localeSetter;
+        $this->defaultLocales = $defaultLocales;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function initializeTranslations($entity, array $locales): void
+    public function initializeTranslations(TranslatableInterface $translatable, ?array $locales = null): void
     {
-        if (!$entity instanceof TranslatableInterface) {
-            throw new TranslatableException(sprintf('Class "%s" is not translatable.', ClassUtils::getClass($entity)));
+        if (null === $locales) {
+            $locales = $this->defaultLocales;
         }
 
-        $this->localeSetter->setLocales($entity);
+        $this->localeSetter->setLocales($translatable);
 
-        $translationClass = $entity::getTranslationEntityClass();
+        $translationClass = $translatable::getTranslationEntityClass();
 
         foreach ($locales as $locale) {
-            /** @var \Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface $translation */
-            $translation = new $translationClass();
-            $translation->setLocale($locale);
-            $entity->addTranslation($translation);
+            $translatable->addTranslation($this->createTranslation($translationClass, $locale));
         }
+    }
+
+    /**
+     * @param string $class  Translation class
+     * @param string $locale Locale
+     *
+     * @return \Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface
+     */
+    private function createTranslation(string $class, string $locale): TranslationInterface
+    {
+        $translation = new $class();
+        $translation->setLocale($locale);
+
+        return $translation;
     }
 }

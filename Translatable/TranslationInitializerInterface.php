@@ -10,16 +10,16 @@
 
 namespace Darvin\ContentBundle\Translatable;
 
+use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
+
 /**
  * Translation initializer
  */
 interface TranslationInitializerInterface
 {
     /**
-     * @param object $entity  Entity
-     * @param array  $locales Locales to create translations for
-     *
-     * @throws \Darvin\ContentBundle\Translatable\TranslatableException
+     * @param \Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface $translatable Translatable
+     * @param string[]|null                                                $locales      Locales to create translations for
      */
-    public function initializeTranslations(object $entity, array $locales): void;
+    public function initializeTranslations(TranslatableInterface $translatable, ?array $locales = null): void;
 }
