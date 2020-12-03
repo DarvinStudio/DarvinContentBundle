@@ -24,6 +24,8 @@ class DisableKnpTranslatableSubscriberPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container): void
     {
-        $container->getDefinition(TranslatableEventSubscriber::class)->clearTag('doctrine.event_subscriber');
+        if ($container->hasDefinition(TranslatableEventSubscriber::class)) {
+            $container->getDefinition(TranslatableEventSubscriber::class)->clearTag('doctrine.event_subscriber');
+        }
     }
 }
