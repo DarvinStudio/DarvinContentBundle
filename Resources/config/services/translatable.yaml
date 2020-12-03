@@ -15,7 +15,6 @@ services:
     darvin_content.translatable.manager:
         class: '%darvin_content.translatable.manager.class%'
         arguments:
-            - '@knp.doctrine_behaviors.reflection.class_analyzer'
             - '@doctrine.orm.entity_manager'
             - '%darvin_content.translatable.manager.get_translatable_entity_class_method%'
             - '%darvin_content.translatable.manager.get_translation_entity_class_method%'

@@ -13,7 +13,6 @@ namespace Darvin\ContentBundle\DependencyInjection\Compiler;
 use Darvin\ContentBundle\EventListener\TranslatableSubscriber;
 use Darvin\ContentBundle\Traits\TranslatableTrait;
 use Darvin\ContentBundle\Traits\TranslationTrait;
-use Darvin\ContentBundle\Translatable\ClassAnalyzer;
 use Darvin\ContentBundle\Translatable\CurrentLocaleCallable;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -36,8 +35,6 @@ class ReplaceTranslatableServicesPass implements CompilerPassInterface
         ] as $suffix => $value) {
             $container->setParameter(sprintf('knp.doctrine_behaviors.translatable_subscriber.%s', $suffix), $value);
         }
-
-        $container->getDefinition('knp.doctrine_behaviors.reflection.class_analyzer')->setClass(ClassAnalyzer::class);
 
         $container->getDefinition('knp.doctrine_behaviors.translatable_subscriber')
             ->setClass(TranslatableSubscriber::class)

@@ -13,18 +13,14 @@ namespace Darvin\ContentBundle\Translatable;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\Persistence\Mapping\MappingException;
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
+use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
 
 /**
  * Translatable manager
  */
 class TranslatableManager implements TranslatableManagerInterface
 {
-    /**
-     * @var \Knp\DoctrineBehaviors\Reflection\ClassAnalyzer
-     */
-    private $classAnalyzer;
-
     /**
      * @var \Doctrine\ORM\EntityManagerInterface
      */
@@ -63,16 +59,6 @@ class TranslatableManager implements TranslatableManagerInterface
     /**
      * @var array
      */
-    private $checkedIfTranslatable;
-
-    /**
-     * @var array
-     */
-    private $checkedIfTranslation;
-
-    /**
-     * @var array
-     */
     private $translatableClasses;
 
     /**
@@ -81,17 +67,15 @@ class TranslatableManager implements TranslatableManagerInterface
     private $translationClasses;
 
     /**
-     * @param \Knp\DoctrineBehaviors\Reflection\ClassAnalyzer $classAnalyzer                    Class analyzer
-     * @param \Doctrine\ORM\EntityManagerInterface            $em                               Entity manager
-     * @param string                                          $getTranslatableEntityClassMethod Get translatable entity class method name
-     * @param string                                          $getTranslationEntityClassMethod  Get translation entity class method name
-     * @param string                                          $translatableTrait                Translatable trait
-     * @param string                                          $translationLocaleProperty        Translation locale property name
-     * @param string                                          $translationTrait                 Translation trait
-     * @param string                                          $translationsProperty             Translations property name
+     * @param \Doctrine\ORM\EntityManagerInterface $em                               Entity manager
+     * @param string                               $getTranslatableEntityClassMethod Get translatable entity class method name
+     * @param string                               $getTranslationEntityClassMethod  Get translation entity class method name
+     * @param string                               $translatableTrait                Translatable trait
+     * @param string                               $translationLocaleProperty        Translation locale property name
+     * @param string                               $translationTrait                 Translation trait
+     * @param string                               $translationsProperty             Translations property name
      */
     public function __construct(
-        ClassAnalyzer $classAnalyzer,
         EntityManagerInterface $em,
         string $getTranslatableEntityClassMethod,
         string $getTranslationEntityClassMethod,
@@ -100,7 +84,6 @@ class TranslatableManager implements TranslatableManagerInterface
         string $translationTrait,
         string $translationsProperty
     ) {
-        $this->classAnalyzer = $classAnalyzer;
         $this->em = $em;
         $this->getTranslatableEntityClassMethod = $getTranslatableEntityClassMethod;
         $this->getTranslationEntityClassMethod = $getTranslationEntityClassMethod;
@@ -108,7 +91,7 @@ class TranslatableManager implements TranslatableManagerInterface
         $this->translationLocaleProperty = $translationLocaleProperty;
         $this->translationTrait = $translationTrait;
         $this->translationsProperty = $translationsProperty;
-        $this->checkedIfTranslatable = $this->checkedIfTranslation = $this->translatableClasses = $this->translationClasses = [];
+        $this->translatableClasses = $this->translationClasses = [];
     }
 
     /**
@@ -152,15 +135,7 @@ class TranslatableManager implements TranslatableManagerInterface
      */
     public function isTranslatable(string $entityClass): bool
     {
-        if (!isset($this->checkedIfTranslatable[$entityClass])) {
-            $meta = $this->getDoctrineMetadata($entityClass);
-
-            $this->checkedIfTranslatable[$entityClass] = null !== $meta
-                ? $this->classAnalyzer->hasTrait($meta->getReflectionClass(), $this->translatableTrait)
-                : false;
-        }
-
-        return $this->checkedIfTranslatable[$entityClass];
+        return in_array(TranslatableInterface::class, class_implements($entityClass));
     }
 
     /**
@@ -168,15 +143,7 @@ class TranslatableManager implements TranslatableManagerInterface
      */
     public function isTranslation(string $entityClass): bool
     {
-        if (!isset($this->checkedIfTranslation[$entityClass])) {
-            $meta = $this->getDoctrineMetadata($entityClass);
-
-            $this->checkedIfTranslation[$entityClass] = null !== $meta
-                ? $this->classAnalyzer->hasTrait($meta->getReflectionClass(), $this->translationTrait)
-                : false;
-        }
-
-        return $this->checkedIfTranslation[$entityClass];
+        return in_array(TranslationInterface::class, class_implements($entityClass));
     }
 
     /**

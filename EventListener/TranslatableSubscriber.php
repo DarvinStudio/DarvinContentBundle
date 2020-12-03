@@ -15,19 +15,15 @@ use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Id\IdentityGenerator;
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
+use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
+use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
 use Knp\DoctrineBehaviors\ORM\Translatable\TranslatableSubscriber as BaseTranslatableSubscriber;
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 /**
  * Translatable event subscriber
  */
 class TranslatableSubscriber extends BaseTranslatableSubscriber
 {
-    /**
-     * @var \Knp\DoctrineBehaviors\Reflection\ClassAnalyzer
-     */
-    private $classAnalyzer;
-
     /**
      * @var string
      */
@@ -57,7 +53,6 @@ class TranslatableSubscriber extends BaseTranslatableSubscriber
      * {@inheritDoc}
      */
     public function __construct(
-        ClassAnalyzer $classAnalyzer,
         callable $currentLocaleCallable,
         callable $defaultLocaleCallable,
         string $translatableTrait,
@@ -67,7 +62,6 @@ class TranslatableSubscriber extends BaseTranslatableSubscriber
         EntityResolverInterface $entityResolver
     ) {
         parent::__construct(
-            $classAnalyzer,
             $currentLocaleCallable,
             $defaultLocaleCallable,
             $translatableTrait,
@@ -76,7 +70,6 @@ class TranslatableSubscriber extends BaseTranslatableSubscriber
             $translationFetchMode
         );
 
-        $this->classAnalyzer = $classAnalyzer;
         $this->translatableTrait = $translatableTrait;
         $this->translationTrait = $translationTrait;
 
@@ -173,7 +166,7 @@ class TranslatableSubscriber extends BaseTranslatableSubscriber
      */
     private function isTranslatable(ClassMetadataInfo $meta): bool
     {
-        return $this->getClassAnalyzer()->hasTrait($meta->getReflectionClass(), $this->translatableTrait);
+        return $meta->getReflectionClass()->implementsInterface(TranslatableInterface::class);
     }
 
     /**
@@ -183,6 +176,6 @@ class TranslatableSubscriber extends BaseTranslatableSubscriber
      */
     private function isTranslation(ClassMetadataInfo $meta): bool
     {
-        return $this->getClassAnalyzer()->hasTrait($meta->getReflectionClass(), $this->translationTrait);
+        return $meta->getReflectionClass()->implementsInterface(TranslationInterface::class);
     }
 }
