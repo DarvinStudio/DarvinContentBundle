@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Darvin\ContentBundle\EventListener;
+namespace Darvin\ContentBundle\EventListener\Translatable;
 
 use Darvin\Utils\Mapping\MetadataFactoryInterface;
 use Doctrine\Common\EventSubscriber;
@@ -21,7 +21,7 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 /**
  * Refresh translatable updated at event subscriber
  */
-class RefreshTranslatableUpdatedAtSubscriber implements EventSubscriber
+class RefreshUpdatedAtSubscriber implements EventSubscriber
 {
     /**
      * @var \Darvin\Utils\Mapping\MetadataFactoryInterface

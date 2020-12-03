@@ -1,11 +1,11 @@
 parameters:
-    darvin_content.translatable.event_subscriber.class: Darvin\ContentBundle\EventListener\TranslatableSubscriber
+    darvin_content.translatable.event_subscriber.class: Darvin\ContentBundle\EventListener\Translatable\TranslatableSubscriber
 
     darvin_content.translatable.locale_setter.class: Darvin\ContentBundle\Translatable\TranslatableLocaleSetter
 
     darvin_content.translatable.manager.class: Darvin\ContentBundle\Translatable\TranslatableManager
 
-    darvin_content.translatable.refresh_updated_at_event_subscriber.class: Darvin\ContentBundle\EventListener\RefreshTranslatableUpdatedAtSubscriber
+    darvin_content.translatable.refresh_updated_at_event_subscriber.class: Darvin\ContentBundle\EventListener\Translatable\RefreshUpdatedAtSubscriber
 
     darvin_content.translatable.translation_initializer.class: Darvin\ContentBundle\Translatable\TranslationInitializer
 

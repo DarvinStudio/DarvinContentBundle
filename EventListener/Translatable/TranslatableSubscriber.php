@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Darvin\ContentBundle\EventListener;
+namespace Darvin\ContentBundle\EventListener\Translatable;
 
 use Darvin\ContentBundle\Translatable\TranslatableLocaleSetterInterface;
 use Darvin\Utils\ORM\EntityResolverInterface;
