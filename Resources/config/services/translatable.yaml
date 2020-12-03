@@ -14,7 +14,7 @@ services:
         class: '%darvin_content.translatable.event_subscriber.class%'
         arguments:
             - '@darvin_utils.orm.entity_resolver'
-            - '@Knp\DoctrineBehaviors\Provider\LocaleProvider'
+            - '@darvin_utils.locale.provider'
         tags:
             - { name: doctrine.event_subscriber }
 

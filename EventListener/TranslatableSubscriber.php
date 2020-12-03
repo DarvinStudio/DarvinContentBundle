@@ -10,6 +10,7 @@
 
 namespace Darvin\ContentBundle\EventListener;
 
+use Darvin\Utils\Locale\LocaleProviderInterface;
 use Darvin\Utils\ORM\EntityResolverInterface;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Util\ClassUtils;
@@ -21,7 +22,6 @@ use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
-use Knp\DoctrineBehaviors\Contract\Provider\LocaleProviderInterface;
 
 /**
  * Translatable event subscriber
@@ -34,13 +34,13 @@ class TranslatableSubscriber implements EventSubscriber
     private $entityResolver;
 
     /**
-     * @var \Knp\DoctrineBehaviors\Contract\Provider\LocaleProviderInterface
+     * @var \Darvin\Utils\Locale\LocaleProviderInterface
      */
     private $localeProvider;
 
     /**
-     * @param \Darvin\Utils\ORM\EntityResolverInterface                        $entityResolver Entity resolver
-     * @param \Knp\DoctrineBehaviors\Contract\Provider\LocaleProviderInterface $localeProvider Locale provider
+     * @param \Darvin\Utils\ORM\EntityResolverInterface    $entityResolver Entity resolver
+     * @param \Darvin\Utils\Locale\LocaleProviderInterface $localeProvider Locale provider
      */
     public function __construct(EntityResolverInterface $entityResolver, LocaleProviderInterface $localeProvider)
     {
@@ -164,23 +164,10 @@ class TranslatableSubscriber implements EventSubscriber
         $entity = $eventArgs->getEntity();
         $meta   = $em->getClassMetadata(ClassUtils::getClass($entity));
 
-        if (!$this->isTranslatable($meta)) {
-            return;
-        }
-
-        $defaultLocale = $this->localeProvider->provideFallbackLocale();
-
-        if (null !== $defaultLocale) {
-            $entity->setDefaultLocale($defaultLocale);
-        }
-
-        $currentLocale = $this->localeProvider->provideCurrentLocale();
-
-        if (null === $currentLocale) {
-            $currentLocale = $defaultLocale;
-        }
-        if (null !== $currentLocale) {
-            $entity->setCurrentLocale($currentLocale);
+        if ($this->isTranslatable($meta)) {
+            /** @var \Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface $entity */
+            $entity->setCurrentLocale($this->localeProvider->getCurrentLocale());
+            $entity->setDefaultLocale($this->localeProvider->getDefaultLocale());
         }
     }
 
