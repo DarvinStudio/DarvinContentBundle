@@ -1,6 +1,8 @@
 parameters:
     darvin_content.translatable.event_subscriber.class: Darvin\ContentBundle\EventListener\TranslatableSubscriber
 
+    darvin_content.translatable.locale_setter.class: Darvin\ContentBundle\Translatable\TranslatableLocaleSetter
+
     darvin_content.translatable.manager.class: Darvin\ContentBundle\Translatable\TranslatableManager
 
     darvin_content.translatable.refresh_updated_at_event_subscriber.class: Darvin\ContentBundle\EventListener\RefreshTranslatableUpdatedAtSubscriber
@@ -14,9 +16,14 @@ services:
         class: '%darvin_content.translatable.event_subscriber.class%'
         arguments:
             - '@darvin_utils.orm.entity_resolver'
-            - '@darvin_utils.locale.provider'
+            - '@darvin_content.translatable.locale_setter'
         tags:
             - { name: doctrine.event_subscriber }
+
+    darvin_content.translatable.locale_setter:
+        class: '%darvin_content.translatable.locale_setter.class%'
+        arguments:
+            - '@darvin_utils.locale.provider'
 
     darvin_content.translatable.manager:
         class: '%darvin_content.translatable.manager.class%'
@@ -37,9 +44,8 @@ services:
     darvin_content.translatable.translation_initializer:
         class: '%darvin_content.translatable.translation_initializer.class%'
         arguments:
-            - '@doctrine.orm.entity_manager'
+            - '@darvin_content.translatable.locale_setter'
             - '@darvin_content.translatable.manager'
-            - '@darvin_content.translatable.event_subscriber'
 
     darvin_content.translatable.translation_joiner:
         class: '%darvin_content.translatable.translation_joiner.class%'

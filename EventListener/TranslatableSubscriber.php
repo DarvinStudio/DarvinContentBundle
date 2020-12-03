@@ -10,10 +10,9 @@
 
 namespace Darvin\ContentBundle\EventListener;
 
-use Darvin\Utils\Locale\LocaleProviderInterface;
+use Darvin\ContentBundle\Translatable\TranslatableLocaleSetterInterface;
 use Darvin\Utils\ORM\EntityResolverInterface;
 use Doctrine\Common\EventSubscriber;
-use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
@@ -34,18 +33,18 @@ class TranslatableSubscriber implements EventSubscriber
     private $entityResolver;
 
     /**
-     * @var \Darvin\Utils\Locale\LocaleProviderInterface
+     * @var \Darvin\ContentBundle\Translatable\TranslatableLocaleSetterInterface
      */
-    private $localeProvider;
+    private $localeSetter;
 
     /**
-     * @param \Darvin\Utils\ORM\EntityResolverInterface    $entityResolver Entity resolver
-     * @param \Darvin\Utils\Locale\LocaleProviderInterface $localeProvider Locale provider
+     * @param \Darvin\Utils\ORM\EntityResolverInterface                            $entityResolver Entity resolver
+     * @param \Darvin\ContentBundle\Translatable\TranslatableLocaleSetterInterface $localeSetter   Translatable locale setter
      */
-    public function __construct(EntityResolverInterface $entityResolver, LocaleProviderInterface $localeProvider)
+    public function __construct(EntityResolverInterface $entityResolver, TranslatableLocaleSetterInterface $localeSetter)
     {
         $this->entityResolver = $entityResolver;
-        $this->localeProvider = $localeProvider;
+        $this->localeSetter = $localeSetter;
     }
 
     /**
@@ -65,7 +64,11 @@ class TranslatableSubscriber implements EventSubscriber
      */
     public function postLoad(LifecycleEventArgs $eventArgs): void
     {
-        $this->setLocales($eventArgs);
+        $entity = $eventArgs->getEntity();
+
+        if ($entity instanceof TranslatableInterface) {
+            $this->localeSetter->setLocales($entity);
+        }
     }
 
     /**
@@ -73,7 +76,11 @@ class TranslatableSubscriber implements EventSubscriber
      */
     public function prePersist(LifecycleEventArgs $eventArgs): void
     {
-        $this->setLocales($eventArgs);
+        $entity = $eventArgs->getEntity();
+
+        if ($entity instanceof TranslatableInterface) {
+            $this->localeSetter->setLocales($entity);
+        }
     }
 
     /**
@@ -83,10 +90,10 @@ class TranslatableSubscriber implements EventSubscriber
     {
         $meta = $args->getClassMetadata();
 
-        if ($this->isTranslatable($meta)) {
+        if (is_a($meta->getName(), TranslatableInterface::class, true)) {
             $this->mapTranslatable($meta);
         }
-        if ($this->isTranslation($meta)) {
+        if (is_a($meta->getName(), TranslationInterface::class, true)) {
             $this->mapTranslation($meta);
         }
     }
@@ -153,41 +160,5 @@ class TranslatableSubscriber implements EventSubscriber
                 'type'      => 'string',
             ]);
         }
-    }
-
-    /**
-     * @param \Doctrine\ORM\Event\LifecycleEventArgs $eventArgs Event arguments
-     */
-    private function setLocales(LifecycleEventArgs $eventArgs): void
-    {
-        $em     = $eventArgs->getEntityManager();
-        $entity = $eventArgs->getEntity();
-        $meta   = $em->getClassMetadata(ClassUtils::getClass($entity));
-
-        if ($this->isTranslatable($meta)) {
-            /** @var \Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface $entity */
-            $entity->setCurrentLocale($this->localeProvider->getCurrentLocale());
-            $entity->setDefaultLocale($this->localeProvider->getDefaultLocale());
-        }
-    }
-
-    /**
-     * @param \Doctrine\ORM\Mapping\ClassMetadataInfo $meta Metadata
-     *
-     * @return bool
-     */
-    private function isTranslatable(ClassMetadataInfo $meta): bool
-    {
-        return is_a($meta->getName(), TranslatableInterface::class, true);
-    }
-
-    /**
-     * @param \Doctrine\ORM\Mapping\ClassMetadataInfo $meta Metadata
-     *
-     * @return bool
-     */
-    private function isTranslation(ClassMetadataInfo $meta): bool
-    {
-        return is_a($meta->getName(), TranslationInterface::class, true);
     }
 }

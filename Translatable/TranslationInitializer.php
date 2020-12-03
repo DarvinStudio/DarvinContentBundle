@@ -10,10 +10,7 @@
 
 namespace Darvin\ContentBundle\Translatable;
 
-use Darvin\ContentBundle\EventListener\TranslatableSubscriber;
 use Doctrine\Common\Util\ClassUtils;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Event\LifecycleEventArgs;
 
 /**
  * Translation initializer
@@ -21,9 +18,9 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 class TranslationInitializer implements TranslationInitializerInterface
 {
     /**
-     * @var \Doctrine\ORM\EntityManagerInterface
+     * @var \Darvin\ContentBundle\Translatable\TranslatableLocaleSetterInterface
      */
-    private $em;
+    private $localeSetter;
 
     /**
      * @var \Darvin\ContentBundle\Translatable\TranslatableManagerInterface
@@ -31,23 +28,13 @@ class TranslationInitializer implements TranslationInitializerInterface
     private $translatableManager;
 
     /**
-     * @var \Darvin\ContentBundle\EventListener\TranslatableSubscriber
+     * @param \Darvin\ContentBundle\Translatable\TranslatableLocaleSetterInterface $localeSetter        Translatable locale setter
+     * @param \Darvin\ContentBundle\Translatable\TranslatableManagerInterface      $translatableManager Translatable manager
      */
-    private $translatableSubscriber;
-
-    /**
-     * @param \Doctrine\ORM\EntityManagerInterface                            $em                     Entity manager
-     * @param \Darvin\ContentBundle\Translatable\TranslatableManagerInterface $translatableManager    Translatable manager
-     * @param \Darvin\ContentBundle\EventListener\TranslatableSubscriber      $translatableSubscriber Translatable event subscriber
-     */
-    public function __construct(
-        EntityManagerInterface $em,
-        TranslatableManagerInterface $translatableManager,
-        TranslatableSubscriber $translatableSubscriber
-    ) {
-        $this->em = $em;
+    public function __construct(TranslatableLocaleSetterInterface $localeSetter, TranslatableManagerInterface $translatableManager)
+    {
+        $this->localeSetter = $localeSetter;
         $this->translatableManager = $translatableManager;
-        $this->translatableSubscriber = $translatableSubscriber;
     }
 
     /**
@@ -61,7 +48,7 @@ class TranslationInitializer implements TranslationInitializerInterface
             throw new TranslatableException(sprintf('Class "%s" is not translatable.', $class));
         }
 
-        $this->translatableSubscriber->postLoad(new LifecycleEventArgs($entity, $this->em));
+        $this->localeSetter->setLocales($entity);
 
         /** @var \Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface $entity */
         $translationClass = $entity::getTranslationEntityClass();
