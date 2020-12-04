@@ -12,6 +12,7 @@ namespace Darvin\ContentBundle\Entity;
 
 use Darvin\ContentBundle\Traits\TranslatableTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -27,7 +28,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @method string getTitle()
  * @method string getValue()
  */
-class GlobalProperty implements GlobalPropertyInterface
+class GlobalProperty implements GlobalPropertyInterface, TranslatableInterface
 {
     use TranslatableTrait;
 

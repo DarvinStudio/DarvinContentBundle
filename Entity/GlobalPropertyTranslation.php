@@ -12,6 +12,7 @@ namespace Darvin\ContentBundle\Entity;
 
 use Darvin\ContentBundle\Traits\TranslationTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -21,7 +22,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\Table(name="content_global_property_translation")
  */
-class GlobalPropertyTranslation
+class GlobalPropertyTranslation implements TranslationInterface
 {
     use TranslationTrait;
 
