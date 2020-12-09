@@ -15,7 +15,9 @@ parameters:
 
 services:
     darvin_content.translatable.event_subscriber.map:
-        class: '%darvin_content.translatable.event_subscriber.map.class%'
+        class:                 '%darvin_content.translatable.event_subscriber.map.class%'
+        decorates:             Knp\DoctrineBehaviors\EventSubscriber\TranslatableEventSubscriber
+        decoration_on_invalid: null
         arguments:
             - '@darvin_utils.orm.entity_resolver'
         tags:
