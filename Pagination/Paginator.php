@@ -30,7 +30,7 @@ class Paginator implements PaginatorInterface
     private $eventDispatcher;
 
     /**
-     * @var \Symfony\Component\HttpFoundation\RequestStack|null
+     * @var \Symfony\Component\HttpFoundation\RequestStack
      */
     private $requestStack;
 
@@ -41,9 +41,9 @@ class Paginator implements PaginatorInterface
 
     /**
      * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $eventDispatcher Event dispatcher
-     * @param \Symfony\Component\HttpFoundation\RequestStack|null         $requestStack    Request stack
+     * @param \Symfony\Component\HttpFoundation\RequestStack              $requestStack    Request stack
      */
-    public function __construct(EventDispatcherInterface $eventDispatcher, ?RequestStack $requestStack = null)
+    public function __construct(EventDispatcherInterface $eventDispatcher, RequestStack $requestStack)
     {
         $this->eventDispatcher = $eventDispatcher;
         $this->requestStack = $requestStack;

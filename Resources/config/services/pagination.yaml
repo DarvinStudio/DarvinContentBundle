@@ -3,6 +3,8 @@ parameters:
 
     darvin_content.pagination.pager_subscriber.class: Darvin\ContentBundle\EventListener\Pagination\PagerSubscriber
 
+    darvin_content.pagination.paginator.class: Darvin\ContentBundle\Pagination\Paginator
+
 services:
     darvin_content.pagination.page_not_found_exception_subscriber:
         class: '%darvin_content.pagination.page_not_found_exception_subscriber.class%'
@@ -15,3 +17,11 @@ services:
             - '@request_stack'
         tags:
             - { name: knp_paginator.subscriber }
+
+    darvin_content.pagination.paginator:
+        class:     '%darvin_content.pagination.paginator.class%'
+        decorates: knp_paginator
+        lazy:      true
+        arguments:
+            - '@event_dispatcher'
+            - '@request_stack'
