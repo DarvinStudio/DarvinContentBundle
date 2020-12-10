@@ -31,7 +31,7 @@ class Sorter implements SorterInterface
     private $entityResolver;
 
     /**
-     * @var \Doctrine\Common\Persistence\ObjectManager
+     * @var \Doctrine\Persistence\ObjectManager
      */
     private $om;
 
