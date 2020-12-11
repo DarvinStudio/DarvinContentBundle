@@ -19,6 +19,8 @@ interface TranslatableManagerInterface
     public const TRANSLATIONS_PROPERTY       = 'translations';
 
     /**
+     * @deprecated Use $entityClass::getTranslatableEntityClass() instead
+     *
      * @param string $entityClass Entity class
      *
      * @return string
@@ -27,6 +29,8 @@ interface TranslatableManagerInterface
     public function getTranslatableClass(string $entityClass): string;
 
     /**
+     * @deprecated Use $entityClass::getTranslationEntityClass() instead
+     *
      * @param string $entityClass Entity class
      *
      * @return string

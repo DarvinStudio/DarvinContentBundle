@@ -32,11 +32,6 @@ class TranslationsCreateCommand extends Command
     private $em;
 
     /**
-     * @var \Darvin\ContentBundle\Translatable\TranslatableManagerInterface
-     */
-    private $translatableManager;
-
-    /**
      * @var string
      */
     private $defaultLocale;
@@ -47,17 +42,15 @@ class TranslationsCreateCommand extends Command
     private $io;
 
     /**
-     * @param string                                                          $name                Command name
-     * @param \Doctrine\ORM\EntityManagerInterface                            $em                  Entity manager
-     * @param \Darvin\ContentBundle\Translatable\TranslatableManagerInterface $translatableManager Translatable manager
-     * @param string                                                          $defaultLocale       Default locale
+     * @param string                               $name          Command name
+     * @param \Doctrine\ORM\EntityManagerInterface $em            Entity manager
+     * @param string                               $defaultLocale Default locale
      */
-    public function __construct(string $name, EntityManagerInterface $em, TranslatableManagerInterface $translatableManager, string $defaultLocale)
+    public function __construct(string $name, EntityManagerInterface $em, string $defaultLocale)
     {
         parent::__construct($name);
 
         $this->em = $em;
-        $this->translatableManager = $translatableManager;
         $this->defaultLocale = $defaultLocale;
     }
 
@@ -178,7 +171,10 @@ EOF
         /** @var \Doctrine\ORM\Mapping\ClassMetadataInfo $meta */
         foreach ($this->em->getMetadataFactory()->getAllMetadata() as $meta) {
             if (is_a($meta->getName(), TranslatableInterface::class, true)) {
-                $class = $this->translatableManager->getTranslationClass($meta->getName());
+                /** @var \Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface $translatableClass */
+                $translatableClass = $meta->getName();
+
+                $class = $translatableClass::getTranslationEntityClass();
 
                 $classes[$class] = $class;
             }

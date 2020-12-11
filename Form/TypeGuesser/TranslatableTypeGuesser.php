@@ -10,7 +10,6 @@
 
 namespace Darvin\ContentBundle\Form\TypeGuesser;
 
-use Darvin\ContentBundle\Translatable\TranslatableManagerInterface;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Symfony\Component\Form\FormTypeGuesserInterface;
 use Symfony\Component\Form\Guess\Guess;
@@ -23,22 +22,15 @@ use Symfony\Component\Form\Guess\ValueGuess;
 class TranslatableTypeGuesser implements FormTypeGuesserInterface
 {
     /**
-     * @var \Darvin\ContentBundle\Translatable\TranslatableManagerInterface
-     */
-    private $translatableManager;
-
-    /**
      * @var \Symfony\Component\Form\FormTypeGuesserInterface
      */
     private $genericTypeGuesser;
 
     /**
-     * @param \Darvin\ContentBundle\Translatable\TranslatableManagerInterface $translatableManager Translatable manager
-     * @param \Symfony\Component\Form\FormTypeGuesserInterface                $genericTypeGuesser  Generic form type guesser
+     * @param \Symfony\Component\Form\FormTypeGuesserInterface $genericTypeGuesser Generic form type guesser
      */
-    public function __construct(TranslatableManagerInterface $translatableManager, FormTypeGuesserInterface $genericTypeGuesser)
+    public function __construct(FormTypeGuesserInterface $genericTypeGuesser)
     {
-        $this->translatableManager = $translatableManager;
         $this->genericTypeGuesser = $genericTypeGuesser;
     }
 
@@ -93,7 +85,8 @@ class TranslatableTypeGuesser implements FormTypeGuesserInterface
             return null;
         }
 
-        $secondGuess = $this->genericTypeGuesser->$method($this->translatableManager->getTranslationClass($class), $property);
+        /** @var \Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface $class */
+        $secondGuess = $this->genericTypeGuesser->$method($class::getTranslationEntityClass(), $property);
 
         if (!$secondGuess instanceof Guess) {
             return null;
