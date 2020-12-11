@@ -5,8 +5,6 @@ services:
     darvin_content.form.type_guesser.translatable.abstract:
         class:    '%darvin_content.form.type_guesser.translatable.abstract.class%'
         abstract: true
-        arguments:
-            - '@darvin_content.translatable.manager'
 
     darvin_content.form.type_guesser.translatable.doctrine:
         parent: darvin_content.form.type_guesser.translatable.abstract
