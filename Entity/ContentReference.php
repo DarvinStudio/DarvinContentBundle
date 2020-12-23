@@ -14,15 +14,15 @@ use Darvin\Utils\Mapping\Annotation as Darvin;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Slug map item
+ * Content reference
  *
  * @ORM\Entity(repositoryClass="Darvin\ContentBundle\Repository\SlugMapItemRepository")
  * @ORM\Table(name="content")
  */
-class SlugMapItem
+class ContentReference
 {
     /**
-     * @var int
+     * @var int|null
      *
      * @ORM\Column(type="integer", unique=true)
      * @ORM\GeneratedValue
@@ -59,7 +59,7 @@ class SlugMapItem
     private $property;
 
     /**
-     * @var object
+     * @var object|null
      *
      * @Darvin\CustomObject(classPropertyPath="objectClass", initPropertyValuePath="objectId")
      */
@@ -75,12 +75,13 @@ class SlugMapItem
     {
         $this->slug = $slug;
         $this->objectClass = $objectClass;
-        $this->objectId = (string)$objectId;
         $this->property = $property;
+
+        $this->setObjectId($objectId);
     }
 
     /**
-     * @return int
+     * @return int|null
      */
     public function getId(): ?int
     {
@@ -90,7 +91,7 @@ class SlugMapItem
     /**
      * @return string
      */
-    public function getSlug(): ?string
+    public function getSlug(): string
     {
         return $this->slug;
     }
@@ -98,9 +99,9 @@ class SlugMapItem
     /**
      * @param string $slug slug
      *
-     * @return SlugMapItem
+     * @return ContentReference
      */
-    public function setSlug(?string $slug): SlugMapItem
+    public function setSlug(string $slug): ContentReference
     {
         $this->slug = $slug;
 
@@ -110,7 +111,7 @@ class SlugMapItem
     /**
      * @return string
      */
-    public function getObjectClass(): ?string
+    public function getObjectClass(): string
     {
         return $this->objectClass;
     }
@@ -118,9 +119,9 @@ class SlugMapItem
     /**
      * @param string $objectClass objectClass
      *
-     * @return SlugMapItem
+     * @return ContentReference
      */
-    public function setObjectClass(?string $objectClass): SlugMapItem
+    public function setObjectClass(string $objectClass): ContentReference
     {
         $this->objectClass = $objectClass;
 
@@ -130,7 +131,7 @@ class SlugMapItem
     /**
      * @return string
      */
-    public function getObjectId(): ?string
+    public function getObjectId(): string
     {
         return $this->objectId;
     }
@@ -138,9 +139,9 @@ class SlugMapItem
     /**
      * @param mixed $objectId objectId
      *
-     * @return SlugMapItem
+     * @return ContentReference
      */
-    public function setObjectId($objectId): SlugMapItem
+    public function setObjectId($objectId): ContentReference
     {
         $this->objectId = (string)$objectId;
 
@@ -150,7 +151,7 @@ class SlugMapItem
     /**
      * @return string
      */
-    public function getProperty(): ?string
+    public function getProperty(): string
     {
         return $this->property;
     }
@@ -158,9 +159,9 @@ class SlugMapItem
     /**
      * @param string $property property
      *
-     * @return SlugMapItem
+     * @return ContentReference
      */
-    public function setProperty(?string $property): SlugMapItem
+    public function setProperty(string $property): ContentReference
     {
         $this->property = $property;
 
@@ -168,7 +169,7 @@ class SlugMapItem
     }
 
     /**
-     * @return object
+     * @return object|null
      */
     public function getObject(): ?object
     {
@@ -176,11 +177,11 @@ class SlugMapItem
     }
 
     /**
-     * @param object $object object
+     * @param object|null $object object
      *
-     * @return SlugMapItem
+     * @return ContentReference
      */
-    public function setObject(?object $object): SlugMapItem
+    public function setObject(?object $object): ContentReference
     {
         $this->object = $object;
 
