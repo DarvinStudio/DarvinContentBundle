@@ -14,13 +14,13 @@ use Darvin\AdminBundle\EntityNamer\EntityNamerInterface;
 use Darvin\AdminBundle\Security\Permissions\Permission;
 use Darvin\AdminBundle\View\Widget\Widget\AbstractWidget;
 use Darvin\AdminBundle\View\Widget\Widget\ShowLinkWidget;
-use Darvin\ContentBundle\Entity\SlugMapItem;
+use Darvin\ContentBundle\Entity\ContentReference;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * Slug map item admin view widget
+ * Content reference admin view widget
  */
-class SlugMapItemWidget extends AbstractWidget
+class ContentReferenceWidget extends AbstractWidget
 {
     /**
      * @var \Darvin\AdminBundle\EntityNamer\EntityNamerInterface
@@ -54,21 +54,21 @@ class SlugMapItemWidget extends AbstractWidget
      */
     protected function createContent(object $entity, array $options): ?string
     {
-        $slugMapItem = $this->getPropertyValue($entity, $options['property']);
+        $ref = $this->getPropertyValue($entity, $options['property']);
 
-        if (null === $slugMapItem) {
+        if (null === $ref) {
             return null;
         }
-        if (!$slugMapItem instanceof SlugMapItem) {
+        if (!$ref instanceof ContentReference) {
             throw new \InvalidArgumentException(sprintf(
                 'View widget "%s" requires property value to be instance of "%s", got "%s".',
                 $this->getAlias(),
-                SlugMapItem::class,
-                is_object($slugMapItem) ? get_class($slugMapItem) : gettype($slugMapItem)
+                ContentReference::class,
+                is_object($ref) ? get_class($ref) : gettype($ref)
             ));
         }
 
-        $entity = $slugMapItem->getObject();
+        $entity = $ref->getObject();
 
         if (null === $entity) {
             return null;

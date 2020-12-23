@@ -1,7 +1,7 @@
 parameters:
     darvin_content.admin.form.type.slug_map_item.choice.class: Darvin\ContentBundle\Form\Type\Admin\SlugMapItemChoiceType
 
-    darvin_content.admin.view.widget.slug_map_item.class: Darvin\ContentBundle\Admin\View\SlugMapItemWidget
+    darvin_content.admin.view.widget.content_reference.class: Darvin\ContentBundle\Admin\View\ContentReferenceWidget
 
 services:
     darvin_content.admin.form.type.slug_map_item.choice:
@@ -19,8 +19,8 @@ services:
         tags:
             - { name: form.type }
 
-    darvin_content.admin.view.widget.slug_map_item:
-        class:  '%darvin_content.admin.view.widget.slug_map_item.class%'
+    darvin_content.admin.view.widget.content_reference:
+        class:  '%darvin_content.admin.view.widget.content_reference.class%'
         parent: darvin_admin.view.widget.abstract
         arguments:
             - '@darvin_admin.entity_namer'
