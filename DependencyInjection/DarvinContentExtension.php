@@ -64,6 +64,7 @@ class DarvinContentExtension extends Extension implements PrependExtensionInterf
 
             'admin' => ['bundle' => 'DarvinAdminBundle'],
 
+            'dev/reference'    => ['env' => 'dev'],
             'dev/slug'         => ['env' => 'dev'],
             'dev/translatable' => ['env' => 'dev'],
             'dev/widget'       => ['env' => 'dev'],

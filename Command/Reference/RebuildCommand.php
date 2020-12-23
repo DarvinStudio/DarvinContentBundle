@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Darvin\ContentBundle\Command;
+namespace Darvin\ContentBundle\Command\Reference;
 
 use Darvin\ContentBundle\Entity\ContentReference;
 use Darvin\ContentBundle\Reference\ContentReferenceFactoryInterface;
@@ -20,9 +20,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
- * Slug map rebuild command
+ * Content reference rebuild command
  */
-class SlugMapRebuildCommand extends Command
+class RebuildCommand extends Command
 {
     /**
      * @var \Darvin\ContentBundle\Reference\ContentReferenceFactoryInterface
@@ -40,18 +40,16 @@ class SlugMapRebuildCommand extends Command
     private $metadataFactory;
 
     /**
-     * @param string                                                           $name                    Command name
      * @param \Darvin\ContentBundle\Reference\ContentReferenceFactoryInterface $contentReferenceFactory Content reference factory
      * @param \Doctrine\ORM\EntityManagerInterface                             $em                      Entity manager
      * @param \Darvin\Utils\Mapping\MetadataFactoryInterface                   $metadataFactory         Metadata factory
      */
     public function __construct(
-        string $name,
         ContentReferenceFactoryInterface $contentReferenceFactory,
         EntityManagerInterface $em,
         MetadataFactoryInterface $metadataFactory
     ) {
-        parent::__construct($name);
+        parent::__construct();
 
         $this->contentReferenceFactory = $contentReferenceFactory;
         $this->em = $em;
@@ -63,7 +61,9 @@ class SlugMapRebuildCommand extends Command
      */
     protected function configure(): void
     {
-        $this->setDescription('Rebuilds slug map.');
+        $this
+            ->setName('darvin:content:reference:rebuild')
+            ->setDescription('Rebuilds content references.');
     }
 
     /**
@@ -73,7 +73,7 @@ class SlugMapRebuildCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $this->truncateSlugMap();
+        $this->truncateReferenceTable();
 
         /** @var \Doctrine\ORM\Mapping\ClassMetadataInfo[] $allDoctrineMeta */
         $allDoctrineMeta = $this->em->getMetadataFactory()->getAllMetadata();
@@ -97,8 +97,8 @@ class SlugMapRebuildCommand extends Command
             $entities = $this->em->getRepository($doctrineMeta->getName())->findAll();
 
             foreach ($entities as $entity) {
-                foreach ($this->contentReferenceFactory->createContentReferences($entity, $extendedMeta['slugs'], $doctrineMeta) as $slugMapItem) {
-                    $this->em->persist($slugMapItem);
+                foreach ($this->contentReferenceFactory->createContentReferences($entity, $extendedMeta['slugs'], $doctrineMeta) as $reference) {
+                    $this->em->persist($reference);
                 }
 
                 $io->comment($doctrineMeta->getName().' '.implode('', $doctrineMeta->getIdentifierValues($entity)));
@@ -110,7 +110,7 @@ class SlugMapRebuildCommand extends Command
         return 0;
     }
 
-    private function truncateSlugMap(): void
+    private function truncateReferenceTable(): void
     {
         $tableName = $this->em->getClassMetadata(ContentReference::class)->getTableName();
 
