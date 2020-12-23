@@ -10,8 +10,8 @@
 
 namespace Darvin\ContentBundle\Command;
 
-use Darvin\ContentBundle\Entity\SlugMapItem;
-use Darvin\ContentBundle\Slug\SlugMapItemFactoryInterface;
+use Darvin\ContentBundle\Entity\ContentReference;
+use Darvin\ContentBundle\Reference\ContentReferenceFactoryInterface;
 use Darvin\Utils\Mapping\MetadataFactoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -25,6 +25,11 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class SlugMapRebuildCommand extends Command
 {
     /**
+     * @var \Darvin\ContentBundle\Reference\ContentReferenceFactoryInterface
+     */
+    private $contentReferenceFactory;
+
+    /**
      * @var \Doctrine\ORM\EntityManagerInterface
      */
     private $em;
@@ -35,23 +40,22 @@ class SlugMapRebuildCommand extends Command
     private $metadataFactory;
 
     /**
-     * @var \Darvin\ContentBundle\Slug\SlugMapItemFactoryInterface
+     * @param string                                                           $name                    Command name
+     * @param \Darvin\ContentBundle\Reference\ContentReferenceFactoryInterface $contentReferenceFactory Content reference factory
+     * @param \Doctrine\ORM\EntityManagerInterface                             $em                      Entity manager
+     * @param \Darvin\Utils\Mapping\MetadataFactoryInterface                   $metadataFactory         Metadata factory
      */
-    private $slugMapItemFactory;
-
-    /**
-     * @param string                                                 $name               Command name
-     * @param \Doctrine\ORM\EntityManagerInterface                   $em                 Entity manager
-     * @param \Darvin\Utils\Mapping\MetadataFactoryInterface         $metadataFactory    Metadata factory
-     * @param \Darvin\ContentBundle\Slug\SlugMapItemFactoryInterface $slugMapItemFactory Slug map item factory
-     */
-    public function __construct(string $name, EntityManagerInterface $em, MetadataFactoryInterface $metadataFactory, SlugMapItemFactoryInterface $slugMapItemFactory)
-    {
+    public function __construct(
+        string $name,
+        ContentReferenceFactoryInterface $contentReferenceFactory,
+        EntityManagerInterface $em,
+        MetadataFactoryInterface $metadataFactory
+    ) {
         parent::__construct($name);
 
+        $this->contentReferenceFactory = $contentReferenceFactory;
         $this->em = $em;
         $this->metadataFactory = $metadataFactory;
-        $this->slugMapItemFactory = $slugMapItemFactory;
     }
 
     /**
@@ -93,7 +97,7 @@ class SlugMapRebuildCommand extends Command
             $entities = $this->em->getRepository($doctrineMeta->getName())->findAll();
 
             foreach ($entities as $entity) {
-                foreach ($this->slugMapItemFactory->createItems($entity, $extendedMeta['slugs'], $doctrineMeta) as $slugMapItem) {
+                foreach ($this->contentReferenceFactory->createContentReferences($entity, $extendedMeta['slugs'], $doctrineMeta) as $slugMapItem) {
                     $this->em->persist($slugMapItem);
                 }
 
@@ -108,7 +112,7 @@ class SlugMapRebuildCommand extends Command
 
     private function truncateSlugMap(): void
     {
-        $tableName = $this->em->getClassMetadata(SlugMapItem::class)->getTableName();
+        $tableName = $this->em->getClassMetadata(ContentReference::class)->getTableName();
 
         $connection = $this->em->getConnection();
         $connection->exec('SET foreign_key_checks = 0');

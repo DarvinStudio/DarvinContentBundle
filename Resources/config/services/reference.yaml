@@ -1,0 +1,8 @@
+parameters:
+    darvin_content.reference.factory.class: Darvin\ContentBundle\Reference\ContentReferenceFactoryInterface
+
+services:
+    darvin_content.reference.factory:
+        class: '%darvin_content.reference.factory.class%'
+        arguments:
+            - '@property_accessor'

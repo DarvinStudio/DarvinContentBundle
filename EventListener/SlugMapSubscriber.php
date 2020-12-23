@@ -10,9 +10,9 @@
 
 namespace Darvin\ContentBundle\EventListener;
 
-use Darvin\ContentBundle\Entity\SlugMapItem;
+use Darvin\ContentBundle\Entity\ContentReference;
+use Darvin\ContentBundle\Reference\ContentReferenceFactoryInterface;
 use Darvin\ContentBundle\Repository\SlugMapItemRepository;
-use Darvin\ContentBundle\Slug\SlugMapItemFactoryInterface;
 use Darvin\Utils\Event\SlugsUpdateEvent;
 use Darvin\Utils\Mapping\MetadataFactoryInterface;
 use Darvin\Utils\ORM\EntityResolverInterface;
@@ -31,6 +31,11 @@ use Doctrine\ORM\Events;
 class SlugMapSubscriber implements EventSubscriber
 {
     /**
+     * @var \Darvin\ContentBundle\Reference\ContentReferenceFactoryInterface
+     */
+    private $contentReferenceFactory;
+
+    /**
      * @var \Darvin\Utils\ORM\EntityResolverInterface
      */
     private $entityResolver;
@@ -41,28 +46,23 @@ class SlugMapSubscriber implements EventSubscriber
     private $extendedMetadataFactory;
 
     /**
-     * @var \Darvin\ContentBundle\Slug\SlugMapItemFactoryInterface
-     */
-    private $slugMapItemFactory;
-
-    /**
      * @var bool
      */
     private $flushNeeded;
 
     /**
-     * @param \Darvin\Utils\ORM\EntityResolverInterface              $entityResolver          Entity resolver
-     * @param \Darvin\Utils\Mapping\MetadataFactoryInterface         $extendedMetadataFactory Extended metadata factory
-     * @param \Darvin\ContentBundle\Slug\SlugMapItemFactoryInterface $slugMapItemFactory      Slug map item factory
+     * @param \Darvin\ContentBundle\Reference\ContentReferenceFactoryInterface $contentReferenceFactory Content reference factory
+     * @param \Darvin\Utils\ORM\EntityResolverInterface                        $entityResolver          Entity resolver
+     * @param \Darvin\Utils\Mapping\MetadataFactoryInterface                   $extendedMetadataFactory Extended metadata factory
      */
     public function __construct(
+        ContentReferenceFactoryInterface $contentReferenceFactory,
         EntityResolverInterface $entityResolver,
-        MetadataFactoryInterface $extendedMetadataFactory,
-        SlugMapItemFactoryInterface $slugMapItemFactory
+        MetadataFactoryInterface $extendedMetadataFactory
     ) {
+        $this->contentReferenceFactory = $contentReferenceFactory;
         $this->entityResolver = $entityResolver;
         $this->extendedMetadataFactory = $extendedMetadataFactory;
-        $this->slugMapItemFactory = $slugMapItemFactory;
 
         $this->flushNeeded = false;
     }
@@ -110,7 +110,7 @@ class SlugMapSubscriber implements EventSubscriber
         if (!isset($meta['slugs']) || empty($meta['slugs'])) {
             return;
         }
-        foreach ($this->slugMapItemFactory->createItems($entity, $meta['slugs'], $em->getClassMetadata($entityClass)) as $slugMapItem) {
+        foreach ($this->contentReferenceFactory->createContentReferences($entity, $meta['slugs'], $em->getClassMetadata($entityClass)) as $slugMapItem) {
             $em->persist($slugMapItem);
         }
 
@@ -149,7 +149,7 @@ class SlugMapSubscriber implements EventSubscriber
         $slugMapItemRepository = $this->getSlugMapItemRepository($em);
 
         $slugMapItemUpdateQb = $em->createQueryBuilder()
-            ->update(SlugMapItem::class, 'o')
+            ->update(ContentReference::class, 'o')
             ->set('o.slug', ':new_slug')
             ->where('o.slug = :old_slug');
 
@@ -180,7 +180,7 @@ class SlugMapSubscriber implements EventSubscriber
                 $separator = $config[$property]['separator'];
 
                 $em->createQueryBuilder()
-                    ->update(SlugMapItem::class, 'o')
+                    ->update(ContentReference::class, 'o')
                     ->set('o.slug', 'CONCAT(:new_slug, SUBSTRING(o.slug, :old_slug_length + 1, LENGTH(o.slug)))')
                     ->where('SUBSTRING(o.slug, 1, :old_slug_length) = :old_slug')
                     ->setParameter('new_slug', $slugs[1].$separator)
@@ -263,7 +263,7 @@ class SlugMapSubscriber implements EventSubscriber
             return;
         }
 
-        $slugMapItemMeta = $em->getClassMetadata(SlugMapItem::class);
+        $slugMapItemMeta = $em->getClassMetadata(ContentReference::class);
         $slugMapItems    = $this->getSlugMapItemRepository($em)->getForSlugMapSubscriber(
             [$entityClass, $this->entityResolver->reverseResolve($entityClass)],
             $this->getEntityId($em, $entity, $entityClass),
@@ -298,6 +298,6 @@ class SlugMapSubscriber implements EventSubscriber
      */
     private function getSlugMapItemRepository(EntityManagerInterface $em): SlugMapItemRepository
     {
-        return $em->getRepository(SlugMapItem::class);
+        return $em->getRepository(ContentReference::class);
     }
 }

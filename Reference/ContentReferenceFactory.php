@@ -8,17 +8,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Darvin\ContentBundle\Slug;
+namespace Darvin\ContentBundle\Reference;
 
-use Darvin\ContentBundle\Entity\SlugMapItem;
+use Darvin\ContentBundle\Entity\ContentReference;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 /**
- * Slug map item factory
+ * Content reference factory
  */
-class SlugMapItemFactory implements SlugMapItemFactoryInterface
+class ContentReferenceFactory implements ContentReferenceFactoryInterface
 {
     /**
      * @var \Symfony\Component\PropertyAccess\PropertyAccessorInterface
@@ -36,28 +36,30 @@ class SlugMapItemFactory implements SlugMapItemFactoryInterface
     /**
      * {@inheritDoc}
      */
-    public function createItems($object, array $slugsMeta, ClassMetadata $doctrineMeta): array
+    public function createContentReferences($object, array $slugMeta, ClassMetadata $doctrineMeta): array
     {
-        $items = [];
-
-        if (empty($slugsMeta)) {
-            return $items;
+        if (empty($slugMeta)) {
+            return [];
         }
 
+        $references  = [];
         $objectClass = ClassUtils::getClass($object);
 
-        foreach ($slugsMeta as $slugProperty => $params) {
-            if (!$this->propertyAccessor->isReadable($object, $slugProperty)) {
-                throw new \LogicException(sprintf('Property "%s::$%s" is not readable.', $objectClass, $slugProperty));
+        foreach (array_keys($slugMeta) as $property) {
+            if (!$this->propertyAccessor->isReadable($object, $property)) {
+                throw new \LogicException(sprintf('Property "%s::$%s" is not readable.', $objectClass, $property));
             }
 
-            $slug = $this->propertyAccessor->getValue($object, $slugProperty);
+            $objectIds = $doctrineMeta->getIdentifierValues($object);
 
-            $ids = $doctrineMeta->getIdentifierValues($object);
-
-            $items[] = new SlugMapItem($slug, $objectClass, reset($ids), $slugProperty);
+            $references[] = new ContentReference(
+                $this->propertyAccessor->getValue($object, $property),
+                $objectClass,
+                reset($objectIds),
+                $property
+            );
         }
 
-        return $items;
+        return $references;
     }
 }

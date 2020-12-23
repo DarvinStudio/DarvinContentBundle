@@ -10,9 +10,9 @@ services:
         class: '%darvin_content.slug.map_rebuild_command.class%'
         arguments:
             - '%darvin_content.slug.map_rebuild_command.name%'
+            - '@darvin_content.reference.factory'
             - '@doctrine.orm.entity_manager'
             - '@darvin_utils.mapping.metadata_factory'
-            - '@darvin_content.slug_map.item_factory'
         tags:
             - { name: console.command }
 

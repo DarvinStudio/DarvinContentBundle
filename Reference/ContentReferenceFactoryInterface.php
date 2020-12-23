@@ -8,22 +8,22 @@
  * file that was distributed with this source code.
  */
 
-namespace Darvin\ContentBundle\Slug;
+namespace Darvin\ContentBundle\Reference;
 
 use Doctrine\Persistence\Mapping\ClassMetadata;
 
 /**
- * Slug map item factory
+ * Content reference factory
  */
-interface SlugMapItemFactoryInterface
+interface ContentReferenceFactoryInterface
 {
     /**
      * @param object                                      $object       Object
-     * @param array                                       $slugsMeta    Slugs metadata
+     * @param array                                       $slugMeta     Slug metadata
      * @param \Doctrine\Persistence\Mapping\ClassMetadata $doctrineMeta Doctrine metadata
      *
-     * @return \Darvin\ContentBundle\Entity\SlugMapItem[]
+     * @return \Darvin\ContentBundle\Entity\ContentReference[]
      * @throws \LogicException
      */
-    public function createItems(object $object, array $slugsMeta, ClassMetadata $doctrineMeta): array;
+    public function createContentReferences(object $object, array $slugMeta, ClassMetadata $doctrineMeta): array;
 }
