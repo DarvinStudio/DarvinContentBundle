@@ -127,4 +127,8 @@ darvin_content:
 
 8.8.0: Upgrade "knplabs/doctrine-behaviors".
 
-9.0.0: Remove redundant widget name unique validation constraint.
+9.0.0:
+
+- Remove redundant widget name unique validation constraint.
+
+- Remove unsupported translations.
