@@ -136,3 +136,5 @@ darvin_content:
 - Remove "forward-to-controller" widgets.
 
 - Rename SlugMapItem entity to ContentReference.
+
+- Remove translatable manager.
