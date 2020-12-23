@@ -132,3 +132,5 @@ darvin_content:
 - Remove redundant widget name unique validation constraint.
 
 - Remove unsupported translations.
+
+- Remove "forward-to-controller" widgets.

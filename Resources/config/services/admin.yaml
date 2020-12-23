@@ -3,8 +3,6 @@ parameters:
 
     darvin_content.admin.view.widget.slug_map_item.class: Darvin\ContentBundle\Admin\View\SlugMapItemWidget
 
-    darvin_content.admin.widget.factory.forward_to_controller.class: Darvin\ContentBundle\Widget\Admin\ForwardToController\ForwardToControllerWidgetFactory
-
 services:
     darvin_content.admin.form.type.slug_map_item.choice:
         class: '%darvin_content.admin.form.type.slug_map_item.choice.class%'
@@ -30,12 +28,3 @@ services:
             - '@translator'
         tags:
             - { name: darvin_admin.view_widget }
-
-    darvin_content.admin.widget.factory.forward_to_controller:
-        class: '%darvin_content.admin.widget.factory.forward_to_controller.class%'
-        arguments:
-            - '@http_kernel'
-            - '@request_stack'
-            - '%darvin_content.widget.forward_to_controller%'
-        tags:
-            - { name: darvin_content.widget_factory }
