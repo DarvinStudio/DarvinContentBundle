@@ -9,8 +9,6 @@ parameters:
 
     darvin_content.widget.twig_extension.class: Darvin\ContentBundle\Twig\Extension\WidgetExtension
 
-    darvin_content.widget.validator.name_unique.class: Darvin\ContentBundle\Validator\WidgetNameUniqueValidator
-
 services:
     darvin_content.widget.embedder:
         class: '%darvin_content.widget.embedder.class%'
@@ -44,10 +42,3 @@ services:
             - '@darvin_content.widget.pool.provider'
         tags:
             - { name: twig.extension }
-
-    darvin_content.widget.validator.name_unique:
-        class: '%darvin_content.widget.validator.name_unique.class%'
-        arguments:
-            - '@darvin_content.widget.pool'
-        tags:
-            - { name: validator.constraint_validator, alias: darvin_content_widget_name_unique }
