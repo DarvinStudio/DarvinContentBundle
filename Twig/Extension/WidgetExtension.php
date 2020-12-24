@@ -10,7 +10,7 @@
 
 namespace Darvin\ContentBundle\Twig\Extension;
 
-use Darvin\ContentBundle\Widget\WidgetEmbedderInterface;
+use Darvin\ContentBundle\Widget\Embedder\WidgetEmbedderInterface;
 use Darvin\ContentBundle\Widget\WidgetPoolInterface;
 use Darvin\Utils\Service\ServiceProviderInterface;
 use Twig\Extension\AbstractExtension;
@@ -78,7 +78,7 @@ class WidgetExtension extends AbstractExtension
     }
 
     /**
-     * @return \Darvin\ContentBundle\Widget\WidgetEmbedderInterface
+     * @return \Darvin\ContentBundle\Widget\Embedder\WidgetEmbedderInterface
      */
     private function getWidgetEmbedder(): WidgetEmbedderInterface
     {

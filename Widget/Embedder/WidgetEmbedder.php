@@ -8,10 +8,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Darvin\ContentBundle\Widget;
+namespace Darvin\ContentBundle\Widget\Embedder;
 
 use Darvin\ContentBundle\EventListener\Pagination\PagerSubscriber;
 use Darvin\ContentBundle\Widget\Embedder\Exception\HttpException;
+use Darvin\ContentBundle\Widget\WidgetInterface;
+use Darvin\ContentBundle\Widget\WidgetPoolInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\HttpException as KernelHttpException;
 

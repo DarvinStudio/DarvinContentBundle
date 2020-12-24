@@ -1,5 +1,5 @@
 parameters:
-    darvin_content.widget.embedder.class: Darvin\ContentBundle\Widget\WidgetEmbedder
+    darvin_content.widget.embedder.class: Darvin\ContentBundle\Widget\Embedder\WidgetEmbedder
 
     darvin_content.widget.embedder.http_exception_event_subscriber.class: Darvin\ContentBundle\EventListener\Widget\Embedder\HttpExceptionSubscriber
 
