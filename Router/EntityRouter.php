@@ -10,8 +10,8 @@
 
 namespace Darvin\ContentBundle\Router;
 
-use Darvin\ContentBundle\Entity\SlugMapItem;
-use Darvin\ContentBundle\Repository\SlugMapItemRepository;
+use Darvin\ContentBundle\Entity\ContentReference;
+use Darvin\ContentBundle\Repository\ContentReferenceRepository;
 use Darvin\Utils\ORM\EntityResolverInterface;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManagerInterface;
@@ -23,6 +23,11 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class EntityRouter implements EntityRouterInterface
 {
     /**
+     * @var \Darvin\ContentBundle\Router\ContentReferenceRouterInterface
+     */
+    private $contentReferenceRouter;
+
+    /**
      * @var \Doctrine\ORM\EntityManagerInterface
      */
     private $em;
@@ -33,20 +38,18 @@ class EntityRouter implements EntityRouterInterface
     private $entityResolver;
 
     /**
-     * @var \Darvin\ContentBundle\Router\SlugMapRouterInterface
+     * @param \Darvin\ContentBundle\Router\ContentReferenceRouterInterface $contentReferenceRouter Content reference router
+     * @param \Doctrine\ORM\EntityManagerInterface                         $em                     Entity manager
+     * @param \Darvin\Utils\ORM\EntityResolverInterface                    $entityResolver         Entity resolver
      */
-    private $slugMapRouter;
-
-    /**
-     * @param \Doctrine\ORM\EntityManagerInterface                $em             Entity manager
-     * @param \Darvin\Utils\ORM\EntityResolverInterface           $entityResolver Entity resolver
-     * @param \Darvin\ContentBundle\Router\SlugMapRouterInterface $slugMapRouter  Slug map router
-     */
-    public function __construct(EntityManagerInterface $em, EntityResolverInterface $entityResolver, SlugMapRouterInterface $slugMapRouter)
-    {
+    public function __construct(
+        ContentReferenceRouterInterface $contentReferenceRouter,
+        EntityManagerInterface $em,
+        EntityResolverInterface $entityResolver
+    ) {
+        $this->contentReferenceRouter = $contentReferenceRouter;
         $this->em = $em;
         $this->entityResolver = $entityResolver;
-        $this->slugMapRouter = $slugMapRouter;
     }
 
     /**
@@ -60,8 +63,8 @@ class EntityRouter implements EntityRouterInterface
 
         $class = ClassUtils::getClass($entity);
 
-        return $this->slugMapRouter->generateUrl(
-            $this->getSlugMapItemRepository()->getOneByClassesAndId(
+        return $this->contentReferenceRouter->generateUrl(
+            $this->getContentReferenceRepository()->getOneByClassesAndId(
                 array_unique([$class, $this->entityResolver->reverseResolve($class)]),
                 array_values($this->em->getClassMetadata($class)->getIdentifierValues($entity))[0]
             ),
@@ -71,10 +74,10 @@ class EntityRouter implements EntityRouterInterface
     }
 
     /**
-     * @return \Darvin\ContentBundle\Repository\SlugMapItemRepository
+     * @return \Darvin\ContentBundle\Repository\ContentReferenceRepository
      */
-    private function getSlugMapItemRepository(): SlugMapItemRepository
+    private function getContentReferenceRepository(): ContentReferenceRepository
     {
-        return $this->em->getRepository(SlugMapItem::class);
+        return $this->em->getRepository(ContentReference::class);
     }
 }

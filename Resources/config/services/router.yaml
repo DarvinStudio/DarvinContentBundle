@@ -1,20 +1,18 @@
 parameters:
+    darvin_content.router.content_reference.class: Darvin\ContentBundle\Router\ContentReferenceRouter
+
     darvin_content.router.entity.class: Darvin\ContentBundle\Router\EntityRouter
 
-    darvin_content.router.slug_map.class:         Darvin\ContentBundle\Router\SlugMapRouter
-    darvin_content.router.slug_map.content_route: darvin_content_show
-
 services:
-    darvin_content.router.entity:
-        class: '%darvin_content.router.entity.class%'
-        arguments:
-            - '@doctrine.orm.entity_manager'
-            - '@darvin_utils.orm.entity_resolver'
-            - '@darvin_content.router.slug_map'
-
-    darvin_content.router.slug_map:
-        class: '%darvin_content.router.slug_map.class%'
+    darvin_content.router.content_reference:
+        class: '%darvin_content.router.content_reference.class%'
         arguments:
             - '@router'
             - '@darvin_utils.homepage.router'
-            - '%darvin_content.router.slug_map.content_route%'
+
+    darvin_content.router.entity:
+        class: '%darvin_content.router.entity.class%'
+        arguments:
+            - '@darvin_content.router.content_reference'
+            - '@doctrine.orm.entity_manager'
+            - '@darvin_utils.orm.entity_resolver'
