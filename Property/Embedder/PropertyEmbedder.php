@@ -136,9 +136,7 @@ class PropertyEmbedder implements PropertyEmbedderInterface
 
                 try {
                     $value = $this->propertyAccessor->getValue($object, $propertyCamelized);
-                } catch (ExceptionInterface $ex) {
-                    continue;
-                } catch (TranslatableException $ex) {
+                } catch (ExceptionInterface | TranslatableException $ex) {
                     continue;
                 }
 
