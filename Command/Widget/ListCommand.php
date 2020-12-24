@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Darvin\ContentBundle\Command;
+namespace Darvin\ContentBundle\Command\Widget;
 
 use Darvin\ContentBundle\Widget\WidgetPoolInterface;
 use Symfony\Component\Console\Command\Command;
@@ -19,9 +19,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * List widgets command
+ * Widget list command
  */
-class ListWidgetsCommand extends Command
+class ListCommand extends Command
 {
     /**
      * @var \Symfony\Component\HttpFoundation\RequestStack
@@ -34,13 +34,12 @@ class ListWidgetsCommand extends Command
     private $widgetPool;
 
     /**
-     * @param string                                           $name         Command name
      * @param \Symfony\Component\HttpFoundation\RequestStack   $requestStack Request stack
      * @param \Darvin\ContentBundle\Widget\WidgetPoolInterface $widgetPool   Widget pool
      */
-    public function __construct(string $name, RequestStack $requestStack, WidgetPoolInterface $widgetPool)
+    public function __construct(RequestStack $requestStack, WidgetPoolInterface $widgetPool)
     {
-        parent::__construct($name);
+        parent::__construct();
 
         $this->requestStack = $requestStack;
         $this->widgetPool = $widgetPool;
@@ -51,7 +50,9 @@ class ListWidgetsCommand extends Command
      */
     protected function configure(): void
     {
-        $this->setDescription('Displays list of existing content widget names.');
+        $this
+            ->setName('darvin:content:widget:list')
+            ->setDescription('Displays list of existing content widget names.');
     }
 
     /**

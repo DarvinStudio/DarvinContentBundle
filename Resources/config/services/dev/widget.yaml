@@ -1,12 +1,10 @@
 parameters:
-    darvin_content.widget.list_command.class: Darvin\ContentBundle\Command\ListWidgetsCommand
-    darvin_content.widget.list_command.name:  darvin:content:widget:list
+    darvin_content.widget.list.command.class: Darvin\ContentBundle\Command\Widget\ListCommand
 
 services:
-    darvin_content.widget.list_command:
-        class: '%darvin_content.widget.list_command.class%'
+    darvin_content.widget.list.command:
+        class: '%darvin_content.widget.list.command.class%'
         arguments:
-            - '%darvin_content.widget.list_command.name%'
             - '@request_stack'
             - '@darvin_content.widget.pool'
         tags:
