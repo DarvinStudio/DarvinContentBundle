@@ -93,7 +93,7 @@ class TranslationCreator implements TranslationCreatorInterface
                 $this->em->persist($translationClone);
 
                 $ids = $meta->getIdentifierValues($translation);
-                $output($translationClass.' '.reset($ids));
+                $output(implode(' ', [$translationClass, reset($ids)]));
             }
 
             $this->em->flush();

@@ -190,7 +190,7 @@ class ContentReferenceSubscriber implements EventSubscriber
                     ->execute();
                 $em->createQueryBuilder()
                     ->update($entityClass, 'o')
-                    ->set('o.'.$property, ':new_slug')
+                    ->set(sprintf('o.%s', $property), ':new_slug')
                     ->where(sprintf('o.%s = :old_slug', $property))
                     ->setParameter('new_slug', $slugs[1])
                     ->setParameter('old_slug', $slugs[0])
@@ -199,7 +199,7 @@ class ContentReferenceSubscriber implements EventSubscriber
                 $em->createQueryBuilder()
                     ->update($entityClass, 'o')
                     ->set(
-                        'o.'.$property,
+                        sprintf('o.%s', $property),
                         sprintf('CONCAT(:new_slug, SUBSTRING(o.%s, :old_slug_length + 1, LENGTH(o.%1$s)))', $property)
                     )
                     ->where(sprintf('SUBSTRING(o.%s, 1, :old_slug_length) = :old_slug', $property))

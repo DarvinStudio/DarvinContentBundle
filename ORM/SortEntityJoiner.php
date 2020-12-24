@@ -114,7 +114,7 @@ class SortEntityJoiner implements SortEntityJoinerInterface
             return;
         }
 
-        $join = $qbRootAlias.'.'.$firstPart;
+        $join = implode('.', [$qbRootAlias, $firstPart]);
 
         $sameAliasJoin = QueryBuilderUtil::findJoinByAlias($qb, $qbRootAlias, $firstPart);
 

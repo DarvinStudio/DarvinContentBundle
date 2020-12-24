@@ -107,6 +107,6 @@ class CanonicalUrlGenerator implements CanonicalUrlGeneratorInterface
      */
     private function createPattern(string $text): string
     {
-        return '/^'.$text.'$/';
+        return sprintf('/^%s$/', $text);
     }
 }

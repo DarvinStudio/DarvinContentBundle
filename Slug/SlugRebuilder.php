@@ -87,7 +87,7 @@ class SlugRebuilder implements SlugRebuilderInterface
                 $this->em->flush();
 
                 foreach ($properties as $property) {
-                    $comments[] = $property.': '.$this->propertyAccessor->getValue($entity, $property);
+                    $comments[] = implode(': ', [$property, $this->propertyAccessor->getValue($entity, $property)]);
                 }
 
                 $ids = $meta->getIdentifierValues($entity);

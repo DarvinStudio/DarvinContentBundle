@@ -112,7 +112,7 @@ class MapSubscriber implements EventSubscriber
             ]);
         }
 
-        $constraint = $meta->getTableName().'_unique_translation';
+        $constraint = sprintf('%s_unique_translation', $meta->getTableName());
 
         if (!isset($meta->table['uniqueConstraints'][$constraint])) {
             $meta->table['uniqueConstraints'][$constraint] = [

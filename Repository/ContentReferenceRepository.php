@@ -58,7 +58,7 @@ class ContentReferenceRepository extends EntityRepository
         foreach ($slugs as $i => $slug) {
             $param = sprintf('slug_%d', $i);
 
-            $orX->add('o.slug LIKE :'.$param);
+            $orX->add(sprintf('o.slug LIKE :%s', $param));
 
             $qb->setParameter($param, $slug.'%');
         }

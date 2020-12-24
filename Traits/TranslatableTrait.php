@@ -30,7 +30,7 @@ trait TranslatableTrait
      */
     public function __set(string $property, $value)
     {
-        return $this->proxyCurrentLocaleTranslation('set'.ucfirst($property), [$value]);
+        return $this->proxyCurrentLocaleTranslation(sprintf('set%s', ucfirst($property)), [$value]);
     }
 
     /**
@@ -40,7 +40,7 @@ trait TranslatableTrait
      */
     public function __get(string $property)
     {
-        return $this->proxyCurrentLocaleTranslation('get'.ucfirst($property));
+        return $this->proxyCurrentLocaleTranslation(sprintf('get%s', ucfirst($property)));
     }
 
     /**

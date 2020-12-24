@@ -25,7 +25,7 @@ trait MetadataRepositoryTrait
      */
     public function addNotHiddenFilter(QueryBuilder $qb, string $alias = 'translations')
     {
-        $qb->andWhere($alias.'.hidden = :hidden')->setParameter('hidden', false);
+        $qb->andWhere(sprintf('%s.hidden = :hidden', $alias))->setParameter('hidden', false);
 
         return $this;
     }
@@ -38,7 +38,7 @@ trait MetadataRepositoryTrait
      */
     protected function addEnabledFilter(QueryBuilder $qb, string $alias = 'translations')
     {
-        $qb->andWhere($alias.'.enabled = :enabled')->setParameter('enabled', true);
+        $qb->andWhere(sprintf('%s.enabled = :enabled', $alias))->setParameter('enabled', true);
 
         return $this;
     }

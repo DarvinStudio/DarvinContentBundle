@@ -27,9 +27,7 @@ class Configuration implements ConfigurationInterface
     {
         $builder = new TreeBuilder('darvin_content');
 
-        /** @var \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition $root */
-        $root = $builder->getRootNode();
-        $root
+        $builder->getRootNode()
             ->children()
                 ->arrayNode('autocomplete')->canBeEnabled()
                     ->children()

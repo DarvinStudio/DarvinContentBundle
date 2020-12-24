@@ -53,10 +53,10 @@ class UniqueSlugHandler implements SlugHandlerInterface
 
             do {
                 $index++;
-                $slug = $originalSlug.'-'.$index;
+                $slug = implode('-', [$originalSlug, $index]);
             } while (!$this->isSlugUnique($slug, $entityClass, $entityId, $similarSlugs));
 
-            $suffix .= '-'.$index;
+            $suffix .= sprintf('-%d', $index);
         }
 
         $this->similarSlugs[$originalSlug][] = $this->similarSlugs[$slug][] = [
