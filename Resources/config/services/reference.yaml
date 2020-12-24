@@ -1,7 +1,7 @@
 parameters:
     darvin_content.reference.event_subscriber.class: Darvin\ContentBundle\EventListener\ContentReferenceSubscriber
 
-    darvin_content.reference.factory.class: Darvin\ContentBundle\Reference\ContentReferenceFactoryInterface
+    darvin_content.reference.factory.class: Darvin\ContentBundle\Reference\ContentReferenceFactory
 
     darvin_content.reference.object.loader.class: Darvin\ContentBundle\Reference\ContentReferenceObjectLoader
 
