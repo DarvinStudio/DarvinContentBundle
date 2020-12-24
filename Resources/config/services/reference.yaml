@@ -6,7 +6,7 @@ parameters:
     darvin_content.reference.object.loader.class: Darvin\ContentBundle\Reference\ContentReferenceObjectLoader
 
 services:
-    Darvin\ContentBundle\Reference\ContentReferenceObjectLoaderInterface: '@darvin_content.reference.object_loader'
+    Darvin\ContentBundle\Reference\ContentReferenceObjectLoaderInterface: '@darvin_content.reference.object.loader'
 
     darvin_content.reference.event_subscriber:
         class: '%darvin_content.reference.event_subscriber.class%'
