@@ -21,6 +21,8 @@ interface SortEntityJoinerInterface
      * @param \Doctrine\ORM\QueryBuilder $qb               Query builder
      * @param string|null                $sortPropertyPath Sort property path
      * @param string                     $locale           Locale
+     *
+     * @throws \InvalidArgumentException
      */
     public function joinEntity(QueryBuilder $qb, ?string $sortPropertyPath, string $locale): void;
 }

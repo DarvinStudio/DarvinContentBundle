@@ -21,6 +21,7 @@ interface RepositionerInterface
      * @param \Darvin\ContentBundle\Sorting\Reposition\Model\Reposition $reposition Reposition
      *
      * @throws \InvalidArgumentException
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
      */
     public function reposition(Reposition $reposition): void;
 }
