@@ -34,7 +34,7 @@ class Reposition
     private $tags;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @Assert\Type("string")
      * @Assert\NotBlank
@@ -107,7 +107,7 @@ class Reposition
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getClass(): ?string
     {
@@ -115,7 +115,7 @@ class Reposition
     }
 
     /**
-     * @param string $class class
+     * @param string|null $class class
      *
      * @return Reposition
      */

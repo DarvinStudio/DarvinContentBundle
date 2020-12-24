@@ -38,7 +38,7 @@ trait MetadataTrait
     protected $hidden;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column
      *
@@ -85,19 +85,19 @@ trait MetadataTrait
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
-    public function isEnabled(): ?bool
+    public function isEnabled(): bool
     {
         return $this->enabled;
     }
 
     /**
-     * @param boolean $enabled enabled
+     * @param bool $enabled enabled
      *
      * @return self
      */
-    public function setEnabled(?bool $enabled)
+    public function setEnabled(bool $enabled)
     {
         $this->enabled = $enabled;
 
@@ -105,19 +105,19 @@ trait MetadataTrait
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
-    public function isHidden(): ?bool
+    public function isHidden(): bool
     {
         return $this->hidden;
     }
 
     /**
-     * @param boolean $hidden hidden
+     * @param bool $hidden hidden
      *
      * @return self
      */
-    public function setHidden(?bool $hidden)
+    public function setHidden(bool $hidden)
     {
         $this->hidden = $hidden;
 
@@ -125,7 +125,7 @@ trait MetadataTrait
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getTitle(): ?string
     {
@@ -133,7 +133,7 @@ trait MetadataTrait
     }
 
     /**
-     * @param string $title title
+     * @param string|null $title title
      *
      * @return self
      */

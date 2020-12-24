@@ -27,7 +27,7 @@ class GlobalPropertyTranslation implements TranslationInterface
     use TranslationTrait;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column
      *
@@ -36,7 +36,7 @@ class GlobalPropertyTranslation implements TranslationInterface
     protected $title;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(type="text")
      *
@@ -45,7 +45,7 @@ class GlobalPropertyTranslation implements TranslationInterface
     protected $value;
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getTitle(): ?string
     {
@@ -53,7 +53,7 @@ class GlobalPropertyTranslation implements TranslationInterface
     }
 
     /**
-     * @param string $title title
+     * @param string|null $title title
      *
      * @return GlobalPropertyTranslation
      */
@@ -65,7 +65,7 @@ class GlobalPropertyTranslation implements TranslationInterface
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getValue(): ?string
     {
@@ -73,7 +73,7 @@ class GlobalPropertyTranslation implements TranslationInterface
     }
 
     /**
-     * @param string $value value
+     * @param string|null $value value
      *
      * @return GlobalPropertyTranslation
      */

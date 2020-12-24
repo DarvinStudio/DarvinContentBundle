@@ -143,7 +143,6 @@ EOF
     private function checkIfTargetLocaleTranslationsExist(array $translationClasses, string $targetLocale): void
     {
         foreach ($translationClasses as $translationClass) {
-            /** @var \Doctrine\ORM\QueryBuilder $qb */
             $qb = $this->em->getRepository($translationClass)->createQueryBuilder('o');
 
             $translationsCount = $qb

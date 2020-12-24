@@ -25,15 +25,15 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @DoctrineAssert\UniqueEntity(fields={"name"})
  *
- * @method string getTitle()
- * @method string getValue()
+ * @method string|null getTitle()
+ * @method string|null getValue()
  */
 class GlobalProperty implements GlobalPropertyInterface, TranslatableInterface
 {
     use TranslatableTrait;
 
     /**
-     * @var int
+     * @var int|null
      *
      * @ORM\Column(type="integer", unique=true)
      * @ORM\GeneratedValue
@@ -42,7 +42,7 @@ class GlobalProperty implements GlobalPropertyInterface, TranslatableInterface
     protected $id;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(unique=true)
      *
@@ -52,7 +52,7 @@ class GlobalProperty implements GlobalPropertyInterface, TranslatableInterface
     protected $name;
 
     /**
-     * @return int
+     * @return int|null
      */
     public function getId(): ?int
     {
@@ -68,7 +68,7 @@ class GlobalProperty implements GlobalPropertyInterface, TranslatableInterface
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getName(): ?string
     {
@@ -76,7 +76,7 @@ class GlobalProperty implements GlobalPropertyInterface, TranslatableInterface
     }
 
     /**
-     * @param string $name name
+     * @param string|null $name name
      *
      * @return GlobalProperty
      */
