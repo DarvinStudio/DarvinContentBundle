@@ -10,8 +10,8 @@
 
 namespace Darvin\ContentBundle\Controller;
 
-use Darvin\ContentBundle\Entity\SlugMapItem;
-use Darvin\ContentBundle\Repository\SlugMapItemRepository;
+use Darvin\ContentBundle\Entity\ContentReference;
+use Darvin\ContentBundle\Repository\ContentReferenceRepository;
 use Darvin\ContentBundle\Translatable\TranslationJoinerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ObjectManager;
@@ -61,17 +61,17 @@ class FrontController
      */
     public function __invoke(Request $request, string $slug): Response
     {
-        $slugMapItem = $this->getSlugMapItem($slug);
+        $reference = $this->getContentReference($slug);
 
         try {
-            $contentController = $this->controllerPool->getController($slugMapItem->getObjectClass());
+            $contentController = $this->controllerPool->getController($reference->getObjectClass());
         } catch (ControllerNotExistsException $ex) {
             throw new NotFoundHttpException($ex->getMessage(), $ex);
         }
 
         $content = $this->getContent(
-            $slugMapItem->getObjectClass(),
-            $slugMapItem->getObjectId(),
+            $reference->getObjectClass(),
+            $reference->getObjectId(),
             $request->getLocale(),
             $contentController
         );
@@ -79,8 +79,8 @@ class FrontController
         if (null === $content) {
             $message = sprintf(
                 'Unable to find content object "%s" by ID "%s".',
-                $slugMapItem->getObjectClass(),
-                $slugMapItem->getObjectId()
+                $reference->getObjectClass(),
+                $reference->getObjectId()
             );
 
             throw new NotFoundHttpException($message);
@@ -121,27 +121,27 @@ class FrontController
     /**
      * @param string $slug Content slug
      *
-     * @return \Darvin\ContentBundle\Entity\SlugMapItem
+     * @return \Darvin\ContentBundle\Entity\ContentReference
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    private function getSlugMapItem(string $slug): SlugMapItem
+    private function getContentReference(string $slug): ContentReference
     {
-        $slugMapItem = $this->getSlugMapItemRepository()->findOneBy([
+        $reference = $this->getContentReferenceRepository()->findOneBy([
             'slug' => $slug,
         ]);
 
-        if (null === $slugMapItem) {
-            throw new NotFoundHttpException(sprintf('Unable to find slug map item by slug "%s".', $slug));
+        if (null === $reference) {
+            throw new NotFoundHttpException(sprintf('Unable to find content reference by slug "%s".', $slug));
         }
 
-        return $slugMapItem;
+        return $reference;
     }
 
     /**
-     * @return \Darvin\ContentBundle\Repository\SlugMapItemRepository
+     * @return \Darvin\ContentBundle\Repository\ContentReferenceRepository
      */
-    private function getSlugMapItemRepository(): SlugMapItemRepository
+    private function getContentReferenceRepository(): ContentReferenceRepository
     {
-        return $this->om->getRepository(SlugMapItem::class);
+        return $this->om->getRepository(ContentReference::class);
     }
 }
