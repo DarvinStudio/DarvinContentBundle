@@ -16,8 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Content reference
  *
- * @ORM\Entity(repositoryClass="Darvin\ContentBundle\Repository\SlugMapItemRepository")
- * @ORM\Table(name="content")
+ * @ORM\Entity(repositoryClass="Darvin\ContentBundle\Repository\ContentReferenceRepository")
  */
 class ContentReference
 {

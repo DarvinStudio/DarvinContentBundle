@@ -1,10 +1,22 @@
 parameters:
+    darvin_content.reference.event_subscriber.class: Darvin\ContentBundle\EventListener\ContentReferenceSubscriber
+
     darvin_content.reference.factory.class: Darvin\ContentBundle\Reference\ContentReferenceFactoryInterface
 
     darvin_content.reference.object.loader.class: Darvin\ContentBundle\Reference\ContentReferenceObjectLoader
 
 services:
     Darvin\ContentBundle\Reference\ContentReferenceObjectLoaderInterface: '@darvin_content.reference.object_loader'
+
+    darvin_content.reference.event_subscriber:
+        class: '%darvin_content.reference.event_subscriber.class%'
+        arguments:
+            - '@darvin_content.reference.factory'
+            - '@darvin_utils.orm.entity_resolver'
+            - '@darvin_utils.mapping.metadata_factory'
+        tags:
+            - { name: doctrine.event_subscriber, priority: 100 }
+            - { name: kernel.event_listener, event: darvin_utils.sluggable.slugs_updated, method: slugsUpdated }
 
     darvin_content.reference.factory:
         class: '%darvin_content.reference.factory.class%'

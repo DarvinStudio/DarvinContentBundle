@@ -58,7 +58,6 @@ class DarvinContentExtension extends Extension implements PrependExtensionInterf
             'reference',
             'router',
             'slug',
-            'slug_map',
             'translatable',
             'widget',
 

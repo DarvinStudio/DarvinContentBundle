@@ -10,15 +10,15 @@
 
 namespace Darvin\ContentBundle\Repository;
 
-use Darvin\ContentBundle\Entity\SlugMapItem;
+use Darvin\ContentBundle\Entity\ContentReference;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 
 /**
- * Slug map item entity repository
+ * Content reference entity repository
  */
-class SlugMapItemRepository extends EntityRepository
+class ContentReferenceRepository extends EntityRepository
 {
     /**
      * @param string[] $classes  Object classes
@@ -73,11 +73,11 @@ class SlugMapItemRepository extends EntityRepository
 
         $children = array_fill_keys($slugs, []);
 
-        /** @var \Darvin\ContentBundle\Entity\SlugMapItem $slugMapItem */
-        foreach ($qb->getQuery()->getResult() as $slugMapItem) {
+        /** @var \Darvin\ContentBundle\Entity\ContentReference $reference */
+        foreach ($qb->getQuery()->getResult() as $reference) {
             foreach ($slugs as $slug) {
-                if (0 === strpos($slugMapItem->getSlug(), $slug)) {
-                    $children[$slug][] = $slugMapItem;
+                if (0 === strpos($reference->getSlug(), $slug)) {
+                    $children[$slug][] = $reference;
                 }
             }
         }
@@ -90,9 +90,9 @@ class SlugMapItemRepository extends EntityRepository
      * @param mixed    $id         Object ID
      * @param array    $properties Slug properties
      *
-     * @return \Darvin\ContentBundle\Entity\SlugMapItem[]
+     * @return \Darvin\ContentBundle\Entity\ContentReference[]
      */
-    public function getForSlugMapSubscriber(array $classes, $id, array $properties = []): array
+    public function getForContentReferenceSubscriber(array $classes, $id, array $properties = []): array
     {
         if (empty($classes)) {
             return [];
@@ -114,9 +114,9 @@ class SlugMapItemRepository extends EntityRepository
      * @param string[] $classes Object classes
      * @param mixed    $id      Object ID
      *
-     * @return \Darvin\ContentBundle\Entity\SlugMapItem|null
+     * @return \Darvin\ContentBundle\Entity\ContentReference|null
      */
-    public function getOneByClassesAndId(array $classes, $id): ?SlugMapItem
+    public function getOneByClassesAndId(array $classes, $id): ?ContentReference
     {
         if (empty($classes)) {
             return null;
@@ -136,7 +136,7 @@ class SlugMapItemRepository extends EntityRepository
     /**
      * @param string $slug Slug
      *
-     * @return \Darvin\ContentBundle\Entity\SlugMapItem[]
+     * @return \Darvin\ContentBundle\Entity\ContentReference[]
      */
     public function getParentsBySlug(string $slug): array
     {
@@ -167,10 +167,10 @@ class SlugMapItemRepository extends EntityRepository
      * @param \Doctrine\ORM\QueryBuilder $qb      Query builder
      * @param string[]                   $classes Object classes
      *
-     * @return SlugMapItemRepository
+     * @return ContentReferenceRepository
      * @throws \InvalidArgumentException
      */
-    private function addObjectClassesFilter(QueryBuilder $qb, array $classes): SlugMapItemRepository
+    private function addObjectClassesFilter(QueryBuilder $qb, array $classes): ContentReferenceRepository
     {
         if (empty($classes)) {
             throw new \InvalidArgumentException('Array of object classes is empty.');
@@ -197,9 +197,9 @@ class SlugMapItemRepository extends EntityRepository
      * @param \Doctrine\ORM\QueryBuilder $qb Query builder
      * @param mixed                      $id Object ID
      *
-     * @return SlugMapItemRepository
+     * @return ContentReferenceRepository
      */
-    private function addObjectIdFilter(QueryBuilder $qb, $id): SlugMapItemRepository
+    private function addObjectIdFilter(QueryBuilder $qb, $id): ContentReferenceRepository
     {
         $qb->andWhere('o.objectId = :object_id')->setParameter('object_id', $id);
 
@@ -210,10 +210,10 @@ class SlugMapItemRepository extends EntityRepository
      * @param \Doctrine\ORM\QueryBuilder $qb         Query builder
      * @param string[]                   $properties Properties
      *
-     * @return SlugMapItemRepository
+     * @return ContentReferenceRepository
      * @throws \InvalidArgumentException
      */
-    private function addPropertiesFilter(QueryBuilder $qb, array $properties): SlugMapItemRepository
+    private function addPropertiesFilter(QueryBuilder $qb, array $properties): ContentReferenceRepository
     {
         if (empty($properties)) {
             throw new \InvalidArgumentException('Array of properties is empty.');
@@ -228,9 +228,9 @@ class SlugMapItemRepository extends EntityRepository
      * @param \Doctrine\ORM\QueryBuilder $qb       Query builder
      * @param string                     $property Property
      *
-     * @return SlugMapItemRepository
+     * @return ContentReferenceRepository
      */
-    private function addPropertyFilter(QueryBuilder $qb, string $property): SlugMapItemRepository
+    private function addPropertyFilter(QueryBuilder $qb, string $property): ContentReferenceRepository
     {
         $qb->andWhere('o.property = :property')->setParameter('property', $property);
 
@@ -241,9 +241,9 @@ class SlugMapItemRepository extends EntityRepository
      * @param \Doctrine\ORM\QueryBuilder $qb   Query builder
      * @param string                     $slug Slug
      *
-     * @return SlugMapItemRepository
+     * @return ContentReferenceRepository
      */
-    private function addSimilarSlugsFilter(QueryBuilder $qb, string $slug): SlugMapItemRepository
+    private function addSimilarSlugsFilter(QueryBuilder $qb, string $slug): ContentReferenceRepository
     {
         $qb->andWhere('o.slug LIKE :slug')->setParameter('slug', $slug.'%');
 

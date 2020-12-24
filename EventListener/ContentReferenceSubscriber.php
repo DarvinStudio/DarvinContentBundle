@@ -12,7 +12,7 @@ namespace Darvin\ContentBundle\EventListener;
 
 use Darvin\ContentBundle\Entity\ContentReference;
 use Darvin\ContentBundle\Reference\ContentReferenceFactoryInterface;
-use Darvin\ContentBundle\Repository\SlugMapItemRepository;
+use Darvin\ContentBundle\Repository\ContentReferenceRepository;
 use Darvin\Utils\Event\SlugsUpdateEvent;
 use Darvin\Utils\Mapping\MetadataFactoryInterface;
 use Darvin\Utils\ORM\EntityResolverInterface;
@@ -26,9 +26,9 @@ use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Events;
 
 /**
- * Slug map event subscriber
+ * Content reference event subscriber
  */
-class SlugMapSubscriber implements EventSubscriber
+class ContentReferenceSubscriber implements EventSubscriber
 {
     /**
      * @var \Darvin\ContentBundle\Reference\ContentReferenceFactoryInterface
@@ -88,10 +88,10 @@ class SlugMapSubscriber implements EventSubscriber
         $uow = $em->getUnitOfWork();
 
         foreach ($uow->getScheduledEntityDeletions() as $entity) {
-            $this->deleteSlugMapItems($em, $entity);
+            $this->deleteReferences($em, $entity);
         }
         foreach ($uow->getScheduledEntityUpdates() as $entity) {
-            $this->updateSlugMapItems($em, $entity);
+            $this->updateReferences($em, $entity);
         }
     }
 
@@ -110,8 +110,8 @@ class SlugMapSubscriber implements EventSubscriber
         if (!isset($meta['slugs']) || empty($meta['slugs'])) {
             return;
         }
-        foreach ($this->contentReferenceFactory->createContentReferences($entity, $meta['slugs'], $em->getClassMetadata($entityClass)) as $slugMapItem) {
-            $em->persist($slugMapItem);
+        foreach ($this->contentReferenceFactory->createContentReferences($entity, $meta['slugs'], $em->getClassMetadata($entityClass)) as $contentReference) {
+            $em->persist($contentReference);
         }
 
         $this->flushNeeded = true;
@@ -146,9 +146,9 @@ class SlugMapSubscriber implements EventSubscriber
             return;
         }
 
-        $slugMapItemRepository = $this->getSlugMapItemRepository($em);
+        $contentReferenceRepository = $this->getContentReferenceRepository($em);
 
-        $slugMapItemUpdateQb = $em->createQueryBuilder()
+        $contentReferenceUpdateBuilder = $em->createQueryBuilder()
             ->update(ContentReference::class, 'o')
             ->set('o.slug', ':new_slug')
             ->where('o.slug = :old_slug');
@@ -159,15 +159,15 @@ class SlugMapSubscriber implements EventSubscriber
             $oldSlug = (string)$oldSlug;
             $newSlug = (string)$newSlug;
 
-            foreach ($slugMapItemRepository->getSimilar($oldSlug, AbstractQuery::HYDRATE_ARRAY) as $slugMapItem) {
-                if (!isset($entitiesToUpdate[$slugMapItem['objectClass']])) {
-                    $entitiesToUpdate[$slugMapItem['objectClass']] = [];
+            foreach ($contentReferenceRepository->getSimilar($oldSlug, AbstractQuery::HYDRATE_ARRAY) as $reference) {
+                if (!isset($entitiesToUpdate[$reference['objectClass']])) {
+                    $entitiesToUpdate[$reference['objectClass']] = [];
                 }
 
-                $entitiesToUpdate[$slugMapItem['objectClass']][$slugMapItem['property']] = [$oldSlug, $newSlug];
+                $entitiesToUpdate[$reference['objectClass']][$reference['property']] = [$oldSlug, $newSlug];
             }
 
-            $slugMapItemUpdateQb
+            $contentReferenceUpdateBuilder
                 ->setParameter('new_slug', $newSlug)
                 ->setParameter('old_slug', $oldSlug)
                 ->getQuery()
@@ -216,7 +216,7 @@ class SlugMapSubscriber implements EventSubscriber
      * @param \Doctrine\ORM\EntityManagerInterface $em     Entity manager
      * @param object                               $entity Entity
      */
-    private function deleteSlugMapItems(EntityManagerInterface $em, object $entity): void
+    private function deleteReferences(EntityManagerInterface $em, object $entity): void
     {
         $entityClass = ClassUtils::getClass($entity);
 
@@ -226,13 +226,13 @@ class SlugMapSubscriber implements EventSubscriber
             return;
         }
 
-        $slugMapItems = $this->getSlugMapItemRepository($em)->getForSlugMapSubscriber(
+        $contentReferences = $this->getContentReferenceRepository($em)->getForContentReferenceSubscriber(
             [$entityClass, $this->entityResolver->reverseResolve($entityClass)],
             $this->getEntityId($em, $entity, $entityClass)
         );
 
-        foreach ($slugMapItems as $slugMapItem) {
-            $em->remove($slugMapItem);
+        foreach ($contentReferences as $contentReference) {
+            $em->remove($contentReference);
         }
     }
 
@@ -240,7 +240,7 @@ class SlugMapSubscriber implements EventSubscriber
      * @param \Doctrine\ORM\EntityManagerInterface $em     Entity manager
      * @param object                               $entity Entity
      */
-    private function updateSlugMapItems(EntityManagerInterface $em, object $entity): void
+    private function updateReferences(EntityManagerInterface $em, object $entity): void
     {
         $entityClass = ClassUtils::getClass($entity);
 
@@ -263,17 +263,17 @@ class SlugMapSubscriber implements EventSubscriber
             return;
         }
 
-        $slugMapItemMeta = $em->getClassMetadata(ContentReference::class);
-        $slugMapItems    = $this->getSlugMapItemRepository($em)->getForSlugMapSubscriber(
+        $contentReferenceMeta = $em->getClassMetadata(ContentReference::class);
+        $contentReferences    = $this->getContentReferenceRepository($em)->getForContentReferenceSubscriber(
             [$entityClass, $this->entityResolver->reverseResolve($entityClass)],
             $this->getEntityId($em, $entity, $entityClass),
             $properties
         );
 
-        foreach ($slugMapItems as $slugMapItem) {
-            $slugMapItem->setSlug($changeSet[$slugMapItem->getProperty()][1]);
+        foreach ($contentReferences as $contentReference) {
+            $contentReference->setSlug($changeSet[$contentReference->getProperty()][1]);
 
-            $em->getUnitOfWork()->recomputeSingleEntityChangeSet($slugMapItemMeta, $slugMapItem);
+            $em->getUnitOfWork()->recomputeSingleEntityChangeSet($contentReferenceMeta, $contentReference);
         }
     }
 
@@ -294,9 +294,9 @@ class SlugMapSubscriber implements EventSubscriber
     /**
      * @param \Doctrine\ORM\EntityManagerInterface $em Entity manager
      *
-     * @return \Darvin\ContentBundle\Repository\SlugMapItemRepository
+     * @return \Darvin\ContentBundle\Repository\ContentReferenceRepository
      */
-    private function getSlugMapItemRepository(EntityManagerInterface $em): SlugMapItemRepository
+    private function getContentReferenceRepository(EntityManagerInterface $em): ContentReferenceRepository
     {
         return $em->getRepository(ContentReference::class);
     }
