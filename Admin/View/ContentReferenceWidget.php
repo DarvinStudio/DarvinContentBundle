@@ -54,21 +54,21 @@ class ContentReferenceWidget extends AbstractWidget
      */
     protected function createContent(object $entity, array $options): ?string
     {
-        $ref = $this->getPropertyValue($entity, $options['property']);
+        $reference = $this->getPropertyValue($entity, $options['property']);
 
-        if (null === $ref) {
+        if (null === $reference) {
             return null;
         }
-        if (!$ref instanceof ContentReference) {
+        if (!$reference instanceof ContentReference) {
             throw new \InvalidArgumentException(sprintf(
                 'View widget "%s" requires property value to be instance of "%s", got "%s".',
                 $this->getAlias(),
                 ContentReference::class,
-                is_object($ref) ? get_class($ref) : gettype($ref)
+                is_object($reference) ? get_class($reference) : gettype($reference)
             ));
         }
 
-        $entity = $ref->getObject();
+        $entity = $reference->getObject();
 
         if (null === $entity) {
             return null;
