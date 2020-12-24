@@ -54,19 +54,18 @@ class WidgetPool implements WidgetPoolInterface
     }
 
     /**
-     * @param \Darvin\ContentBundle\Widget\WidgetInterface $widget                 Widget
-     * @param bool                                         $duplicateNameException Whether to throw exception on duplicate widget name
+     * @param \Darvin\ContentBundle\Widget\WidgetInterface $widget Widget
      *
      * @throws \InvalidArgumentException
      */
-    public function addWidget(WidgetInterface $widget, bool $duplicateNameException = true): void
+    public function addWidget(WidgetInterface $widget): void
     {
         $name = $widget->getName();
 
         if (in_array($name, $this->widgetBlacklist)) {
             return;
         }
-        if (isset($this->widgets[$name]) && $duplicateNameException) {
+        if (isset($this->widgets[$name])) {
             throw new \InvalidArgumentException(sprintf('Widget "%s" already added to pool.', $name));
         }
 
@@ -149,7 +148,7 @@ class WidgetPool implements WidgetPoolInterface
 
         foreach ($this->widgetFactories as $widgetFactory) {
             foreach ($widgetFactory->createWidgets() as $widget) {
-                $this->addWidget($widget, false);
+                $this->addWidget($widget);
             }
         }
     }
