@@ -1,15 +1,20 @@
 parameters:
-    darvin_content.slug.rebuild_command.class: Darvin\ContentBundle\Command\RebuildSlugsCommand
-    darvin_content.slug.rebuild_command.name:  darvin:content:slugs:rebuild
+    darvin_content.slug.rebuild.command.class: Darvin\ContentBundle\Command\Slug\RebuildCommand
+
+    darvin_content.slug.rebuild.rebuilder.class: Darvin\ContentBundle\Slug\SlugRebuilder
 
 services:
-    darvin_content.slug.rebuild_command:
-        class: '%darvin_content.slug.rebuild_command.class%'
+    darvin_content.slug.rebuild.command:
+        class: '%darvin_content.slug.rebuild.command.class%'
         arguments:
-            - '%darvin_content.slug.rebuild_command.name%'
+            - '@darvin_content.slug.rebuild.rebuilder'
+        tags:
+            - { name: console.command }
+
+    darvin_content.slug.rebuild.rebuilder:
+        class: '%darvin_content.slug.rebuild.rebuilder.class%'
+        arguments:
             - '@doctrine.orm.entity_manager'
             - '@darvin_utils.mapping.metadata_factory'
             - '@property_accessor'
             - '@darvin_utils.sluggable.manager'
-        tags:
-            - { name: console.command }
