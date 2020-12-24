@@ -115,7 +115,7 @@ class RebuildCommand extends Command
         $tableName = $this->em->getClassMetadata(ContentReference::class)->getTableName();
 
         $connection = $this->em->getConnection();
-        $connection->exec('SET foreign_key_checks = 0');
-        $connection->exec($connection->getDriver()->getDatabasePlatform()->getTruncateTableSQL($tableName));
+        $connection->executeStatement('SET foreign_key_checks = 0');
+        $connection->executeStatement($connection->getDriver()->getDatabasePlatform()->getTruncateTableSQL($tableName));
     }
 }
