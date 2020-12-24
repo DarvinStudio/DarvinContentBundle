@@ -29,7 +29,7 @@ trait TranslationTrait
     protected $id;
 
     /**
-     * {@inheritDoc}
+     * @return bool
      */
     public function isEmpty(): bool
     {

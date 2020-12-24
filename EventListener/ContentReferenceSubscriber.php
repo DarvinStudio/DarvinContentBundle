@@ -80,7 +80,7 @@ class ContentReferenceSubscriber implements EventSubscriber
     }
 
     /**
-     * {@inheritDoc}
+     * @param \Doctrine\ORM\Event\OnFlushEventArgs $args Event arguments
      */
     public function onFlush(OnFlushEventArgs $args): void
     {
