@@ -1,30 +1,23 @@
 <?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2015-2019, Darvin Studio
+ * @copyright Copyright (c) 2020, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Darvin\ContentBundle\Command;
+namespace Darvin\ContentBundle\Translatable;
 
-use Darvin\ContentBundle\Translatable\TranslatableException;
-use Darvin\ContentBundle\Translatable\TranslatableManagerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
- * Translations create command
+ * Translation creator
  */
-class TranslationsCreateCommand extends Command
+class TranslationCreator implements TranslationCreatorInterface
 {
     /**
      * @var \Doctrine\ORM\EntityManagerInterface
@@ -37,19 +30,11 @@ class TranslationsCreateCommand extends Command
     private $defaultLocale;
 
     /**
-     * @var \Symfony\Component\Console\Style\SymfonyStyle
-     */
-    private $io;
-
-    /**
-     * @param string                               $name          Command name
      * @param \Doctrine\ORM\EntityManagerInterface $em            Entity manager
      * @param string                               $defaultLocale Default locale
      */
-    public function __construct(string $name, EntityManagerInterface $em, string $defaultLocale)
+    public function __construct(EntityManagerInterface $em, string $defaultLocale)
     {
-        parent::__construct($name);
-
         $this->em = $em;
         $this->defaultLocale = $defaultLocale;
     }
@@ -57,44 +42,28 @@ class TranslationsCreateCommand extends Command
     /**
      * {@inheritDoc}
      */
-    protected function configure(): void
+    public function createTranslations(string $targetLocale, ?callable $output = null): void
     {
-        $this
-            ->setDescription(<<<EOF
-Creates translations for all translatable entities and specified locale by cloning default locale translations.
-EOF
-            )
-            ->setDefinition([
-                new InputArgument('locale', InputArgument::REQUIRED),
-            ]);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function execute(InputInterface $input, OutputInterface $output): int
-    {
-        $this->io = new SymfonyStyle($input, $output);
-
-        $targetLocale = $input->getArgument('locale');
-
         $classes = $this->getTranslationClasses();
 
         if (empty($classes)) {
-            return 0;
+            return;
+        }
+        if (null === $output) {
+            $output = function ($message): void {
+            };
         }
 
         $this->checkIfTargetLocaleTranslationsExist($classes, $targetLocale);
-        $this->cloneDefaultLocaleTranslations($classes, $targetLocale);
-
-        return 0;
+        $this->cloneDefaultLocaleTranslations($output, $classes, $targetLocale);
     }
 
     /**
-     * @param array  $translationClasses Translation classes
-     * @param string $targetLocale       Target locale
+     * @param callable $output             Output callback
+     * @param array    $translationClasses Translation classes
+     * @param string   $targetLocale       Target locale
      */
-    private function cloneDefaultLocaleTranslations(array $translationClasses, string $targetLocale): void
+    private function cloneDefaultLocaleTranslations(callable $output, array $translationClasses, string $targetLocale): void
     {
         $this->em->getConnection()->beginTransaction();
 
@@ -124,7 +93,7 @@ EOF
                 $this->em->persist($translationClone);
 
                 $ids = $meta->getIdentifierValues($translation);
-                $this->io->comment($translationClass.' '.reset($ids));
+                $output($translationClass.' '.reset($ids));
             }
 
             $this->em->flush();
@@ -138,7 +107,7 @@ EOF
      * @param array  $translationClasses Translation classes
      * @param string $targetLocale       Target locale
      *
-     * @throws \Darvin\ContentBundle\Translatable\TranslatableException
+     * @throws \RuntimeException
      */
     private function checkIfTargetLocaleTranslationsExist(array $translationClasses, string $targetLocale): void
     {
@@ -153,7 +122,7 @@ EOF
                 ->getSingleScalarResult();
 
             if ($translationsCount > 0) {
-                throw new TranslatableException(
+                throw new \RuntimeException(
                     sprintf('Translations for locale "%s" already exist in repository "%s".', $targetLocale, $translationClass)
                 );
             }
