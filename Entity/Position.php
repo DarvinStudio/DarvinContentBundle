@@ -30,12 +30,12 @@ class Position
     private $id;
 
     /**
-     * @var \Darvin\ContentBundle\Entity\SlugMapItem
+     * @var \Darvin\ContentBundle\Entity\ContentReference
      *
-     * @ORM\ManyToOne(targetEntity="Darvin\ContentBundle\Entity\SlugMapItem")
+     * @ORM\ManyToOne(targetEntity="Darvin\ContentBundle\Entity\ContentReference")
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
-    private $slug;
+    private $contentReference;
 
     /**
      * @var array
@@ -66,15 +66,15 @@ class Position
     private $value;
 
     /**
-     * @param \Darvin\ContentBundle\Entity\SlugMapItem $slug        Slug
-     * @param string                                   $objectClass Object class
-     * @param string                                   $objectId    Object ID
-     * @param int                                      $value       Value
-     * @param array                                    $tags        Tags
+     * @param \Darvin\ContentBundle\Entity\ContentReference $contentReference Content reference
+     * @param string                                        $objectClass      Object class
+     * @param string                                        $objectId         Object ID
+     * @param int                                           $value            Value
+     * @param array                                         $tags             Tags
      */
-    public function __construct(SlugMapItem $slug, string $objectClass, string $objectId, int $value, array $tags = [])
+    public function __construct(ContentReference $contentReference, string $objectClass, string $objectId, int $value, array $tags = [])
     {
-        $this->slug = $slug;
+        $this->contentReference = $contentReference;
         $this->tags = $tags;
         $this->objectClass = $objectClass;
         $this->objectId = $objectId;
@@ -90,11 +90,11 @@ class Position
     }
 
     /**
-     * @return \Darvin\ContentBundle\Entity\SlugMapItem
+     * @return \Darvin\ContentBundle\Entity\ContentReference
      */
-    public function getSlug(): SlugMapItem
+    public function getContentReference(): ContentReference
     {
-        return $this->slug;
+        return $this->contentReference;
     }
 
     /**

@@ -10,7 +10,7 @@
 
 namespace Darvin\ContentBundle\Repository;
 
-use Darvin\ContentBundle\Entity\SlugMapItem;
+use Darvin\ContentBundle\Entity\ContentReference;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 
@@ -20,14 +20,14 @@ use Doctrine\ORM\QueryBuilder;
 class PositionRepository extends EntityRepository
 {
     /**
-     * @param \Darvin\ContentBundle\Entity\SlugMapItem|null $slug          Slug
-     * @param array                                         $tags          Tags
-     * @param string[]                                      $objectClasses Object classes
-     * @param string[]                                      $objectIds     Object IDs
+     * @param \Darvin\ContentBundle\Entity\ContentReference|null $contentReference Content reference
+     * @param array                                              $tags             Tags
+     * @param string[]                                           $objectClasses    Object classes
+     * @param string[]                                           $objectIds        Object IDs
      *
      * @return \Darvin\ContentBundle\Entity\Position[]
      */
-    public function getForRepositioner(?SlugMapItem $slug, array $tags, array $objectClasses, array $objectIds): array
+    public function getForRepositioner(?ContentReference $contentReference, array $tags, array $objectClasses, array $objectIds): array
     {
         if (empty($objectIds)) {
             return [];
@@ -35,7 +35,7 @@ class PositionRepository extends EntityRepository
 
         $qb = $this->createDefaultBuilder();
         $this
-            ->addSlugFilter($qb, $slug)
+            ->addContentReferenceFilter($qb, $contentReference)
             ->addTagsFilter($qb, $tags)
             ->addObjectClassesFilter($qb, $objectClasses)
             ->addObjectIdsFilter($qb, $objectIds);
@@ -51,22 +51,37 @@ class PositionRepository extends EntityRepository
     }
 
     /**
-     * @param \Darvin\ContentBundle\Entity\SlugMapItem|null $slug          Slug
-     * @param array                                         $tags          Tags
-     * @param string[]                                      $objectClasses Object classes
+     * @param \Darvin\ContentBundle\Entity\ContentReference|null $contentReference Content reference
+     * @param array                                              $tags             Tags
+     * @param string[]                                           $objectClasses    Object classes
      *
      * @return array
      */
-    public function getObjectIdsForSorter(?SlugMapItem $slug, array $tags, array $objectClasses): array
+    public function getObjectIdsForSorter(?ContentReference $contentReference, array $tags, array $objectClasses): array
     {
         $qb = $this->createDefaultBuilder()
             ->select('o.objectId');
         $this
-            ->addSlugFilter($qb, $slug)
+            ->addContentReferenceFilter($qb, $contentReference)
             ->addTagsFilter($qb, $tags)
             ->addObjectClassesFilter($qb, $objectClasses);
 
         return array_column($qb->getQuery()->getScalarResult(), 'objectId');
+    }
+
+    /**
+     * @param \Doctrine\ORM\QueryBuilder                         $qb               Query builder
+     * @param \Darvin\ContentBundle\Entity\ContentReference|null $contentReference Content reference
+     *
+     * @return PositionRepository
+     */
+    private function addContentReferenceFilter(QueryBuilder $qb, ?ContentReference $contentReference): PositionRepository
+    {
+        null !== $contentReference
+            ? $qb->andWhere('o.contentReference = :content_reference')->setParameter('content_reference', $contentReference)
+            : $qb->andWhere('o.contentReference IS NULL');
+
+        return $this;
     }
 
     /**
@@ -120,21 +135,6 @@ class PositionRepository extends EntityRepository
         }
 
         $qb->andWhere($qb->expr()->in('o.objectId', ':object_ids'))->setParameter('object_ids', $objectIds);
-
-        return $this;
-    }
-
-    /**
-     * @param \Doctrine\ORM\QueryBuilder                    $qb   Query builder
-     * @param \Darvin\ContentBundle\Entity\SlugMapItem|null $slug Slug
-     *
-     * @return PositionRepository
-     */
-    private function addSlugFilter(QueryBuilder $qb, ?SlugMapItem $slug): PositionRepository
-    {
-        null !== $slug
-            ? $qb->andWhere('o.slug = :slug')->setParameter('slug', $slug)
-            : $qb->andWhere('o.slug IS NULL');
 
         return $this;
     }
