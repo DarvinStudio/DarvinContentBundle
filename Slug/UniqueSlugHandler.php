@@ -10,8 +10,8 @@
 
 namespace Darvin\ContentBundle\Slug;
 
-use Darvin\ContentBundle\Entity\SlugMapItem;
-use Darvin\ContentBundle\Repository\SlugMapItemRepository;
+use Darvin\ContentBundle\Entity\ContentReference;
+use Darvin\ContentBundle\Repository\ContentReferenceRepository;
 use Darvin\Utils\Sluggable\SlugHandlerInterface;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\AbstractQuery;
@@ -105,7 +105,7 @@ class UniqueSlugHandler implements SlugHandlerInterface
     private function getSimilarSlugs(EntityManagerInterface $em, string $slug): array
     {
         if (!isset($this->similarSlugs[$slug])) {
-            $this->similarSlugs[$slug] = $this->getSlugMapItemRepository($em)->getSimilar($slug, AbstractQuery::HYDRATE_ARRAY);
+            $this->similarSlugs[$slug] = $this->getContentReferenceRepository($em)->getSimilar($slug, AbstractQuery::HYDRATE_ARRAY);
         }
 
         return $this->similarSlugs[$slug];
@@ -114,10 +114,10 @@ class UniqueSlugHandler implements SlugHandlerInterface
     /**
      * @param \Doctrine\ORM\EntityManagerInterface $em Entity manager
      *
-     * @return \Darvin\ContentBundle\Repository\SlugMapItemRepository
+     * @return \Darvin\ContentBundle\Repository\ContentReferenceRepository
      */
-    private function getSlugMapItemRepository(EntityManagerInterface $em): SlugMapItemRepository
+    private function getContentReferenceRepository(EntityManagerInterface $em): ContentReferenceRepository
     {
-        return $em->getRepository(SlugMapItem::class);
+        return $em->getRepository(ContentReference::class);
     }
 }

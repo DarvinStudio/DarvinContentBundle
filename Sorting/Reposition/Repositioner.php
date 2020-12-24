@@ -10,8 +10,8 @@
 
 namespace Darvin\ContentBundle\Sorting\Reposition;
 
+use Darvin\ContentBundle\Entity\ContentReference;
 use Darvin\ContentBundle\Entity\Position;
-use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Repository\PositionRepository;
 use Darvin\ContentBundle\Security\Voter\Sorting\RepositionVoter;
 use Darvin\ContentBundle\Sorting\Reposition\Model\Reposition;
@@ -76,21 +76,21 @@ class Repositioner implements RepositionerInterface
             throw new \InvalidArgumentException(sprintf('Object class "%s" does not exist.', $class));
         }
 
-        $slug = $this->om->getRepository(SlugMapItem::class)->findOneBy(['slug' => $reposition->getSlug()]);
+        $contentReference = $this->om->getRepository(ContentReference::class)->findOneBy(['slug' => $reposition->getSlug()]);
 
-        if (null === $slug) {
-            throw new \InvalidArgumentException(sprintf('Slug "%s" does not exist.', $reposition->getSlug()));
+        if (null === $contentReference) {
+            throw new \InvalidArgumentException(sprintf('Content reference with slug "%s" does not exist.', $reposition->getSlug()));
         }
 
         $positions = $this->getPositionRepository()->getForRepositioner(
-            $slug,
+            $contentReference,
             $reposition->getTags(),
             [$class, $this->entityResolver->reverseResolve($class)],
             $reposition->getIds()
         );
 
         foreach (array_values($reposition->getIds()) as $value => $id) {
-            $position = $positions[$id] ?? new Position($slug, $class, $id, $value, $reposition->getTags());
+            $position = $positions[$id] ?? new Position($contentReference, $class, $id, $value, $reposition->getTags());
             $position->setValue($value);
 
             $this->om->persist($position);

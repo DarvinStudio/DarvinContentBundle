@@ -10,8 +10,8 @@
 
 namespace Darvin\ContentBundle\Sorting;
 
+use Darvin\ContentBundle\Entity\ContentReference;
 use Darvin\ContentBundle\Entity\Position;
-use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Repository\PositionRepository;
 use Darvin\Utils\ORM\EntityResolverInterface;
 use Doctrine\Common\Util\ClassUtils;
@@ -62,7 +62,7 @@ class Sorter implements SorterInterface
         $class = reset($classes);
 
         $ids = $this->getPositionRepository()->getObjectIdsForSorter(
-            $this->getSlugObject($slug),
+            $this->getContentReference($slug),
             $tags,
             [$class, $this->entityResolver->reverseResolve($class)]
         );
@@ -96,7 +96,7 @@ class Sorter implements SorterInterface
         $meta   = $this->om->getClassMetadata($class);
         $sorted = [];
         $ids    = $this->getPositionRepository()->getObjectIdsForSorter(
-            $this->getSlugObject($slug),
+            $this->getContentReference($slug),
             $tags,
             [$class, $this->entityResolver->reverseResolve($class)]
         );
@@ -130,9 +130,9 @@ class Sorter implements SorterInterface
     /**
      * @param string|null $slug Slug string
      *
-     * @return \Darvin\ContentBundle\Entity\SlugMapItem|null
+     * @return \Darvin\ContentBundle\Entity\ContentReference|null
      */
-    private function getSlugObject(?string $slug): ?SlugMapItem
+    private function getContentReference(?string $slug): ?ContentReference
     {
         if (null === $slug) {
             $request = $this->requestStack->getCurrentRequest();
@@ -146,7 +146,7 @@ class Sorter implements SorterInterface
             }
         }
         if (null !== $slug) {
-            return $this->om->getRepository(SlugMapItem::class)->findOneBy(['slug' => $slug]);
+            return $this->om->getRepository(ContentReference::class)->findOneBy(['slug' => $slug]);
         }
 
         return null;
