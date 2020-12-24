@@ -1,9 +1,13 @@
 parameters:
     darvin_content.controller.front.class: Darvin\ContentBundle\Controller\FrontController
 
-    darvin_content.controller_pool.class: Darvin\ContentBundle\Controller\ContentControllerPool
+    darvin_content.controller_registry.class: Darvin\ContentBundle\Controller\ContentControllerRegistry
 
 services:
+    darvin_content.controller_pool:
+        alias:      darvin_content.controller_registry
+        deprecated: '"%alias_id%" is deprecated. Use "darvin_content.controller_registry" instead.'
+
     darvin_content.controller.front:
         class: '%darvin_content.controller.front.class%'
         arguments:
@@ -13,5 +17,5 @@ services:
         tags:
             - { name: controller.service_arguments }
 
-    darvin_content.controller_pool:
-        class: '%darvin_content.controller_pool.class%'
+    darvin_content.controller_registry:
+        class: '%darvin_content.controller_registry.class%'

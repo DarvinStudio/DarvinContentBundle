@@ -10,10 +10,12 @@
 
 namespace Darvin\ContentBundle\Controller;
 
+class_alias(ContentControllerRegistryInterface::class, 'Darvin\ContentBundle\Controller\ContentControllerPoolInterface');
+
 /**
- * Content controller pool
+ * Content controller registry
  */
-interface ContentControllerPoolInterface
+interface ContentControllerRegistryInterface
 {
     /**
      * @param string $contentClass Content class

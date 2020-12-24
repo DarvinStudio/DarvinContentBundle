@@ -11,9 +11,9 @@
 namespace Darvin\ContentBundle\Controller;
 
 /**
- * Content controller pool
+ * Content controller registry
  */
-class ContentControllerPool implements ContentControllerPoolInterface
+class ContentControllerRegistry implements ContentControllerRegistryInterface
 {
     /**
      * @var \Darvin\ContentBundle\Controller\ContentControllerInterface[]

@@ -26,7 +26,7 @@ class RegisterContentControllersPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container): void
     {
-        $pool = $container->getDefinition('darvin_content.controller_pool');
+        $registry = $container->getDefinition('darvin_content.controller_registry');
 
         foreach (array_keys($container->findTaggedServiceIds(DarvinContentExtension::TAG_CONTROLLER)) as $id) {
             $controller = $container->getDefinition($id);
@@ -35,7 +35,7 @@ class RegisterContentControllersPass implements CompilerPassInterface
                 $controller->addMethodCall('setTwig', [new Reference('twig')]);
             }
 
-            $pool->addMethodCall('addController', [new Reference($id)]);
+            $registry->addMethodCall('addController', [new Reference($id)]);
         }
     }
 }

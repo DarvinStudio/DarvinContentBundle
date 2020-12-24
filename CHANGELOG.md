@@ -142,3 +142,5 @@ darvin_content:
 - 404 if page number is negative.
 
 - Remove TranslationJoinerInterface::isTranslatable().
+
+- Rename "pool" => "registry".
