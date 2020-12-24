@@ -94,12 +94,4 @@ class TranslationJoiner implements TranslationJoinerInterface
             throw new TranslatableException($message);
         }
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function isTranslatable(string $entityClass): bool
-    {
-        return is_a($entityClass, TranslatableInterface::class, true);
-    }
 }

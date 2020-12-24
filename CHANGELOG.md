@@ -140,3 +140,5 @@ darvin_content:
 - Remove translatable manager.
 
 - 404 if page number is negative.
+
+- Remove TranslationJoinerInterface::isTranslatable().

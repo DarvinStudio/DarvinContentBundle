@@ -27,13 +27,4 @@ interface TranslationJoinerInterface
      * @throws \Darvin\ContentBundle\Translatable\TranslatableException
      */
     public function joinTranslation(QueryBuilder $qb, bool $addSelect = false, ?string $locale = null, ?string $joinAlias = null, bool $inner = false): void;
-
-    /**
-     * @deprecated Check TranslatableInterface instead
-     *
-     * @param string $entityClass Entity class
-     *
-     * @return bool
-     */
-    public function isTranslatable(string $entityClass): bool;
 }
