@@ -5,6 +5,11 @@ configuration:
             heading: 'Heading H1'
             title: 'Meta Title'
 
+content_reference:
+    form:
+        choice:
+            class: Object
+
 entity_name:
     multiple:
         global_property: Variables
@@ -41,8 +46,3 @@ global_property:
         name:  Used in templates (wrapped with "%" symbols). Can contain latin characters, digits and underscores "_".
         title: What the variable is needed for, what it contains. Used only in the admin panel.
         value: What the variable is replaced with when the meta tag is rendered in the website's public section.
-
-slug_map_item:
-    form:
-        choice:
-            class: Object

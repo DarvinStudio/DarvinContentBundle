@@ -40,7 +40,7 @@ class ContentReferenceRepository extends EntityRepository
      * @param string[] $slugs          Slugs
      * @param string[] $classBlacklist Object class blacklist
      *
-     * @return array Key - slug, value - array of child slug map item entities
+     * @return array Key - slug, value - array of child content reference entities
      */
     public function getChildrenBySlugs(array $slugs, array $classBlacklist = []): array
     {

@@ -5,6 +5,11 @@ configuration:
             heading:     Заголовок H1
             title:       Meta title
 
+content_reference:
+    form:
+        choice:
+            class: Объект
+
 entity_name:
     multiple:
         global_property: Переменные
@@ -43,8 +48,3 @@ global_property:
             алфавита, цифры и знак подчеркивания «_».
         title: Для чего нужна переменная, что содержит. Используется только в админке.
         value: То, на что заменяется переменная при выводе мета-тега в публичной части.
-
-slug_map_item:
-    form:
-        choice:
-            class: Объект
