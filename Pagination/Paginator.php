@@ -73,9 +73,13 @@ class Paginator implements PaginatorInterface
      */
     public function paginate($target, int $page = 1, ?int $limit = null, array $options = []): PaginationInterface
     {
+        if ($page < 0) {
+            throw new NotFoundHttpException('Page number is negative.');
+        }
+
         $limit = $limit ?? $this->defaultOptions[self::DEFAULT_LIMIT];
-        if ($limit <= 0 || $page < 0) {
-            throw new \LogicException("Invalid item per page number. Limit: $limit and Page: $page, must be positive integers");
+        if ($limit <= 0) {
+            throw new \LogicException("Limit: $limit, must be positive integer");
         }
 
         $offset = 0 === $page ? 0 : (($page - 1) * $limit);

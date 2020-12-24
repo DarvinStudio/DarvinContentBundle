@@ -138,3 +138,5 @@ darvin_content:
 - Rename SlugMapItem entity to ContentReference.
 
 - Remove translatable manager.
+
+- 404 if page number is negative.
