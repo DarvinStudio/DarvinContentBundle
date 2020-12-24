@@ -10,10 +10,7 @@
 
 namespace Darvin\ContentBundle\Command\Reference;
 
-use Darvin\ContentBundle\Entity\ContentReference;
-use Darvin\ContentBundle\Reference\ContentReferenceFactoryInterface;
-use Darvin\Utils\Mapping\MetadataFactoryInterface;
-use Doctrine\ORM\EntityManagerInterface;
+use Darvin\ContentBundle\Reference\ContentReferenceRebuilderInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -25,35 +22,18 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class RebuildCommand extends Command
 {
     /**
-     * @var \Darvin\ContentBundle\Reference\ContentReferenceFactoryInterface
+     * @var \Darvin\ContentBundle\Reference\ContentReferenceRebuilderInterface
      */
-    private $contentReferenceFactory;
+    private $rebuilder;
 
     /**
-     * @var \Doctrine\ORM\EntityManagerInterface
+     * @param \Darvin\ContentBundle\Reference\ContentReferenceRebuilderInterface $rebuilder Content reference rebuilder
      */
-    private $em;
-
-    /**
-     * @var \Darvin\Utils\Mapping\MetadataFactoryInterface
-     */
-    private $metadataFactory;
-
-    /**
-     * @param \Darvin\ContentBundle\Reference\ContentReferenceFactoryInterface $contentReferenceFactory Content reference factory
-     * @param \Doctrine\ORM\EntityManagerInterface                             $em                      Entity manager
-     * @param \Darvin\Utils\Mapping\MetadataFactoryInterface                   $metadataFactory         Metadata factory
-     */
-    public function __construct(
-        ContentReferenceFactoryInterface $contentReferenceFactory,
-        EntityManagerInterface $em,
-        MetadataFactoryInterface $metadataFactory
-    ) {
+    public function __construct(ContentReferenceRebuilderInterface $rebuilder)
+    {
         parent::__construct();
 
-        $this->contentReferenceFactory = $contentReferenceFactory;
-        $this->em = $em;
-        $this->metadataFactory = $metadataFactory;
+        $this->rebuilder = $rebuilder;
     }
 
     /**
@@ -73,49 +53,10 @@ class RebuildCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $this->truncateReferenceTable();
-
-        /** @var \Doctrine\ORM\Mapping\ClassMetadataInfo[] $allDoctrineMeta */
-        $allDoctrineMeta = $this->em->getMetadataFactory()->getAllMetadata();
-
-        foreach ($allDoctrineMeta as $doctrineMeta) {
-            if ($doctrineMeta->getReflectionClass()->isAbstract()) {
-                continue;
-            }
-            foreach ($allDoctrineMeta as $otherDoctrineMeta) {
-                if (in_array($doctrineMeta->getName(), class_parents($otherDoctrineMeta->getName()))) {
-                    continue 2;
-                }
-            }
-
-            $extendedMeta = $this->metadataFactory->getExtendedMetadata($doctrineMeta->getName());
-
-            if (!isset($extendedMeta['slugs']) || empty($extendedMeta['slugs'])) {
-                continue;
-            }
-
-            $entities = $this->em->getRepository($doctrineMeta->getName())->findAll();
-
-            foreach ($entities as $entity) {
-                foreach ($this->contentReferenceFactory->createContentReferences($entity, $extendedMeta['slugs'], $doctrineMeta) as $reference) {
-                    $this->em->persist($reference);
-                }
-
-                $io->comment($doctrineMeta->getName().' '.implode('', $doctrineMeta->getIdentifierValues($entity)));
-            }
-        }
-
-        $this->em->flush();
+        $this->rebuilder->rebuildContentReferences(function ($message) use ($io): void {
+            $io->writeln($message);
+        });
 
         return 0;
-    }
-
-    private function truncateReferenceTable(): void
-    {
-        $tableName = $this->em->getClassMetadata(ContentReference::class)->getTableName();
-
-        $connection = $this->em->getConnection();
-        $connection->executeStatement('SET foreign_key_checks = 0');
-        $connection->executeStatement($connection->getDriver()->getDatabasePlatform()->getTruncateTableSQL($tableName));
     }
 }

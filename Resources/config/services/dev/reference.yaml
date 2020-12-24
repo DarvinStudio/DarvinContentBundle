@@ -1,12 +1,19 @@
 parameters:
     darvin_content.reference.rebuild.command.class: Darvin\ContentBundle\Command\Reference\RebuildCommand
 
+    darvin_content.reference.rebuild.rebuilder.class: Darvin\ContentBundle\Reference\ContentReferenceRebuilder
+
 services:
     darvin_content.reference.rebuild.command:
         class: '%darvin_content.reference.rebuild.command.class%'
         arguments:
+            - '@darvin_content.reference.rebuild.rebuilder'
+        tags:
+            - { name: console.command }
+
+    darvin_content.reference.rebuild.rebuilder:
+        class: '%darvin_content.reference.rebuild.rebuilder.class%'
+        arguments:
             - '@darvin_content.reference.factory'
             - '@doctrine.orm.entity_manager'
             - '@darvin_utils.mapping.metadata_factory'
-        tags:
-            - { name: console.command }
