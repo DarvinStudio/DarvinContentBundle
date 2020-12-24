@@ -11,14 +11,14 @@
 namespace Darvin\ContentBundle\Form\DataTransformer\Admin;
 
 use Darvin\AdminBundle\EntityNamer\EntityNamerInterface;
-use Darvin\ContentBundle\Entity\SlugMapItem;
+use Darvin\ContentBundle\Entity\ContentReference;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 
 /**
- * Slug map item to array admin form data transformer
+ * Content reference to array admin form data transformer
  */
-class SlugMapItemToArrayTransformer implements DataTransformerInterface
+class ContentReferenceToArrayTransformer implements DataTransformerInterface
 {
     /**
      * @var \Darvin\AdminBundle\EntityNamer\EntityNamerInterface
@@ -41,8 +41,8 @@ class SlugMapItemToArrayTransformer implements DataTransformerInterface
         if (null === $value) {
             return null;
         }
-        if (!$value instanceof SlugMapItem) {
-            throw new TransformationFailedException(sprintf('value must be instance of "%s".', SlugMapItem::class));
+        if (!$value instanceof ContentReference) {
+            throw new TransformationFailedException(sprintf('value must be instance of "%s".', ContentReference::class));
         }
 
         $classProperty = implode('_', [$this->entityNamer->name($value->getObjectClass()), $value->getProperty()]);
@@ -56,7 +56,7 @@ class SlugMapItemToArrayTransformer implements DataTransformerInterface
     /**
      * {@inheritDoc}
      */
-    public function reverseTransform($value): ?SlugMapItem
+    public function reverseTransform($value): ?ContentReference
     {
         $classProperty = $value['class_property'];
 

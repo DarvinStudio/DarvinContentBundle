@@ -13,10 +13,10 @@ namespace Darvin\ContentBundle\Form\Type\Admin;
 use Darvin\AdminBundle\EntityNamer\EntityNamerInterface;
 use Darvin\AdminBundle\Metadata\AdminMetadataManagerInterface;
 use Darvin\AdminBundle\Metadata\SortCriteriaDetectorInterface;
-use Darvin\ContentBundle\Entity\SlugMapItem;
-use Darvin\ContentBundle\Form\DataTransformer\Admin\SlugMapItemToArrayTransformer;
+use Darvin\ContentBundle\Entity\ContentReference;
+use Darvin\ContentBundle\Form\DataTransformer\Admin\ContentReferenceToArrayTransformer;
 use Darvin\ContentBundle\Reference\ContentReferenceObjectLoaderInterface;
-use Darvin\ContentBundle\Repository\SlugMapItemRepository;
+use Darvin\ContentBundle\Repository\ContentReferenceRepository;
 use Darvin\Utils\ORM\EntityResolverInterface;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManagerInterface;
@@ -32,9 +32,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 /**
- * Slug map item choice admin form type
+ * Content reference choice admin form type
  */
-class SlugMapItemChoiceType extends AbstractType
+class ContentReferenceChoiceType extends AbstractType
 {
     /**
      * @var \Psr\Container\ContainerInterface
@@ -125,7 +125,7 @@ class SlugMapItemChoiceType extends AbstractType
         $classPropertyChoices = $this->buildClassPropertyChoices($propertiesByClasses);
 
         $builder->add('class_property', ChoiceType::class, [
-            'label'    => 'slug_map_item.form.choice.class',
+            'label'    => 'content_reference.form.choice.class',
             'choices'  => $classPropertyChoices,
             'required' => false,
             'attr'     => [
@@ -142,18 +142,18 @@ class SlugMapItemChoiceType extends AbstractType
             foreach ($properties as $property) {
                 if (!isset($classPropertyChoiceValues[$i])) {
                     throw new \RuntimeException(<<<MESSAGE
-Content slug map is invalid: please make sure you've replaced all overridden object classes in column "object_class" of
-table "content" in database.
+Content map is invalid: please make sure you've replaced all overridden object classes in column "object_class" of
+table "content_reference" in database.
 MESSAGE
                     );
                 }
 
                 $builder->add($classPropertyChoiceValues[$i], EntityType::class, [
                     'label'         => $classPropertyChoiceLabels[$i],
-                    'class'         => SlugMapItem::class,
+                    'class'         => ContentReference::class,
                     'choice_label'  => 'id',
                     'required'      => false,
-                    'query_builder' => function (SlugMapItemRepository $repository) use ($class, $entityResolver, $property) {
+                    'query_builder' => function (ContentReferenceRepository $repository) use ($class, $entityResolver, $property) {
                         return $repository->createBuilderByClassesAndProperty([$class, $entityResolver->reverseResolve($class)], $property);
                     },
                     'attr' => [
@@ -166,7 +166,7 @@ MESSAGE
             }
         }
 
-        $builder->addModelTransformer(new SlugMapItemToArrayTransformer($this->entityNamer));
+        $builder->addModelTransformer(new ContentReferenceToArrayTransformer($this->entityNamer));
     }
 
     /**
@@ -174,7 +174,7 @@ MESSAGE
      */
     public function finishView(FormView $view, FormInterface $form, array $options): void
     {
-        $slugMapItems = [];
+        $contentReferences = [];
 
         foreach ($view->children as $field) {
             if (!in_array('entity', $field->vars['block_prefixes'])) {
@@ -182,11 +182,11 @@ MESSAGE
             }
             /** @var \Symfony\Component\Form\ChoiceList\View\ChoiceView $choice */
             foreach ($field->vars['choices'] as $choice) {
-                $slugMapItems[] = $choice->data;
+                $contentReferences[] = $choice->data;
             }
         }
 
-        $this->contentReferenceObjectLoader->loadObjects($slugMapItems);
+        $this->contentReferenceObjectLoader->loadObjects($contentReferences);
 
         foreach ($view->children as $field) {
             if (!in_array('entity', $field->vars['block_prefixes'])) {
@@ -197,16 +197,16 @@ MESSAGE
             $choices = $entities = [];
 
             foreach ($field->vars['choices'] as $key => $choice) {
-                /** @var \Darvin\ContentBundle\Entity\SlugMapItem $slugMapItem */
-                $slugMapItem = $choice->data;
+                /** @var \Darvin\ContentBundle\Entity\ContentReference $contentReference */
+                $contentReference = $choice->data;
 
-                if (null === $slugMapItem->getObject()) {
+                if (null === $contentReference->getObject()) {
                     continue;
                 }
 
                 $choices[$key] = $choice;
 
-                $entities[] = $slugMapItem->getObject();
+                $entities[] = $contentReference->getObject();
             }
             if (empty($entities)) {
                 continue;
@@ -224,10 +224,10 @@ MESSAGE
 
             foreach ($entities as $entity) {
                 foreach ($choices as $key => $choice) {
-                    /** @var \Darvin\ContentBundle\Entity\SlugMapItem $slugMapItem */
-                    $slugMapItem = $choice->data;
+                    /** @var \Darvin\ContentBundle\Entity\ContentReference $contentReference */
+                    $contentReference = $choice->data;
 
-                    if ($slugMapItem->getObject() !== $entity) {
+                    if ($contentReference->getObject() !== $entity) {
                         continue;
                     }
 
@@ -272,7 +272,7 @@ MESSAGE
      */
     public function getBlockPrefix(): string
     {
-        return 'darvin_content_admin_slug_map_item_choice';
+        return 'darvin_content_admin_content_reference_choice';
     }
 
     /**
@@ -326,7 +326,7 @@ MESSAGE
     }
 
     /**
-     * @param array $propertiesByClasses Slug map item properties by classes
+     * @param array $propertiesByClasses Content reference properties by classes
      *
      * @return array
      */
@@ -346,7 +346,7 @@ MESSAGE
                 continue;
             }
             foreach ($properties as $property) {
-                $choices[sprintf('slug_map_item.%s.%s', $entityName, $property)] = $buildChoice($entityName, $property);
+                $choices[sprintf('content_reference.%s.%s', $entityName, $property)] = $buildChoice($entityName, $property);
             }
         }
 
@@ -360,7 +360,7 @@ MESSAGE
      */
     private function getPropertiesByClasses(array $classBlacklist): array
     {
-        $qb = $this->getSlugMapItemRepository()->createQueryBuilder('o')
+        $qb = $this->getContentReferenceRepository()->createQueryBuilder('o')
             ->select('o.objectClass')
             ->addSelect('o.property');
 
@@ -388,10 +388,10 @@ MESSAGE
     }
 
     /**
-     * @return \Darvin\ContentBundle\Repository\SlugMapItemRepository
+     * @return \Darvin\ContentBundle\Repository\ContentReferenceRepository
      */
-    private function getSlugMapItemRepository(): SlugMapItemRepository
+    private function getContentReferenceRepository(): ContentReferenceRepository
     {
-        return $this->em->getRepository(SlugMapItem::class);
+        return $this->em->getRepository(ContentReference::class);
     }
 }
