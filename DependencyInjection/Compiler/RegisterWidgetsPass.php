@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2016-2019, Darvin Studio
+ * @copyright Copyright (c) 2015-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -16,21 +16,21 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Add widget factories to widget pool compiler pass
+ * Register widgets compiler pass
  */
-class AddWidgetFactoriesPass implements CompilerPassInterface
+class RegisterWidgetsPass implements CompilerPassInterface
 {
     /**
      * {@inheritDoc}
      */
     public function process(ContainerBuilder $container): void
     {
-        $blacklist = $container->getParameter('darvin_content.widget_factory.blacklist');
+        $blacklist = $container->getParameter('darvin_content.widget.blacklist');
         $pool      = $container->getDefinition('darvin_content.widget.pool');
 
-        foreach (array_keys($container->findTaggedServiceIds(DarvinContentExtension::TAG_WIDGET_FACTORY)) as $id) {
+        foreach (array_keys($container->findTaggedServiceIds(DarvinContentExtension::TAG_WIDGET)) as $id) {
             if (!in_array($id, $blacklist)) {
-                $pool->addMethodCall('addWidgetFactory', [new Reference($id)]);
+                $pool->addMethodCall('addWidget', [new Reference($id)]);
             }
         }
     }

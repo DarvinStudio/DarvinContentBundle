@@ -10,28 +10,32 @@
 
 namespace Darvin\ContentBundle\DependencyInjection\Compiler;
 
+use Darvin\ContentBundle\Controller\AbstractContentController;
 use Darvin\ContentBundle\DependencyInjection\DarvinContentExtension;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Add widgets compiler pass
+ * Register content controllers compiler pass
  */
-class AddWidgetsPass implements CompilerPassInterface
+class RegisterContentControllersPass implements CompilerPassInterface
 {
     /**
      * {@inheritDoc}
      */
     public function process(ContainerBuilder $container): void
     {
-        $blacklist = $container->getParameter('darvin_content.widget.blacklist');
-        $pool      = $container->getDefinition('darvin_content.widget.pool');
+        $pool = $container->getDefinition('darvin_content.controller_pool');
 
-        foreach (array_keys($container->findTaggedServiceIds(DarvinContentExtension::TAG_WIDGET)) as $id) {
-            if (!in_array($id, $blacklist)) {
-                $pool->addMethodCall('addWidget', [new Reference($id)]);
+        foreach (array_keys($container->findTaggedServiceIds(DarvinContentExtension::TAG_CONTROLLER)) as $id) {
+            $controller = $container->getDefinition($id);
+
+            if (in_array(AbstractContentController::class, class_parents($controller->getClass()))) {
+                $controller->addMethodCall('setTwig', [new Reference('twig')]);
             }
+
+            $pool->addMethodCall('addController', [new Reference($id)]);
         }
     }
 }

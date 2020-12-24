@@ -10,10 +10,10 @@
 
 namespace Darvin\ContentBundle;
 
-use Darvin\ContentBundle\DependencyInjection\Compiler\AddContentControllersPass;
 use Darvin\ContentBundle\DependencyInjection\Compiler\AddFormNamesToCanonicalUrlWhitelist;
-use Darvin\ContentBundle\DependencyInjection\Compiler\AddWidgetFactoriesPass;
-use Darvin\ContentBundle\DependencyInjection\Compiler\AddWidgetsPass;
+use Darvin\ContentBundle\DependencyInjection\Compiler\RegisterContentControllersPass;
+use Darvin\ContentBundle\DependencyInjection\Compiler\RegisterWidgetFactoriesPass;
+use Darvin\ContentBundle\DependencyInjection\Compiler\RegisterWidgetsPass;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -29,9 +29,9 @@ class DarvinContentBundle extends Bundle
     public function build(ContainerBuilder $container): void
     {
         $container
-            ->addCompilerPass(new AddWidgetFactoriesPass())
-            ->addCompilerPass(new AddWidgetsPass())
-            ->addCompilerPass(new AddContentControllersPass(), PassConfig::TYPE_OPTIMIZE)
-            ->addCompilerPass(new AddFormNamesToCanonicalUrlWhitelist(), PassConfig::TYPE_BEFORE_REMOVING);
+            ->addCompilerPass(new AddFormNamesToCanonicalUrlWhitelist(), PassConfig::TYPE_BEFORE_REMOVING)
+            ->addCompilerPass(new RegisterContentControllersPass(), PassConfig::TYPE_OPTIMIZE)
+            ->addCompilerPass(new RegisterWidgetFactoriesPass())
+            ->addCompilerPass(new RegisterWidgetsPass());
     }
 }

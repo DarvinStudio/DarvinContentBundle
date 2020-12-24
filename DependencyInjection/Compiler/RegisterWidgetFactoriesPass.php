@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2015-2019, Darvin Studio
+ * @copyright Copyright (c) 2016-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -10,32 +10,28 @@
 
 namespace Darvin\ContentBundle\DependencyInjection\Compiler;
 
-use Darvin\ContentBundle\Controller\AbstractContentController;
 use Darvin\ContentBundle\DependencyInjection\DarvinContentExtension;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Add content controllers compiler pass
+ * Register widget factories compiler pass
  */
-class AddContentControllersPass implements CompilerPassInterface
+class RegisterWidgetFactoriesPass implements CompilerPassInterface
 {
     /**
      * {@inheritDoc}
      */
     public function process(ContainerBuilder $container): void
     {
-        $pool = $container->getDefinition('darvin_content.controller_pool');
+        $blacklist = $container->getParameter('darvin_content.widget_factory.blacklist');
+        $pool      = $container->getDefinition('darvin_content.widget.pool');
 
-        foreach (array_keys($container->findTaggedServiceIds(DarvinContentExtension::TAG_CONTROLLER)) as $id) {
-            $controller = $container->getDefinition($id);
-
-            if (in_array(AbstractContentController::class, class_parents($controller->getClass()))) {
-                $controller->addMethodCall('setTwig', [new Reference('twig')]);
+        foreach (array_keys($container->findTaggedServiceIds(DarvinContentExtension::TAG_WIDGET_FACTORY)) as $id) {
+            if (!in_array($id, $blacklist)) {
+                $pool->addMethodCall('addWidgetFactory', [new Reference($id)]);
             }
-
-            $pool->addMethodCall('addController', [new Reference($id)]);
         }
     }
 }
