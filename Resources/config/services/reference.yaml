@@ -1,8 +1,21 @@
 parameters:
     darvin_content.reference.factory.class: Darvin\ContentBundle\Reference\ContentReferenceFactoryInterface
 
+    darvin_content.reference.object.loader.class: Darvin\ContentBundle\Reference\ContentReferenceObjectLoader
+
 services:
+    Darvin\ContentBundle\Reference\ContentReferenceObjectLoaderInterface: '@darvin_content.reference.object_loader'
+
     darvin_content.reference.factory:
         class: '%darvin_content.reference.factory.class%'
         arguments:
             - '@property_accessor'
+
+    darvin_content.reference.object.loader:
+        class: '%darvin_content.reference.object.loader.class%'
+        arguments:
+            - '@darvin_utils.custom_object.loader'
+            - '@darvin_utils.locale.provider'
+            - '@darvin_content.translatable.translation_joiner'
+        calls:
+            - [ setImageJoiner, [ '@?darvin_image.orm.image_joiner' ] ]

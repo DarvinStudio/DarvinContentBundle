@@ -8,12 +8,12 @@ services:
         class: '%darvin_content.admin.form.type.slug_map_item.choice.class%'
         arguments:
             - '@service_container'
+            - '@darvin_content.reference.object.loader'
             - '@doctrine.orm.entity_manager'
             - '@darvin_admin.entity_namer'
             - '@darvin_utils.orm.entity_resolver'
             - '@darvin_admin.metadata.manager'
             - '@property_accessor'
-            - '@darvin_content.slug_map.object_loader'
             - '@darvin_admin.metadata.sort_criteria_detector'
             - '@stof_doctrine_extensions.listener.tree'
         tags:

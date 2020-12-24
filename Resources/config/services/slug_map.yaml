@@ -1,20 +1,7 @@
 parameters:
-    darvin_content.slug_map.object_loader.class: Darvin\ContentBundle\Slug\SlugMapObjectLoader
-
     darvin_content.slug_map.subscriber.class: Darvin\ContentBundle\EventListener\SlugMapSubscriber
 
 services:
-    Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface: '@darvin_content.slug_map.object_loader'
-
-    darvin_content.slug_map.object_loader:
-        class: '%darvin_content.slug_map.object_loader.class%'
-        arguments:
-            - '@darvin_utils.custom_object.loader'
-            - '@darvin_utils.locale.provider'
-            - '@darvin_content.translatable.translation_joiner'
-        calls:
-            - [ setImageJoiner, [ '@?darvin_image.orm.image_joiner' ] ]
-
     darvin_content.slug_map.subscriber:
         class: '%darvin_content.slug_map.subscriber.class%'
         arguments:

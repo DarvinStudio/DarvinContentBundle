@@ -8,15 +8,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Darvin\ContentBundle\Slug;
+namespace Darvin\ContentBundle\Reference;
 
 /**
- * Slug map object loader
+ * Content reference object loader
  */
-interface SlugMapObjectLoaderInterface
+interface ContentReferenceObjectLoaderInterface
 {
     /**
-     * @param \Darvin\ContentBundle\Entity\SlugMapItem[]|\Darvin\ContentBundle\Entity\SlugMapItem $items Slug map items
+     * @param \Darvin\ContentBundle\Entity\ContentReference[]|\Darvin\ContentBundle\Entity\ContentReference $references Content references
      */
-    public function loadObjects($items): void;
+    public function loadObjects($references): void;
 }

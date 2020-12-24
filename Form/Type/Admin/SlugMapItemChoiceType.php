@@ -15,8 +15,8 @@ use Darvin\AdminBundle\Metadata\AdminMetadataManagerInterface;
 use Darvin\AdminBundle\Metadata\SortCriteriaDetectorInterface;
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Form\DataTransformer\Admin\SlugMapItemToArrayTransformer;
+use Darvin\ContentBundle\Reference\ContentReferenceObjectLoaderInterface;
 use Darvin\ContentBundle\Repository\SlugMapItemRepository;
-use Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface;
 use Darvin\Utils\ORM\EntityResolverInterface;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManagerInterface;
@@ -40,6 +40,11 @@ class SlugMapItemChoiceType extends AbstractType
      * @var \Psr\Container\ContainerInterface
      */
     private $container;
+
+    /**
+     * @var \Darvin\ContentBundle\Reference\ContentReferenceObjectLoaderInterface
+     */
+    private $contentReferenceObjectLoader;
 
     /**
      * @var \Doctrine\ORM\EntityManagerInterface
@@ -67,11 +72,6 @@ class SlugMapItemChoiceType extends AbstractType
     private $propertyAccessor;
 
     /**
-     * @var \Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface
-     */
-    private $slugMapObjectLoader;
-
-    /**
      * @var \Darvin\AdminBundle\Metadata\SortCriteriaDetectorInterface
      */
     private $sortCriteriaDetector;
@@ -82,34 +82,34 @@ class SlugMapItemChoiceType extends AbstractType
     private $treeListener;
 
     /**
-     * @param \Psr\Container\ContainerInterface                           $container            DI container
-     * @param \Doctrine\ORM\EntityManagerInterface                        $em                   Entity manager
-     * @param \Darvin\AdminBundle\EntityNamer\EntityNamerInterface        $entityNamer          Entity namer
-     * @param \Darvin\Utils\ORM\EntityResolverInterface                   $entityResolver       Entity resolver
-     * @param \Darvin\AdminBundle\Metadata\AdminMetadataManagerInterface  $metadataManager      Metadata manager
-     * @param \Symfony\Component\PropertyAccess\PropertyAccessorInterface $propertyAccessor     Property accessor
-     * @param \Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface     $slugMapObjectLoader  Slug map object loader
-     * @param \Darvin\AdminBundle\Metadata\SortCriteriaDetectorInterface  $sortCriteriaDetector Sort criteria detector
-     * @param \Gedmo\Tree\TreeListener                                    $treeListener         Tree event listener
+     * @param \Psr\Container\ContainerInterface                                     $container                    DI container
+     * @param \Darvin\ContentBundle\Reference\ContentReferenceObjectLoaderInterface $contentReferenceObjectLoader Content reference object loader
+     * @param \Doctrine\ORM\EntityManagerInterface                                  $em                           Entity manager
+     * @param \Darvin\AdminBundle\EntityNamer\EntityNamerInterface                  $entityNamer                  Entity namer
+     * @param \Darvin\Utils\ORM\EntityResolverInterface                             $entityResolver               Entity resolver
+     * @param \Darvin\AdminBundle\Metadata\AdminMetadataManagerInterface            $metadataManager              Metadata manager
+     * @param \Symfony\Component\PropertyAccess\PropertyAccessorInterface           $propertyAccessor             Property accessor
+     * @param \Darvin\AdminBundle\Metadata\SortCriteriaDetectorInterface            $sortCriteriaDetector         Sort criteria detector
+     * @param \Gedmo\Tree\TreeListener                                              $treeListener                 Tree event listener
      */
     public function __construct(
         ContainerInterface $container,
+        ContentReferenceObjectLoaderInterface $contentReferenceObjectLoader,
         EntityManagerInterface $em,
         EntityNamerInterface $entityNamer,
         EntityResolverInterface $entityResolver,
         AdminMetadataManagerInterface $metadataManager,
         PropertyAccessorInterface $propertyAccessor,
-        SlugMapObjectLoaderInterface $slugMapObjectLoader,
         SortCriteriaDetectorInterface $sortCriteriaDetector,
         TreeListener $treeListener
     ) {
         $this->container = $container;
+        $this->contentReferenceObjectLoader = $contentReferenceObjectLoader;
         $this->em = $em;
         $this->entityNamer = $entityNamer;
         $this->entityResolver = $entityResolver;
         $this->metadataManager = $metadataManager;
         $this->propertyAccessor = $propertyAccessor;
-        $this->slugMapObjectLoader = $slugMapObjectLoader;
         $this->sortCriteriaDetector = $sortCriteriaDetector;
         $this->treeListener = $treeListener;
     }
@@ -186,7 +186,7 @@ MESSAGE
             }
         }
 
-        $this->slugMapObjectLoader->loadObjects($slugMapItems);
+        $this->contentReferenceObjectLoader->loadObjects($slugMapItems);
 
         foreach ($view->children as $field) {
             if (!in_array('entity', $field->vars['block_prefixes'])) {
