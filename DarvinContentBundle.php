@@ -22,6 +22,8 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class DarvinContentBundle extends Bundle
 {
+    public const MAJOR_VERSION = 9;
+
     /**
      * {@inheritDoc}
      */

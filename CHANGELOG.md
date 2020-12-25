@@ -152,3 +152,5 @@ darvin_content:
 - Remove canonical URL template.
 
 - Add extra meta tags to "meta_tags()" macro.
+
+9.0.1: Add constant DarvinContentBundle::MAJOR_VERSION.
