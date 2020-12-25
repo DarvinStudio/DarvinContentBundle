@@ -4,6 +4,8 @@ parameters:
     darvin_content.controller_registry.class: Darvin\ContentBundle\Controller\ContentControllerRegistry
 
 services:
+    Darvin\ContentBundle\Controller\ContentControllerRegistryInterface: '@darvin_content.controller_registry'
+
     darvin_content.controller_pool:
         alias:      darvin_content.controller_registry
         deprecated: '"%alias_id%" is deprecated. Use "darvin_content.controller_registry" instead.'

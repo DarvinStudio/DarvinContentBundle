@@ -2,6 +2,8 @@ parameters:
     darvin_content.filterer.class: Darvin\ContentBundle\Filterer\Filterer
 
 services:
+    Darvin\ContentBundle\Filterer\FiltererInterface: '@darvin_content.filterer'
+
     darvin_content.filterer:
         class: '%darvin_content.filterer.class%'
         arguments:

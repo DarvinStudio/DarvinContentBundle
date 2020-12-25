@@ -146,3 +146,5 @@ darvin_content:
 - Rename "pool" => "registry".
 
 - Do not add form names to canonical URL whitelist.
+
+- Alias public services.

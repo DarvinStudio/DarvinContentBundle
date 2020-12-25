@@ -2,6 +2,8 @@ parameters:
     darvin_content.orm.sort_entity_joiner.class: Darvin\ContentBundle\ORM\SortEntityJoiner
 
 services:
+    Darvin\ContentBundle\ORM\SortEntityJoinerInterface: '@darvin_content.orm.sort_entity_joiner'
+
     darvin_content.orm.sort_entity_joiner:
         class: '%darvin_content.orm.sort_entity_joiner.class%'
         arguments:

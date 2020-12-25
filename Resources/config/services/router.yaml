@@ -4,6 +4,9 @@ parameters:
     darvin_content.router.entity.class: Darvin\ContentBundle\Router\EntityRouter
 
 services:
+    Darvin\ContentBundle\Router\ContentReferenceRouterInterface: '@darvin_content.router.content_reference'
+    Darvin\ContentBundle\Router\EntityRouterInterface:           '@darvin_content.router.entity'
+
     darvin_content.router.content_reference:
         class: '%darvin_content.router.content_reference.class%'
         arguments:

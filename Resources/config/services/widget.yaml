@@ -12,6 +12,9 @@ parameters:
     darvin_content.widget.registry.twig.extension.class: Darvin\ContentBundle\Twig\Extension\Widget\RegistryExtension
 
 services:
+    Darvin\ContentBundle\Widget\Embedder\WidgetEmbedderInterface: '@darvin_content.widget.embedder'
+    Darvin\ContentBundle\Widget\WidgetRegistryInterface:          '@darvin_content.widget.registry'
+
     darvin_content.widget.pool:
         alias:      darvin_content.widget.registry
         deprecated: '"%alias_id%" is deprecated. Use "darvin_content.widget.registry" instead.'

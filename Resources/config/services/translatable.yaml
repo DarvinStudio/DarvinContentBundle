@@ -12,6 +12,9 @@ parameters:
     darvin_content.translatable.translation_joiner.class: Darvin\ContentBundle\Translatable\TranslationJoiner
 
 services:
+    Darvin\ContentBundle\Translatable\TranslationInitializerInterface: '@darvin_content.translatable.translation_initializer'
+    Darvin\ContentBundle\Translatable\TranslationJoinerInterface:      '@darvin_content.translatable.translation_joiner'
+
     darvin_content.translatable.event_subscriber.map:
         class:                 '%darvin_content.translatable.event_subscriber.map.class%'
         decorates:             Knp\DoctrineBehaviors\EventSubscriber\TranslatableEventSubscriber
