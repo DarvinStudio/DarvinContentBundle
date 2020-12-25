@@ -5,9 +5,11 @@ parameters:
 
     darvin_content.widget.embedder.redirect_event_subscriber.class: Darvin\ContentBundle\EventListener\Widget\Embedder\RedirectSubscriber
 
+    darvin_content.widget.embedder.twig.extension.class: Darvin\ContentBundle\Twig\Extension\Widget\EmbedderExtension
+
     darvin_content.widget.registry.class: Darvin\ContentBundle\Widget\WidgetRegistry
 
-    darvin_content.widget.twig_extension.class: Darvin\ContentBundle\Twig\Extension\WidgetExtension
+    darvin_content.widget.registry.twig.extension.class: Darvin\ContentBundle\Twig\Extension\Widget\RegistryExtension
 
 services:
     darvin_content.widget.pool:
@@ -36,6 +38,13 @@ services:
         tags:
             - { name: kernel.event_subscriber }
 
+    darvin_content.widget.embedder.twig.extension:
+        class: '%darvin_content.widget.embedder.twig.extension.class%'
+        arguments:
+            - '@darvin_content.widget.embedder.provider'
+        tags:
+            - { name: twig.extension }
+
     darvin_content.widget.registry:
         class: '%darvin_content.widget.registry.class%'
         arguments:
@@ -43,10 +52,9 @@ services:
         tags:
             - { name: darvin_utils.providable }
 
-    darvin_content.widget.twig_extension:
-        class: '%darvin_content.widget.twig_extension.class%'
+    darvin_content.widget.registry.twig.extension:
+        class: '%darvin_content.widget.registry.twig.extension.class%'
         arguments:
-            - '@darvin_content.widget.embedder.provider'
-            - '@darvin_content.widget.pool.provider'
+            - '@darvin_content.widget.registry.provider'
         tags:
             - { name: twig.extension }
