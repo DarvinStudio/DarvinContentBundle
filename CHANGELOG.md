@@ -150,3 +150,5 @@ darvin_content:
 - Alias public services.
 
 - Remove canonical URL template.
+
+- Add extra meta tags to "meta_tags()" macro.
