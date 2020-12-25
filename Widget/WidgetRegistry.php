@@ -31,11 +31,6 @@ class WidgetRegistry implements WidgetRegistryInterface
     private $widgetFactories;
 
     /**
-     * @var array
-     */
-    private $nameCounts;
-
-    /**
      * @var bool
      */
     private $initialized;
@@ -47,7 +42,7 @@ class WidgetRegistry implements WidgetRegistryInterface
     {
         $this->widgetBlacklist = $widgetBlacklist;
 
-        $this->widgets = $this->widgetFactories = $this->nameCounts = [];
+        $this->widgets = $this->widgetFactories = [];
         $this->initialized = false;
     }
 
@@ -68,12 +63,6 @@ class WidgetRegistry implements WidgetRegistryInterface
         }
 
         $this->widgets[$name] = $widget;
-
-        if (!isset($this->nameCounts[$name])) {
-            $this->nameCounts[$name] = 0;
-        }
-
-        $this->nameCounts[$name]++;
     }
 
     /**
@@ -124,16 +113,6 @@ class WidgetRegistry implements WidgetRegistryInterface
         $this->init();
 
         return $this->widgets;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function isWidgetUnique(string $name): bool
-    {
-        $this->init();
-
-        return !isset($this->nameCounts[$name]) || 1 === $this->nameCounts[$name];
     }
 
     private function init(): void

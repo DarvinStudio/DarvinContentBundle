@@ -36,11 +36,4 @@ interface WidgetRegistryInterface
      * @return iterable|\Darvin\ContentBundle\Widget\WidgetInterface[]
      */
     public function getAllWidgets(): iterable;
-
-    /**
-     * @param string $name Widget name
-     *
-     * @return bool
-     */
-    public function isWidgetUnique(string $name): bool;
 }
