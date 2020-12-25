@@ -1,7 +1,9 @@
 <form action="{{ path('darvin_content_locale_switch') }}" method="post">
+
     {% for locale in locales %}
-        <button name="locale" value="{{ locale }}"{% if locale == app.request.locale %} disabled{% endif %}>
+        <button name="locale" value="{{ locale }}"{% if app.request and locale == app.request.locale %} disabled{% endif %}>
             {{ ('locale.' ~ locale)|trans({}, 'messages', locale) }}
         </button>
     {% endfor %}
+
 </form>

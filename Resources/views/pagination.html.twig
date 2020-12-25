@@ -2,23 +2,29 @@
     <div class="pagination">
 
         {% block first %}
+
             {% if first is defined and current != first and current > 0 and first not in pagesInRange %}
                 <span class="first">
                     <a href="{{ path(route, query|merge({(pageParameterName): 1 != first ? first : null})) }}">{% trans %}pagination.first{% endtrans %}</a>
                 </span>
             {% endif %}
+
         {% endblock %}
 
         {% block previous %}
+
             {% if previous is defined and first|default not in pagesInRange %}
                 <span class="previous">
                     <a href="{{ path(route, query|merge({(pageParameterName): 1 != previous ? previous : null})) }}">{% trans %}pagination.previous{% endtrans %}</a>
                 </span>
             {% endif %}
+
         {% endblock %}
 
         {% block pages %}
+
             {% for page in pagesInRange %}
+
                 {% if page != current %}
                     <span class="page">
                         <a href="{{ path(route, query|merge({(pageParameterName): 1 != page ? page : null})) }}">{% trans with {'%page%': page} %}pagination.page{% endtrans %}</a>
@@ -26,26 +32,33 @@
                 {% else %}
                     <span class="current">{% trans with {'%page%': page} %}pagination.page{% endtrans %}</span>
                 {% endif %}
+
             {% endfor %}
+
         {% endblock %}
 
         {% block next %}
+
             {% if next is defined and current > 0 and last|default not in pagesInRange %}
                 <span class="next">
                     <a href="{{ path(route, query|merge({(pageParameterName): 1 != next ? next : null})) }}">{% trans %}pagination.next{% endtrans %}</a>
                 </span>
             {% endif %}
+
         {% endblock %}
 
         {% block last %}
+
             {% if last is defined and current != last and last not in pagesInRange %}
                 <span class="last">
                     <a href="{{ path(route, query|merge({(pageParameterName): 1 != last ? last : null})) }}">{% trans %}pagination.last{% endtrans %}</a>
                 </span>
             {% endif %}
+
         {% endblock %}
 
         {% block all %}
+
             {% if 0 != current %}
                 <span class="all">
                     <a href="{{ path(route, query|merge({(pageParameterName): 0})) }}" rel="nofollow">{% trans %}pagination.all{% endtrans %}</a>
@@ -53,6 +66,7 @@
             {% else %}
                 <span class="all current">{% trans %}pagination.all{% endtrans %}</span>
             {% endif %}
+
         {% endblock %}
 
     </div>
