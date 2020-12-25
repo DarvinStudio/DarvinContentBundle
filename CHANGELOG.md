@@ -144,3 +144,5 @@ darvin_content:
 - Remove TranslationJoinerInterface::isTranslatable().
 
 - Rename "pool" => "registry".
+
+- Do not add form names to canonical URL whitelist.

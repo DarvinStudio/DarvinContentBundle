@@ -10,7 +10,6 @@
 
 namespace Darvin\ContentBundle;
 
-use Darvin\ContentBundle\DependencyInjection\Compiler\AddFormNamesToCanonicalUrlWhitelist;
 use Darvin\ContentBundle\DependencyInjection\Compiler\RegisterContentControllersPass;
 use Darvin\ContentBundle\DependencyInjection\Compiler\RegisterWidgetFactoriesPass;
 use Darvin\ContentBundle\DependencyInjection\Compiler\RegisterWidgetsPass;
@@ -29,7 +28,6 @@ class DarvinContentBundle extends Bundle
     public function build(ContainerBuilder $container): void
     {
         $container
-            ->addCompilerPass(new AddFormNamesToCanonicalUrlWhitelist(), PassConfig::TYPE_BEFORE_REMOVING)
             ->addCompilerPass(new RegisterContentControllersPass(), PassConfig::TYPE_OPTIMIZE)
             ->addCompilerPass(new RegisterWidgetFactoriesPass())
             ->addCompilerPass(new RegisterWidgetsPass());
