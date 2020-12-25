@@ -4,5 +4,7 @@ parameters:
 services:
     darvin_content.config:
         class: '%darvin_content.config.class%'
+        arguments:
+            - '%app_title%'
         tags:
             - { name: darvin_config.configuration }

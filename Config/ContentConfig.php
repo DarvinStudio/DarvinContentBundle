@@ -24,17 +24,30 @@ use Darvin\ConfigBundle\Parameter\ParameterModel;
 class ContentConfig extends AbstractConfiguration
 {
     /**
+     * @var string
+     */
+    private $defaultMetaOgSiteName;
+
+    /**
+     * @param string $defaultMetaOgSiteName Default "og:site_name" meta tag's value
+     */
+    public function __construct(string $defaultMetaOgSiteName)
+    {
+        $this->defaultMetaOgSiteName = $defaultMetaOgSiteName;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function getModel(): iterable
     {
         foreach ([
-            'meta_article_author',
-            'meta_article_publisher',
-            'meta_og_site_name',
-            'meta_twitter_site',
-        ] as $name) {
-            yield new ParameterModel($name, ParameterModel::TYPE_STRING, null, [
+            'meta_article_author'    => null,
+            'meta_article_publisher' => null,
+            'meta_og_site_name'      => $this->defaultMetaOgSiteName,
+            'meta_twitter_site'      => null,
+        ] as $name => $default) {
+            yield new ParameterModel($name, ParameterModel::TYPE_STRING, $default, [
                 'form' => [
                     'options' => [
                         'help' => sprintf('configuration.darvin_content.help.%s', $name),

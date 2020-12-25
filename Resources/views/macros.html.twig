@@ -49,6 +49,12 @@
     {% set og_site_name      = darvin_content_config.metaOgSiteName %}
     {% set twitter_site      = darvin_content_config.metaTwitterSite %}
 
+    {% if twitter_site is not same as(null) and not twitter_site starts with '@' %}
+
+        {% set twitter_site = '@' ~ twitter_site %}
+
+    {% endif %}
+
     {# Generic #}
 
     {% if description is not same as(null) %}
