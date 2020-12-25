@@ -33,7 +33,7 @@ class WidgetRegistry implements WidgetRegistryInterface
     /**
      * @var bool
      */
-    private $initialized;
+    private $factoryWidgetsLoaded;
 
     /**
      * @param string[] $widgetBlacklist Blacklist of widget names or services IDs
@@ -42,8 +42,9 @@ class WidgetRegistry implements WidgetRegistryInterface
     {
         $this->widgetBlacklist = $widgetBlacklist;
 
-        $this->widgets = $this->widgetFactories = [];
-        $this->initialized = false;
+        $this->widgets = [];
+        $this->widgetFactories = [];
+        $this->factoryWidgetsLoaded = false;
     }
 
     /**
@@ -86,13 +87,13 @@ class WidgetRegistry implements WidgetRegistryInterface
      */
     public function getWidget(string $name): WidgetInterface
     {
-        $this->init();
+        $widgets = $this->getAllWidgets();
 
-        if (!$this->widgetExists($name)) {
+        if (!isset($widgets[$name])) {
             throw new \InvalidArgumentException(sprintf('Widget "%s" does not exist.', $name));
         }
 
-        return $this->widgets[$name];
+        return $widgets[$name];
     }
 
     /**
@@ -100,9 +101,9 @@ class WidgetRegistry implements WidgetRegistryInterface
      */
     public function widgetExists(string $name): bool
     {
-        $this->init();
+        $widgets = $this->getAllWidgets();
 
-        return isset($this->widgets[$name]);
+        return isset($widgets[$name]);
     }
 
     /**
@@ -110,23 +111,16 @@ class WidgetRegistry implements WidgetRegistryInterface
      */
     public function getAllWidgets(): iterable
     {
-        $this->init();
+        if (!$this->factoryWidgetsLoaded) {
+            foreach ($this->widgetFactories as $widgetFactory) {
+                foreach ($widgetFactory->createWidgets() as $widget) {
+                    $this->addWidget($widget);
+                }
+            }
+
+            $this->factoryWidgetsLoaded = true;
+        }
 
         return $this->widgets;
-    }
-
-    private function init(): void
-    {
-        if ($this->initialized) {
-            return;
-        }
-
-        $this->initialized = true;
-
-        foreach ($this->widgetFactories as $widgetFactory) {
-            foreach ($widgetFactory->createWidgets() as $widget) {
-                $this->addWidget($widget);
-            }
-        }
     }
 }
