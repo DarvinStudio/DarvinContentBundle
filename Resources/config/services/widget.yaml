@@ -1,9 +1,9 @@
 parameters:
     darvin_content.widget.embedder.class: Darvin\ContentBundle\Widget\Embedder\WidgetEmbedder
 
-    darvin_content.widget.embedder.http_exception_event_subscriber.class: Darvin\ContentBundle\EventListener\Widget\Embedder\HttpExceptionSubscriber
+    darvin_content.widget.embedder.event_subscriber.http_exception.class: Darvin\ContentBundle\EventListener\Widget\Embedder\HttpExceptionSubscriber
 
-    darvin_content.widget.embedder.redirect_event_subscriber.class: Darvin\ContentBundle\EventListener\Widget\Embedder\RedirectSubscriber
+    darvin_content.widget.embedder.event_subscriber.redirect.class: Darvin\ContentBundle\EventListener\Widget\Embedder\RedirectSubscriber
 
     darvin_content.widget.embedder.twig.extension.class: Darvin\ContentBundle\Twig\Extension\Widget\EmbedderExtension
 
@@ -28,13 +28,13 @@ services:
         tags:
             - { name: darvin_utils.providable }
 
-    darvin_content.widget.embedder.http_exception_event_subscriber:
-        class: '%darvin_content.widget.embedder.http_exception_event_subscriber.class%'
+    darvin_content.widget.embedder.event_subscriber.http_exception:
+        class: '%darvin_content.widget.embedder.event_subscriber.http_exception.class%'
         tags:
             - { name: kernel.event_subscriber }
 
-    darvin_content.widget.embedder.redirect_event_subscriber:
-        class: '%darvin_content.widget.embedder.redirect_event_subscriber.class%'
+    darvin_content.widget.embedder.event_subscriber.redirect:
+        class: '%darvin_content.widget.embedder.event_subscriber.redirect.class%'
         tags:
             - { name: kernel.event_subscriber }
 

@@ -1,8 +1,8 @@
 parameters:
-    darvin_content.content.twig_extension.class: Darvin\ContentBundle\Twig\Extension\ContentExtension
+    darvin_content.content.twig.extension.class: Darvin\ContentBundle\Twig\Extension\ContentExtension
 
 services:
-    darvin_content.content.twig_extension:
-        class: '%darvin_content.content.twig_extension.class%'
+    darvin_content.content.twig.extension:
+        class: '%darvin_content.content.twig.extension.class%'
         tags:
             - { name: twig.extension }

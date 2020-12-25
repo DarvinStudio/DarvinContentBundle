@@ -1,7 +1,7 @@
 parameters:
     darvin_content.canonical_url.generator.class: Darvin\ContentBundle\CanonicalUrl\CanonicalUrlGenerator
 
-    darvin_content.canonical_url.twig_extension.class: Darvin\ContentBundle\Twig\Extension\CanonicalUrlExtension
+    darvin_content.canonical_url.twig.extension.class: Darvin\ContentBundle\Twig\Extension\CanonicalUrlExtension
 
 services:
     darvin_content.canonical_url.generator:
@@ -11,8 +11,8 @@ services:
             - '@router'
             - '%darvin_content.canonical_url.parameter_whitelist%'
 
-    darvin_content.canonical_url.twig_extension:
-        class: '%darvin_content.canonical_url.twig_extension.class%'
+    darvin_content.canonical_url.twig.extension:
+        class: '%darvin_content.canonical_url.twig.extension.class%'
         arguments:
             - '@darvin_content.canonical_url.generator'
         tags:
