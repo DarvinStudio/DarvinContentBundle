@@ -42,7 +42,7 @@
 
 {% endmacro %}
 
-{% macro meta_tags(description, title = null, url = null, image = null) %}
+{% macro meta_tags(description, title = null, image = null, url = null) %}
 
     {% set article_author    = darvin_content_config.metaArticleAuthor %}
     {% set article_publisher = darvin_content_config.metaArticlePublisher %}
@@ -52,6 +52,12 @@
     {% if twitter_site is not same as(null) and not twitter_site starts with '@' %}
 
         {% set twitter_site = '@' ~ twitter_site %}
+
+    {% endif %}
+
+    {% if url is same as(null) %}
+
+        {% set url = content_canonical_url() %}
 
     {% endif %}
 
@@ -77,10 +83,7 @@
         <meta property="og:description" content="{{ description }}" />
     {% endif %}
 
-    {% if url is not same as(null) %}
-        <meta property="og:url" content="{{ url }}" />
-    {% endif %}
-
+    <meta property="og:url" content="{{ url }}" />
     <meta property="og:type" content="article" />
 
     {% if og_site_name is not same as(null) %}
@@ -100,10 +103,7 @@
     {# Twitter #}
 
     <meta property="twitter:card" content="summary_large_image" />
-
-    {% if url %}
-        <meta property="twitter:url" content="{{ url }}" />
-    {% endif %}
+    <meta property="twitter:url" content="{{ url }}" />
 
     {% if title is not same as(null) %}
         <meta property="twitter:title" content="{{ title }}" />
