@@ -10,8 +10,6 @@
 
 namespace Darvin\ContentBundle\Widget;
 
-use Darvin\ContentBundle\Widget\Exception\WidgetNotExistsException;
-
 /**
  * Widget pool
  */
@@ -102,7 +100,7 @@ class WidgetPool implements WidgetPoolInterface
         $this->init();
 
         if (!$this->widgetExists($name)) {
-            throw new WidgetNotExistsException($name);
+            throw new \InvalidArgumentException(sprintf('Widget "%s" does not exist.', $name));
         }
 
         return $this->widgets[$name];
