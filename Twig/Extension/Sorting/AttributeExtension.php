@@ -8,18 +8,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Darvin\ContentBundle\Twig\Extension;
+namespace Darvin\ContentBundle\Twig\Extension\Sorting;
 
 use Darvin\ContentBundle\Sorting\AttributeRendererInterface;
-use Darvin\ContentBundle\Sorting\SorterInterface;
 use Twig\Extension\AbstractExtension;
-use Twig\TwigFilter;
 use Twig\TwigFunction;
 
 /**
- * Sorting Twig extension
+ * Sorting attribute Twig extension
  */
-class SortingExtension extends AbstractExtension
+class AttributeExtension extends AbstractExtension
 {
     /**
      * @var \Darvin\ContentBundle\Sorting\AttributeRendererInterface
@@ -27,28 +25,11 @@ class SortingExtension extends AbstractExtension
     private $attributeRenderer;
 
     /**
-     * @var \Darvin\ContentBundle\Sorting\SorterInterface
-     */
-    private $sorter;
-
-    /**
      * @param \Darvin\ContentBundle\Sorting\AttributeRendererInterface $attributeRenderer Sorting attribute renderer
-     * @param \Darvin\ContentBundle\Sorting\SorterInterface            $sorter            Sorter
      */
-    public function __construct(AttributeRendererInterface $attributeRenderer, SorterInterface $sorter)
+    public function __construct(AttributeRendererInterface $attributeRenderer)
     {
         $this->attributeRenderer = $attributeRenderer;
-        $this->sorter = $sorter;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getFilters(): array
-    {
-        return [
-            new TwigFilter('content_sort', [$this->sorter, 'sort']),
-        ];
     }
 
     /**

@@ -1,5 +1,7 @@
 parameters:
-    darvin_content.sorting.attribute_renderer.class: Darvin\ContentBundle\Sorting\AttributeRenderer
+    darvin_content.sorting.attribute.renderer.class: Darvin\ContentBundle\Sorting\AttributeRenderer
+
+    darvin_content.sorting.attribute.twig.extension.class: Darvin\ContentBundle\Twig\Extension\Sorting\AttributeExtension
 
     darvin_content.sorting.controller.reposition.class: Darvin\ContentBundle\Controller\Sorting\RepositionController
 
@@ -9,16 +11,23 @@ parameters:
 
     darvin_content.sorting.sorter.class: Darvin\ContentBundle\Sorting\Sorter
 
-    darvin_content.sorting.twig_extension.class: Darvin\ContentBundle\Twig\Extension\SortingExtension
+    darvin_content.sorting.sorter.twig.extension.class: Darvin\ContentBundle\Twig\Extension\Sorting\SorterExtension
 
 services:
-    darvin_content.sorting.attribute_renderer:
-        class: '%darvin_content.sorting.attribute_renderer.class%'
+    darvin_content.sorting.attribute.renderer:
+        class: '%darvin_content.sorting.attribute.renderer.class%'
         arguments:
             - '@security.authorization_checker'
             - '@doctrine.orm.entity_manager'
             - '@request_stack'
             - '@router'
+
+    darvin_content.sorting.attribute.twig.extension:
+        class: '%darvin_content.sorting.attribute.twig.extension.class%'
+        arguments:
+            - '@darvin_content.sorting.attribute.renderer'
+        tags:
+            - { name: twig.extension }
 
     darvin_content.sorting.controller.reposition:
         class: '%darvin_content.sorting.controller.reposition.class%'
@@ -50,10 +59,9 @@ services:
             - '@doctrine.orm.entity_manager'
             - '@request_stack'
 
-    darvin_content.sorting.twig_extension:
-        class: '%darvin_content.sorting.twig_extension.class%'
+    darvin_content.sorting.sorter.twig.extension:
+        class: '%darvin_content.sorting.sorter.twig.extension.class%'
         arguments:
-            - '@darvin_content.sorting.attribute_renderer'
             - '@darvin_content.sorting.sorter'
         tags:
             - { name: twig.extension }
