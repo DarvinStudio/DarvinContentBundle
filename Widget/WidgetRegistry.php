@@ -11,9 +11,9 @@
 namespace Darvin\ContentBundle\Widget;
 
 /**
- * Widget pool
+ * Widget registry
  */
-class WidgetPool implements WidgetPoolInterface
+class WidgetRegistry implements WidgetRegistryInterface
 {
     /**
      * @var string[]
@@ -64,7 +64,7 @@ class WidgetPool implements WidgetPoolInterface
             return;
         }
         if (isset($this->widgets[$name])) {
-            throw new \InvalidArgumentException(sprintf('Widget "%s" already added to pool.', $name));
+            throw new \InvalidArgumentException(sprintf('Widget "%s" already added to registry.', $name));
         }
 
         $this->widgets[$name] = $widget;
@@ -86,7 +86,7 @@ class WidgetPool implements WidgetPoolInterface
         $class = get_class($widgetFactory);
 
         if (isset($this->widgetFactories[$class])) {
-            throw new \InvalidArgumentException(sprintf('Widget factory "%s" already added to pool.', $class));
+            throw new \InvalidArgumentException(sprintf('Widget factory "%s" already added to registry.', $class));
         }
 
         $this->widgetFactories[$class] = $widgetFactory;

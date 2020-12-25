@@ -10,10 +10,12 @@
 
 namespace Darvin\ContentBundle\Widget;
 
+class_alias(WidgetRegistryInterface::class, 'Darvin\ContentBundle\Widget\WidgetPoolInterface');
+
 /**
- * Widget pool
+ * Widget registry
  */
-interface WidgetPoolInterface
+interface WidgetRegistryInterface
 {
     /**
      * @param string $name Widget name

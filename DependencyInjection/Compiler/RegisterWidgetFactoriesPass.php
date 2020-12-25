@@ -26,11 +26,11 @@ class RegisterWidgetFactoriesPass implements CompilerPassInterface
     public function process(ContainerBuilder $container): void
     {
         $blacklist = $container->getParameter('darvin_content.widget_factory.blacklist');
-        $pool      = $container->getDefinition('darvin_content.widget.pool');
+        $registry  = $container->getDefinition('darvin_content.widget.registry');
 
         foreach (array_keys($container->findTaggedServiceIds(DarvinContentExtension::TAG_WIDGET_FACTORY)) as $id) {
             if (!in_array($id, $blacklist)) {
-                $pool->addMethodCall('addWidgetFactory', [new Reference($id)]);
+                $registry->addMethodCall('addWidgetFactory', [new Reference($id)]);
             }
         }
     }

@@ -5,11 +5,19 @@ parameters:
 
     darvin_content.widget.embedder.redirect_event_subscriber.class: Darvin\ContentBundle\EventListener\Widget\Embedder\RedirectSubscriber
 
-    darvin_content.widget.pool.class: Darvin\ContentBundle\Widget\WidgetPool
+    darvin_content.widget.registry.class: Darvin\ContentBundle\Widget\WidgetRegistry
 
     darvin_content.widget.twig_extension.class: Darvin\ContentBundle\Twig\Extension\WidgetExtension
 
 services:
+    darvin_content.widget.pool:
+        alias:      darvin_content.widget.registry
+        deprecated: '"%alias_id%" is deprecated. Use "darvin_content.widget.registry" instead.'
+
+    darvin_content.widget.pool.provider:
+        alias:      darvin_content.widget.registry.provider
+        deprecated: '"%alias_id%" is deprecated. Use "darvin_content.widget.registry.provider" instead.'
+
     darvin_content.widget.embedder:
         class: '%darvin_content.widget.embedder.class%'
         arguments:
@@ -28,8 +36,8 @@ services:
         tags:
             - { name: kernel.event_subscriber }
 
-    darvin_content.widget.pool:
-        class: '%darvin_content.widget.pool.class%'
+    darvin_content.widget.registry:
+        class: '%darvin_content.widget.registry.class%'
         arguments:
             - '%darvin_content.widget.blacklist%'
         tags:
