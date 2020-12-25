@@ -148,3 +148,5 @@ darvin_content:
 - Do not add form names to canonical URL whitelist.
 
 - Alias public services.
+
+- Remove canonical URL template.

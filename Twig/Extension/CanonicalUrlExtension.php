@@ -11,7 +11,6 @@
 namespace Darvin\ContentBundle\Twig\Extension;
 
 use Darvin\ContentBundle\CanonicalUrl\CanonicalUrlGeneratorInterface;
-use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -20,8 +19,6 @@ use Twig\TwigFunction;
  */
 class CanonicalUrlExtension extends AbstractExtension
 {
-    private const DEFAULT_TEMPLATE = '@DarvinContent/canonical_url.html.twig';
-
     /**
      * @var \Darvin\ContentBundle\CanonicalUrl\CanonicalUrlGeneratorInterface
      */
@@ -41,38 +38,7 @@ class CanonicalUrlExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('content_canonical_url', [$this, 'renderCanonicalUrlTag'], [
-                'needs_environment' => true,
-                'is_safe'           => ['html'],
-            ]),
+            new TwigFunction('content_canonical_url', [$this->canonicalUrlGenerator, 'generateCanonicalUrl']),
         ];
-    }
-
-    /**
-     * @param \Twig\Environment $twig        Twig
-     * @param string|null       $template    Template
-     * @param string|null       $route       Route
-     * @param array|null        $routeParams Route parameters
-     *
-     * @return string|null
-     */
-    public function renderCanonicalUrlTag(
-        Environment $twig,
-        ?string $template = null,
-        ?string $route = null,
-        ?array $routeParams = null
-    ): ?string {
-        $url = $this->canonicalUrlGenerator->generateCanonicalUrl($route, $routeParams);
-
-        if (null === $url) {
-            return null;
-        }
-        if (null === $template) {
-            $template = self::DEFAULT_TEMPLATE;
-        }
-
-        return $twig->render($template, [
-            'url' => $url,
-        ]);
     }
 }
