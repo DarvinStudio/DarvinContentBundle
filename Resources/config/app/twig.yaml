@@ -1,3 +1,5 @@
 twig:
     form_themes:
         - '@DarvinContent/fields.html.twig'
+    globals:
+        darvin_content_config: '@darvin_content.config'

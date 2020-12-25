@@ -1,4 +1,16 @@
 configuration:
+    darvin_content:
+        help:
+            meta_article_author:    Мета-тег «article:author»
+            meta_article_publisher: Мета-тег «article:publisher»
+            meta_og_site_name:      Мета-тег «og:site_name»
+            meta_twitter_site:      Мета-тег «twitter:site»
+        parameter:
+            meta_article_author:    Автор контента
+            meta_article_publisher: Издатель контента
+            meta_og_site_name:      Название сайта
+            meta_twitter_site:      Имя пользователя в Твиттере
+        title: Контент
     model:
         content_meta_template:
             description: Meta description

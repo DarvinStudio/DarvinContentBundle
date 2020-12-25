@@ -1,0 +1,8 @@
+parameters:
+    darvin_content.config.class: Darvin\ContentBundle\Config\ContentConfig
+
+services:
+    darvin_content.config:
+        class: '%darvin_content.config.class%'
+        tags:
+            - { name: darvin_config.configuration }

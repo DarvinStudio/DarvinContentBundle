@@ -42,11 +42,20 @@
 
 {% endmacro %}
 
-{% macro meta_tags(description, title = null, slug = null, image = null) %}
+{% macro meta_tags(description, title = null, url = null, image = null) %}
+
+    {% set article_author    = darvin_content_config.metaArticleAuthor %}
+    {% set article_publisher = darvin_content_config.metaArticlePublisher %}
+    {% set og_site_name      = darvin_content_config.metaOgSiteName %}
+    {% set twitter_site      = darvin_content_config.metaTwitterSite %}
+
+    {# Generic #}
 
     {% if description is not same as(null) %}
         <meta name="description" content="{{ description }}{{ _self.page_number() }}">
     {% endif %}
+
+    {# Open Graph #}
 
     {% if title is not same as(null) %}
         <meta property="og:title" content="{{ title }}" />
@@ -62,25 +71,32 @@
         <meta property="og:description" content="{{ description }}" />
     {% endif %}
 
-    {% if slug is not same as(null) %}
-        <meta property="og:url" content="{{ url('darvin_content_show', {'slug': slug}) }}" />
+    {% if url is not same as(null) %}
+        <meta property="og:url" content="{{ url }}" />
     {% endif %}
 
     <meta property="og:type" content="article" />
 
-    {% if config.metaOgSiteName %}
-        <meta property="og:site_name" content="{{ config.metaOgSiteName }}" />
+    {% if og_site_name is not same as(null) %}
+        <meta property="og:site_name" content="{{ og_site_name }}" />
     {% endif %}
 
-    {% if config.facebookUrl %}
-        <meta property="article:publisher" content="{{ config.facebookUrl }}" />
-        <meta property="article:author" content="{{ config.facebookUrl }}" />
+    {# Article #}
+
+    {% if article_publisher is not same as(null) %}
+        <meta property="article:publisher" content="{{ article_publisher }}" />
     {% endif %}
+
+    {% if article_author is not same as(null) %}
+        <meta property="article:author" content="{{ article_author }}" />
+    {% endif %}
+
+    {# Twitter #}
 
     <meta property="twitter:card" content="summary_large_image" />
 
-    {% if slug is not same as(null) %}
-        <meta property="twitter:url" content="{{ url('darvin_content_show', {'slug': slug}) }}" />
+    {% if url %}
+        <meta property="twitter:url" content="{{ url }}" />
     {% endif %}
 
     {% if title is not same as(null) %}
@@ -97,8 +113,8 @@
         <meta property="twitter:image:height" content="{{ image.height }}" />
     {% endif %}
 
-    {% if config.metaTwitterSite %}
-        <meta property="twitter:site" content="{{ config.metaTwitterSite }}" />
+    {% if twitter_site is not same as(null) %}
+        <meta property="twitter:site" content="{{ twitter_site }}" />
     {% endif %}
 
 {% endmacro %}

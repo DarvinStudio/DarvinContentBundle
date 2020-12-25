@@ -12,8 +12,9 @@
         }
     ],
     "require": {
-        "darvinstudio/darvin-utils-bundle": "*",
-        "knplabs/doctrine-behaviors":       "^2.0"
+        "darvinstudio/darvin-config-bundle": "*",
+        "darvinstudio/darvin-utils-bundle":  "*",
+        "knplabs/doctrine-behaviors":        "^2.0"
     },
     "suggest": {
         "beberlei/doctrineextensions": "Allows to sort paginated results"
