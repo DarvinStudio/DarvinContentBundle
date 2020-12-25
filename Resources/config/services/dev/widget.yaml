@@ -6,6 +6,6 @@ services:
         class: '%darvin_content.widget.list.command.class%'
         arguments:
             - '@request_stack'
-            - '@darvin_content.widget.pool'
+            - '@darvin_content.widget.registry'
         tags:
             - { name: console.command }

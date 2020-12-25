@@ -26,9 +26,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class FrontController
 {
     /**
-     * @var \Darvin\ContentBundle\Controller\ContentControllerPoolInterface
+     * @var \Darvin\ContentBundle\Controller\ContentControllerRegistryInterface
      */
-    private $controllerPool;
+    private $controllerRegistry;
 
     /**
      * @var \Doctrine\Persistence\ObjectManager
@@ -41,13 +41,13 @@ class FrontController
     private $translationJoiner;
 
     /**
-     * @param \Darvin\ContentBundle\Controller\ContentControllerPoolInterface $controllerPool    Content controller pool
-     * @param \Doctrine\Persistence\ObjectManager                             $om                Object manager
-     * @param \Darvin\ContentBundle\Translatable\TranslationJoinerInterface   $translationJoiner Translation joiner
+     * @param \Darvin\ContentBundle\Controller\ContentControllerRegistryInterface $controllerRegistry Content controller registry
+     * @param \Doctrine\Persistence\ObjectManager                                 $om                 Object manager
+     * @param \Darvin\ContentBundle\Translatable\TranslationJoinerInterface       $translationJoiner  Translation joiner
      */
-    public function __construct(ContentControllerPoolInterface $controllerPool, ObjectManager $om, TranslationJoinerInterface $translationJoiner)
+    public function __construct(ContentControllerRegistryInterface $controllerRegistry, ObjectManager $om, TranslationJoinerInterface $translationJoiner)
     {
-        $this->controllerPool = $controllerPool;
+        $this->controllerRegistry = $controllerRegistry;
         $this->om = $om;
         $this->translationJoiner = $translationJoiner;
     }
@@ -64,7 +64,7 @@ class FrontController
         $reference = $this->getContentReference($slug);
 
         try {
-            $contentController = $this->controllerPool->getController($reference->getObjectClass());
+            $contentController = $this->controllerRegistry->getController($reference->getObjectClass());
         } catch (ControllerNotExistsException $ex) {
             throw new NotFoundHttpException($ex->getMessage(), $ex);
         }

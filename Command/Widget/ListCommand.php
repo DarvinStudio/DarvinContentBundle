@@ -10,7 +10,7 @@
 
 namespace Darvin\ContentBundle\Command\Widget;
 
-use Darvin\ContentBundle\Widget\WidgetPoolInterface;
+use Darvin\ContentBundle\Widget\WidgetRegistryInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -29,20 +29,20 @@ class ListCommand extends Command
     private $requestStack;
 
     /**
-     * @var \Darvin\ContentBundle\Widget\WidgetPoolInterface
+     * @var \Darvin\ContentBundle\Widget\WidgetRegistryInterface
      */
-    private $widgetPool;
+    private $widgetRegistry;
 
     /**
-     * @param \Symfony\Component\HttpFoundation\RequestStack   $requestStack Request stack
-     * @param \Darvin\ContentBundle\Widget\WidgetPoolInterface $widgetPool   Widget pool
+     * @param \Symfony\Component\HttpFoundation\RequestStack       $requestStack   Request stack
+     * @param \Darvin\ContentBundle\Widget\WidgetRegistryInterface $widgetRegistry Widget registry
      */
-    public function __construct(RequestStack $requestStack, WidgetPoolInterface $widgetPool)
+    public function __construct(RequestStack $requestStack, WidgetRegistryInterface $widgetRegistry)
     {
         parent::__construct();
 
         $this->requestStack = $requestStack;
-        $this->widgetPool = $widgetPool;
+        $this->widgetRegistry = $widgetRegistry;
     }
 
     /**
@@ -64,7 +64,7 @@ class ListCommand extends Command
 
         $names = [];
 
-        foreach ($this->widgetPool->getAllWidgets() as $widget) {
+        foreach ($this->widgetRegistry->getAllWidgets() as $widget) {
             $names[] = $widget->getName();
         }
 

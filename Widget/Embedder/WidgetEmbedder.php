@@ -13,7 +13,7 @@ namespace Darvin\ContentBundle\Widget\Embedder;
 use Darvin\ContentBundle\EventListener\Pagination\PagerSubscriber;
 use Darvin\ContentBundle\Widget\Embedder\Exception\HttpException;
 use Darvin\ContentBundle\Widget\WidgetInterface;
-use Darvin\ContentBundle\Widget\WidgetPoolInterface;
+use Darvin\ContentBundle\Widget\WidgetRegistryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\HttpException as KernelHttpException;
 
@@ -28,9 +28,9 @@ class WidgetEmbedder implements WidgetEmbedderInterface
     private $requestStack;
 
     /**
-     * @var \Darvin\ContentBundle\Widget\WidgetPoolInterface
+     * @var \Darvin\ContentBundle\Widget\WidgetRegistryInterface
      */
-    private $widgetPool;
+    private $widgetRegistry;
 
     /**
      * @var array
@@ -38,13 +38,13 @@ class WidgetEmbedder implements WidgetEmbedderInterface
     private $widgetContents;
 
     /**
-     * @param \Symfony\Component\HttpFoundation\RequestStack   $requestStack Request stack
-     * @param \Darvin\ContentBundle\Widget\WidgetPoolInterface $widgetPool   Widget pool
+     * @param \Symfony\Component\HttpFoundation\RequestStack       $requestStack   Request stack
+     * @param \Darvin\ContentBundle\Widget\WidgetRegistryInterface $widgetRegistry Widget registry
      */
-    public function __construct(RequestStack $requestStack, WidgetPoolInterface $widgetPool)
+    public function __construct(RequestStack $requestStack, WidgetRegistryInterface $widgetRegistry)
     {
         $this->requestStack = $requestStack;
-        $this->widgetPool = $widgetPool;
+        $this->widgetRegistry = $widgetRegistry;
 
         $this->widgetContents = [];
     }
@@ -62,7 +62,7 @@ class WidgetEmbedder implements WidgetEmbedderInterface
 
         $replacements = [];
 
-        foreach ($this->widgetPool->getAllWidgets() as $widget) {
+        foreach ($this->widgetRegistry->getAllWidgets() as $widget) {
             $placeholder = '%'.$widget->getName().'%';
 
             if (false !== strpos($content, $placeholder)) {

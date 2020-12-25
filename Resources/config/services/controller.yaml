@@ -11,7 +11,7 @@ services:
     darvin_content.controller.front:
         class: '%darvin_content.controller.front.class%'
         arguments:
-            - '@darvin_content.controller_pool'
+            - '@darvin_content.controller_registry'
             - '@doctrine.orm.entity_manager'
             - '@darvin_content.translatable.translation_joiner'
         tags:
