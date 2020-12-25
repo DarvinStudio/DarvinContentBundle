@@ -15,13 +15,8 @@ use Darvin\ConfigBundle\Parameter\ParameterModel;
 
 /**
  * Content config
- *
- * @method string|null getMetaArticleAuthor()
- * @method string|null getMetaArticlePublisher()
- * @method string|null getMetaOgSiteName()
- * @method string|null getMetaTwitterSite()
  */
-class ContentConfig extends AbstractConfiguration
+class ContentConfig extends AbstractConfiguration implements ContentConfigInterface
 {
     /**
      * @var string
@@ -55,6 +50,44 @@ class ContentConfig extends AbstractConfiguration
                 ],
             ]);
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getMetaArticleAuthor(): ?string
+    {
+        return $this->__call(__FUNCTION__);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getMetaArticlePublisher(): ?string
+    {
+        return $this->__call(__FUNCTION__);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getMetaOgSiteName(): ?string
+    {
+        return $this->__call(__FUNCTION__);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getMetaTwitterSite(): ?string
+    {
+        $site = $this->__call(__FUNCTION__);
+
+        if (null !== $site) {
+            $site = sprintf('@%s', ltrim($site, '@'));
+        }
+
+        return $site;
     }
 
     /**

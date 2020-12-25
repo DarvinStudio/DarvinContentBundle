@@ -154,3 +154,5 @@ darvin_content:
 - Add extra meta tags to "meta_tags()" macro.
 
 9.0.1: Add constant DarvinContentBundle::MAJOR_VERSION.
+
+9.0.2: Add config interface.
