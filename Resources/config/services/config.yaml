@@ -2,6 +2,8 @@ parameters:
     darvin_content.config.class: Darvin\ContentBundle\Config\ContentConfig
 
 services:
+    Darvin\ContentBundle\Config\ContentConfigInterface: '@darvin_content.config'
+
     darvin_content.config:
         class: '%darvin_content.config.class%'
         arguments:

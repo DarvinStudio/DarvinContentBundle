@@ -156,3 +156,5 @@ darvin_content:
 9.0.1: Add constant DarvinContentBundle::MAJOR_VERSION.
 
 9.0.2: Add config interface.
+
+9.0.3: Alias config service.
