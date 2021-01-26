@@ -15,6 +15,7 @@ services:
         arguments:
             - '@darvin_content.controller_registry'
             - '@doctrine.orm.entity_manager'
+            - '@router'
             - '@darvin_content.translatable.translation_joiner'
         tags:
             - { name: controller.service_arguments }

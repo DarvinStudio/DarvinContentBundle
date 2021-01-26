@@ -158,3 +158,5 @@ darvin_content:
 9.0.2: Add config interface.
 
 9.0.3: Alias config service.
+
+9.0.4: Content controller: redirect if slug is not lowercase.

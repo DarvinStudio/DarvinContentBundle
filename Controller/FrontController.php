@@ -16,9 +16,11 @@ use Darvin\ContentBundle\Translatable\TranslationJoinerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ObjectManager;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Content front controller
@@ -36,6 +38,11 @@ class FrontController
     private $om;
 
     /**
+     * @var \Symfony\Component\Routing\RouterInterface
+     */
+    private $router;
+
+    /**
      * @var \Darvin\ContentBundle\Translatable\TranslationJoinerInterface
      */
     private $translationJoiner;
@@ -43,12 +50,18 @@ class FrontController
     /**
      * @param \Darvin\ContentBundle\Controller\ContentControllerRegistryInterface $controllerRegistry Content controller registry
      * @param \Doctrine\Persistence\ObjectManager                                 $om                 Object manager
+     * @param \Symfony\Component\Routing\RouterInterface                          $router             Router
      * @param \Darvin\ContentBundle\Translatable\TranslationJoinerInterface       $translationJoiner  Translation joiner
      */
-    public function __construct(ContentControllerRegistryInterface $controllerRegistry, ObjectManager $om, TranslationJoinerInterface $translationJoiner)
-    {
+    public function __construct(
+        ContentControllerRegistryInterface $controllerRegistry,
+        ObjectManager $om,
+        RouterInterface $router,
+        TranslationJoinerInterface $translationJoiner
+    ) {
         $this->controllerRegistry = $controllerRegistry;
         $this->om = $om;
+        $this->router = $router;
         $this->translationJoiner = $translationJoiner;
     }
 
@@ -61,6 +74,16 @@ class FrontController
      */
     public function __invoke(Request $request, string $slug): Response
     {
+        $slugLowercase = mb_strtolower($slug);
+
+        if ($slugLowercase !== $slug) {
+            $redirectUrl = $this->router->generate('darvin_content_show', array_merge($request->query->all(), [
+                'slug' => $slugLowercase,
+            ]));
+
+            return new RedirectResponse($redirectUrl, 301);
+        }
+
         $reference = $this->getContentReference($slug);
 
         try {
