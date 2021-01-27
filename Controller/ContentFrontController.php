@@ -29,6 +29,14 @@ class ContentFrontController extends Controller
      */
     public function showAction(Request $request, $slug)
     {
+        $slugLowercase = mb_strtolower($slug);
+
+        if ($slugLowercase !== $slug) {
+            return $this->redirectToRoute('darvin_content_show', array_merge($request->query->all(), [
+                'slug' => $slugLowercase,
+            ]), 301);
+        }
+
         $slugMapItem = $this->getSlugMapItem($slug);
 
         try {
