@@ -1,11 +1,11 @@
 darvin_content_show:
     path:         /{slug}/
     defaults:     { _controller: DarvinContentBundle:ContentFront:show }
-    requirements: { slug: "[0-9a-z_\\-]+|[0-9a-z_\\-]+[0-9a-z_\\-\\/]*[0-9a-z_\\-]+" }
+    requirements: { slug: "[0-9a-zA-Z_\\-]+|[0-9a-zA-Z_\\-]+[0-9a-zA-Z_\\-\\/]*[0-9a-zA-Z_\\-]+" }
     methods:      [ get ]
 
 darvin_content_content_show:
     path:         /{slug}/
     defaults:     { _controller: DarvinContentBundle:ContentFront:show }
-    requirements: { slug: "[0-9a-z_\\-]+|[0-9a-z_\\-]+[0-9a-z_\\-\\/]*[0-9a-z_\\-]+" }
+    requirements: { slug: "[0-9a-zA-Z_\\-]+|[0-9a-zA-Z_\\-]+[0-9a-zA-Z_\\-\\/]*[0-9a-zA-Z_\\-]+" }
     methods:      [ get ]
