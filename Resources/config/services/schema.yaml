@@ -1,0 +1,30 @@
+parameters:
+    darvin_content.schema.web_page.factory.class: Darvin\ContentBundle\Schema\Factory\WebPageSchemaFactory
+
+    darvin_content.schema.web_page.renderer.class: Darvin\ContentBundle\Schema\Renderer\WebPageSchemaRenderer
+
+    darvin_content.schema.web_page.twig.extension.class: Darvin\ContentBundle\Twig\Extension\Schema\WebPageExtension
+
+services:
+    Darvin\ContentBundle\Schema\Factory\WebPageSchemaFactoryInterface: '@darvin_content.schema.web_page.factory'
+    Darvin\ContentBundle\Schema\Renderer\WebPageSchemaRenderer:        '@darvin_content.schema.web_page.renderer'
+
+    darvin_content.schema.web_page.factory:
+        class: '%darvin_content.schema.web_page.factory.class%'
+        arguments:
+            - '@darvin_content.canonical_url.generator'
+            - '@darvin_schema.factory'
+            - '@request_stack'
+
+    darvin_content.schema.web_page.renderer:
+        class: '%darvin_content.schema.web_page.renderer.class%'
+        arguments:
+            - '@darvin_schema.renderer'
+            - '@darvin_content.schema.web_page.factory'
+
+    darvin_content.schema.web_page.twig.extension:
+        class: '%darvin_content.schema.web_page.twig.extension.class%'
+        arguments:
+            - '@darvin_content.schema.web_page.renderer'
+        tags:
+            - { name: twig.extension }

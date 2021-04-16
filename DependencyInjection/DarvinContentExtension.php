@@ -77,6 +77,8 @@ class DarvinContentExtension extends Extension implements PrependExtensionInterf
                 return count($locales) > 1;
             }],
 
+            'schema' => ['bundle' => 'DarvinSchemaBundle'],
+
             'sorting' => ['callback' => function () use ($config): bool {
                 return $config['sorting']['enabled'];
             }],
