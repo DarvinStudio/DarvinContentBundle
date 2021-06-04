@@ -22,14 +22,14 @@ class MetaTemplate
     /**
      * @var string|null
      *
-     * @ORM\Column(nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $heading;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(length=1024, nullable=true)
+     * @ORM\Column(type="text", length=1024, nullable=true)
      */
     private $title;
 
