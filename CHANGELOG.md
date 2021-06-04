@@ -126,5 +126,3 @@ darvin_content:
 - Add "slug_map_item" admin view widget.
 
 8.8.0: Upgrade "knplabs/doctrine-behaviors".
-
-8.8.1: Fix fields type in MetaTemplate entity
