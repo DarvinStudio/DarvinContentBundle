@@ -29,7 +29,7 @@ class MetaTemplate
     /**
      * @var string|null
      *
-     * @ORM\Column(type="text", length=1024, nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $title;
 
