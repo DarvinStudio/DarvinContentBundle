@@ -162,3 +162,5 @@ darvin_content:
 9.0.4: Content controller: redirect if slug is not lowercase.
 
 9.0.5: Add "schema_web_page" Twig function.
+
+9.0.7: Fix autocomplete form type.
