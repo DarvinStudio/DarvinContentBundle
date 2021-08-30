@@ -164,3 +164,5 @@ darvin_content:
 9.0.5: Add "schema_web_page" Twig function.
 
 9.0.7: Fix autocomplete form type.
+
+9.0.8: Increase priority of page not found exception event subscriber in order to force it run before Monolog's exception listeners.
