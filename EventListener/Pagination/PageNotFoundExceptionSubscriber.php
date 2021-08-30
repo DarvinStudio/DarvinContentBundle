@@ -27,7 +27,7 @@ class PageNotFoundExceptionSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            KernelEvents::EXCEPTION => 'setHttpException',
+            KernelEvents::EXCEPTION => ['setHttpException', PHP_INT_MAX],
         ];
     }
 
