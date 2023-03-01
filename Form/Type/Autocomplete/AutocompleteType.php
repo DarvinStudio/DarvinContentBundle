@@ -74,6 +74,11 @@ class AutocompleteType extends AbstractType
         foreach ($viewTransformers as $transformer) {
             $builder->addViewTransformer($transformer);
         }
+
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event): void {
+            $event->stopPropagation();
+        }, PHP_INT_MAX);
+
         if (!$options['rebuild_choices']) {
             return;
         }
