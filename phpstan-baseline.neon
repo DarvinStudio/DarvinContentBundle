@@ -1,0 +1,79 @@
+parameters:
+    ignoreErrors:
+        # Symfony 3.4/4 console commands: execute() returns nothing (null exits 0). Only Symfony >= 5 requires int; this line targets Symfony 3.4/4.
+        -
+            message: '#^Method Darvin\\ContentBundle\\Command\\ListWidgetsCommand\:\:execute\(\) should return int but return statement is missing\.$#'
+            identifier: return.missing
+            count: 1
+            path: Command/ListWidgetsCommand.php
+        -
+            message: '#^Method Darvin\\ContentBundle\\Command\\RebuildSlugsCommand\:\:execute\(\) should return int but return statement is missing\.$#'
+            identifier: return.missing
+            count: 1
+            path: Command/RebuildSlugsCommand.php
+        -
+            message: '#^Method Darvin\\ContentBundle\\Command\\SlugMapRebuildCommand\:\:execute\(\) should return int but return statement is missing\.$#'
+            identifier: return.missing
+            count: 1
+            path: Command/SlugMapRebuildCommand.php
+        -
+            message: '#^Method Darvin\\ContentBundle\\Command\\TranslationsCreateCommand\:\:execute\(\) should return int but return statement is missing\.$#'
+            identifier: return.missing
+            count: 1
+            path: Command/TranslationsCreateCommand.php
+        # Symfony 3.4/4 console commands: execute() returns nothing (null exits 0). Only Symfony >= 5 requires int; this line targets Symfony 3.4/4.
+        -
+            message: '#^Method Darvin\\ContentBundle\\Command\\TranslationsCreateCommand\:\:execute\(\) should return int but empty return statement found\.$#'
+            identifier: return.empty
+            count: 1
+            path: Command/TranslationsCreateCommand.php
+        # Deliberate BC shim guard (method_exists) that is always true in the analysed Symfony version.
+        -
+            message: '#^Call to function method_exists\(\) with Symfony\\Component\\Config\\Definition\\Builder\\TreeBuilder and ''getRootNode'' will always evaluate to true\.$#'
+            identifier: function.alreadyNarrowedType
+            count: 1
+            path: DependencyInjection/Configuration.php
+        # Doctrine-managed identifier (@ORM\GeneratedValue): written by the ORM via reflection, never by PHP code.
+        -
+            message: '#^Property Darvin\\ContentBundle\\Entity\\SlugMapItem\:\:\$id is never written, only read\.$#'
+            identifier: property.onlyRead
+            count: 1
+            path: Entity/SlugMapItem.php
+        # Traits are meant for use by client-project classes, not by this bundle.
+        -
+            message: '#^Trait Darvin\\ContentBundle\\Traits\\ClientMetadataTrait is used zero times and is not analysed\.$#'
+            identifier: trait.unused
+            count: 1
+            path: Traits/ClientMetadataTrait.php
+        -
+            message: '#^Trait Darvin\\ContentBundle\\Traits\\MetadataEntityRepositoryTrait is used zero times and is not analysed\.$#'
+            identifier: trait.unused
+            count: 1
+            path: Traits/MetadataEntityRepositoryTrait.php
+        -
+            message: '#^Trait Darvin\\ContentBundle\\Traits\\MetadataTrait is used zero times and is not analysed\.$#'
+            identifier: trait.unused
+            count: 1
+            path: Traits/MetadataTrait.php
+        -
+            message: '#^Trait Darvin\\ContentBundle\\Traits\\TranslatableTrait is used zero times and is not analysed\.$#'
+            identifier: trait.unused
+            count: 1
+            path: Traits/TranslatableTrait.php
+        # knplabs/doctrine-behaviors 1.x traits are interfaces-by-docblock; the analysis environment has 2.x.
+        -
+            message: '#^PHPDoc tag @var for variable \$entity has invalid type Knp\\DoctrineBehaviors\\Model\\Translatable\\Translatable\.$#'
+            identifier: varTag.trait
+            count: 1
+            path: Translatable/TranslationsInitializer.php
+        -
+            message: '#^PHPDoc tag @var for variable \$translation has invalid type Knp\\DoctrineBehaviors\\Model\\Translatable\\Translation\.$#'
+            identifier: varTag.trait
+            count: 1
+            path: Translatable/TranslationsInitializer.php
+        # Pre-existing: exception created but not thrown. Fixing it would change behaviour, so it is kept as is.
+        -
+            message: '#^Call to Darvin\\ContentBundle\\Widget\\WidgetException\:\:__construct\(\) on a separate line has no effect\.$#'
+            identifier: new.resultUnused
+            count: 1
+            path: Widget/ForwardToController/ForwardToControllerWidgetFactory.php

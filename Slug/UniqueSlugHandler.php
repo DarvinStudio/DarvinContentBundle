@@ -48,6 +48,9 @@ class UniqueSlugHandler implements SlugHandlerInterface
      */
     private function getSlugMapItemRepository(EntityManager $em)
     {
-        return $em->getRepository(SlugMapItem::class);
+        /** @var \Darvin\ContentBundle\Repository\SlugMapItemRepository $repository */
+        $repository = $em->getRepository(SlugMapItem::class);
+
+        return $repository;
     }
 }

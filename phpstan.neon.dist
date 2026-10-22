@@ -1,0 +1,28 @@
+includes:
+    - phpstan-baseline.neon
+parameters:
+    level: 5
+    phpVersion:
+        min: 70200
+        max: 80400
+    excludePaths:
+        - */Tests/*
+        - */vendor/*
+    treatPhpDocTypesAsCertain: false
+    ignoreErrors:
+        # Deliberate BC shim: TreeBuilder::root() exists only before Symfony 5.0, getRootNode() only since 4.1. Whichever
+        # branch does not exist in the analysed Symfony version is reported as unknown.
+        -
+            message: '#^Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\TreeBuilder\:\:root\(\)\.$#'
+            identifier: method.notFound
+            reportUnmatched: false
+            path: DependencyInjection/*Configuration.php
+        # False positive caused by the analysis environment: Symfony >= 6 / Doctrine ORM 3 declare a native "mixed" parameter,
+        # which PHPStan reads as a class named ...\mixed because phpVersion.min is 7.2. Not reported by every dependency version.
+        -
+            message: '#^Parameter \#\d \$\w+ of method (Symfony\\Component\\HttpFoundation\\(InputBag|ParameterBag)|Doctrine\\ORM\\Query\\Expr\\Base)(<.+>)?\:\:\w+\(\) expects (Symfony\\Component\\HttpFoundation|Doctrine\\ORM\\Query\\Expr)\\mixed.*$#'
+            identifier: argument.type
+            reportUnmatched: false
+            paths:
+                - EventListener/SetPageToRequestSubscriber.php
+                - Repository/SlugMapItemRepository.php
