@@ -25,5 +25,5 @@ interface FiltererInterface
      *
      * @throws \Darvin\ContentBundle\Filterer\FiltererException
      */
-    public function filter(QueryBuilder $qb, array $filterData = null, array $options = [], $conjunction = true);
+    public function filter(QueryBuilder $qb, ?array $filterData = null, array $options = [], $conjunction = true);
 }

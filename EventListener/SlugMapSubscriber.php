@@ -262,6 +262,9 @@ class SlugMapSubscriber extends AbstractOnFlushListener implements EventSubscrib
      */
     private function getSlugMapItemRepository()
     {
-        return $this->em->getRepository(SlugMapItem::class);
+        /** @var \Darvin\ContentBundle\Repository\SlugMapItemRepository $repository */
+        $repository = $this->em->getRepository(SlugMapItem::class);
+
+        return $repository;
     }
 }

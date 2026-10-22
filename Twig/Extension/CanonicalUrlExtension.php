@@ -47,7 +47,7 @@ class CanonicalUrlExtension extends \Twig_Extension
      * @param \Twig_Environment $env      Environment
      * @param string            $template Template
      *
-     * @return string
+     * @return string|null
      */
     public function renderCanonicalUrlTag(\Twig_Environment $env, $template = 'DarvinContentBundle::canonical_url.html.twig')
     {

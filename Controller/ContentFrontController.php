@@ -120,7 +120,10 @@ class ContentFrontController extends Controller
      */
     private function getSlugMapItemRepository()
     {
-        return $this->getDoctrine()->getRepository(SlugMapItem::class);
+        /** @var \Darvin\ContentBundle\Repository\SlugMapItemRepository $repository */
+        $repository = $this->getDoctrine()->getRepository(SlugMapItem::class);
+
+        return $repository;
     }
 
     /**
