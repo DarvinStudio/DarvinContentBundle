@@ -27,12 +27,6 @@ parameters:
             identifier: return.empty
             count: 1
             path: Command/TranslationsCreateCommand.php
-        # Deliberate BC shim guard (method_exists) that is always true in the analysed Symfony version.
-        -
-            message: '#^Call to function method_exists\(\) with Symfony\\Component\\Config\\Definition\\Builder\\TreeBuilder and ''getRootNode'' will always evaluate to true\.$#'
-            identifier: function.alreadyNarrowedType
-            count: 1
-            path: DependencyInjection/Configuration.php
         # Doctrine-managed identifier (@ORM\GeneratedValue): written by the ORM via reflection, never by PHP code.
         -
             message: '#^Property Darvin\\ContentBundle\\Entity\\SlugMapItem\:\:\$id is never written, only read\.$#'
