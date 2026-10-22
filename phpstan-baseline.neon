@@ -1,0 +1,51 @@
+parameters:
+    ignoreErrors:
+        # Doctrine-managed identifiers (@ORM\GeneratedValue): written by the ORM via reflection, never by PHP code.
+        -
+            message: '#^Property Darvin\\ContentBundle\\Entity\\(Position|SlugMapItem)\:\:\$id is never written, only read\.$#'
+            identifier: property.onlyRead
+            count: 2
+            path: Entity
+        # Traits that exist for client projects to use; no class in this package uses them.
+        -
+            message: '#^Trait Darvin\\ContentBundle\\Traits\\(ClientMetadataTrait|MetadataRepositoryTrait|MetadataTrait) is used zero times and is not analysed\.$#'
+            identifier: trait.unused
+            count: 3
+            path: Traits
+        # Defensive code and docblock noise, no runtime effect (none of these identifiers is on the must-fix list).
+        -
+            message: '#^Anonymous function never returns null so it can be removed from the return type\.$#'
+            identifier: return.unusedType
+            count: 1
+            path: Controller/Sorting/RepositionController.php
+        -
+            message: '#^Strict comparison using === between null and \(int\|string\) will always evaluate to false\.$#'
+            identifier: identical.alwaysFalse
+            count: 1
+            path: EventListener/SlugMapSubscriber.php
+        -
+            message: '#^Strict comparison using === between null and Knp\\DoctrineBehaviors\\Contract\\Entity\\TranslatableInterface will always evaluate to false\.$#'
+            identifier: identical.alwaysFalse
+            count: 1
+            path: EventListener/Translatable/RefreshUpdatedAtSubscriber.php
+        -
+            message: '#^PHPDoc tag @var with type Knp\\DoctrineBehaviors\\Contract\\Entity\\TranslatableInterface is not subtype of native type class-string<Knp\\DoctrineBehaviors\\Contract\\Entity\\TranslatableInterface>\.$#'
+            identifier: varTag.nativeType
+            count: 1
+            path: Form/TypeGuesser/TranslatableTypeGuesser.php
+        -
+            message: '#^Dead catch - Darvin\\ContentBundle\\Translatable\\TranslatableException is never thrown in the try block\.$#'
+            identifier: catch.neverThrown
+            count: 1
+            path: Property/Embedder/PropertyEmbedder.php
+        -
+            message: '#^Instanceof between object and mixed results in an error\.$#'
+            identifier: instanceof.invalidExprType
+            count: 1
+            path: Property/Embedder/PropertyEmbedder.php
+        # Magic __set() proxy: the returned value is ignored by PHP, kept as is (changing it is not a PHP 8 matter).
+        -
+            message: '#^Method Darvin\\ContentBundle\\Entity\\GlobalProperty\:\:__set\(\) with return type void returns mixed but should not return anything\.$#'
+            identifier: return.void
+            count: 1
+            path: Traits/TranslatableTrait.php

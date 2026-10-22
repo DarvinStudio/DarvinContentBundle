@@ -75,6 +75,9 @@ class EntityRouter implements EntityRouterInterface
      */
     private function getSlugMapItemRepository(): SlugMapItemRepository
     {
-        return $this->em->getRepository(SlugMapItem::class);
+        /** @var \Darvin\ContentBundle\Repository\SlugMapItemRepository $repository */
+        $repository = $this->em->getRepository(SlugMapItem::class);
+
+        return $repository;
     }
 }

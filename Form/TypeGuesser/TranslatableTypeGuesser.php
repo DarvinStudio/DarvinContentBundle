@@ -39,7 +39,10 @@ class TranslatableTypeGuesser implements FormTypeGuesserInterface
      */
     public function guessType($class, $property): ?TypeGuess
     {
-        return $this->guess($class, $property, __FUNCTION__);
+        /** @var \Symfony\Component\Form\Guess\TypeGuess|null $guess */
+        $guess = $this->guess($class, $property, __FUNCTION__);
+
+        return $guess;
     }
 
     /**
@@ -47,7 +50,10 @@ class TranslatableTypeGuesser implements FormTypeGuesserInterface
      */
     public function guessRequired($class, $property): ?ValueGuess
     {
-        return $this->guess($class, $property, __FUNCTION__);
+        /** @var \Symfony\Component\Form\Guess\ValueGuess|null $guess */
+        $guess = $this->guess($class, $property, __FUNCTION__);
+
+        return $guess;
     }
 
     /**
@@ -55,7 +61,10 @@ class TranslatableTypeGuesser implements FormTypeGuesserInterface
      */
     public function guessMaxLength($class, $property): ?ValueGuess
     {
-        return $this->guess($class, $property, __FUNCTION__);
+        /** @var \Symfony\Component\Form\Guess\ValueGuess|null $guess */
+        $guess = $this->guess($class, $property, __FUNCTION__);
+
+        return $guess;
     }
 
     /**
@@ -63,7 +72,10 @@ class TranslatableTypeGuesser implements FormTypeGuesserInterface
      */
     public function guessPattern($class, $property): ?ValueGuess
     {
-        return $this->guess($class, $property, __FUNCTION__);
+        /** @var \Symfony\Component\Form\Guess\ValueGuess|null $guess */
+        $guess = $this->guess($class, $property, __FUNCTION__);
+
+        return $guess;
     }
 
     /**

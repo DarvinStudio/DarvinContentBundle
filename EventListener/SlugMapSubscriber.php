@@ -298,6 +298,9 @@ class SlugMapSubscriber implements EventSubscriber
      */
     private function getSlugMapItemRepository(EntityManagerInterface $em): SlugMapItemRepository
     {
-        return $em->getRepository(SlugMapItem::class);
+        /** @var \Darvin\ContentBundle\Repository\SlugMapItemRepository $repository */
+        $repository = $em->getRepository(SlugMapItem::class);
+
+        return $repository;
     }
 }
