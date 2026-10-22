@@ -25,8 +25,9 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $treeBuilder->root('darvin_content')
+        $treeBuilder = new TreeBuilder('darvin_content');
+        $rootNode = method_exists($treeBuilder, 'getRootNode') ? $treeBuilder->getRootNode() : $treeBuilder->root('darvin_content');
+        $rootNode
             ->children()
                 ->arrayNode('canonical_url')->addDefaultsIfNotSet()
                     ->children()
