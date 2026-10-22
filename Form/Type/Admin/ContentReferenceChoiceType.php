@@ -392,6 +392,9 @@ MESSAGE
      */
     private function getContentReferenceRepository(): ContentReferenceRepository
     {
-        return $this->em->getRepository(ContentReference::class);
+        /** @var \Darvin\ContentBundle\Repository\ContentReferenceRepository $repository */
+        $repository = $this->em->getRepository(ContentReference::class);
+
+        return $repository;
     }
 }

@@ -165,6 +165,9 @@ class FrontController
      */
     private function getContentReferenceRepository(): ContentReferenceRepository
     {
-        return $this->om->getRepository(ContentReference::class);
+        /** @var \Darvin\ContentBundle\Repository\ContentReferenceRepository $repository */
+        $repository = $this->om->getRepository(ContentReference::class);
+
+        return $repository;
     }
 }

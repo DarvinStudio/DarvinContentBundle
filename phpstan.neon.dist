@@ -1,0 +1,27 @@
+includes:
+    - phpstan-baseline.neon
+parameters:
+    level: 5
+    phpVersion:
+        min: 70200
+        max: 80400
+    excludePaths:
+        - */Tests/*
+        - */vendor/*
+    treatPhpDocTypesAsCertain: false
+    ignoreErrors:
+        # Third-party docblock false positive: Doctrine documents AbstractQuery::getResult()'s $hydrationMode as the
+        # literal union 1|2|3|4|5|6|string, so an int variable is rejected although any hydration mode int is valid.
+        -
+            message: '#^Parameter \#1 \$hydrationMode of method Doctrine\\ORM\\AbstractQuery\:\:getResult\(\) expects 1\|2\|3\|4\|5\|6\|string, int given\.$#'
+            identifier: argument.type
+            reportUnmatched: false
+            path: Repository/ContentReferenceRepository.php
+        # Third-party docblock false positive: Symfony documents TreeBuilder::getRootNode() as NodeDefinition, which has no
+        # children(); for new TreeBuilder('darvin_content') the node really is an ArrayNodeDefinition.
+        -
+            message: '#^Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition\:\:children\(\)\.$#'
+            identifier: method.notFound
+            count: 1
+            reportUnmatched: false
+            path: DependencyInjection/Configuration.php

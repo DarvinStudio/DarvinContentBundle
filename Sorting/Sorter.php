@@ -157,6 +157,9 @@ class Sorter implements SorterInterface
      */
     private function getPositionRepository(): PositionRepository
     {
-        return $this->om->getRepository(Position::class);
+        /** @var \Darvin\ContentBundle\Repository\PositionRepository $repository */
+        $repository = $this->om->getRepository(Position::class);
+
+        return $repository;
     }
 }
