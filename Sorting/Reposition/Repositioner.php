@@ -104,6 +104,9 @@ class Repositioner implements RepositionerInterface
      */
     private function getPositionRepository(): PositionRepository
     {
-        return $this->om->getRepository(Position::class);
+        /** @var \Darvin\ContentBundle\Repository\PositionRepository $repository */
+        $repository = $this->om->getRepository(Position::class);
+
+        return $repository;
     }
 }

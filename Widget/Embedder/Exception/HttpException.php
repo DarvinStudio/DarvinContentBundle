@@ -30,6 +30,9 @@ class HttpException extends WidgetEmbedderException
      */
     public function getKernelHttpException(): KernelHttpException
     {
-        return $this->getPrevious();
+        /** @var \Symfony\Component\HttpKernel\Exception\HttpException $kernelHttpException */
+        $kernelHttpException = $this->getPrevious();
+
+        return $kernelHttpException;
     }
 }

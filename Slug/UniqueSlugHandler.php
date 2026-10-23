@@ -118,6 +118,9 @@ class UniqueSlugHandler implements SlugHandlerInterface
      */
     private function getContentReferenceRepository(EntityManagerInterface $em): ContentReferenceRepository
     {
-        return $em->getRepository(ContentReference::class);
+        /** @var \Darvin\ContentBundle\Repository\ContentReferenceRepository $repository */
+        $repository = $em->getRepository(ContentReference::class);
+
+        return $repository;
     }
 }

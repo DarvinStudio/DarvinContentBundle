@@ -167,7 +167,7 @@ class AttributeRenderer implements AttributeRendererInterface
                 $value = json_encode($value);
             }
             if (null !== $value) {
-                $parts[] = sprintf('%s="%s"', $name, htmlspecialchars((string)$value));
+                $parts[] = sprintf('%s="%s"', $name, htmlspecialchars((string)$value, ENT_COMPAT | ENT_HTML401));
             }
         }
         if (empty($parts)) {
