@@ -17,3 +17,15 @@ parameters:
             identifier: argument.type
             reportUnmatched: false
             path: Repository/SlugMapItemRepository.php
+        # Deliberate BC shim: isMainRequest() exists only since Symfony 5.3, isMasterRequest() only before 6.0.
+        # Whichever branch does not exist in the analysed Symfony version is reported as unknown.
+        -
+            message: '#^Call to an undefined method Symfony\\Component\\HttpKernel\\Event\\(Request|Exception)Event\:\:isMasterRequest\(\)\.$#'
+            identifier: method.notFound
+            reportUnmatched: false
+            path: EventListener/Locale/SwitchSubscriber.php
+        -
+            message: '#^Call to function method_exists\(\) with Symfony\\Component\\HttpKernel\\Event\\(Request|Exception)Event and ''isMainRequest'' will always evaluate to true\.$#'
+            identifier: function.alreadyNarrowedType
+            reportUnmatched: false
+            path: EventListener/Locale/SwitchSubscriber.php
