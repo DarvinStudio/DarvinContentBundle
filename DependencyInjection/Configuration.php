@@ -25,8 +25,9 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $treeBuilder->root('darvin_content')
+        $treeBuilder = new TreeBuilder('darvin_content');
+        $rootNode = method_exists($treeBuilder, 'getRootNode') ? $treeBuilder->getRootNode() : $treeBuilder->root('darvin_content');
+        $rootNode
             ->children()
                 ->arrayNode('canonical_url')->addDefaultsIfNotSet()
                     ->children()
@@ -34,7 +35,7 @@ class Configuration implements ConfigurationInterface
                             ->prototype('scalar')
                                 ->validate()
                                     ->ifTrue(function ($pattern) {
-                                        return false === @preg_match('/^'.$pattern.'$/', null);
+                                        return false === @preg_match('/^'.$pattern.'$/', '');
                                     })
                                     ->thenInvalid('%s is not valid pattern.')
                                 ->end()
