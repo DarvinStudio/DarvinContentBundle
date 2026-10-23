@@ -49,6 +49,22 @@ class MapSubscriber implements EventSubscriber
     }
 
     /**
+     * Intentionally empty. With knplabs/doctrine-behaviors 3.x the decorated subscriber is registered through
+     * #[AsDoctrineListener] tags (postLoad, prePersist), which this decorating service inherits, so Doctrine calls
+     * these methods on it. With 2.x they are never called.
+     */
+    public function postLoad()
+    {
+    }
+
+    /**
+     * Intentionally empty, see postLoad().
+     */
+    public function prePersist()
+    {
+    }
+
+    /**
      * @param \Doctrine\ORM\Event\LoadClassMetadataEventArgs $args Event arguments
      */
     public function loadClassMetadata(LoadClassMetadataEventArgs $args): void
