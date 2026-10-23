@@ -61,7 +61,8 @@ class SwitchSubscriber implements EventSubscriberInterface
      */
     public function detectLocaleSwitching(RequestEvent $event): void
     {
-        if (!$event->isMasterRequest() || !$event->getRequest()->getSession()->has(self::SESSION_KEY)) {
+        // isMasterRequest() is deprecated since Symfony 5.3 and removed in 6.0; isMainRequest() does not exist before 5.3.
+        if (!(method_exists($event, 'isMainRequest') ? $event->isMainRequest() : $event->isMasterRequest()) || !$event->getRequest()->getSession()->has(self::SESSION_KEY)) {
             return;
         }
 
@@ -75,7 +76,8 @@ class SwitchSubscriber implements EventSubscriberInterface
      */
     public function redirectToHomepage(ExceptionEvent $event): void
     {
-        if (!$event->isMasterRequest() || !$this->localeIsSwitching) {
+        // isMasterRequest() is deprecated since Symfony 5.3 and removed in 6.0; isMainRequest() does not exist before 5.3.
+        if (!(method_exists($event, 'isMainRequest') ? $event->isMainRequest() : $event->isMasterRequest()) || !$this->localeIsSwitching) {
             return;
         }
 

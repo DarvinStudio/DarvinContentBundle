@@ -33,8 +33,8 @@ class WidgetNameUniqueValidator extends ConstraintValidator
     }
 
     /**
-     * @param string                                                                                               $name       Widget name
-     * @param \Darvin\ContentBundle\Validator\Constraints\WidgetNameUnique|\Symfony\Component\Validator\Constraint $constraint Constraint
+     * @param string                                                       $name       Widget name
+     * @param \Darvin\ContentBundle\Validator\Constraints\WidgetNameUnique $constraint Constraint
      */
     public function validate($name, Constraint $constraint): void
     {

@@ -79,7 +79,9 @@ class SortEntityJoiner implements SortEntityJoinerInterface
         $rootAliases = $qb->getRootAliases();
 
         $method = sprintf('joinBy%dPartsPropertyPath', $partsCount);
-        $this->$method($qb, $parts, $locale, $doctrineMeta, $rootAliases[0]);
+        // The root alias is passed to joinBy3PartsPropertyPath() as well, although the base implementation ignores it:
+        // overriding methods may declare it.
+        call_user_func_array([$this, $method], [$qb, $parts, $locale, $doctrineMeta, $rootAliases[0]]);
     }
 
     /**

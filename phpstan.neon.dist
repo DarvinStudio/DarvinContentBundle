@@ -1,0 +1,31 @@
+includes:
+    - phpstan-baseline.neon
+parameters:
+    level: 5
+    phpVersion:
+        min: 70200
+        max: 80400
+    excludePaths:
+        - */Tests/*
+        - */vendor/*
+    treatPhpDocTypesAsCertain: false
+    ignoreErrors:
+        # Third-party docblock false positive: Doctrine documents AbstractQuery::getResult()'s $hydrationMode as the
+        # literal union 1|2|3|4|5|6|string, so an int variable is rejected although any hydration mode int is valid.
+        -
+            message: '#^Parameter \#1 \$hydrationMode of method Doctrine\\ORM\\AbstractQuery\:\:getResult\(\) expects 1\|2\|3\|4\|5\|6\|string, int given\.$#'
+            identifier: argument.type
+            reportUnmatched: false
+            path: Repository/SlugMapItemRepository.php
+        # Deliberate BC shim: isMainRequest() exists only since Symfony 5.3, isMasterRequest() only before 6.0.
+        # Whichever branch does not exist in the analysed Symfony version is reported as unknown.
+        -
+            message: '#^Call to an undefined method Symfony\\Component\\HttpKernel\\Event\\(Request|Exception)Event\:\:isMasterRequest\(\)\.$#'
+            identifier: method.notFound
+            reportUnmatched: false
+            path: EventListener/Locale/SwitchSubscriber.php
+        -
+            message: '#^Call to function method_exists\(\) with Symfony\\Component\\HttpKernel\\Event\\(Request|Exception)Event and ''isMainRequest'' will always evaluate to true\.$#'
+            identifier: function.alreadyNarrowedType
+            reportUnmatched: false
+            path: EventListener/Locale/SwitchSubscriber.php

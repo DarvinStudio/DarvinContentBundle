@@ -165,6 +165,9 @@ class FrontController
      */
     private function getSlugMapItemRepository(): SlugMapItemRepository
     {
-        return $this->om->getRepository(SlugMapItem::class);
+        /** @var \Darvin\ContentBundle\Repository\SlugMapItemRepository $repository */
+        $repository = $this->om->getRepository(SlugMapItem::class);
+
+        return $repository;
     }
 }

@@ -195,6 +195,9 @@ class PropertyEmbedder implements PropertyEmbedderInterface
      */
     private function getGlobalPropertyRepository(): GlobalPropertyRepository
     {
-        return $this->em->getRepository(GlobalPropertyInterface::class);
+        /** @var \Darvin\ContentBundle\Repository\GlobalPropertyRepository $repository */
+        $repository = $this->em->getRepository(GlobalPropertyInterface::class);
+
+        return $repository;
     }
 }
